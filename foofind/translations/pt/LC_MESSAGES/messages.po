@@ -1,0 +1,609 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: 1\n"
+"Report-Msgid-Bugs-To: ismael@mp2p.net\n"
+"POT-Creation-Date: 2011-12-09 11:49+0100\n"
+"PO-Revision-Date: 2011-12-09 11:49+0100\n"
+"Last-Translator: Foofind <hola@foofind.com>\n"
+"Language-Team: pt <hola@foofind.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Foofind awesome legacy-csv importer\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgid "your_email"
+msgstr "Seu email:"
+
+msgid "password"
+msgstr "Senha"
+
+msgid "submit"
+msgstr "Enviar"
+
+msgid "required_empty"
+msgstr "O valor é necessário e não pode ser nulo"
+
+msgid "about"
+msgstr "Sobre"
+
+msgid "contact"
+msgstr "Fale conosco"
+
+msgid "legal"
+msgstr "Aviso legal"
+
+msgid "tos"
+msgstr "Termos e condições"
+
+msgid "privacy"
+msgstr "Privacidade"
+
+msgid "complaint"
+msgstr "Reportar ligação"
+
+msgid "source_code"
+msgstr "Código fonte"
+
+msgid "files_indexed"
+msgstr "arquivos indexados"
+
+msgid "last_indexed_files"
+msgstr "Últimos arquivos indexados"
+
+msgid "i_want_that_file"
+msgstr "Eu. Quero. Aquele. Arquivo."
+
+msgid "all"
+msgstr "Tudo"
+
+msgid "direct_downloads"
+msgstr "Downloads diretos"
+
+msgid "audio"
+msgstr "Áudio"
+
+msgid "video"
+msgstr "Vídeo"
+
+msgid "image"
+msgstr "Imagem"
+
+msgid "document"
+msgstr "Documento"
+
+msgid "software"
+msgstr "Programa"
+
+msgid "archive"
+msgstr "Arquivo"
+
+msgid "no_results_for"
+msgstr "Nenhum resultado para:"
+
+msgid "write_something"
+msgstr "Ei! Escreva alguma coisa!!"
+
+msgid "previous"
+msgstr "Anterior"
+
+msgid "next"
+msgstr "Próximo"
+
+msgid "sources"
+msgstr "fontes"
+
+msgid "of_about"
+msgstr "aproximadamente"
+
+msgid "results_for"
+msgstr "resultados para"
+
+msgid "not_allow_browse_results"
+msgstr "Foofind não permite pesquisar resultados depois da página 100."
+
+msgid "how_to_download"
+msgstr "Como baixar?"
+
+msgid "download_explanation"
+msgstr ""
+"Para baixar o arquivo nesta ligação, você precisa de um software externo. "
+"Veja aqui alguns aplicativos compatíveis."
+
+msgid "all_sizes"
+msgstr "Todos os tamanhos"
+
+msgid "advanced_search"
+msgstr "Busca avançada"
+
+msgid "hide_advanced_search"
+msgstr "ocultar busca avançada"
+
+msgid "smaller_than"
+msgstr "menor que"
+
+msgid "larger_than"
+msgstr "maior que"
+
+msgid "all_qualities"
+msgstr "todas as qualidades"
+
+msgid "or_better"
+msgstr "ou melhor"
+
+msgid "all_years"
+msgstr "todos os anos"
+
+msgid "before"
+msgstr "antes"
+
+msgid "last_year"
+msgstr "neste ano"
+
+msgid "artist"
+msgstr "artista"
+
+msgid "title"
+msgstr "título"
+
+msgid "author"
+msgstr "autor"
+
+msgid "format"
+msgstr "formato"
+
+msgid "pages"
+msgstr "páginas"
+
+msgid "album"
+msgstr "álbum"
+
+msgid "length"
+msgstr "comprimento"
+
+msgid "bitrate"
+msgstr "bitrate"
+
+msgid "genre"
+msgstr "gênero"
+
+msgid "seconds"
+msgstr "segundos"
+
+msgid "minutes"
+msgstr "minutos"
+
+msgid "source"
+msgstr "fonte"
+
+msgid "height"
+msgstr "altura"
+
+msgid "width"
+msgstr "largura"
+
+msgid "track"
+msgstr "faixa"
+
+msgid "quality"
+msgstr "qualidade"
+
+msgid "num_pages"
+msgstr "nº de páginas"
+
+msgid "include_results_from"
+msgstr "Incluir resultados de:"
+
+msgid "size"
+msgstr "Tamanho"
+
+msgid "unpacked_size"
+msgstr "Tamanho descompactado"
+
+msgid "colors"
+msgstr "Cores"
+
+msgid "version"
+msgstr "Versão"
+
+msgid "name"
+msgstr "Nome"
+
+msgid "description"
+msgstr "Descrição"
+
+msgid "files"
+msgstr "Arquivos"
+
+msgid "soundtype"
+msgstr "Tipo sonoro"
+
+msgid "year"
+msgstr "ano"
+
+msgid "years"
+msgstr "anos"
+
+msgid "month"
+msgstr "mês"
+
+msgid "months"
+msgstr "meses"
+
+msgid "day"
+msgstr "dia"
+
+msgid "days"
+msgstr "dias"
+
+msgid "hour"
+msgstr "hora"
+
+msgid "hours"
+msgstr "horas"
+
+msgid "minute"
+msgstr "minuto"
+
+msgid "second"
+msgstr "segundo"
+
+msgid "loading"
+msgstr "Carregando"
+
+msgid "close"
+msgstr "Fechar"
+
+msgid "share_this"
+msgstr "Compartilhe"
+
+msgid "share_facebook"
+msgstr "Compartilhe no Facebook"
+
+msgid "share_twitter"
+msgstr "Compartilhe no Twitter"
+
+msgid "send_by_email"
+msgstr "Enviar por email"
+
+msgid "download"
+msgstr "Download"
+
+msgid "watch"
+msgstr "Assista"
+
+msgid "your_comments"
+msgstr "Comentários"
+
+msgid "since"
+msgstr " since s atr s"
+
+msgid "post_comment"
+msgstr "Comentar"
+
+msgid "add_comment"
+msgstr "Adicionar comentário"
+
+msgid "from"
+msgstr "de"
+
+msgid "i_like_it"
+msgstr "Gostei!"
+
+msgid "booo"
+msgstr "Buuuu!"
+
+msgid "comment_published_succesfully"
+msgstr "Comentário publicado com sucesso!"
+
+msgid "related_files"
+msgstr "Arquivos relacionados"
+
+msgid "user_profile"
+msgstr "Seu usuário."
+
+msgid "your_password"
+msgstr "Escolha sua senha:"
+
+msgid "insert_your_password"
+msgstr "Insira sua senha (de novo!)"
+
+msgid "fill_sing_up_form"
+msgstr ""
+"Por favor, preencha este formulário para ser um membro registrado do "
+"Foofind:"
+
+msgid "nickname"
+msgstr "Apelido"
+
+msgid "edit_profile"
+msgstr "Editar perfil"
+
+msgid "edit_your_profile"
+msgstr "Edite seu perfil"
+
+msgid "profile_edited_succesfully"
+msgstr "Seu perfil foi editado com sucesso!"
+
+msgid "hello"
+msgstr "oi,"
+
+msgid "logout"
+msgstr "sair"
+
+msgid "login"
+msgstr "entrar"
+
+msgid "new_user"
+msgstr "usuário novo"
+
+msgid "or"
+msgstr "ou"
+
+msgid "register"
+msgstr "Registre-se"
+
+msgid "if_new_user"
+msgstr "Se você é um usuário novo, por favor"
+
+msgid "register_here"
+msgstr "registre-se aqui"
+
+msgid "choose_nickname"
+msgstr "Escolha um nickname"
+
+msgid "user_login"
+msgstr "Login"
+
+msgid "remember_me"
+msgstr "Lembrete"
+
+msgid "your_location"
+msgstr "Localização"
+
+msgid "new_password"
+msgstr "Troque sua senha aqui: (ou ainda deixe em branco)"
+
+msgid "save_profile"
+msgstr "Salvar perfil"
+
+msgid "not_allowed_view_page"
+msgstr "Não é permitido visualizar esta página"
+
+msgid "username_taken"
+msgstr "Esse nome de usuário está sendo usado. Por favor, escolha outro."
+
+msgid "email_taken"
+msgstr "Este email está sendo usado. Por favor, escolha outro."
+
+msgid "forgot"
+msgstr "Esqueceu"
+
+msgid "your_password?"
+msgstr "sua senha?"
+
+msgid "passwords_not_match"
+msgstr "A senha digitada não confere."
+
+msgid "sure_delete_account"
+msgstr "Você quer apagar sua conta no Foofind?"
+
+msgid "yes"
+msgstr "Sim"
+
+msgid "account_deleted"
+msgstr "Sua conta foi apagada."
+
+msgid "nice_to_hear_that"
+msgstr "Legal saber que"
+
+msgid "profile"
+msgstr "perfil"
+
+msgid "username"
+msgstr "Nome de usuário:"
+
+msgid "member_since"
+msgstr "Membro desde:"
+
+msgid "last_comments"
+msgstr "Últimos %(comments)d comentários"
+
+msgid "location"
+msgstr "Localização"
+
+msgid "delete_account"
+msgstr "Apagar sua conta no Foofind"
+
+msgid "forgot_password"
+msgstr "Esqueceu sua senha?"
+
+msgid "wrong_email_password"
+msgstr "Senha ou email errado, por favor tente de novo"
+
+msgid "welcome"
+msgstr "Bem-vindo"
+
+msgid "finish_register"
+msgstr "Por favor, clique neste URL para terminar seu processo de registro:"
+
+msgid "token_not_exist"
+msgstr "Sinto muito, o token não existe ou já está sendo usado."
+
+msgid "confirm_email"
+msgstr ", confirme seu email"
+
+msgid "check_inbox_email_finish"
+msgstr ""
+"Verifique sua caixa de mensagens para terminar o processo de registro."
+
+msgid "foofind_team"
+msgstr "A equipe do Foofind"
+
+msgid "user_not_exist"
+msgstr "Este usuário não existe"
+
+msgid "logged_in"
+msgstr "Você está logado."
+
+msgid "registered_user"
+msgstr "Se você já é um usuário registrado, por favor"
+
+msgid "login_here"
+msgstr "faça login aqui"
+
+msgid "enter_email"
+msgstr ""
+"Por favor, insira seu endereço de email. Uma mensagem para recuperar seu "
+"acesso será enviada a você."
+
+msgid "email_same_register"
+msgstr "O endereço de email deve ser o mesmo usado para o registro."
+
+msgid "email_not_database"
+msgstr "Este email não está em nosso banco de dados. Por favor, tente de novo"
+
+msgid "check_inbox_email_restore"
+msgstr "Verifique sua caixa de mensaqgens para recuperar o acesso ao Foofind"
+
+msgid "restore_access"
+msgstr ", recupere seu acesso ao Foofind"
+
+msgid "restore_account"
+msgstr ""
+"Alguém quer recuperar seu acesso ao Foofind. Clique neste URL para recuperar"
+" sua conta do Foofind."
+
+msgid "ignore_message"
+msgstr "Ao contrário, ignore esta mensagem."
+
+msgid "login_vote"
+msgstr "Por favor, faça login para voltar"
+
+msgid "login_comment"
+msgstr "Por favor, faça logion para comentar"
+
+msgid "technical_problems"
+msgstr "Desculpe, estamos com problemas tecnicos com %(service)s serviço."
+
+msgid "allow_access_account"
+msgstr ""
+"Você pode usar o Foofind para acessar o seu %(account)s conta com esse "
+"serviço."
+
+msgid "submit_search"
+msgstr "Procura"
+
+msgid "contact_form"
+msgstr "Formulário de contato"
+
+msgid "link_removal"
+msgstr ""
+"Nota: se você está solicitando uma remoção de link, deve usar o "
+"%(report_form)s."
+
+msgid "complaints_ignored"
+msgstr "Reclamações através deste formulário serão ignoradas."
+
+msgid "your_message"
+msgstr "Sua mensagem:"
+
+msgid "insert_characters"
+msgstr "Por favor, insira os 5 caracteres mostrados:"
+
+msgid "captcha_wrong"
+msgstr "O valor do captcha está errado"
+
+msgid "message_sent"
+msgstr "Mensagem enviada com sucesso!"
+
+msgid "your_name"
+msgstr "Nome"
+
+msgid "your_surname"
+msgstr "Sobrenome"
+
+msgid "your_company"
+msgstr "Empresa"
+
+msgid "your_phone"
+msgstr "Telefone"
+
+msgid "link_reviewed"
+msgstr "Por favor, coloque o link a ser revisado:"
+
+msgid "url_content"
+msgstr "Por favor, coloque a URL onde o conteudo aparece:"
+
+msgid "reason_complaint"
+msgstr "Motivo da sua reclamação:"
+
+msgid "accept_terms"
+msgstr "Por favor, aceite os termos de uso e a política de privacidade"
+
+msgid "submit_links"
+msgstr "Links enviados"
+
+msgid "include_link_per_line"
+msgstr ""
+"Por favor enclua http, ed3k ou um link na vilha.<br />Ele vai ser adicionado"
+" automaticamente nos resultados encurtados."
+
+msgid "link_sent"
+msgstr "Mensagem enviada. Obrigado pela ajuda!"
+
+msgid "footer"
+msgstr ""
+"Site sobre a licença Creative Commons <a rel='license content' "
+"href='http://creativecommons.org/licenses/by-sa/3.0/deed.pt'>BY-SA</a>. <a "
+"href='http://code.google.com/p/Foofind/'>Codigo fonte</a> <a rel='license "
+"source code' href='http://www.gnu.org/licenses/agpl.html'>Affero GPL</a>."
+
+msgid "about_text"
+msgstr ""
+"Foofind é um motor de busca. Nele trabalhamos criando um programa que "
+"procura em todas as redes e indexa cada arquivo. Desta forma, pretendemos "
+"oferecer o maior conjunto de links disponível. Foofind é uma criação de "
+"Pablo Soto, programador P2P, desenvolvida em Madri, Espanha, por MP2P "
+"Technologies. "
+
+msgid "under_maintenance"
+msgstr " Foofind está em manutenção. Por favor, volte mais tarde."
+
+msgid "link_not_exist"
+msgstr "O link não existe ou foi deletado!"
+
+msgid "translate"
+msgstr "Traduzir"
+
+msgid "translate_to_your_language"
+msgstr "Ajude a traduzir Foofind no seu idioma"
+
+msgid "translate_description"
+msgstr ""
+"Foofind está disponível em alguns idiomas, mas você pode nos ajudar a "
+"traduzir em sua língua. Escolha na lista e preencha os campos com os textos "
+"traduzidos. Você não precisa preencher todos para enviar o formulário, e "
+"qualquer ajuda será bem-vinda.<br/><br/>Se seu idioma não aparece na lista, "
+"por favor, fale conosco para que seja adicionado. "
+
+msgid "choose_language"
+msgstr "Escolha o idioma"
+
+msgid "translation_sent"
+msgstr "Sua tradução foi enviada. Obrigado por sua ajuda!"
+
+msgid "translate_at_least_one"
+msgstr "Por favor, traduza pelo menos um texto."
+
+msgid "here"
+msgstr "entre em contato"
+
+msgid "translation_beta"
+msgstr ""
+"Esta tradução está em fase de testes. Se você encontrar falhas ou erros, por"
+" favor, %(here)s."
+
+msgid "other"
+msgstr "Outros"

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% from "helpers.html" import render_field %}
+{% block content %}
+<div id="inner_contents">
+    <h2>{{_("new_user")|capitalize}}</h2>
+    {{ flash() }}
+    <p>({{_("registered_user")}} <a href="{{ url_for('user.login') }}" title="user login">{{_("login_here")}}</a>)</p>
+    <p>{{_("fill_sing_up_form")}}</p>
+    <form method="post">
+        <fieldset>
+            {{ render_field(form.email) }}
+            {{ render_field(form.username) }}
+            {{ render_field(form.password) }}
+            {{ render_field(form.confirm) }}
+            {{ render_field(form.captcha) }}
+            {{ render_field(form.accept_tos) }}            
+        </fieldset>
+        <fieldset>
+            {{form.submit}}
+        </fieldset>
+    </form>
+    <a href="/es/user/login/twitter" class="oauth tw"><span>Login using Twitter</span></a>
+    <a href="/es/user/login/facebook" class="oauth fb"><span>Login using Facebook</span></a>
+</div>
+{% endblock %}
+

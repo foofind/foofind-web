@@ -1,0 +1,36 @@
+{% extends "admin/base.html" %}
+{% block page %}
+    <form method="post">
+        <input type="hidden" name="fields" value="{{field_keys}}"/>
+        <h3 class="list">{{_('admin_translation_info')}}</h3>
+        <dl class="list">
+            {% for prop in data %}
+            <dt>{{_(prop)}}</dt>
+            <dd>{{data[prop]}}</dd>
+            {% endfor %}
+        </dl>
+        <h3 class="list">{{_('admin_translation_fields')}}</h3>
+        <dl class="list">
+            {% for prop in fields %}
+            <dt>{{prop}}</dt>
+            <dd class="multi">
+                <ul>
+                    <li>{% if fields[prop][2] %}{{fields[prop][2]}}{% else %}-{% endif %}</li>
+                    <li>{% if fields[prop][0] %}{{fields[prop][0]}}{% else %}-{% endif %}</li>
+                    <li>{% if fields[prop][1] %}{{fields[prop][1]}}{% else %}-{% endif %}</li>
+                    <li>{{form["field_%s" % prop]}}</li>
+                    <li>{{form["check_%s" % prop]}}</li>
+                </ul>
+            </dd>
+            {% endfor %}
+        </dl>
+        <div class="list_mode">
+            {% if select == 'all' %}
+            <a href="{{url_for('admin.review_translation', translation_id=data['_id'], page=page, show=list_mode, size=page_size, select='none')}}">{{_("admin_multiselection_select_none")}}</a>
+            {% else %}
+            <a href="{{url_for('admin.review_translation', translation_id=data['_id'], page=page, show=list_mode, size=page_size, select='all')}}">{{_("admin_multiselection_select_all")}}</a>
+            {% endif %}
+            </div>
+        {{form["submit"](class="list")}} {{form["cancel"]}}
+    </form>
+{% endblock %}

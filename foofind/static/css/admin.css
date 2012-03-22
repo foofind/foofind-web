@@ -1,0 +1,212 @@
+*{
+    margin:0;
+    padding:0;
+    }
+body{
+    font:normal 13px Arial,sans-serif;
+    }
+a{
+    color:#cd0069;
+    }
+a.showmore{
+    text-decoration:none;
+    }
+textarea{
+    border:1px solid gray;
+    display:block;
+    }
+input[type="text"],input[type="password"], textarea{
+    font:normal 1.1em Arial,sans-serif;
+    border:1px solid gray;
+    padding:5px;margin-bottom:10px;
+    }
+input[type="submit"],input[type="button"]{
+    position:relative;
+    line-height:19px;font:bold 14px Arial,sans-serif;text-decoration:none;
+    padding:4px 10px 4px 10px;
+    color:#fff;background:#DB006E url("/static/foofind3.png") 0px -312px repeat-x;
+    display:inline-block;
+    border:0;
+    border-bottom:1px solid #BA0060;
+    border-radius:5px;box-shadow:0px 1px 3px #999;text-shadow:0px -1px 1px #808080;
+    cursor:pointer;
+    }
+input[type="submit"][disabled],input[type="button"][disabled]{
+    color:#BBB;
+    background:#DB91B6;
+    border-bottom:1px solid #CF89AC;
+    }
+input[type="submit"]:active,input[type="button"]:active{
+    top:1px;
+    box-shadow:0 0.5px 1.5px #999;
+    }
+.header{
+    border-bottom:1px solid #cd0069;
+    padding:5px 5px 10px;
+    }
+.header .logo{
+    text-indent:-999em; overflow:hidden;
+    width:171px;height:67px;
+    background:transparent url('/static/foofind3.png') left top;
+    display:block;
+    }
+.wrapper{
+
+    }
+.monospaced{
+    font-family:monospace;
+    font-size:0.95em;
+    }
+.menu{
+    width:170px;
+    float:left;
+    padding:10px;
+    }
+    .menu ul{
+        list-style:none;
+        }
+    .menu ul li{
+        display:block;
+        line-height:1.5em;
+        }
+.content{
+    margin-left:200px;
+    padding:10px;
+    }
+    .content h2{
+        position:relative; z-index:1;
+        top:-88px;
+        line-height:75px;
+        vertical-align:baseline;
+        margin-bottom:-80px;
+        }
+    .content .list_mode{
+        position:relative; z-index:2;
+        top:-38px;
+        line-height:30px;
+        vertical-align:baseline;
+        margin-bottom:-30px;
+        }
+div.list{
+    width:100%;
+    display:table;
+    }
+dl.list{
+    margin:0 0 5px;
+    display:table;
+    width:100%;
+    }
+    .list dd pre{
+        min-height:1em;
+        }
+
+    .list ul{
+        display:table-row;
+        }
+        .list ul:nth-child(1) li{
+            border-top:none;
+            }
+        .list ul:nth-child(2n) li{
+            background:#DDD;
+            }
+        .list ul .edit_row{
+            font-weight:bold;
+            }
+    .list li{
+        display:table-cell;
+        padding:2px;
+        border-left:1px solid #cd0069; border-top:1px solid #cd0069;
+        vertical-align:middle;
+        white-space:normal;
+        width:auto;
+        }
+        .list li:nth-child(1){
+            border-left:none;
+            }
+.message, .success, .error{padding:.8em;margin:1em;border:1px solid #cd0069}
+.message{background:#FBEFFB;color:#cd0069}
+.success{background:#FBEFFB;color:#cd0069}
+.error{background:#FBEFFB;color:#cd0069}
+
+h3.list{
+    width:191px;
+    text-align:center;
+    font-weight:bold;
+    color:white; background-color:#cd0069;
+    margin:0;
+    padding:5px;
+    border-radius:4px;
+    border-bottom-right-radius:0px;
+    }
+input[type="submit"].list, input[type="button"].list{
+    margin-top:-6px;
+    margin-left:200px;
+    border-top-left-radius:0px;
+    }
+dl.list input, dl.list textarea, dl.list input[type="submit"], dl.list input[type="button"]{
+    margin:0;
+    padding:1px 5px;
+    border-width:1px;
+    border-radius:2px;
+    margin-right:4px;
+    font-size:13px;
+    position:relative;
+    top:-4px;
+    margin-bottom:-4px;
+    }
+dl.list input[type="text"], dl.list textarea{
+    width:300px;
+    }
+dl.list > *{
+    padding:4px 0;
+    display:block;
+    }
+dl.list > dt{
+    font-weight:bold; text-align:right;
+    float:left; clear:left;
+    width:195px;
+    margin-top:0;
+    }
+dl.list > dd{
+    margin-left:200px; padding-left:5px;
+    border-left:1px solid #cd0069;
+    white-space:pre-wrap;
+    }
+div.list_mode{
+    text-align:right;
+    padding-right:1em;
+    }
+dl.list > dd.multi{
+    display:block;
+    width:auto;
+    white-space:nowrap;
+    padding:0;
+    border-bottom:1px solid #cd0069;
+    }
+dl.list > dd.multi:last-child{
+    border-bottom:none;
+    }
+dl.list > dd.multi > ul{
+    display:table-row;
+    margin:0;padding:0;
+    }
+dl.list > dd.multi > ul > li{
+    display:table-cell;
+    width:20%;
+    padding:5px;
+    border-right:1px solid #cd0069;
+    vertical-align:middle;
+    }
+dl.list > dd.multi > ul > li:last-child{
+    border-right:none;
+    }
+dl.list > dd.multi > ul > li.free{
+    width:auto;
+    }
+
+a.toggler{
+    font-family:monospace;
+    font-weight:bold;
+    }
+a.filter_active{}
+a.filter_active{color:black;}

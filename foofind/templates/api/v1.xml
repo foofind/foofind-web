@@ -1,0 +1,26 @@
+{#
+
+Compatibilidad con API antigua:
+    - Un sólo método: getSearch
+    - Versión: 1
+
+#}
+<SearchrestServer generator="zend" version="1.0">
+    <{{ api_method }}>
+        {% for number, file in results %}
+        <key_{{number}}>
+            <size>{% if "z" in file["file"] %}{{ file["file"]["z"] }}{% else %}0{% endif %}</size>
+            <type>{{ file["view"]["file_type"] }}</type>
+            <dlink><![CDATA[{{ url_for("files.download", file_id=file["view"]["url"], _external=True) }}]]></dlink>
+            {% if file["view"]["md"] %}
+            <md>
+                {% for key, value in file["view"]["md"].iteritems() %}
+                <{{ key }}>{{ value }}</{{ key }}>
+                {% endfor %}
+            </md>
+            {% endif %}
+        </key_{{number}}>
+        {% endfor %}
+        <status>{% if success %}success{% else %}failed{% endif %}</status>
+    </{{ api_method }}>
+</SearchrestServer>

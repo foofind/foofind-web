@@ -1,0 +1,40 @@
+{% extends "admin/base.html" %}
+{% block page %}
+    <div class="list_mode">
+        {% for n in show_modes %}
+            {% if show_mode != n %}<a href="{{url_for('admin.origins', page=page, show=n, mode=list_mode, size=page_size)}}">{{_('admin_show'+n)}}</a>
+            {% else %}<span>{{_('admin_show'+n)}}</span>{% endif %}
+            {% if not loop.last %}<span>, </span>{% endif %}
+        {% endfor %}
+        <span> | </span>
+        {% for m in list_modes %}
+            {% if m in list_mode %}<a class="filter_active" href="{{url_for('admin.origins', page=page, show=show_mode, mode=list_mode_substracted[m], size=page_size)}}">{{m}}</a>
+            {% else %}<a href="{{url_for('admin.origins', page=page, show=show_mode, mode=list_mode_add+m, size=page_size)}}">{{m}}</a>{% endif %}
+            {% if not loop.last %}<span>, </span>{% endif %}
+        {% endfor %}
+        <span> | </span>
+        {% for s in (15, 30, 60) %}
+            {% if page_size != s %}<a href="{{url_for('admin.origins',page=page, show=show_mode, mode=list_mode, size=s)}}">{{s}}</a>
+            {% else %}<span>{{s}}</span>{% endif %}
+            {% if not loop.last %}<span>, </span>{% endif %}
+        {% endfor %}
+    </div>
+    {% if num_items > 0 %}
+        <div class="list">
+        {% for data in origins %}
+            <ul>
+                <li>{{ data["d"] }}</li>
+                <li>{{ data["d"] }}</li>
+                <li>{{ data["crbl"] }}</li>
+                <li>{% for g in data["g"] %}{{g}}{% if not loop.last %}, {% endif %}{% endfor %}</li>
+                <li class="edit_row"><a href="{{url_for('admin.manage_origin', originid=data['_id'], page=page, show=show_mode, mode=list_mode, size=page_size)}}">{{_('admin_locks_fileinfo')}}</a></li>
+            </ul>
+        {% endfor %}
+        </div>
+        <p>{% for i in range(num_pages) %}
+            {% if i == page %}{{ i+ 1 }}{% else %}<a href="{{url_for('admin.origins', page=i, show=show_mode, mode=list_mode, size=page_size)}}">{{i+1}}</a>{% endif %}
+            {% if not loop.last %} , {% endif %}{% endfor %}</p>
+    {% else %}
+        <p>{{_('admin_origins_none')}}</p>
+    {% endif %}
+{% endblock %}

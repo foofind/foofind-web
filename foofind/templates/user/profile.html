@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<div id="inner_contents">
+    <h2>{{_("user_profile")}}  -  {{current_user.username}}</h2>
+    {{ flash() }}
+    <div class="user_profile">
+        <h3>Nick: {{current_user.username}}</h3>
+        <h3>Ubicación: {{current_user.location}}</h3>
+        <h3>Miembro desde: {{current_user.created}}</h3>
+    </div>
+    <h3><a href="{{ url_for('user.edit')}}">{{_("edit_profile")}}</a></h3>
+</div>
+{% endblock %}

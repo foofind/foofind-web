@@ -1,0 +1,464 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: 1\n"
+"Report-Msgid-Bugs-To: ismael@mp2p.net\n"
+"POT-Creation-Date: 2011-12-09 11:49+0100\n"
+"PO-Revision-Date: 2011-12-09 11:49+0100\n"
+"Last-Translator: Foofind <hola@foofind.com>\n"
+"Language-Team: de <hola@foofind.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Foofind awesome legacy-csv importer\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgid "password"
+msgstr "Passwort:"
+
+msgid "submit"
+msgstr "Senden"
+
+msgid "about"
+msgstr "Über"
+
+msgid "contact"
+msgstr "Kontakt"
+
+msgid "legal"
+msgstr "Rechtl. Hinweise"
+
+msgid "tos"
+msgstr "Allgemeine Geschäftsbedingungen"
+
+msgid "privacy"
+msgstr "Datenschutz"
+
+msgid "complaint"
+msgstr "Link anfordern"
+
+msgid "source_code"
+msgstr "Quellcode"
+
+msgid "files_indexed"
+msgstr "indexierte Dateien"
+
+msgid "last_indexed_files"
+msgstr "letzte indexierte Dateien"
+
+msgid "i_want_that_file"
+msgstr "ich will. Diese. Datei"
+
+msgid "all"
+msgstr "Alle"
+
+msgid "direct_downloads"
+msgstr "direkt Download"
+
+msgid "audio"
+msgstr "Audio"
+
+msgid "video"
+msgstr "Video"
+
+msgid "image"
+msgstr "Bild"
+
+msgid "document"
+msgstr "Dokument"
+
+msgid "software"
+msgstr "Software"
+
+msgid "archive"
+msgstr "Datei"
+
+msgid "no_results_for"
+msgstr "Es gibt leider keine Ergebnisse für:"
+
+msgid "write_something"
+msgstr "Schreib was!"
+
+msgid "previous"
+msgstr "Vorherige"
+
+msgid "next"
+msgstr "Nächste"
+
+msgid "sources"
+msgstr "Quellen"
+
+msgid "of_about"
+msgstr "etwa"
+
+msgid "results_for"
+msgstr "Ergebnisse für"
+
+msgid "not_allow_browse_results"
+msgstr "Sorry! Foofind kann keine weiteren Ergebnisse ab Seite 100 zeigen."
+
+msgid "how_to_download"
+msgstr "Wie kann ich eine Datei herunterladen?"
+
+msgid "download_explanation"
+msgstr ""
+"Um die Datei herunterladen zu können, benötigen Sie zusätzliche Software. "
+"Hier finden Sie einige kompatible Programme:"
+
+msgid "did_you_mean"
+msgstr "Meinten Sie %(text)s?"
+
+msgid "all_sizes"
+msgstr "jede Größe"
+
+msgid "advanced_search"
+msgstr "erweiterte Suche"
+
+msgid "hide_advanced_search"
+msgstr "erweiterte Suche verbergen"
+
+msgid "smaller_than"
+msgstr "kleiner als"
+
+msgid "larger_than"
+msgstr "größer als"
+
+msgid "all_qualities"
+msgstr "alle Dateiqualität"
+
+msgid "or_better"
+msgstr "oder besser"
+
+msgid "all_years"
+msgstr "alle Jahre"
+
+msgid "before"
+msgstr "vor"
+
+msgid "last_year"
+msgstr "letztes Jahr"
+
+msgid "artist"
+msgstr "Artist"
+
+msgid "title"
+msgstr "Titel"
+
+msgid "author"
+msgstr "Autor"
+
+msgid "format"
+msgstr "Format"
+
+msgid "pages"
+msgstr "Seiten"
+
+msgid "album"
+msgstr "Album"
+
+msgid "length"
+msgstr "Dauer"
+
+msgid "bitrate"
+msgstr "Bitrate"
+
+msgid "genre"
+msgstr "Genre"
+
+msgid "seconds"
+msgstr "Sekunden"
+
+msgid "minutes"
+msgstr "Minuten"
+
+msgid "source"
+msgstr "Quelle"
+
+msgid "height"
+msgstr "Hoch"
+
+msgid "width"
+msgstr "Breite"
+
+msgid "track"
+msgstr "Track"
+
+msgid "quality"
+msgstr "Qualität"
+
+msgid "num_pages"
+msgstr "Seitennummer"
+
+msgid "include_results_from"
+msgstr "folgende Ergebnisse einrechnen:"
+
+msgid "size"
+msgstr "Die Dateigröße"
+
+msgid "unpacked_size"
+msgstr "Dateigröße&nbsp;ohne&nbsp;Komprimierung"
+
+msgid "colors"
+msgstr "Farben"
+
+msgid "version"
+msgstr "Version"
+
+msgid "name"
+msgstr "Name"
+
+msgid "description"
+msgstr "Beschreibung"
+
+msgid "files"
+msgstr "Dateien"
+
+msgid "soundtype"
+msgstr "Klangart"
+
+msgid "year"
+msgstr "Jahr"
+
+msgid "years"
+msgstr "Jahren"
+
+msgid "month"
+msgstr "Monate"
+
+msgid "months"
+msgstr "Monaten"
+
+msgid "day"
+msgstr "Tag"
+
+msgid "days"
+msgstr "Tagen"
+
+msgid "hour"
+msgstr "Uhr"
+
+msgid "hours"
+msgstr "Ühren"
+
+msgid "minute"
+msgstr "Minute"
+
+msgid "second"
+msgstr "Sekunde"
+
+msgid "loading"
+msgstr "Laden"
+
+msgid "close"
+msgstr "Schließen"
+
+msgid "share_this"
+msgstr "Dieser Link schicken:"
+
+msgid "share_facebook"
+msgstr "In Facebook posten:"
+
+msgid "share_twitter"
+msgstr "In Twitter posten:"
+
+msgid "send_by_email"
+msgstr "Per Mail senden:"
+
+msgid "download"
+msgstr "Herunterladen"
+
+msgid "watch"
+msgstr "Sehen"
+
+msgid "your_comments"
+msgstr "Deine Kommentare"
+
+msgid "since"
+msgstr "seit since s "
+
+msgid "post_comment"
+msgstr "Kommentar senden"
+
+msgid "add_comment"
+msgstr "Kommentar hinzufügen"
+
+msgid "from"
+msgstr "seit"
+
+msgid "i_like_it"
+msgstr "Gefällt!"
+
+msgid "booo"
+msgstr "Buuh!"
+
+msgid "comment_published_succesfully"
+msgstr "Kommentar erfolgreich veröffentlichen!"
+
+msgid "related_files"
+msgstr "bezogene Dateien"
+
+msgid "user_profile"
+msgstr "Anwenderprofil"
+
+msgid "your_password"
+msgstr "Passwort eingeben:"
+
+msgid "insert_your_password"
+msgstr "Passwort eingeben (ja, noch Mal):"
+
+msgid "fill_sing_up_form"
+msgstr "Bitte Formular ausfüllen um eine registrierte Nutzer werden zu dürfen"
+
+msgid "nickname"
+msgstr "Nick:"
+
+msgid "edit_profile"
+msgstr "Profil bearbeiten"
+
+msgid "edit_your_profile"
+msgstr "Profil editieren"
+
+msgid "profile_edited_succesfully"
+msgstr "Deine Profil würde erfolgreich aktualisiert"
+
+msgid "hello"
+msgstr "Hallo,"
+
+msgid "logout"
+msgstr "Abmelden"
+
+msgid "login"
+msgstr "Anmelden"
+
+msgid "new_user"
+msgstr "Konto erstellen"
+
+msgid "or"
+msgstr "oder"
+
+msgid "register"
+msgstr "Anmelden"
+
+msgid "if_new_user"
+msgstr "Falls du neu bei uns bist, bitte "
+
+msgid "register_here"
+msgstr "sich hier anmelden"
+
+msgid "choose_nickname"
+msgstr "Neckname wählen:"
+
+msgid "user_login"
+msgstr "Einloggen"
+
+msgid "remember_me"
+msgstr "Passwort erinnern"
+
+msgid "your_location"
+msgstr "meine Standort"
+
+msgid "new_password"
+msgstr ""
+"neue Passwort eingeben (falls Sie es nicht ändern wollen, bitte das Feld "
+"einfach leer lassen)"
+
+msgid "save_profile"
+msgstr "Änderungen speichern"
+
+msgid "not_allowed_view_page"
+msgstr "Sie haben auf diese Seite kein Zugriffsrecht."
+
+msgid "username_taken"
+msgstr "Sorry, diese Nutzername liegt schon vor. Bitte gibt eine neue ein."
+
+msgid "email_taken"
+msgstr ""
+"Sorry, diese E-mail liegt auf unsere Datenbank schon vor. Bitte gibt eine "
+"neue ein."
+
+msgid "forgot"
+msgstr "Hast du dein Passwort vergessen?"
+
+msgid "your_password?"
+msgstr "Hast du dein Passwort vergessen?"
+
+msgid "passwords_not_match"
+msgstr "die eingegebene Passworte stimmen nicht überein"
+
+msgid "sure_delete_account"
+msgstr "Sicher willst du deine Foofind Konto löschen?"
+
+msgid "yes"
+msgstr "Ja"
+
+msgid "account_deleted"
+msgstr "Deine Foofind Konto würde erfolgreich gelöscht."
+
+msgid "nice_to_hear_that"
+msgstr "Wir freuen uns drauf"
+
+msgid "profile"
+msgstr "Profil"
+
+msgid "username"
+msgstr "Nick:"
+
+msgid "member_since"
+msgstr "Mitglied seit:"
+
+msgid "last_comments"
+msgstr "letzten %(comments)d Kommentare"
+
+msgid "location"
+msgstr "Standort:"
+
+msgid "delete_account"
+msgstr "Nutzerkonto vom Foofind löschen"
+
+msgid "forgot_password"
+msgstr "Hast du dein Passwort vergessen?"
+
+msgid "wrong_email_password"
+msgstr ""
+"Falsche e-mail Adresse oder falsches Passwort. Bitte erneut versuchen. "
+
+msgid "welcome"
+msgstr "Wilkommen"
+
+msgid "finish_register"
+msgstr "Klicke bitte auf die URL zum fertigstellen deiner Registratin"
+
+msgid "token_not_exist"
+msgstr ""
+"Entschuldigun dieser Username ist nicht vorhanden oder wurde bereits "
+"verwendet"
+
+msgid "confirm_email"
+msgstr "Bestätige bitte deine E-Mail Adresse"
+
+msgid "submit_search"
+msgstr "Suchen"
+
+msgid "contact_form"
+msgstr "Kontakt Form"
+
+msgid "your_name"
+msgstr "Ihre Name:"
+
+msgid "your_surname"
+msgstr "Ihre Familienname:"
+
+msgid "your_company"
+msgstr "Ihr Unternehmen:"
+
+msgid "your_phone"
+msgstr "Ihre Telefonnummer:"
+
+msgid "translate"
+msgstr "Übersetzen"
+
+msgid "choose_language"
+msgstr "Sprache wählen"
+
+msgid "here"
+msgstr "ací"

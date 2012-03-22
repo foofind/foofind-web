@@ -1,0 +1,18 @@
+{% extends "admin/base.html" %}
+{% block page %}
+    {%- if origin_form %}
+    <form method="post">
+        {{origin_form.props}}
+        <h3 class="list">{{_('admin_origins_info')}}</h3>
+        <dl class="list">
+            <dt>_id</dt>
+            <dd>{{originid}}</dd>
+            {%- for prop in origin_properties %}
+                <dt>{{origin_form["field_%s" % prop].label}}</dt>
+                <dd>{{origin_form["field_%s" % prop]}}</dd>
+            {%- endfor %}
+        </dl>
+        {{ origin_form.submit(class="list") }}
+    </form>
+    {%- endif %}
+{%- endblock %}

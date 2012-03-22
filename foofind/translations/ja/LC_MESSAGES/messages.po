@@ -1,0 +1,189 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: 1\n"
+"Report-Msgid-Bugs-To: ismael@mp2p.net\n"
+"POT-Creation-Date: 2011-12-09 11:49+0100\n"
+"PO-Revision-Date: 2011-12-09 11:49+0100\n"
+"Last-Translator: Foofind <hola@foofind.com>\n"
+"Language-Team: ja <hola@foofind.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Foofind awesome legacy-csv importer\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgid "password"
+msgstr "パスワード"
+
+msgid "about"
+msgstr "について"
+
+msgid "contact"
+msgstr "お問い合わせ"
+
+msgid "legal"
+msgstr "法的"
+
+msgid "tos"
+msgstr "利用規約"
+
+msgid "privacy"
+msgstr "プライバシー"
+
+msgid "complaint"
+msgstr "リンクレポート"
+
+msgid "source_code"
+msgstr "ソースコード"
+
+msgid "files_indexed"
+msgstr "インデックスファイル"
+
+msgid "last_indexed_files"
+msgstr "最後に、ファイルは索引をつけました。"
+
+msgid "i_want_that_file"
+msgstr "私は欲しいです。 それ。 ファイルします。"
+
+msgid "all"
+msgstr "すべて"
+
+msgid "direct_downloads"
+msgstr "ダイレクト ダウンロード"
+
+msgid "audio"
+msgstr "オーディオ"
+
+msgid "video"
+msgstr "動画"
+
+msgid "image"
+msgstr "画像"
+
+msgid "document"
+msgstr "ドキュメント"
+
+msgid "software"
+msgstr "ソフトウェア"
+
+msgid "archive"
+msgstr "アーカイブ"
+
+msgid "no_results_for"
+msgstr "以下のための結果がありません"
+
+msgid "write_something"
+msgstr "何かを書いてください"
+
+msgid "previous"
+msgstr "戻る"
+
+msgid "next"
+msgstr "次へ"
+
+msgid "sources"
+msgstr "ソース"
+
+msgid "of_about"
+msgstr "について"
+
+msgid "results_for"
+msgstr "結果"
+
+msgid "not_allow_browse_results"
+msgstr "Foofindは100年ページ以降、ブラウズの結果を許容しません。"
+
+msgid "how_to_download"
+msgstr "ダウンロードする方法?"
+
+msgid "download_explanation"
+msgstr ""
+"繋がっているファイルをダウンロードするために、あなたは外部のソフトウェアを必要としたかもしれません。 ここに、いくつかのコンパチブル利用があります:"
+
+msgid "all_sizes"
+msgstr "全サイズ"
+
+msgid "artist"
+msgstr "アーティスト"
+
+msgid "title"
+msgstr "タイトル"
+
+msgid "format"
+msgstr "フォーマット"
+
+msgid "pages"
+msgstr "ページ"
+
+msgid "minutes"
+msgstr "分"
+
+msgid "source"
+msgstr "ソース"
+
+msgid "size"
+msgstr "サイズ"
+
+msgid "colors"
+msgstr "色"
+
+msgid "version"
+msgstr "バージョン"
+
+msgid "name"
+msgstr "なまえ"
+
+msgid "files"
+msgstr "ファイル"
+
+msgid "year"
+msgstr "年"
+
+msgid "years"
+msgstr "年"
+
+msgid "month"
+msgstr "月"
+
+msgid "months"
+msgstr "月"
+
+msgid "day"
+msgstr "日"
+
+msgid "days"
+msgstr "日"
+
+msgid "hour"
+msgstr "時"
+
+msgid "hours"
+msgstr "時"
+
+msgid "minute"
+msgstr "分"
+
+msgid "second"
+msgstr "秒"
+
+msgid "download"
+msgstr "ダウンロード"
+
+msgid "hello"
+msgstr "こんにちは、"
+
+msgid "logout"
+msgstr "ログアウト"
+
+msgid "login"
+msgstr "ログイン"
+
+msgid "yes"
+msgstr "はい"
+
+msgid "submit_search"
+msgstr "検索"
+
+msgid "choose_language"
+msgstr "言語を選択してください"

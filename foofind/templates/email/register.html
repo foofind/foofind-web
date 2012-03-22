@@ -1,0 +1,9 @@
+{% extends "email/base.html" %}
+{% block content %}
+    {{_("finish_register")}} <a href="{{ url_for('user.validate',_external=True,token=token) }}">{{_("register_here")}}</a>
+    <br />
+    <br />
+    _______________________________
+    <br />
+    {{_("foofind_team")}}
+{% endblock %}

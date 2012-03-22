@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<ul>
+    <li><a href="{{ url_for('page.show',pname='about') }}">{{_('about')}}</a></li>
+    <li><a href="{{ url_for('page.contact') }}">{{_('contact')}}</a></li>
+    {%- if g.lang == "es" %}
+    <li><a href="{{ url_for('page.show',pname='jobs') }}">Ofertas de empleo</a></li>
+    {%- endif %}
+    <li></li>
+    <li></li>
+    <li><a href="{{ url_for('page.show',pname='legal') }}">{{_('legal')}}</a></li>
+    <li><a href="{{ url_for('page.show',pname='tos') }}">{{_('tos')}}</a></li>
+    <li><a href="{{ url_for('page.show',pname='privacy') }}">{{_('privacy')}}</a></li>
+    <li></li>
+    <li></li>
+    <li><a href="{{ url_for('page.submit_link') }}">{{_('submit_links')}}</a></li>
+    <li><a href="{{ url_for('page.complaint') }}">{{_('complaint')}}</a></li>
+    <li></li>
+    <li></li>
+    <li><a href="{{ url_for('page.translate') }}">{{_('translate')}}</a></li>
+    <li><a href="http://code.google.com/p/foofind/">{{_('source_code')}}</a></li>
+</ul>
+<h2>{{ page_title }}</h2>
+{{ flash() }}
+<div>
+{% block page %}{% endblock %}
+</div>
+{% endblock %}

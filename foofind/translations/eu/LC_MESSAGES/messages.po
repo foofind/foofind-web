@@ -1,0 +1,590 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: 1\n"
+"Report-Msgid-Bugs-To: ismael@mp2p.net\n"
+"POT-Creation-Date: 2011-12-09 11:49+0100\n"
+"PO-Revision-Date: 2011-12-09 11:49+0100\n"
+"Last-Translator: Foofind <hola@foofind.com>\n"
+"Language-Team: eu <hola@foofind.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Foofind awesome legacy-csv importer\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgid "your_email"
+msgstr "Zure eposta:"
+
+msgid "password"
+msgstr "Pasahitza:"
+
+msgid "submit"
+msgstr "Bidali"
+
+msgid "required_empty"
+msgstr "Eremu hau ezin da hutsik utzi"
+
+msgid "about"
+msgstr "Honi buruz"
+
+msgid "contact"
+msgstr "Harremana"
+
+msgid "legal"
+msgstr "Legezko oharra"
+
+msgid "tos"
+msgstr "Erabilpen Baldintzak"
+
+msgid "privacy"
+msgstr "Pribatutasun politika"
+
+msgid "complaint"
+msgstr "Esteka galdegin"
+
+msgid "source_code"
+msgstr "Iturburu kodea"
+
+msgid "files_indexed"
+msgstr "indexatutako fitxategiak"
+
+msgid "last_indexed_files"
+msgstr "Indexatutako azken fitxategiak"
+
+msgid "i_want_that_file"
+msgstr "Fitxategi. Hori. Nahi. Dut."
+
+msgid "all"
+msgstr "Guztiak"
+
+msgid "direct_downloads"
+msgstr "Deskarga zuzenak"
+
+msgid "audio"
+msgstr "Audioa"
+
+msgid "video"
+msgstr "Bideoa"
+
+msgid "image"
+msgstr "Irudia"
+
+msgid "document"
+msgstr "Dokumentua"
+
+msgid "software"
+msgstr "Softwarea"
+
+msgid "archive"
+msgstr "Fitxategia"
+
+msgid "no_results_for"
+msgstr "Ez dago emaitzarik:"
+
+msgid "write_something"
+msgstr "Zerbait idatzi!"
+
+msgid "previous"
+msgstr "Aurrekoa"
+
+msgid "next"
+msgstr "Hurrengoa"
+
+msgid "sources"
+msgstr "Iturriak"
+
+msgid "of_about"
+msgstr "ingurutik"
+
+msgid "not_allow_browse_results"
+msgstr "Foofinde-ek ez du onartzen 100 emaitzatik haratago nabigatzea"
+
+msgid "how_to_download"
+msgstr "Zelan jeitsi?"
+
+msgid "download_explanation"
+msgstr ""
+"Orrialde honetan estekatutako fitxategia jaisteko, agian kanpo-softwarea "
+"beharrezkoa da. Hona hemen programa erabilgarri batzuk:"
+
+msgid "did_you_mean"
+msgstr "%(text)s esan nahi zenuen?"
+
+msgid "all_sizes"
+msgstr "Tamaina guztiak"
+
+msgid "advanced_search"
+msgstr "bilaketa aurreratua"
+
+msgid "hide_advanced_search"
+msgstr "izkutatu bilaketa aurreratua"
+
+msgid "all_qualities"
+msgstr "Edozein kalitatekoa"
+
+msgid "or_better"
+msgstr "edo handiagoa"
+
+msgid "all_years"
+msgstr "Urtero"
+
+msgid "last_year"
+msgstr "Azken urtea"
+
+msgid "artist"
+msgstr "Artista"
+
+msgid "title"
+msgstr "Izenburua"
+
+msgid "author"
+msgstr "Egilea"
+
+msgid "format"
+msgstr "Formatua"
+
+msgid "pages"
+msgstr "Orrialde"
+
+msgid "album"
+msgstr "Albuma"
+
+msgid "length"
+msgstr "Iraupena"
+
+msgid "bitrate"
+msgstr "Bit-tasa"
+
+msgid "genre"
+msgstr "Generoa"
+
+msgid "seconds"
+msgstr "segundu"
+
+msgid "minutes"
+msgstr "minutuak"
+
+msgid "source"
+msgstr "Iturria"
+
+msgid "height"
+msgstr "Garaiera"
+
+msgid "width"
+msgstr "Zabalera"
+
+msgid "track"
+msgstr "Pista"
+
+msgid "quality"
+msgstr "Kalitatea"
+
+msgid "num_pages"
+msgstr "Orrialde kopurua"
+
+msgid "include_results_from"
+msgstr "Hauen emaitzak kontutan hartu:"
+
+msgid "size"
+msgstr "Tamaina"
+
+msgid "unpacked_size"
+msgstr "Konprimatu gabeko tamaina"
+
+msgid "colors"
+msgstr "Koloreak"
+
+msgid "version"
+msgstr "Bertsioa"
+
+msgid "name"
+msgstr "Izena"
+
+msgid "description"
+msgstr "Deskribapena"
+
+msgid "files"
+msgstr "Fitxategiak"
+
+msgid "soundtype"
+msgstr "Soinu mota"
+
+msgid "year"
+msgstr "urtea"
+
+msgid "years"
+msgstr "urteak"
+
+msgid "month"
+msgstr "hilabetea"
+
+msgid "months"
+msgstr "hilabeteak"
+
+msgid "day"
+msgstr "eguna"
+
+msgid "days"
+msgstr "egunak"
+
+msgid "hour"
+msgstr "ordua"
+
+msgid "hours"
+msgstr "orduak"
+
+msgid "minute"
+msgstr "minutua"
+
+msgid "second"
+msgstr "segundua"
+
+msgid "loading"
+msgstr "Kargatzen"
+
+msgid "close"
+msgstr "Itxi"
+
+msgid "share_this"
+msgstr "Esteka hau elkarbanatu:"
+
+msgid "share_facebook"
+msgstr "facebook-en elkarbanatu"
+
+msgid "share_twitter"
+msgstr "twitter-en elkarbanatu"
+
+msgid "send_by_email"
+msgstr "postaz bidali"
+
+msgid "download"
+msgstr "Jeitsi "
+
+msgid "watch"
+msgstr "Ikusi"
+
+msgid "your_comments"
+msgstr "Zure iruzkinak"
+
+msgid "since"
+msgstr "duela since s"
+
+msgid "post_comment"
+msgstr "Iruzkina bidali"
+
+msgid "add_comment"
+msgstr "Iruzkina gehitu"
+
+msgid "i_like_it"
+msgstr "Gustoko dut!"
+
+msgid "booo"
+msgstr "Buuu!"
+
+msgid "comment_published_succesfully"
+msgstr "Iruzkina ondo argitaratu da."
+
+msgid "related_files"
+msgstr "Erlazionatutako fitxategiak"
+
+msgid "user_profile"
+msgstr "Erabiltzailearen profila"
+
+msgid "your_password"
+msgstr "Zure pasahitza aukeratu"
+
+msgid "insert_your_password"
+msgstr "Idatzi zure pasahitza (bai, barriro)"
+
+msgid "fill_sing_up_form"
+msgstr ""
+"Mesedez, inprimaki hau bete Foofind-eko erabiltzaile erregistratua izateko:"
+
+msgid "nickname"
+msgstr "Ezizena (Nick):"
+
+msgid "edit_profile"
+msgstr "profila editatu"
+
+msgid "edit_your_profile"
+msgstr "Zure kontua editatu"
+
+msgid "profile_edited_succesfully"
+msgstr "Zure profila ondo berriztatu da"
+
+msgid "hello"
+msgstr "kaixo,"
+
+msgid "logout"
+msgstr "irten"
+
+msgid "login"
+msgstr "sesioa hasi"
+
+msgid "new_user"
+msgstr "erabiltzaile berria"
+
+msgid "or"
+msgstr "edo"
+
+msgid "register"
+msgstr "Izena eman"
+
+msgid "if_new_user"
+msgstr "Erabiltzaile berria izatekotan, mesedez"
+
+msgid "register_here"
+msgstr "eman izena hemen"
+
+msgid "choose_nickname"
+msgstr "Ezizena aukeratu:"
+
+msgid "user_login"
+msgstr "Sartu"
+
+msgid "remember_me"
+msgstr "Gogora nazazu"
+
+msgid "your_location"
+msgstr "Zure kokapena:"
+
+msgid "new_password"
+msgstr ""
+"Pasahitz berria idatzi (aldatu nahi ez izatekotan, zuri utzi eremu hau)"
+
+msgid "save_profile"
+msgstr "Gorde aldaketak"
+
+msgid "not_allowed_view_page"
+msgstr "Orrialde hau ikusteko baimenik ez duzu"
+
+msgid "username_taken"
+msgstr ""
+"Erabiltzaile izen hori erabilita dago. Mesedez, aukeratu ezberdin bat."
+
+msgid "email_taken"
+msgstr ""
+"e-posta hori iadanik bada gure datu-basean. Mesedez, erabili ezberdin bat."
+
+msgid "forgot"
+msgstr "Ahaztu duzu"
+
+msgid "your_password?"
+msgstr "pasahitza?"
+
+msgid "passwords_not_match"
+msgstr "Idatzitako pasahitzak ez dira bera."
+
+msgid "sure_delete_account"
+msgstr "Benetan ezabatu nahi duzula Foofind-eko zure kontua?"
+
+msgid "yes"
+msgstr "Bai"
+
+msgid "account_deleted"
+msgstr "Zure kontua ezabatua izan da."
+
+msgid "nice_to_hear_that"
+msgstr "Pozgarria da hori"
+
+msgid "profile"
+msgstr "profila"
+
+msgid "username"
+msgstr "Ezizena:"
+
+msgid "last_comments"
+msgstr "Azken %(comments)d iruzkinak:"
+
+msgid "location"
+msgstr "Kokapena"
+
+msgid "delete_account"
+msgstr "Foofind-eko zure kontua ezabatu"
+
+msgid "forgot_password"
+msgstr "Pasahitza ahaztu duzu?"
+
+msgid "wrong_email_password"
+msgstr "posta helbide edo pasahitz okerra. Saia zaitez barriro."
+
+msgid "welcome"
+msgstr "Ongi etorri"
+
+msgid "finish_register"
+msgstr "Mesedez, izen-emate prozesua bukatzeko klik egin esteka honetan"
+
+msgid "token_not_exist"
+msgstr ""
+"Sentitzen dugu, baimentze url hori okerra da edo iadanik erabilia izan da"
+
+msgid "confirm_email"
+msgstr ", zure posta baieztatu"
+
+msgid "check_inbox_email_finish"
+msgstr "Zure posta begiratu izen-emate prozesua burutzeko"
+
+msgid "foofind_team"
+msgstr "Foofind-eko taldea"
+
+msgid "user_not_exist"
+msgstr "Erabiltzaile hau ez da ezaguna"
+
+msgid "logged_in"
+msgstr "Sesioa hasii duzu,"
+
+msgid "registered_user"
+msgstr "Iadanik izena eman baduzu, mesedez"
+
+msgid "login_here"
+msgstr "sartu hemendik"
+
+msgid "enter_email"
+msgstr ""
+"Mesedez, idatzi zure posta helbidea. Mezu bat bidaliko dizugu sarrera "
+"berreskuratzeko."
+
+msgid "email_same_register"
+msgstr "Eposta helbidea izena emateko erabili zenuen bera izan behar da."
+
+msgid "email_not_database"
+msgstr ""
+"Idatzitako eposta helbidea ez dugu gure datu-basean aurkitzen. Mesedez, "
+"barriro saiatu."
+
+msgid "check_inbox_email_restore"
+msgstr "Zure posta begiratu Foofind-erako sarrera berreskuratzeko"
+
+msgid "restore_access"
+msgstr ", Foofind-erako sarrera berriztatu"
+
+msgid "restore_account"
+msgstr ""
+"Norbaitek, ziurrenik zuk, zure Foofind-eko konturako sarrera berreskuratzea "
+"eskatu du. Kontua berreskuratzeko egin klik url honetan:"
+
+msgid "ignore_message"
+msgstr "Bestela, baztertu mezua."
+
+msgid "login_vote"
+msgstr "Mesedez, sartu bozka emateko"
+
+msgid "login_comment"
+msgstr "Mesedez, sartu iruzkina gehitzeko"
+
+msgid "allow_access_account"
+msgstr ""
+"Funtzionaltasun hau erabiltzeko Foofind-i zure %(account)s konturako "
+"sarbidea baimendu behar duzu"
+
+msgid "submit_search"
+msgstr "Bilatu"
+
+msgid "contact_form"
+msgstr "Harremanetarako inprimakia"
+
+msgid "complaints_ignored"
+msgstr "Inprimaki honen bidez egindako erreklamazioak baztertuak izango dira."
+
+msgid "your_message"
+msgstr "Zure mezua:"
+
+msgid "insert_characters"
+msgstr "Mesedez, idatzi ikusten diren 5 karaktereak:"
+
+msgid "captcha_wrong"
+msgstr "Idatzitako karaktereak imajinakoekin ez datoz bat"
+
+msgid "message_sent"
+msgstr "Zure mezua ondo bidali da"
+
+msgid "your_name"
+msgstr "Zure izena:"
+
+msgid "your_surname"
+msgstr "Zure abizenak:"
+
+msgid "your_company"
+msgstr "Zure enpresa:"
+
+msgid "your_phone"
+msgstr "Zure telefono zenbakia:"
+
+msgid "link_reviewed"
+msgstr "Mesedez, idatzi zure ustetan berrikusia izan behar den esteka:"
+
+msgid "url_content"
+msgstr "Mesedez, idatzi galdegindako edukia agertzen den url-a"
+
+msgid "reason_complaint"
+msgstr "Galdegitearen zioa:"
+
+msgid "accept_terms"
+msgstr ""
+"Mesedez, irakurri eta onartu behar dituzu erabilpen baldintzak eta "
+"pribatutasun politika"
+
+msgid "not_foofind_page"
+msgstr "Esteka ezin da izan Foofind-eko orrialde bat."
+
+msgid "not_foofind_link"
+msgstr ""
+"Helbidea Foofind-eko baliozko jaitsiera orri batekin bat etorri behar du."
+
+msgid "include_reported_links"
+msgstr "Mesedez, estekak dagozkion inprimakiko eremuetan ezarri"
+
+msgid "submit_links"
+msgstr "Estekak bidali"
+
+msgid "link_sent"
+msgstr "Estekak bidaliak izan dira. Mila esker laguntzearren!!"
+
+msgid "footer"
+msgstr ""
+"Webguneko eduki guztiek Creative Commons BY-SA lizentziapean daude. Kode-"
+"iturria Affero GPL lizentziapean."
+
+msgid "about_text"
+msgstr ""
+"Foofind bilaketa-motore unibertsal bat da. Foofind-en sare guztiak arakatu "
+"eta fitxategi guztiak indexatzen dituen softwarea sortzen egiten dugu lan. "
+"Honela, ahalik eta esteka-laburpen handiena eskaintzea lortu nahi dugu. "
+"Foofind Pablo Soto-ren ideia da, P2P teknologien sortzailea, Madrid-en, "
+"Espainia, Foofind Labs S.L.-k MP2P Technologies-ekin batera garatutakoa."
+
+msgid "under_maintenance"
+msgstr "Foofind mantentze geldialdian da. Mesedez, itzuli geroago."
+
+msgid "link_not_exist"
+msgstr "Esteka hau ezin da aurkitu edo ezabatua izan da!"
+
+msgid "translate"
+msgstr "Itzuli"
+
+msgid "translate_to_your_language"
+msgstr "Lagun iezaguzu itzultzen Foofind zure hizkuntzara"
+
+msgid "translate_description"
+msgstr ""
+"Gaur egun, Foofind hizkuntza gutxi batzuetara dago itzulia, baina zuk lagun "
+"gaitzakezu zeurera itzultzen. Ondoren aurkituko duzun hizkuntza-zerrendan "
+"aukeratu eta eremuak bete itzulitako testuekin. Eremu guztiak betetzea ez da"
+" beharrezkoa, edozein ekarpen oso lagungarria izango da. Zure hizkuntza ez "
+"baduzu zerrendan topatzen, jarri gurekin harremanetan gehitu dezagun."
+
+msgid "choose_language"
+msgstr "Hizkuntza aukeratu"
+
+msgid "translation_sent"
+msgstr "Zure itzulpena bidali da. Mila esker laguntzearren!"
+
+msgid "translate_at_least_one"
+msgstr "Mesedez, behintzat esaldi bat itzuli bidali aurretik."
+
+msgid "here"
+msgstr "bunu rapor ediniz"
+
+msgid "other"
+msgstr "Beste bat"

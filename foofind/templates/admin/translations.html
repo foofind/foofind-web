@@ -1,0 +1,32 @@
+{% extends "admin/base.html" %}
+{% block page %}
+    <div class="list_mode">
+        {% for m in list_modes %}
+            {% if list_mode != m %}<a href="{{url_for('admin.translations', page=page, show=m, size=page_size)}}">{{_('admin_show'+m)}}</a>
+            {% else %}<span>{{_('admin_show'+m)}}</span>{% endif %}
+            {% if not loop.last %}<span>, </span>{% endif %}
+        {% endfor %}
+        <span> | </span>
+        {% for s in (15, 30, 60) %}
+            {% if page_size != s %}<a href="{{url_for('admin.translations',page=page, show=list_mode, size=s)}}">{{s}}</a>
+            {% else %}<span>{{s}}</span>{% endif %}
+            {% if not loop.last %}<span>, </span>{% endif %}
+        {% endfor %}
+    </div>
+    {% if num_items > 0 %}
+        <div class="list">
+        {% for data in translations %}
+            <ul>
+                <li>{{ data["created"] }}</li>
+                <li>{{ data["dest_lang"] }}</li>
+                <li class="edit_row"><a href="{{url_for('admin.review_translation', translation_id=data['_id'], page=page, show=list_mode, size=page_size)}}">{{_('admin_translation_review')}}</a></li>
+            </ul>
+        {% endfor %}
+        </div>
+        <p>{% for i in range(num_pages) %}
+            {% if i == page %}{{ i+ 1 }}{% else %}<a href="{{url_for('admin.translations', page=i, show=list_mode, size=page_size)}}">{{i+1}}</a>{% endif %}
+            {% if not loop.last %} , {% endif %}{% endfor %}</p>
+    {% else %}
+        <p>{{_('admin_translation_none')}}</p>
+    {% endif %}
+{% endblock %}

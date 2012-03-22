@@ -1,0 +1,42 @@
+{%- macro url_search(delete_params=['page'],catch_kwargs=true) -%}
+    {{url_for('.search',**kwargs|search_params(delete_params,args=args))}}
+{%- endmacro -%}
+{%- macro searched(param,value="",empty=false) %}
+    {%- if (value=="" and param not in args) or args[param]==value or ((args[param]=="" or not param in args) and empty==true) -%}
+        class="actual{% if args["type"]!="" %} {{ args["type"] }}{% endif %}"
+    {%- endif -%}
+{% endmacro -%}
+{% extends "base.html" %}
+{% block header %}
+        <h1>
+            <a href="{{ url_for('index.home') }}">
+                <img src="/static/foofind3.png" alt="File search engine - foofind.com" title="foofind.com"/>
+            </a>
+        </h1>
+        {%- if args["q"] -%}
+        <div id="search_file">
+            <ul>
+                <li><a href="{{url_search(delete_params=['page','type'])}}" {{searched('type')}}>{{_('all')}}</a></li>
+                <li><a href="{{url_search(type='audio') }}" {{searched('type','audio')}}>{{_('audio')}}</a></li>
+                <li><a href="{{url_search(type='video') }}" {{searched('type','video')}}>{{_('video')}}</a></li>
+                <li><a href="{{url_search(type='image') }}" {{searched('type','image')}}>{{_('image')}}</a></li>
+                <li><a href="{{url_search(type='document')}}" {{searched('type','document')}}>{{_('document')}}</a></li>
+                <li><a href="{{url_search(type='software')}}" {{searched('type','software')}}>{{_('software')}}</a></li>
+                <li><a href="{{url_search(type='archive')}}" {{searched('type','archive')}}>{{_('archive')}}</a></li>
+            </ul>
+        {%- else -%}
+        <div id="search_file" style="padding-top:35px">
+        {%- endif -%}
+            <form method="get" action="{{ url_search() }}" class="searchbox">
+                <fieldset>
+                    <div id="tamingresults" style="display: none;"></div>
+                    {{ search_form.q(autocomplete="off",value=args["q"]) }}
+                    {{ search_form.type(value=args["type"]) }}
+                    <input type="hidden" id="src" name="src" value="{{args['src']}}" />
+                    {{ search_form.submit(class="large magenta awesome") }}
+                </fieldset>
+            </form>
+        </div>
+{% endblock %}
+{% block content %}
+{% endblock %}

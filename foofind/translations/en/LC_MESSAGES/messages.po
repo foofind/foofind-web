@@ -1,0 +1,1004 @@
+# Spanish translations for PROJECT.
+# Copyright (C) 2011 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# Ismael <ismael@mp2p.net>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 1\n"
+"Report-Msgid-Bugs-To: ismael@mp2p.net\n"
+"POT-Creation-Date: 2011-12-09 11:49+0100\n"
+"PO-Revision-Date: 2011-12-09 11:49+0100\n"
+"Last-Translator: Ismael <ismael@mp2p.net>\n"
+"Language-Team: es <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 0.9.6\n"
+
+# common
+msgid "your_email"
+msgstr "Your email:"
+
+msgid "password"
+msgstr "Password:"
+
+msgid "submit"
+msgstr "Send"
+
+# validators
+msgid "non_alphabetic_digits"
+msgstr "%(value)s contains characters which are non alphabetic and no digits"
+
+msgid "required_empty"
+msgstr "Value is required and can't be empty"
+
+msgid "no_valid_email"
+msgstr "This isn't a valid email address with the format: user@example.com"
+
+msgid "field_length"
+msgstr "This field must have %(min)s to %(max)s characters"
+
+msgid "no_valid_url"
+msgstr "Not valid URL"
+
+# main layout
+# about
+msgid "about"
+msgstr "About"
+
+msgid "contact"
+msgstr "Contact"
+
+# legal
+msgid "legal"
+msgstr "Legal"
+
+msgid "tos"
+msgstr "Terms of use"
+
+msgid "privacy"
+msgstr "Privacy policy"
+
+msgid "complaint"
+msgstr "Report link"
+
+msgid "source_code"
+msgstr "Source code"
+
+msgid "files_indexed"
+msgstr "files indexed"
+
+msgid "last_indexed_files"
+msgstr "last indexed files"
+
+msgid "i_want_that_file"
+msgstr "I. Want. That. File"
+
+# search"
+msgid "all"
+msgstr "All"
+
+msgid "direct_downloads"
+msgstr "Direct downloads"
+
+msgid "audio"
+msgstr "Audio"
+
+msgid "video"
+msgstr "Video"
+
+msgid "image"
+msgstr "Image"
+
+msgid "document"
+msgstr "Document"
+
+msgid "software"
+msgstr "Software"
+
+msgid "archive"
+msgstr "Archive"
+
+msgid "no_results_for"
+msgstr "No results for:"
+
+msgid "write_something"
+msgstr "Hey! Write something"
+
+msgid "previous"
+msgstr "Previous"
+
+msgid "next"
+msgstr "Next"
+
+msgid "sources"
+msgstr "sources"
+
+msgid "of_about"
+msgstr "of about"
+
+msgid "results_for"
+msgstr "results for"
+
+msgid "other_categories"
+msgstr "other categories"
+
+msgid "no_type_count"
+msgstr "No results were found for your search in %(search)s, but there are about %(results)d results for your search in %(category)s."
+
+msgid "not_allow_browse_results"
+msgstr "Foofind doesn't show results beyond page 100."
+
+msgid "how_to_download"
+msgstr "how to download?"
+
+msgid "download_explanation"
+msgstr "To download the linked file, you could need an external software. Here are some compatible applications:"
+
+msgid "did_you_mean"
+msgstr "Did you mean %(text)s?"
+
+# advanced search
+msgid "all_sizes"
+msgstr "All sizes"
+
+msgid "advanced_search"
+msgstr "advanced search"
+
+msgid "hide_advanced_search"
+msgstr "hide advanced search"
+
+msgid "smaller_than"
+msgstr "Smaller than"
+
+msgid "larger_than"
+msgstr "Larger than"
+
+msgid "all_qualities"
+msgstr "All qualities"
+
+msgid "or_better"
+msgstr "or better"
+
+msgid "all_years"
+msgstr "All years"
+
+msgid "before"
+msgstr "Before"
+
+msgid "last_year"
+msgstr "Last year"
+
+# metadata
+msgid "artist"
+msgstr "Artist"
+
+msgid "title"
+msgstr "Title"
+
+msgid "author"
+msgstr "Author"
+
+msgid "format"
+msgstr "Format"
+
+msgid "pages"
+msgstr "Pages"
+
+msgid "album"
+msgstr "Album"
+
+msgid "length"
+msgstr "Length"
+
+msgid "bitrate"
+msgstr "Bitrate"
+
+msgid "genre"
+msgstr "Genre"
+
+msgid "seconds"
+msgstr "Seconds"
+
+msgid "minutes"
+msgstr "Minutes"
+
+msgid "source"
+msgstr "Source"
+
+msgid "height"
+msgstr "Height"
+
+msgid "width"
+msgstr "Width"
+
+msgid "track"
+msgstr "Track"
+
+msgid "quality"
+msgstr "Quality"
+
+msgid "num_pages"
+msgstr "Num. of pages"
+
+msgid "include_results_from"
+msgstr "Include results from:"
+
+msgid "size"
+msgstr "Size"
+
+msgid "unpacked_size"
+msgstr "Unpacked size"
+
+msgid "colors"
+msgstr "Colors"
+
+msgid "version"
+msgstr "Version"
+
+msgid "name"
+msgstr "Name"
+
+msgid "description"
+msgstr "Description"
+
+msgid "files"
+msgstr "Files"
+
+msgid "soundtype"
+msgstr "Soundtype"
+
+msgid "year"
+msgstr "year"
+
+msgid "years"
+msgstr "years"
+
+msgid "month"
+msgstr "month"
+
+msgid "months"
+msgstr "months"
+
+msgid "day"
+msgstr "day"
+
+msgid "days"
+msgstr "days"
+
+msgid "hour"
+msgstr "hour"
+
+msgid "hours"
+msgstr "hours"
+
+msgid "minute"
+msgstr "minute"
+
+msgid "second"
+msgstr "second"
+
+# download
+msgid "loading"
+msgstr "Loading"
+
+msgid "close"
+msgstr "Close"
+
+msgid "share_this"
+msgstr "Share this:"
+
+msgid "share_facebook"
+msgstr "share on facebook"
+
+msgid "share_twitter"
+msgstr "share on Twitter"
+
+msgid "send_by_email"
+msgstr "send by email"
+
+msgid "download"
+msgstr "Download"
+
+msgid "watch"
+msgstr "Watch"
+
+msgid "your_comments"
+msgstr "Your comments"
+
+msgid "since"
+msgstr "since %(since)s"
+
+msgid "post_comment"
+msgstr "Post comment"
+
+msgid "add_comment"
+msgstr "Add comment"
+
+msgid "from"
+msgstr "from"
+
+msgid "i_like_it"
+msgstr "I like it!"
+
+msgid "booo"
+msgstr "Booo!"
+
+msgid "comment_published_succesfully"
+msgstr "Comment published succesfully"
+
+msgid "related_files"
+msgstr "Related files"
+
+# user profile
+msgid "login_required"
+msgstr "You must login to access this page."
+
+msgid "user_profile"
+msgstr "User profile"
+
+msgid "your_password"
+msgstr "Choose your password:"
+
+msgid "insert_your_password"
+msgstr "Insert your password (yep, again):"
+
+msgid "fill_sing_up_form"
+msgstr "Please, fill this form to be a Foofind registered member:"
+
+msgid "nickname"
+msgstr "Nickname:"
+
+msgid "edit_profile"
+msgstr "edit profile"
+
+msgid "edit_your_profile"
+msgstr "Edit your profile"
+
+msgid "profile_edited_succesfully"
+msgstr "Your profile was edited succesfully!"
+
+msgid "hello"
+msgstr "hello,"
+
+msgid "logout"
+msgstr "logout"
+
+msgid "login"
+msgstr "login"
+
+msgid "new_user"
+msgstr "new user"
+
+msgid "or"
+msgstr "or"
+
+msgid "register"
+msgstr "register"
+
+msgid "if_new_user"
+msgstr "If you are a new user, please"
+
+msgid "register_here"
+msgstr "register here"
+
+msgid "choose_nickname"
+msgstr "Choose a nickname:"
+
+msgid "user_login"
+msgstr "User login"
+
+msgid "remember_me"
+msgstr "Remember me"
+
+msgid "your_location"
+msgstr "Your location:"
+
+msgid "new_password"
+msgstr "Change your password here: (otherwise leave it blank)"
+
+msgid "save_profile"
+msgstr "Save profile"
+
+msgid "not_allowed_view_page"
+msgstr "You are not allowed to view this page"
+
+msgid "username_taken"
+msgstr "This username is taken. Please choose another one."
+
+msgid "email_taken"
+msgstr "This email is taken. Please use another one."
+
+msgid "forgot"
+msgstr "Forgot"
+
+msgid "your_password?"
+msgstr "your password?"
+
+msgid "passwords_not_match"
+msgstr "The passwords entered do not match."
+
+msgid "sure_delete_account"
+msgstr "Are you sure you want to delete your Foofind account?"
+
+msgid "yes"
+msgstr "Yes"
+
+msgid "account_deleted"
+msgstr "Your account has been deleted."
+
+msgid "nice_to_hear_that"
+msgstr "Nice to hear that"
+
+msgid "profile"
+msgstr "profile"
+
+msgid "username"
+msgstr "Nick:"
+
+msgid "member_since"
+msgstr "Member since:"
+
+msgid "last_comments"
+msgstr "Last %(comments)d coments:"
+
+msgid "location"
+msgstr "Location:"
+
+msgid "delete_account"
+msgstr "Delete your Foofind account"
+
+msgid "forgot_password"
+msgstr "Forgot your password?"
+
+msgid "wrong_email_password"
+msgstr "Wrong email or password, please try again"
+
+msgid "welcome"
+msgstr "Welcome"
+
+msgid "finish_register"
+msgstr "Please, click on this url to finish your register process:"
+
+msgid "token_not_exist"
+msgstr "Sorry, this token does not exist or has been already used"
+
+msgid "confirm_email"
+msgstr ", confirm your email"
+
+msgid "check_inbox_email_finish"
+msgstr "Check your inbox email to finish the register process"
+
+msgid "foofind_team"
+msgstr "The Foofind team."
+
+msgid "user_not_exist"
+msgstr "This user does not exist"
+
+msgid "logged_in"
+msgstr "You are now logged in,"
+
+msgid "registered_user"
+msgstr "If you already are a registered user, please"
+
+msgid "login_here"
+msgstr "login here"
+
+msgid "send"
+msgstr "Send"
+
+# user.forgot
+msgid "enter_email"
+msgstr "Please, enter your email address. An email to recover your access will be sent to you."
+
+msgid "email_same_register"
+msgstr "The email address must be the same you used to register."
+
+msgid "email_not_database"
+msgstr "This email is not in our database. Please, try again."
+
+msgid "check_inbox_email_restore"
+msgstr "Check your inbox email to restore your Foofind access"
+
+# user.forgot email
+msgid "restore_access"
+msgstr ", restore your Foofind access"
+
+msgid "restore_account"
+msgstr "Somebody, probably you, wants to restore your Foofind access. Click on this url to restore your Foofind account:"
+
+msgid "ignore_message"
+msgstr "Otherwise, ignore this message."
+
+# file.vote
+msgid "login_vote"
+msgstr "Please, login to vote"
+
+msgid "login_comment"
+msgstr "Please, login to comment"
+
+msgid "technical_problems"
+msgstr "Sorry, we are experiencing technical problems with the %(service)s service."
+
+msgid "allow_access_account"
+msgstr "You should allow Foofind access to your %(account)s account to use this feature."
+
+msgid "submit_registration"
+msgstr "Sign up"
+
+msgid "submit_login"
+msgstr "Login"
+
+msgid "submit_edit"
+msgstr "Save profile"
+
+msgid "submit_search"
+msgstr "Search"
+
+# contact
+msgid "contact_form"
+msgstr "Contact form"
+
+msgid "report_form"
+msgstr "report link form"
+
+msgid "link_removal"
+msgstr "Note: If you are claiming for a link removal, you must use %(report_form)s."
+
+msgid "complaints_ignored"
+msgstr "Complaints done trough this form will be ignored."
+
+msgid "your_message"
+msgstr "Your message:"
+
+msgid "insert_characters"
+msgstr "Please, insert the 5 characters shown:"
+
+msgid "captcha_wrong"
+msgstr "Captcha value is wrong"
+
+msgid "no_valid_hostname"
+msgstr "%(hostname)s is no valid hostname for email address %(value)s"
+
+msgid "local_network"
+msgstr "%(value)s appears to be a local network name but local network names are not allowed"
+
+msgid "no_dns_hostname"
+msgstr "%(value)s does not match the expected structure for a DNS hostname"
+
+msgid "no_tld_known"
+msgstr ""
+"%(value)s appears to be a DNS hostname but cannot match TLD against "
+"known list"
+
+msgid "message_sent"
+msgstr "Message sent successfully!"
+
+# complaint
+msgid "your_name"
+msgstr "Your name:"
+
+msgid "your_surname"
+msgstr "Your surname:"
+
+msgid "your_company"
+msgstr "Your company:"
+
+msgid "your_phone"
+msgstr "Your phone number:"
+
+msgid "link_reviewed"
+msgstr "Please, insert the link to be reviewed:"
+
+msgid "url_content"
+msgstr "Please, insert the url where this content appears:"
+
+msgid "reason_complaint"
+msgstr "Reason of your complaint:"
+
+msgid "accept_tos"
+msgstr "I have read and accept the %(tos)s and %(privacy)s."
+
+msgid "accept_terms"
+msgstr "Please, accept the terms of use and privacy policy"
+
+msgid "not_foofind_page"
+msgstr "Link can't be a Foofind page"
+
+msgid "not_foofind_link"
+msgstr "URL must be a valid Foofind download page."
+
+msgid "include_reported_links"
+msgstr "Please, include the reported links in the appropriate fields on the form."
+
+# submit links
+msgid "submit_links"
+msgstr "Submit links"
+
+msgid "include_link_per_line"
+msgstr "Please include one http, ftp, ed2k or magnet link per line.<br />It will be crawled automatically and added to search results shortly."
+
+msgid "link_sent"
+msgstr "The links have been sent. Thanks for your help!"
+
+# footer
+msgid "footer"
+msgstr "Website under %(cc)s license. %(code)s under %(gpl)s license."
+
+# privacy
+msgid "safe_privacy"
+msgstr ""
+"In accordance with Organic Law 15/1999, of December 13th, on the Protection of Personal Data, Foofind Labs, S.L. (hereinafter THE COMPANY) hereby informs of the existence of an automated data file that it has created and for which it is responsible."
+"<br /><br />"
+"This file is used for dealing with questions and comments, as well as claims made by users wishing to report the existence of results and links that direct to content that is illegal or that has been disseminated without the mandatory authorisation. THE COMPANY may send e-mails to the account provided by the user in order to inform them that the claim they have made is being processed."
+"<br /><br />"
+"The sending of personal data by means of any of our forms implies express authorisation for them to be automatically processed."
+"<br />"
+"The user may exercise their rights to access, rectify, cancel or oppose by contacting those responsible for the file at the following address:"
+"<br /><br />"
+"<img src=\"/static/privacy.png\" /><br />"
+"Foofind Labs, S.L.<br />"
+"Avda. Mediterráneo, 24. Esc. C. 1 C. 28007 Madrid. Spain.<br /><br />"
+"The user consents to the use of cookies that shall under no circumstances allow for them to be identified, in order to facilitate browsing on this website. Nevertheless, the user can disable the cookies by configuring the browser to do so."
+"The servers automatically capture some data that do not identify the user such as: time of visit to the website, the browser and the operating system used and the domain name of the provider and/or IP address that gives access to the network.<br /><br />"
+"This website uses Google Analytics, a web analytics service provided by Google, Inc. (“Google”).  Google Analytics uses “cookies”, which are text files placed on your computer, to help the website analyze how users use the site. The information generated by the cookie about your use of the website (including your IP address) will be transmitted to and stored by Google on servers in the United States . Google will use this information for the purpose of evaluating your use of the website, compiling reports on website activity for website operators and providing other services relating to website activity and Internet usage.  Google may also transfer this information to third parties where required to do so by law, or where such third parties process the information on Google's behalf. Google will not associate your IP address with any other data held by Google.  You may refuse the use of cookies by selecting the appropriate settings on your browser, however please note that if you do this you may not be able to use the full functionality of this website.  By using this website, you consent to the processing of data about you by Google in the manner and for the purposes set out above."
+"<br />"
+"In order to protect your privacy, neither Google Analytics nor THE COMPANY will keep record of the search terms introduced by Foofind users."
+"<br /><br />"
+"THE COMPANY reserves the right to modify this privacy policy in view of future legal or jurisprudential modifications deemed advisable. The user shall be immediately informed of any change in the privacy policy by means of the e-mail address provided to THE COMPANY in any of the contact forms.<br />"
+"Use of this website implies the user’s acceptance of its privacy policy."
+
+# about
+msgid "about_text"
+msgstr "Foofind is a universal search engine. In Foofind we work creating software that crawls every network and indexes every file. This way, we intend to offer the largest collection of links available.<br /><br />Foofind is a creation by Pablo Soto, P2P technology designer, developed in Madrid, Spain by Foofind Labs S.L. in join venture with MP2P Technologies."
+
+# tos
+msgid "safe_tos"
+msgstr ""
+"<b>1.- Purpose and acceptance of terms of use</b><br />"
+"This agreement regulates access to and use of the %(domain)s website that Foofind Labs, S.L. (hereinafter THE COMPANY) provides users interested in the service."
+"Use of the services provided on this website implies the user's acceptance of these terms of use."
+"THE COMPANY may, at any time and without prior notification, stop rendering its services through %(domain)s and may modify the service rendered, whether this be to accidental or significant aspects."
+"THE COMPANY does not guarantee that the service provided through Foofind will be uninterrupted or without error."
+"<br /><br />"
+"<b>2.- Price for using the service</b><br />"
+"Use of this service by the users is completely free."
+"<br /><br />"
+"<b>3.- Language of the “terms of use”.</b><br />"
+"These terms of use are presented in Spanish."
+"<br />"
+"If this website provides a translation of these terms of use in any language other than Spanish, you shall acknowledge that this is done for convenience purposes and that your relationship with THE COMPANY shall be governed by what is laid out in these terms of use in Spanish."
+"<br /><br />"
+"<b>4.- Responsibility for possible illegality of the files that appear as search results.</b><br />"
+"Foofind provides a file search service that automatically generates results. This website does not reproduce, distribute, publicly announce or transform any intellectual property. The results generated by the users’ searches only show the links to files or pages that meet the search criteria entered and are not hosted on this website. The user is aware that THE COMPANY does not assume any obligation to control, supervise or inspect the files or pages that are linked as search results. Nevertheless, in strict compliance with article 17 LSSI, Foofind shall remove all of those results that it actually knows to be illegal. THE COMPANY is not responsible for the reliability or security of the files that appear linked as search results, nor is it responsible for ensuring that they are free from virus.  It is up to the user to protect their system with the necessary security measures."
+"<br /><br />"
+"<b>5.- Notification of links to files that are illegal or that have been disseminated without authorisation.</b><br />"
+"THE USER can inform THE COMPANY of the existence of any file linked from Foofind that they know to be illegal, or of which they have well-founded suspicions. THE USER who informs THE COMPANY of the existence of pages or files that are presumably illegal or disseminated without the appropriate authorisation, should exclusively use <a href=\"/en/complaint\">the contact form provided for this purpose</a> by THE COMPANY and shall accurately provide the information required therein. Prior to this, the user should read and accept THE COMPANY’s privacy policy. THE COMPANY reserves the right to remove links to files or pages it knows to be illegal or of which it has well-founded suspicions. THE COMPANY also reserves the right to use all technological measures that it avails of in order to remove search results which link to content that could be illegal or disseminated without the mandatory authorisation. Nevertheless, the user recognises that the full effectiveness of these measures in always serving their purpose, cannot be guaranteed."
+"<br /><br />"
+"<b>6.- Applicable law and jurisdiction</b><br />"
+"Both parties agree to submit this agreement to Spanish law and jurisdiction, and specifically to the Courts of Madrid (Spain)."
+"<br /><br />"
+"<b>7.- Changes to the terms of use</b><br />"
+"THE COMPANY may modify these terms of use.<br />"
+"The users should refer to these terms of use frequently to be aware of possible changes made since the last time they accessed the website."
+"Use of the service after changes have been made to the terms of use implies that the user is aware of and accepts the new modified version of said terms."
+
+msgid "safe_legal"
+msgstr ""
+"Foofind Labs, S.L.<br />"
+"Avda. Mediterráneo, 24. Esc. C. 1 C. 28007 Madrid. Spain.<br /><br />"
+"<img src=\"/static/legal.png\" /><br />"
+"Inc. en el R.M. de Madrid,<br />"
+"Tomo 28.498, Folio 129, Sección 8, Hoja M-513051.<br />"
+"N.I.F. B-86116035<br />"
+"<br />"
+"Foofind provides a file search service that automatically generates results. Foofind does not host and does, therefore, not reproduce nor publicly announce the linked files that appear as search results. Foofind does not assume any obligation to control, supervise or inspect the works that are linked as a result of the search. Nevertheless, in strict compliance with article 17 LSSI, Foofind shall remove all of those results and links that it actually knows to be illegal."
+"<br />"
+"If you believe any of the linked works are being disseminated without the appropriate authorisation from the rights holders, or that they infringe the rights of third parties, you may request that we remove them using the following <a href=\"/en/complaint\">claim form.</a>"
+"<br /><br />"
+"You should read and accept our <a href="/en/tos">terms of use</a> and our <a href="/es/privacy">privacy policy</a>  before using the services provided by %(domain)s."
+
+# error
+msgid "under_maintenance"
+msgstr "Foofind is under maintenance. Please, come back later."
+
+msgid "link_not_exist"
+msgstr "This link does not exist or may have been deleted!"
+
+# translate
+msgid "translate"
+msgstr "Translate"
+
+msgid "translate_to_your_language"
+msgstr "Help us to translate Foofind to your language"
+
+msgid "translate_description"
+msgstr "Foofind is currently available in a few languages, but you can help us to translate it to your own language. Just choose it from the following list and filling the fields with the translated texts. You don't need to fill all the fields to submit the form, any help will be very appreciated.<br/><br/>If your language is not in the list, please contact us for adding it.<br/><br/>"
+
+msgid "choose_language"
+msgstr "Choose language"
+
+msgid "translation_sent"
+msgstr "Your translation has been sent. Thanks for your help!"
+
+msgid "translate_at_least_one"
+msgstr "Please translate something before send."
+
+msgid "here"
+msgstr "here"
+
+msgid "translation_beta"
+msgstr "This language translation is in testing phase. If you find a missing or wrong translation, please report it %(here)s."
+
+msgid "other"
+msgstr "Other"
+
+# Felipe <felipe@mp2p.net>, 2011.
+msgid "go_home"
+msgstr "Go back to search engine"
+
+msgid "error_404_message"
+msgstr "404: Page not found."
+
+msgid "error_404_description"
+msgstr "Requested url not found. Please check you wrote the url correctly, if so, please notify web administrators."
+
+msgid "error_502_message"
+msgstr "502: Bad gateway."
+
+msgid "error_502_description"
+msgstr "Cannot access to service due wrong gateway."
+
+msgid "admin_prefix"
+msgstr "Admin"
+
+msgid "admin_overview_msg"
+msgstr "Admin zone, overview."
+
+msgid "admin_overview"
+msgstr "Overview"
+
+msgid "admin_locks"
+msgstr "File blocking"
+
+msgid "admin_locks_none"
+msgstr "No file have been reported"
+
+msgid "admin_locks_locked"
+msgstr "File have been marked as blocked"
+
+msgid "admin_locks_unlocked"
+msgstr "File has been unblocked"
+
+msgid "admin_locks_not_locked"
+msgstr "File won't be marked blocked"
+
+msgid "admin_locks_fileinfo"
+msgstr "Info"
+
+msgid "admin_locks_block"
+msgstr "Block file"
+
+msgid "admin_locks_unblock"
+msgstr "Unblock file"
+
+msgid "admin_locks_confirm"
+msgstr "Block"
+
+msgid "admin_locks_cancel"
+msgstr "Ignore"
+
+msgid "admin_locks_complaint_info"
+msgstr "Complaint info"
+
+msgid "admin_locks_complaint_fileinfo"
+msgstr "File info"
+
+msgid "admin_locks_complaint_noinfo"
+msgstr "No complaint info"
+
+msgid "admin_locks_complaint_nofileinfo"
+msgstr "No file info"
+
+msgid "admin_translation"
+msgstr "Translation contribution"
+
+msgid "admin_translation_none"
+msgstr "No translation error has been reported"
+
+msgid "admin_translation_review"
+msgstr "Review translation"
+
+msgid "admin_showall"
+msgstr "all"
+
+msgid "admin_showold"
+msgstr "old"
+
+msgid "admin_shownew"
+msgstr "new"
+
+msgid "admin_locks_new"
+msgstr "There are new file complaints"
+
+msgid "admin_translations_new"
+msgstr "There are new translations"
+
+msgid "admin_origins"
+msgstr "Source management"
+
+msgid "admin_users"
+msgstr "Users management"
+
+msgid "admin_users_save"
+msgstr "Save changes"
+
+msgid "admin_users_info"
+msgstr "User info"
+
+msgid "admin_users_updated"
+msgstr "Updated user"
+
+msgid "admin_users_search"
+msgstr "Search user"
+
+msgid "admin_users_not_found"
+msgstr "User not found"
+
+msgid "admin_users_mode_username"
+msgstr "username"
+
+msgid "admin_users_mode_email"
+msgstr "email"
+
+msgid "admin_users_mode_id"
+msgstr "hex mongoid"
+
+msgid "admin_users_mode_oauth"
+msgstr "oauth"
+
+msgid "admin_no_new"
+msgstr "There is nothing new."
+
+msgid "admin_select_all"
+msgstr "Select all"
+
+msgid "admin_select_none"
+msgstr "Unselect all"
+
+msgid "admin_translation_confirm"
+msgstr "Apply"
+
+msgid "admin_translation_cancel"
+msgstr "Refuse"
+
+msgid "admin_showcurrent"
+msgstr "current"
+
+msgid "admin_showblocked"
+msgstr "blocked"
+
+msgid "admin_origins_none"
+msgstr "No origins"
+
+msgid "admin_translation_info"
+msgstr "Info"
+
+msgid "admin_translation_fields"
+msgstr "Translation fields"
+
+msgid "admin_multiselection_select_all"
+msgstr "Select all"
+
+msgid "admin_multiselection_select_none"
+msgstr "Select none"
+
+msgid "admin_deploy"
+msgstr "App deployment"
+
+msgid "admin_deploy_datetime"
+msgstr "Last deploy"
+
+msgid "admin_deploy_config"
+msgstr "Deploy configuration"
+
+msgid "admin_deploy_mode"
+msgstr "Deploy mode"
+
+msgid "admin_deploy_phase_configuration"
+msgstr "Configure app"
+
+msgid "admin_deploy_phase_preparation"
+msgstr "Distribute"
+
+msgid "admin_deploy_phase_commit"
+msgstr "Run"
+
+msgid "admin_deploy_phase_publish"
+msgstr "Public distribution"
+
+msgid "admin_deploy_phase_deploy"
+msgstr "Deploy"
+
+msgid "admin_deploy_deploy"
+msgstr "Auto-deploy"
+
+msgid "admin_deploy_phase_restart"
+msgstr "Restarting"
+
+msgid "admin_deploy_restart"
+msgstr "Restart services"
+
+msgid "admin_deploy_phase_clean"
+msgstr "Cleaning"
+
+msgid "admin_deploy_clean_local"
+msgstr "Clean local files"
+
+msgid "admin_deploy_clean_remote"
+msgstr "Clean remote files"
+
+msgid "admin_deploy_package"
+msgstr "Package from git"
+
+msgid "admin_deploy_publish"
+msgstr "Public release"
+
+msgid "admin_deploy_publish_version"
+msgstr "Version code"
+
+msgid "admin_deploy_publish_message"
+msgstr "Release message"
+
+msgid "admin_deploy_publish_mode"
+msgstr "Deploy to release"
+
+msgid "admin_deploy_rollback"
+msgstr "Rollback"
+
+msgid "admin_deploy_prepare"
+msgstr "Setup version"
+
+msgid "admin_deploy_commit"
+msgstr "Commit changes"
+
+msgid "admin_deploy_backups"
+msgstr "Backups"
+
+msgid "admin_deploy_in_progress"
+msgstr "The deploy-related task is being processed"
+
+msgid "admin_deploy_manual_restart"
+msgstr "For stability reasons this deploy won't restart any web server"
+
+msgid "admin_deploy_debug"
+msgstr "Información de debug"
+
+msgid "admin_locks_search_mode"
+msgstr "Search by"
+
+msgid "admin_locks_search"
+msgstr "Go"
+
+msgid "admin_lock_mode_hexid"
+msgstr "hexadecimal identifier"
+
+msgid "admin_lock_mode_url"
+msgstr "full url"
+
+msgid "admin_lock_mode_b64"
+msgstr "base64 identifier"
+
+msgid "admin_search_field"
+msgstr "Search"
+
+msgid "admin_origins_save"
+msgstr "Save changes"
+
+msgid "admin_origins_info"
+msgstr "Origin data"
+
+msgid "opensearch_description"
+msgstr "Search using Foofind"

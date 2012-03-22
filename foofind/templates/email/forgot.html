@@ -1,0 +1,11 @@
+{% extends "email/base.html" %}
+{% block content %}
+    {{_("restore_account")}} <a href="{{ url_for('user.validate',_external=True,token=token) }}">{{ url_for('user.validate',_external=True,token=token) }}</a>
+    <br />
+    <br />
+    {{_("ignore_message")}}
+    <br />
+    __________________________
+    <br />
+    {{_("foofind_team")}}
+{% endblock %}

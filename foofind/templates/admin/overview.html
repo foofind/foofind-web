@@ -1,0 +1,17 @@
+{% extends "admin/base.html" %}
+{% block page %}
+<p>{{_('admin_overview_msg')}}</p>
+{% if new_locks > 0 or new_translations > 0 %}
+<ul>
+    {% if new_locks > 0 %}
+        <li><a href="{{ url_for('admin.locks', size=page_size, mode='new') }}">{{_('admin_locks_new')}}</a></li>
+    {% endif %}
+    {% if new_translations > 0 %}
+        <li><a href="{{ url_for('admin.translations', size=page_size, mode='new') }}">{{_('admin_translations_new')}}</a></li>
+    {% endif %}
+</ul>
+{% else %}
+<p>{{_('admin_no_new')}}</p>
+{% endif %}
+
+{% endblock %}

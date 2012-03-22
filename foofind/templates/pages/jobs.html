@@ -1,0 +1,46 @@
+{% extends "pages/base.html" %}
+{% from "helpers.html" import render_field %}
+{% block page %}
+<div>
+    <p>Si te gustan los retos, el Software Libre y los vídeos de gatitos, únete a nosotros: gente joven de espíritu, con ganas de aprender, equivocarse y enfrentarse a problemas técnicos poco frecuentes. No tenemos buffet libre como en Google, pero bajamos al bar dos veces al día.</p>
+    <p>El trabajo es presencial y a jornada completa, en nuestra oficina de Madrid.</p>
+    <p>Ofrecemos incorporación a un proyecto de larga duración y flexibilidad de horarios.</p>
+    <div id="joboffer">
+        <h2>Programadores Python</h2>
+        <p>Buscamos programadores con experiencia en desarrollo con Python e interés en alguna de estas áreas:</p>
+        <ul>
+            <li>Extracción de información de contenidos multimedia de Internet.</li>
+            <li>Análisis, extracción y manipulación de información semántica de la web.</li>
+            <li>Mejora de la experiencia del usuario, los resultados de las búsquedas, la comunidad de usuarios y el rendimiento del sitio web foofind.com.</li>
+        </ul>
+        <p>Requisitos:</p>
+        <ul>
+            <li>Python</li>
+            <li>Entornos Linux</li>
+        </ul>
+        <p>También valoraremos conocimientos y experiencia en:</p>
+        <ul>
+            <li>JavaScript, AJAX, jQuery y JSON</li>
+            <li>HTML y CSS</li>
+            <li>Acceso a APIs de terceros</li>
+            <li>Flask u otros frameworks para web</li>
+            <li>Sphinx o similar</li>
+            <li>MongoDB</li>
+        </ul>
+    </div>
+    <h2>Envíanos tus datos</h2>
+    <form enctype="multipart/form-data" action="" method="post">
+        <fieldset>
+            {{ render_field(form.email) }}
+            {{ render_field(form.offer) }}
+            {{ render_field(form.message,rows=10,cols=60) }}
+            {{ render_field(form.cv) }}
+            {{ render_field(form.captcha) }}
+            {{ render_field(form.accept_tos) }}
+        </fieldset>
+        <fieldset>
+            {{ form.submit }}
+        </fieldset>
+    </form>
+</div>
+{% endblock %}

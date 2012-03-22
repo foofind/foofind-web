@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% from "helpers.html" import render_field %}
+{% block content %}
+<div id="inner_contents">
+    <h2>{{_("forgot")}}</h2>
+    {{ flash() }}
+    <p>({{_("registered_user")}} <a href="{{ url_for('user.login') }}" title="user login">{{_("login_here")}}</a>)</p>
+    <p>{{_("enter_email")}}</p>
+    {% if error %}
+    <div class="error">{{ error }}</div>
+    {% endif %}
+    <form method="post">
+        <fieldset>
+            {{ render_field(form.email) }}
+            {{ render_field(form.captcha) }}
+        </fieldset>
+        <fieldset>
+            {{ form.submit }}
+        </fieldset>
+    </form>
+    <p>{{_("email_same_register")}}</p>
+</div>
+{% endblock %}

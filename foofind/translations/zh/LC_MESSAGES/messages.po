@@ -1,0 +1,577 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: 1\n"
+"Report-Msgid-Bugs-To: ismael@mp2p.net\n"
+"POT-Creation-Date: 2011-12-09 11:49+0100\n"
+"PO-Revision-Date: 2011-12-09 11:49+0100\n"
+"Last-Translator: Foofind <hola@foofind.com>\n"
+"Language-Team: zh <hola@foofind.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Foofind awesome legacy-csv importer\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgid "your_email"
+msgstr "你的电子邮件地址"
+
+msgid "password"
+msgstr "密码："
+
+msgid "submit"
+msgstr "发送"
+
+msgid "required_empty"
+msgstr "评价是必需的 不能为空"
+
+msgid "about"
+msgstr "关于"
+
+msgid "contact"
+msgstr "联系"
+
+msgid "legal"
+msgstr "法律"
+
+msgid "tos"
+msgstr "条款"
+
+msgid "privacy"
+msgstr "隐私"
+
+msgid "complaint"
+msgstr "报告"
+
+msgid "source_code"
+msgstr "源代码"
+
+msgid "files_indexed"
+msgstr "文件目录"
+
+msgid "last_indexed_files"
+msgstr "最后索引的文件"
+
+msgid "i_want_that_file"
+msgstr "我。想知道。这个。文件。"
+
+msgid "all"
+msgstr "所有"
+
+msgid "direct_downloads"
+msgstr "直接下载"
+
+msgid "audio"
+msgstr "音频"
+
+msgid "video"
+msgstr "视频"
+
+msgid "image"
+msgstr "图片"
+
+msgid "document"
+msgstr "文档"
+
+msgid "software"
+msgstr "软件"
+
+msgid "archive"
+msgstr "存档"
+
+msgid "no_results_for"
+msgstr "没有结果"
+
+msgid "write_something"
+msgstr "你好！欢迎留言"
+
+msgid "previous"
+msgstr "上一个"
+
+msgid "next"
+msgstr "下一个"
+
+msgid "sources"
+msgstr "来源"
+
+msgid "of_about"
+msgstr "关于"
+
+msgid "results_for"
+msgstr "结果"
+
+msgid "not_allow_browse_results"
+msgstr "Foofind不允许浏览100页以后的结果。"
+
+msgid "how_to_download"
+msgstr "怎样下载"
+
+msgid "download_explanation"
+msgstr "您可以用一些第三方软件来下载链接中的文件。下面是一些可以用来下载的程序："
+
+msgid "did_you_mean"
+msgstr "你的意思是%(text)s？"
+
+msgid "all_sizes"
+msgstr "文件完整大小"
+
+msgid "advanced_search"
+msgstr "高级搜索"
+
+msgid "hide_advanced_search"
+msgstr "高级隐藏搜索"
+
+msgid "smaller_than"
+msgstr "小于"
+
+msgid "larger_than"
+msgstr "大于"
+
+msgid "all_qualities"
+msgstr "所有品质资源"
+
+msgid "or_better"
+msgstr "更多"
+
+msgid "all_years"
+msgstr "全年"
+
+msgid "before"
+msgstr "之前的"
+
+msgid "last_year"
+msgstr "去年"
+
+msgid "artist"
+msgstr "艺术家"
+
+msgid "title"
+msgstr "题目"
+
+msgid "author"
+msgstr "作者"
+
+msgid "format"
+msgstr "格式"
+
+msgid "pages"
+msgstr "页码"
+
+msgid "album"
+msgstr "专辑"
+
+msgid "length"
+msgstr "长度"
+
+msgid "bitrate"
+msgstr "比特率"
+
+msgid "genre"
+msgstr "流派"
+
+msgid "seconds"
+msgstr "秒"
+
+msgid "minutes"
+msgstr "分钟"
+
+msgid "source"
+msgstr "来源"
+
+msgid "height"
+msgstr "高度"
+
+msgid "width"
+msgstr "宽度"
+
+msgid "track"
+msgstr "轨迹"
+
+msgid "quality"
+msgstr "品质"
+
+msgid "num_pages"
+msgstr "页面序号"
+
+msgid "include_results_from"
+msgstr "包括原因"
+
+msgid "size"
+msgstr "尺寸"
+
+msgid "unpacked_size"
+msgstr "未包装尺寸"
+
+msgid "colors"
+msgstr "颜色"
+
+msgid "version"
+msgstr "版本"
+
+msgid "name"
+msgstr "名字"
+
+msgid "description"
+msgstr "描写类型"
+
+msgid "files"
+msgstr "文件"
+
+msgid "soundtype"
+msgstr "声音类别"
+
+msgid "year"
+msgstr "年"
+
+msgid "years"
+msgstr "年"
+
+msgid "month"
+msgstr "月"
+
+msgid "months"
+msgstr "月"
+
+msgid "day"
+msgstr "日"
+
+msgid "days"
+msgstr "日"
+
+msgid "hour"
+msgstr "小时"
+
+msgid "hours"
+msgstr "小时"
+
+msgid "minute"
+msgstr "分钟"
+
+msgid "second"
+msgstr "秒"
+
+msgid "loading"
+msgstr "读取"
+
+msgid "close"
+msgstr "关闭"
+
+msgid "share_this"
+msgstr "分享"
+
+msgid "share_facebook"
+msgstr "在Facebook上分享"
+
+msgid "share_twitter"
+msgstr "在推特上分享"
+
+msgid "send_by_email"
+msgstr "通过e-mail发送"
+
+msgid "download"
+msgstr "下载"
+
+msgid "watch"
+msgstr "看"
+
+msgid "your_comments"
+msgstr "你的评价"
+
+msgid "since"
+msgstr " since s"
+
+msgid "post_comment"
+msgstr "发表评论"
+
+msgid "add_comment"
+msgstr "添加评论"
+
+msgid "from"
+msgstr "从"
+
+msgid "i_like_it"
+msgstr "我喜欢!"
+
+msgid "booo"
+msgstr "赞!"
+
+msgid "comment_published_succesfully"
+msgstr "发表评论成功!"
+
+msgid "related_files"
+msgstr "相关文件"
+
+msgid "user_profile"
+msgstr "用户设置"
+
+msgid "your_password"
+msgstr "设置密码"
+
+msgid "insert_your_password"
+msgstr "输入密码"
+
+msgid "fill_sing_up_form"
+msgstr "填好这张表格成为Foofind注册会员:"
+
+msgid "nickname"
+msgstr "昵称"
+
+msgid "edit_profile"
+msgstr "编辑属性"
+
+msgid "edit_your_profile"
+msgstr "编辑你的自述"
+
+msgid "profile_edited_succesfully"
+msgstr "你的档案编辑成功!"
+
+msgid "hello"
+msgstr "你好!"
+
+msgid "logout"
+msgstr "注销"
+
+msgid "login"
+msgstr "登录"
+
+msgid "new_user"
+msgstr "新用户"
+
+msgid "or"
+msgstr "或"
+
+msgid "register"
+msgstr "注册"
+
+msgid "if_new_user"
+msgstr "如果你是新用户"
+
+msgid "register_here"
+msgstr "点此注册"
+
+msgid "choose_nickname"
+msgstr "选择昵称"
+
+msgid "user_login"
+msgstr "用户登录"
+
+msgid "remember_me"
+msgstr "记住我"
+
+msgid "your_location"
+msgstr "你的位置"
+
+msgid "new_password"
+msgstr "找回密码:(否则,可留空不填)"
+
+msgid "save_profile"
+msgstr "保存资料"
+
+msgid "not_allowed_view_page"
+msgstr "你不能查看此页面"
+
+msgid "username_taken"
+msgstr "用户名已有 请另选一个"
+
+msgid "email_taken"
+msgstr "电子邮件已被使用 请另选"
+
+msgid "forgot"
+msgstr "忘记"
+
+msgid "your_password?"
+msgstr "你的密码是？"
+
+msgid "passwords_not_match"
+msgstr "密码错误"
+
+msgid "sure_delete_account"
+msgstr "你确定要删除你的Foofind帐户吗?"
+
+msgid "yes"
+msgstr "是的"
+
+msgid "account_deleted"
+msgstr "你的账号已删除"
+
+msgid "nice_to_hear_that"
+msgstr "很高兴听你这么说"
+
+msgid "profile"
+msgstr "属性"
+
+msgid "username"
+msgstr "用户名"
+
+msgid "member_since"
+msgstr "成为会员："
+
+msgid "last_comments"
+msgstr "最后%(comments)d个评论："
+
+msgid "location"
+msgstr "位置："
+
+msgid "delete_account"
+msgstr "删除你的Foofind帐户"
+
+msgid "forgot_password"
+msgstr "忘记密码？"
+
+msgid "wrong_email_password"
+msgstr "错误的电子邮件或密码 重新输入"
+
+msgid "welcome"
+msgstr "欢迎"
+
+msgid "finish_register"
+msgstr "点击此处完成注册"
+
+msgid "token_not_exist"
+msgstr "抱歉 用户名不存在或已使用"
+
+msgid "confirm_email"
+msgstr "确认你的电子邮件"
+
+msgid "check_inbox_email_finish"
+msgstr "检查你的收件箱完成注册"
+
+msgid "foofind_team"
+msgstr "Foofind团队"
+
+msgid "user_not_exist"
+msgstr "用户名不存在"
+
+msgid "logged_in"
+msgstr "现在登录"
+
+msgid "registered_user"
+msgstr "如果您已经是一名注册的用户"
+
+msgid "login_here"
+msgstr "登录"
+
+msgid "enter_email"
+msgstr "输入你的电邮地址 将发送一封邮件恢复你的访问"
+
+msgid "email_same_register"
+msgstr "电子邮件地址必须和你登记的相同"
+
+msgid "email_not_database"
+msgstr "电子邮件不存在 再试一次"
+
+msgid "check_inbox_email_restore"
+msgstr "检查你的收件箱 找回你的Foofind密码"
+
+msgid "restore_access"
+msgstr "找回你的Foofind密码"
+
+msgid "restore_account"
+msgstr "或许你想要恢复您的Foofind访问 点击这个链接来恢复您的Foofind帐户:"
+
+msgid "ignore_message"
+msgstr "否则不理睬这个信息"
+
+msgid "login_vote"
+msgstr "投票"
+
+msgid "login_comment"
+msgstr "评论"
+
+msgid "technical_problems"
+msgstr "对不起，我们的 %(service)s 服务现在遭遇到了技术问题"
+
+msgid "submit_search"
+msgstr "查找"
+
+msgid "contact_form"
+msgstr "联系方式"
+
+msgid "link_removal"
+msgstr "注意：如果你选择注销 你必须完成%(report_form)s 投诉才不会被忽略"
+
+msgid "your_message"
+msgstr "你的短消息"
+
+msgid "insert_characters"
+msgstr "不低于5个字符的解释"
+
+msgid "captcha_wrong"
+msgstr "验证码错误"
+
+msgid "message_sent"
+msgstr "消息发送成功!"
+
+msgid "your_name"
+msgstr "您的名："
+
+msgid "your_surname"
+msgstr "您的姓："
+
+msgid "your_company"
+msgstr "您的公司："
+
+msgid "your_phone"
+msgstr "您的电话号码："
+
+msgid "link_reviewed"
+msgstr "填入评论"
+
+msgid "url_content"
+msgstr "插入链接"
+
+msgid "reason_complaint"
+msgstr "投诉理由："
+
+msgid "accept_terms"
+msgstr "接受使用条款和隐私政策"
+
+msgid "submit_links"
+msgstr "提交连接"
+
+msgid "footer"
+msgstr ""
+"本站内容版权基于创作共享协议<a rel='license content' "
+"href='http://creativecommons.org/licenses/by-sa/3.0/deed.zh'>BY-SA</a>（署名-"
+"非商业性使用-相同方式共享）。<a href='http://code.google.com/p/Foofind/'>源代码</a>版权基于<a "
+"rel='license source code' "
+"href='http://www.gnu.org/licenses/agpl.html'>Affero GPL</a>协议。"
+
+msgid "about_text"
+msgstr ""
+"Foofind是一种通用的搜索引擎。通过Foofind创造生成所有网络上的索引文件。通过这种方式,我们打算提供的最大的收集链接可用。<br /><br "
+"/>Foofind是Pablo Soto在西班牙马德里创造发展P2P技术为MP2P技术。"
+
+msgid "under_maintenance"
+msgstr "Foofind正在维护中，请稍候访问。"
+
+msgid "link_not_exist"
+msgstr "此链接不存在或者已被删除！"
+
+msgid "translate"
+msgstr "翻译"
+
+msgid "translate_to_your_language"
+msgstr "协助我们将Foofind翻译为您使用的语言"
+
+msgid "translate_description"
+msgstr ""
+"Foofind当前可用的语言,但你可以帮助我们把它翻译为你自己的语言。只要选择从它下面列出的及翻译的文本。你不需提交所有领域方式,任何的帮助将很感激的。<br/><br/>如果你的语言是不在列表中,请与我们联系来增加。"
+
+msgid "choose_language"
+msgstr "选择语言"
+
+msgid "translation_sent"
+msgstr "您的翻译结果已经提交成功。谢谢您的帮助！"
+
+msgid "translate_at_least_one"
+msgstr "请至少一个文本翻译"
+
+msgid "here"
+msgstr "里报告"
+
+msgid "translation_beta"
+msgstr "这个语言翻译在测试阶段。如果你发现缺失或是错误的翻译,请在这%(here)s。"
+
+msgid "other"
+msgstr "其他"

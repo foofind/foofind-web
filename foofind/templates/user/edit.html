@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% from "helpers.html" import render_field %}
+{% block content %}
+<div id="inner_contents">
+    <h2>{{_("edit_your_profile")}}</h2>
+    {{ flash() }}
+    {% if error %}
+    <div class="error">{{ error }}</div>
+    {% endif %}
+    <form method="post">
+        <fieldset>
+            {{ render_field(form.username) }}            
+            {{ render_field(form.location) }}
+            {{ render_field(form.password) }}
+            {{ render_field(form.confirm) }}            
+        </fieldset>
+        <fieldset>
+            {{form.submit}}
+        </fieldset>
+    </form>
+</div>
+{% endblock %}

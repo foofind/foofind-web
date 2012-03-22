@@ -1,0 +1,20 @@
+from flaskext.babel import lazy_gettext as _
+samples={
+    "field_length":{"min":2,"max":10},
+    "no_type_count":{"search":"Mozart","category":_("other_categories")},
+    "did_you_mean":{"text":"Mozart"},
+    "since":{"since":"12 days"},
+    "technical_problems":{"service":"Twitter"},
+    "allow_access_account":{"account":"Twitter"},
+    "no_valid_email":{"value":"user@example.com"},
+    "link_removal":{"report_form":_('report_form')},
+    "no_valid_hostname":{"hostname":"example.com","value":"user@example.com"},
+    "local_network":{"value":"127.0.0.1"},
+    "no_dns_hostname":{"value":"127.0.0.1"},
+    "no_tld_known":{"value":"example.cmo"},
+    "non_alphabetic_digits":{"value":"&!$%/()=?"},
+    "accept_tos":{"tos":_("tos"),"privacy":_("privacy")},
+    "footer":{"cc":"Creative Commons BY-NC-SA","code":_("source_code"),"gpl":"GPLv3"},
+    "no_valid_url":{"value":"&!$%/()=?"},
+    "translation_beta":{"here":_("here")},
+}

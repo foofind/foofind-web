@@ -1,0 +1,16 @@
+{% extends "pages/base.html" %}
+{% from "helpers.html" import render_field %}
+{% block page %}    
+    <p class="warning">{{_("link_removal",report_form='<a href="%s">%s</a>'|safe % (url_for('page.complaint'),_('report_form')))}}</p>
+    <form method="post">
+        <fieldset>
+            {{ render_field(form.email) }}            
+            {{ render_field(form.message,cols="60", rows="4") }}
+            {{ render_field(form.captcha) }}
+            {{ render_field(form.accept_tos) }}      
+        </fieldset>
+        <fieldset>
+            {{ form.submit }}
+        </fieldset>
+    </form>    
+{% endblock %}

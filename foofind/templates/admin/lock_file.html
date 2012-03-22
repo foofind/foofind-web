@@ -1,0 +1,33 @@
+{% extends "admin/base.html" %}
+{% block page %}
+    <form method="post">
+        <input type="hidden" name="fileids" value="{{fileids}}"/>
+        {% if complaint_data %}
+        <h3 class="list">{{_('admin_locks_complaint_info')}}</h3>
+        <dl class="list">
+            {% for prop in complaint_data %}
+            <dt>{{prop}}</dt>
+            <dd>{{complaint_data[prop]}}</dd>
+            {% endfor %}
+        </dl>
+        {% else %}
+        {#<h3 class="list">{{_('admin_locks_complaint_noinfo')}}</h3>#}
+        {% endif %}
+        {% if files_data %}
+            <h3 class="list">{{_('admin_locks_complaint_fileinfo')}}</h3>
+            {% for fileid, file_data in files_data.iteritems() %}
+            <dl class="list">
+                {% for prop in file_data %}
+                <dt>{{prop}}</dt>
+                <dd>{{file_data[prop]}}</dd>
+                {% endfor %}
+            </dl>
+            {% endfor %}
+        {% else %}
+        <h3 class="list">{{_('admin_locks_complaint_nofileinfo')}}</h3>
+        {% endif %}
+        {% if blocked or blocked == None %}<input class="list" type="submit" name="unblock" value="{{_('admin_locks_unblock')}}"/>{% endif %}
+        {% if not blocked %}<input class="list" type="submit" name="block" value="{{_('admin_locks_confirm')}}"/>{% endif %}
+        <input type="submit" name="cancel" value="{{_('admin_locks_cancel')}}"/>
+    </form>
+{% endblock %}

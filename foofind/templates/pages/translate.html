@@ -1,0 +1,27 @@
+{% extends "pages/base.html" %}
+{% from "helpers.html" import render_field %}
+{% block page %}
+    <div id="translate">
+        <p>{{_("translate_description")}}</p>
+        {% if lang %}<a id="searchempty" href="#">{{ complete|numberformat }}% ↓</a>{% endif %}
+        <form action="{{ url_for('page.translate') }}" method="get">
+            {{ forml.lang(selected=None, onchange="this.form.submit()", id="lang") }}
+            <noscript>&nbsp;<input type="submit" value="{{_('submit')}}"/></noscript>
+        </form>
+        {% if form %}
+            <form class="texts" action="{{ url_for('page.translate') }}?lang={{ lang }}" method="post">
+                <fieldset>
+                {{ render_field(form.captcha) }}
+                </fieldset>
+                {% for field in msgids %}
+                    <fieldset>
+                    {{ render_field(form[field],**form["_args_"+field]) }}
+                    </fieldset>
+                {% endfor %}
+                <fieldset>
+                    {{ form.submit_form }}
+                </fieldset>
+            </form>
+        {% endif %}
+    </div>
+{% endblock %}

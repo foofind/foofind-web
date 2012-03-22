@@ -1,0 +1,44 @@
+#
+# Librerías requeridas, tal cual se llaman en el repositorio
+# de paquetes de python.
+# Serán eventualmente procesados por el script de despliegue.
+#
+# Formato:
+#   Cada línea será un nombre de paquete.
+#   Líneas que comiencen con # o sean vacías serán ignoradas.
+#
+
+flask
+
+python-memcached
+
+flask-assets
+cssutils
+
+flask-babel
+
+flask-wtf
+
+flask-zen
+
+flask-cache
+
+flask-login
+
+flask-mail
+
+pymongo
+
+polib
+
+GitPython
+
+flask-oauth
+
+pil
+
+pycrypto
+
+fabric
+
+raven

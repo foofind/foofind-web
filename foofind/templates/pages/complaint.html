@@ -1,0 +1,22 @@
+{% extends "pages/base.html" %}
+{% from "helpers.html" import render_field %}
+{% block page %}
+    <form method="post">        
+        <fieldset>
+            {{ render_field(form.name) }}
+            {{ render_field(form.surname) }}
+            {{ render_field(form.company) }}
+            {{ render_field(form.email) }}
+            {{ render_field(form.phonenumber) }}            
+            {{ render_field(form.linkreported) }}
+            {{ render_field(form.urlreported,placeholder="http://foofind.com/"+g.lang+"/download/") }}           
+            {{ render_field(form.reason) }}
+            {{ render_field(form.message,cols="60", rows="4") }}
+            {{ render_field(form.captcha) }}
+            {{ render_field(form.accept_tos) }}
+        </fieldset>
+        <fieldset>
+            {{ form.submit }}
+        </fieldset>
+    </form>    
+{% endblock %}

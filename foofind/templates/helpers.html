@@ -1,0 +1,48 @@
+{% macro render_field(field) %}
+    {%- if field.type=="BooleanField" %}
+        <label>{{ field }}
+        {%- if field.name=="accept_tos" -%}
+            {{ _('accept_tos', tos='<a  href="%s">%s</a>'|safe % (url_for('page.show',pname='tos'),_("tos")), privacy='<a href="%s">%s</a>'|safe % (url_for('page.show',pname='privacy'),_("privacy"))) }}
+        {%- else -%}
+            {{ field.label.text }}
+        {%- endif -%}
+        </label>
+    {%- elif field.type=="RadioField" %}
+        <fieldset>
+        {%- for radio in field %}
+            <label>{{ radio }}{{ radio.label.text }}</label>
+        {%- endfor %}
+        </fieldset>
+    {%- elif field.type=="SelectField" %}
+        {%- for value,option in field.choices %}
+            <option label="{{ option }}" value="{{ value }}"{% if field.default==value %}selected="selected"{% endif %}  >{{ option }}</option>
+        {%- endfor %}
+    {%- else %}
+        {%- if field.type=="SubmitField" %}
+            </fieldset>
+            <fieldset>
+        {%- else %}
+            <label for="{{ field.name }}">{% if field.flags.required %}<span title="{{_('required_empty')}}">*</span>{% endif %} {{ field.label.text|safe }}</label>
+        {%- endif %}
+        {{ field(**kwargs)|safe }}
+    {%- endif %}
+    {%- if field.description %}
+        <span class="description">{{ field.description }}</span>
+    {%- endif %}
+    {%- if field.errors %}
+        <ul class="errors">
+        {%- for error in field.errors %}
+            <li>{{ error }}</li>
+        {%- endfor %}
+        </ul>
+    {%- endif %}
+{%- endmacro %}
+{%- macro flash() %}
+    {%- with messages = get_flashed_messages(with_categories=true) %}
+        {%- if messages %}
+            {%- for category, message in messages %}
+            <div class="{{ category }}">{{ _(message) }}</div>
+            {%- endfor %}
+        {%- endif %}
+    {%- endwith %}
+{%- endmacro %}

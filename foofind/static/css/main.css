@@ -1,0 +1,266 @@
+*{margin:0;padding:0}
+html,body{height:100%}
+body{font:normal 62.5% Arial,Verdana,Helvetica,sans-serif;min-height:490px;min-width:960px;position:absolute;bottom:0;left:0;right:0;top:0}
+ul{list-style:none}
+fieldset{padding:0px;text-align:left;border-width:0px}
+textarea{font:bold 62.5% Arial,Verdana,Helvetica,sans-serif}
+form span.data{margin-bottom:10px}
+form span.data input[type="text"], form div.data input[type="password"]{width:200px}
+input[type="text"], input[type="password"],textarea{font-size:1.1em;border:1px solid #808080    ;padding:5px;margin-bottom:10px}
+input[type="radio"], input[type="checkbox"]{vertical-align:-2px;margin-right:3px}
+input[type="radio"]:focus, input[type="checkbox"]:focus{border-style:none;border:0px;border:0px;background-color:blue;color:green}
+input[type="submit"],a.awesome{font-size:1.1em;padding:4px 18px;background:#DB006E url('/static/foofind3.png') 0px -312px repeat-x;color:#fff;font-weight:bold;border-radius:5px;box-shadow:0px 1px 3px #999;text-shadow:0 -1px 1px #808080;border:0;border-bottom:1px solid #BA0060;cursor:pointer;position:relative}
+a.awesome{font-size:1.2em;padding:10px 18px;display:inline-block;text-decoration:none}
+input[type="submit"]:active{top:1px;box-shadow:0px 0.5px 1.5px #999}
+label{display:block}
+label span{color:#DB006E}
+label[for="captcha"]{margin-top:10px}
+#accept_tos{margin:10px 0}
+a{color:#cd0069}
+img{border:0;vertical-align:middle}
+p{padding:0 6px 1em}
+em{font-weight:bold;font-style:normal}
+hr{position:relative;border:none;border-top:1px solid #cd0069;height:1px;top:12px;clear:left;padding-bottom:12px}
+cite{color:#df1279;font-style:normal}
+h2{margin-bottom:10px}
+h3{font-size:1.3em;font-weight:normal}
+.errors{color:#cd0069;padding-left:0px}
+/* cabecera */
+#header{font-size:1.3em}
+#header h1{clear:left;float:left;margin:13px 10px 0 15px;width:161px;height:67px;overflow:hidden}
+#header h1 img{}
+#header-navigation a, #footer a{color:#0003CC}
+#header-navigation{float:right;margin-right:100px;margin-top:10px}
+.user_login_box{text-align:right;display:inline-block;padding-top:4px}
+#select_language_box{position:absolute;right:2px;top:6px;padding-top: 24px;z-index:10;border:1px solid #FFF;display:inline-block;height:25px;overflow:hidden;vertical-align:top;width:92px}
+#select_language_box:hover{border:1px solid #999;background-color:#FBEFFB;height:auto}
+#select_language_box a{padding:2px 2px 2px 4px;line-height:16px;height:20px;display:none;width:100%;text-decoration:none}
+#select_language_box a span.lang_name{display:inline-block;text-decoration:underline}
+#select_language_box:hover a, #select_language_box a.active{display:block}
+#select_language_box a.active{position:absolute;top:0}
+#select_language_box a:hover{background-color:#999;text-decoration:none;color:#000}
+#select_language_box .beta_lang{font-size:4px;position:absolute;width:19px;height:6px;margin-left:-22px;margin-top:14px;background:url(/static/foofind3.png) -161px -290px}
+.flag{display:inline-block;background:url(/static/foofind3.png) no-repeat;height:11px;width:16px;margin-right:5px;margin-bottom:1px;vertical-align:middle}
+.flag.beta{margin-bottom:5px}
+.flag.en{background-position:-96px -301px}
+.flag.es{background-position:0px -290px}
+.flag.eu{background-position:-128px -301px}
+.flag.fr{background-position:-80px -290px}
+.flag.it{background-position:-80px -301px}
+.flag.pt{background-position:-16px -290px}
+.flag.tr{background-position:-128px -290px}
+.flag.zh{background-position:0px -301px}
+.flag.ca{background-position:-144px -301px}
+.flag.gl{background-position:-144px -290px}
+#advice{background:#FFFF99;font-weight:bold;padding:3px;margin-bottom:10px;max-width:60%;font-size:.92em;display:none}
+#advice p{padding:0}
+#advice .close_advice{float:right;padding:0 5px;margin-top:-4px;margin-right:-5px;color:#000;background:#CCC;text-decoration:none;font-size:1.5em;font-family:Times New Roman, Times}
+#advice .close_advice:hover{background:#666;color:#FFF}
+input#q{height:18px;width:380px;z-index:1000}
+#container{min-height:100%;position:relative}
+#content{padding:10px 10px 60px;font-size:1.3em}
+/* pie */
+#footer{border-top:1px #DDDDDD solid;position:absolute;bottom:0;left:0;right:0;text-align:left;font-size:1.2em;padding:10px;/*IE*/margin-top:480px}
+#footer li{display:inline;margin-right:10px}
+#footer p,#footer div{float:right;padding:0}
+/* home */
+#content.home{position:absolute;bottom:0;left:0;right:0;top:17%;text-align:center}
+#content.home #search{width:600px;margin:0 auto}
+#content.home #search img{min-height:102px}
+#content.home #search span{font-size:1.2em;font-weight:bold;text-shadow:0em 0.1em 0.1em #ccc;color:#666;height:30px;margin:-25px 0 25px 125px;display:block}
+#content.home #search span.small{font-size:.92em}
+#content.home #search form{margin-top:-2px;margin-left:-1%;background-color:#FBEFFB;border:#EA1F85 2px solid;padding:5px}
+#content.home #search fieldset{text-align:center}
+#content.home #search .message{margin:-1.5em 1em 1.5em}
+#content.home #search .tabs{margin:4px 0}
+#content.home #search .tabs li{display:inline-block;height:1em;margin-right:2%}
+#content.home #search .tabs a{position:relative;border:#EA1F85 2px solid;border-bottom:none;background:#EA1F85;padding:3px 10px;color:#FFF;text-decoration:none;font-weight:bold;border-top-left-radius:5px;border-top-right-radius:5px;text-shadow:0 -1px 1px #808080}
+#content.home #search .tabs a:hover{padding:4px 10px;top:-1.5px;background:#EA1F85}
+#content.home #search .tabs a.actual{background-color:#FBEFFB;margin-bottom:0px;color:#000;padding:5px 10px;top:-1px;text-shadow:none}
+#content.home #search .tabs a.actual:focus{outline:none}
+#content.home #search .tabs a.actual:hover{margin-top:4px}
+#content.home #search #q{height:22px;width:420px;font-size:1.6em;line-height:20px;margin:20px 10px 3px 0}
+#content.home #search #tamingresults{margin-top:53px;margin-left: 30px}
+#content.home #search #submit{position:relative;top:-2px}
+#content.home #search label{display:inline-block;margin:8px 10px 12px 5px;vertical-align:middle}
+#content.home #social_widgets{position:absolute;bottom:18%;left:0;right:0;height:25px;overflow:hidden}
+#content.home #___plusone_0{font-size:2.4em;vertical-align:top}
+#content.home+#footer p{padding-bottom:10px;float:none}
+/* page */
+#content.page{margin-bottom:10px}
+#content.page>ul{width:150px;float:left;padding-left:10px}
+#content.page>ul li{height:1.1em}
+#content.page>div{padding-left:172px;padding-bottom:50px}
+#content.page #translate #lang{margin-bottom:30px;margin-left:170px;margin-top:10px;width:20%;height:25px}
+#content.page #translate #lang option{height:20px}
+#content.page #translate img{margin-bottom:10px}
+#content.page #translate li{overflow:hidden}
+#content.page #translate label{float:left;margin-right:10px}
+#content.page #translate span{display:block;font-style:italic;color: #666;margin-top:-25px}
+#content.page #translate textarea+span{top:-15px}
+#content.page #translate textarea{font-size:1.1em;font-weight:normal}
+#content.page #translate fieldset, .content.user fieldset{margin-bottom:10px}
+#content.page #translate form.texts{margin-left:0px}
+#content.page #translate input:focus, #translate textarea:focus{background-color:#FFFF99}
+#content.page #translate .texts *{width:40%}
+#content.page #translate .texts fieldset,#content.page #translate .texts img,#content.page #translate .texts input[type="submit"]{width:auto}
+#content.page #translate .texts #translate_captcha{width:5em}
+#content.page #translate #captcha{width:25.3%}
+#content.page #joboffer{margin-left:5px;margin-bottom:10px}
+#content.page #joboffer p{margin-top:7px}
+#content.page #joboffer ul{list-style:circle inside}
+#content.page #joboffer li{margin-left:20px}
+/* busqueda */
+#container.files{}
+/* cabecera busqueda */
+#header #search_file{padding-top:15px}
+#header #search_file>ul{margin-left:170px;margin-bottom:5px;width:390px;text-align:center;overflow:hidden}
+#header #search_file>ul li{display:inline;margin-right:5px}
+#header #search_file>ul li a{padding:0 2px}
+#header #search_file>ul li a:visited{color:#DF1279}
+#header #search_file>ul li a.actual{color:#000;text-decoration:none;font-weight:bold}
+/* cuerpo busqueda*/
+#content.files #search_info{text-align:right;margin:20px 0 -35px 0}
+#content.files #search_info a{color:#000;text-decoration:none;font-weight:bold}
+#content.files #tabnav{font-weight:bold;border-bottom:1px solid #CD0069;list-style-type:none;padding:20px 0 0 42px}
+#content.files #tabnav li{display:inline-block;padding:3px 7px}
+#content.files #tabnav a{padding-top:5px;padding-left:12px;padding-right:12px;padding-bottom:3px;border:1px solid #CD0069;background:#FFF;color:#CD0069;text-decoration:none;border-bottom:none}
+#content.files #tabnav a.actual,#content.files #tabnav a.actual:hover{background:#FBEFFB;color:#000;border-bottom:1px solid #FBEFFB}
+#content.files #tabnav a:hover{background:#FFF;color:#000}
+#content.files h2{margin:10px}
+/* resultados */
+#content.files #results{margin:10px;text-align:left;overflow:hidden}
+#content.files #results li{display:block;margin-top:5px;margin-bottom:25px;clear:left}
+#content.files #results li dt,#results li dd{display:inline}
+#content.files #results li h3 a{color:#000}
+#content.files #results li>a{text-decoration:none;font-size:0.8em;color:#cd0069}
+#content.files #results li span.useract{display:inline-block;font-size:.92em;height:15px;text-align:left;padding-top:3px;padding-bottom:1px;vertical-align:top;margin:0px;color:#000;margin-left:5px;background-color:#FFEEEE;background-repeat:no-repeat;padding-right:4px}
+#content.files #results li div.comments{display:inline-block;background-image:url(/static/foofind3.png);background-position:-164px -120px;vertical-align:middle;width:19px;height:20px;margin-left:5px}
+#content.files #results li div.votes_up{display:inline-block;background-image:url(/static/foofind3.png);background-position:-120px -120px;vertical-align:middle;width:14px;height:20px;margin-left:5px}
+#content.files #results li div.votes_down{display:inline-block;background-image:url(/static/foofind3.png);background-position:-135px -120px;vertical-align:middle;width:14px;height:20px;margin-left:5px}
+#content.files #results .thumblink{float:left;display:block;border:1px solid #ccc;background:#000;overflow:hidden;width:120px;height:90px;text-align:center;vertical-align:middle;line-height:80px;margin-right:4px; margin-bottom:5px}
+#content.files #results .thumblink img{width:120px;height:auto}
+#content.files .alfa{overflow: hidden}
+#content.files .alfa li{float:left;margin-right:2px}
+#content.files #didyoumean{font-size:1.4em;font-style:italic;font-weight:bold;padding-top:1em}
+#content.files #tags{font-size:1.2em;background:#FBEFFB;max-width:80%;padding:10px;margin-bottom:5px}
+#content.files #tags li{display:inline}
+#content.files #tags a{padding:3px}
+#content.files #advsearch{text-align:right;float:right;padding:0 10px 10px}
+#content.files #advsearch div{display:none;text-align:left;clear:left;float:right}
+#content.files #advsearch ul{margin-top:10px;margin-left:10px;margin-bottom:15px}
+#content.files #advsearch .actual{color:#000;text-decoration:none;font-weight:bold}
+#content.files #advsearch>a{padding:4px;display:block}
+#content.files #advsearch>a span{font:normal 0.92em "Lucida Console",Monaco,monospace;text-decoration:none;display:inline-block;margin-right:5px}
+/* taming */
+.ui-autocomplete{width:390px;background:#fff;border:1px solid #dd157a;font-size:1.6em;text-align:left}
+.ui-autocomplete li {padding:2px;cursor:pointer}
+.ui-autocomplete a{display:block;color:#333}
+.ui-autocomplete #ui-active-menuitem{background:#dd157a;color:#fff}
+/* otras cosas */
+#searchempty{font-size:2.4em;z-index:1;right:30px;position:fixed;text-decoration:none}
+#agree{display:inline;line-height:10px;height:20px}
+.warning{background:url(/static/foofind3.png) no-repeat -162px -297px;padding-left:20px}
+/* mensajes de error */
+.message, .success, .error{padding:.8em;margin:1em;border:1px solid #cd0069}
+.message{background:#FBEFFB;color:#cd0069}
+.success{background:#FBEFFB;color:#cd0069}
+.error{background:#FBEFFB;color:#cd0069}
+/* paginacion */
+.pagination{clear:both;margin-bottom:60px;margin-top:30px;text-align:center;font-size:1.1em;display:block;width:auto;border:0;list-style:none;margin-right:2px}
+.pagination li{display:inline;text-align:center}
+.pagination li *{border:solid 1px #ccc;margin-right:2px;padding:4px}
+.pagination a{text-decoration:none}
+.pagination span{background-color:#df1279;color:#fff}
+/* download */
+.comments .cpagination{border:0;float:right;margin-right:5px;margin-top:-3px}
+.comments .cpagination span{padding:4px}
+.comments .cpagination a{text-decoration:none;color:#000}
+.comments .cpagination #current{font-weight:bold;color:#cd0096}
+.wrap_download{margin:20px 20px 20px 30px;text-align:left;display:block}
+.file_download{vertical-align:top;padding-right:260px}
+.file_download h2{padding-top:20px;font-size:1.6em}
+.file_download_vote, .file_comment_vote{margin-top:10px;float:right;text-align:center}
+.file_download_vote a, .file_comment_vote a{display:inline-block;text-decoration:none;color:#000;font-size:0.7em}
+.file_download_vote a, .file_comment_vote a{background-image:url(/static/foofind3.png);width:30px;height:40px;margin-left:10px;margin-right:10px}
+.file_download_vote span{display:block;margin:40px 0 0 -14px;width:55px}
+.file_comment_vote span{display:block;margin:20px 0 0 -14px;width:40px}
+.small .vote_up{background-position:-120px -140px;width:15px;height:20px}
+.small .vote_down{background-position:-135px -140px;width:15px;height:20px}
+.small.upactive .vote_up, .small .vote_up:hover{background-position:-120px -120px}
+.small.downactive .vote_down, .small .vote_down:hover{background-position:-135px -120px}
+.vote_up{background-position:-90px -120px}
+.vote_down{background-position:-30px -120px}
+.upactive .vote_up, .vote_up:hover{background-position:-60px -120px}
+.downactive .vote_down, .vote_down:hover{background-position:-0px -120px}
+.vote_up span{color:#808080 }
+.vote_down span{color:#cd0069}
+.top_download{text-align:left;clear:left;padding-bottom:20px;padding-top:30px;width:100%;min-height:120px}
+.download_button{position:relative;text-align:center;display:block;top:-20px;vertical-align:middle;float:left}
+.download_file_metadata{width:65%;min-width:490px;display:inline-block;padding-left:40px;vertical-align:middle}
+.download_file_torrent_files{margin-top:10px;width:430px}
+.download_file_torrent_files ul{font-size:.92em;display:block;height:8em;max-height:15em;border:1px solid #cdcdcd;padding:2px;overflow:auto}
+.download_file_metadata a{color:#000;font-weight:bold;text-decoration:none}
+#download_more_info{display:inline-block;float:right;width:210px;border:1px solid #cd0069;background-color:#FBEFFB;color:#cd0069;padding:10px;margin-top:10px}
+#download_more_info h3{font-weight:bold;padding:10px;vertical-align:top}
+#download_more_info p{font-size:.92em;padding:8px}
+#download_more_info li{margin:25px 0px}
+.download_source a{color:#000;text-decoration:none;display:inline-block;width:175px;font-weight:bold;vertical-align:middle;margin:5px}
+.download_source input{float:right;width:65%;padding:5px;border:1px solid #A9D0F5;color:#cd0069;display:inline-block;margin:4px}
+.download_source span{display:inline-block;font-weight:normal;font-size:.8em}
+/* iconos */
+.icon{background:url(/static/foofind3.png);overflow:hidden;display:inline-block;vertical-align:middle}
+.icon24{width:24px;height:24px}
+.ed2k24{background-position:-3px -264px}
+.ed2kd24{background-position:-3px -66px}
+.webd24{background-position:-33px -66px}
+.torrent24{background-position:-63px -264px}
+.torrentd24{background-position:-63px -66px}
+.tmagnetd24{background-position:-93px -66px}
+.gnutella24{background-position:-33px -264px}
+.gnutellad24{background-position:-123px -66px}
+.ftpd24{background-position:-153px -66px}
+.icon30{width:30px;height:30px}
+.ed2k30{background-position:-0px -90px}
+.web30{background-position:-30px -90px}
+.torrent30{background-position:-60px -90px}
+.tmagnet30{background-position:-90px -90px}
+.gnutella30{background-position:-120px -90px}
+.ftp30{background-position:-150px -90px}
+.icon50{width:60px;height:50px;margin-bottom:10px;background-position:-60px -210px}
+.archive50{background-position:-0px -160px}
+.audio50{background-position:-60px -160px}
+.document50{background-position:-120px -160px}
+.image50{background-position:-0px -210px}
+.file50{background-position:-60px -210px}
+.video50{background-position:-120px -210px}
+.icon.facebook{width:14px;margin-right:4px;height:20px;background-position:-150px -120px}
+.icon.twitter{width:14px;margin-right:4px;height:20px;background-position:-150px -140px}
+.icon.email{margin-right:2px;width:16px;height:20px;background-position:-164px -140px}
+.icon.balloon{float:left;width:32px;height:30px;background-position:-148px -260px}
+.icon.link{float:left;margin-left:3px;width:26px;height:30px;background-position:-120px -260px}
+/* comentarios */
+.sharelinks{clear:right;text-align:right;right:120px;margin-bottom:20px}
+.sharelinks ul,.sharelinks li{display:inline}
+.download_section{margin-top:15px;clear:both;margin-bottom:5px}
+.download_section h4{margin-left:36px;border-bottom:2px solid #cd0069;margin-bottom:14px}
+.download_section.related a{color:#000;display:inline-block;margin:5px 0}
+.comment{clear:both;padding:8px;border-bottom:1px solid #cd0069;overflow-x:hidden}
+.comment_form{margin-top:15px}
+.comment_form textarea{height:4em;border:1px solid #cd0069;font-weight:normal;margin-left:20px;padding:3px}
+.comment_form input{position:relative;left:-155px;top:25px}
+.comments_paginator{text-align:right}
+.file_comment_number a{float:left;font-size:1.8em;margin-right:8px;font-weight:bold;color:#000;text-decoration:none}
+.file_comment_nick{clear:left;margin-top:3px;font-size:0.9em}
+.file_comment_nick a{color:#cd0069}
+.download_file_metadata table {width:100%}
+.download_file_metadata table tr :first-child{width:25%}
+.download_file_metadata table tr td{vertical-align:top;width:75%}
+.download_button .thumblink {margin:10px; display:block}
+.download_file_sources {clear:left}
+/* user */
+#content.user .oauth{width:89px;height:21px;display:inline-block;margin:5px}
+#content.user .oauth span{display:none}
+#content.user .oauth.tw{background:url(/static/foofind3.png) 0px -362px no-repeat}
+#content.user .oauth.fb{background:url(/static/foofind3.png) -89px -362px no-repeat}
+#content.user input[type="submit"],#content.page input[type="submit"]{margin:10px 0}

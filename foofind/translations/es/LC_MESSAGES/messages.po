@@ -1,0 +1,948 @@
+# Spanish translations for PROJECT.
+# Copyright (C) 2011 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# Ismael <ismael@mp2p.net>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 1\n"
+"Report-Msgid-Bugs-To: ismael@mp2p.net\n"
+"POT-Creation-Date: 2011-12-09 11:49+0100\n"
+"PO-Revision-Date: 2011-12-30 10:59+0100\n"
+"Last-Translator: Ismael <ismael@mp2p.net>\n"
+"Language-Team: es <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 0.9.6\n"
+
+# common
+msgid "your_email"
+msgstr "Tu email:"
+
+msgid "password"
+msgstr "Contraseña:"
+
+msgid "submit"
+msgstr "Enviar"
+
+# validators
+msgid "non_alphabetic_digits"
+msgstr "%(value)s contains characters which are non alphabetic and no digits"
+
+msgid "required_empty"
+msgstr "Este campo no puede estar vacío"
+
+msgid "no_valid_email"
+msgstr "Esta no es una dirección de correo válida con el formato: usuario@ejemplo.com"
+
+msgid "field_length"
+msgstr "Este campo debe tener de %(min)s a %(max)s caracteres"
+
+msgid "no_valid_url"
+msgstr "URL no válida"
+
+# main layout
+# about
+msgid "about"
+msgstr "Acerca de"
+
+msgid "contact"
+msgstr "Contacto"
+
+# legal
+msgid "legal"
+msgstr "Aviso legal"
+
+msgid "tos"
+msgstr "Términos de uso"
+
+msgid "privacy"
+msgstr "Política de privacidad"
+
+msgid "complaint"
+msgstr "Reclamar enlace"
+
+msgid "source_code"
+msgstr "Código fuente"
+
+msgid "files_indexed"
+msgstr "archivos indexados"
+
+msgid "last_indexed_files"
+msgstr "Últimos archivos indexados"
+
+msgid "i_want_that_file"
+msgstr "Quiero. Ese. Archivo."
+
+# search"
+msgid "all"
+msgstr "Todos"
+
+msgid "direct_downloads"
+msgstr "Descargas directas"
+
+msgid "audio"
+msgstr "Audio"
+
+msgid "video"
+msgstr "Video"
+
+msgid "image"
+msgstr "Imagen"
+
+msgid "document"
+msgstr "Documento"
+
+msgid "software"
+msgstr "Software"
+
+msgid "archive"
+msgstr "Archivo"
+
+msgid "no_results_for"
+msgstr "No hay resultados para:"
+
+msgid "write_something"
+msgstr "¡Escribe algo!"
+
+msgid "previous"
+msgstr "Anterior"
+
+msgid "next"
+msgstr "Siguiente"
+
+msgid "sources"
+msgstr "fuentes"
+
+msgid "of_about"
+msgstr "de aprox."
+
+msgid "results_for"
+msgstr "resultados para"
+
+msgid "other_categories"
+msgstr "otras categorías"
+
+msgid "no_type_count"
+msgstr "No se han encontrado resultados de %(search)s, pero existen aproximadamente %(results)d resultados para su búsqueda en %(category)s."
+
+msgid "not_allow_browse_results"
+msgstr "Foofind no permite navegar resultados posteriores a la página 100."
+
+msgid "did_you_mean"
+msgstr "¿Has querido decir %(text)s?"
+
+# files.download
+msgid "how_to_download"
+msgstr "¿Cómo descargar?"
+
+msgid "download_explanation"
+msgstr "Para descargar el archivo enlazado en esta página se puede precisar un software externo. Aquí tienes algunos programas compatibles:"
+
+# advanced search
+msgid "all_sizes"
+msgstr "Todos los tamaños"
+
+msgid "advanced_search"
+msgstr "búsqueda avanzada"
+
+msgid "hide_advanced_search"
+msgstr "ocultar búsqueda avanzada"
+
+msgid "smaller_than"
+msgstr "Menor de"
+
+msgid "larger_than"
+msgstr "Mayor de"
+
+msgid "all_qualities"
+msgstr "Cualquier calidad"
+
+msgid "or_better"
+msgstr "o superior"
+
+msgid "all_years"
+msgstr "Todos los años"
+
+msgid "before"
+msgstr "Previo a"
+
+msgid "last_year"
+msgstr "Último año"
+
+# metadata
+msgid "artist"
+msgstr "Artista"
+
+msgid "title"
+msgstr "Título"
+
+msgid "author"
+msgstr "Autor"
+
+msgid "format"
+msgstr "Formato"
+
+msgid "pages"
+msgstr "Páginas"
+
+msgid "album"
+msgstr "Álbum"
+
+msgid "length"
+msgstr "Duración"
+
+msgid "bitrate"
+msgstr "Tasa de bits"
+
+msgid "genre"
+msgstr "Género"
+
+msgid "seconds"
+msgstr "Segundos"
+
+msgid "minutes"
+msgstr "Minutos"
+
+msgid "source"
+msgstr "Fuente"
+
+msgid "height"
+msgstr "Alto"
+
+msgid "width"
+msgstr "Ancho"
+
+msgid "track"
+msgstr "Pista"
+
+msgid "quality"
+msgstr "Calidad"
+
+msgid "num_pages"
+msgstr "Nº de páginas"
+
+msgid "include_results_from"
+msgstr "Incluir resultados de:"
+
+msgid "size"
+msgstr "Tamaño"
+
+msgid "unpacked_size"
+msgstr "Tamaño&nbsp;sin&nbsp;comprimir"
+
+msgid "colors"
+msgstr "Colores"
+
+msgid "version"
+msgstr "Versión"
+
+msgid "name"
+msgstr "Nombre"
+
+msgid "description"
+msgstr "Descripción"
+
+msgid "files"
+msgstr "Archivos"
+
+msgid "soundtype"
+msgstr "Tipo de sonido"
+
+msgid "year"
+msgstr "año"
+
+msgid "years"
+msgstr "años"
+
+msgid "month"
+msgstr "mes"
+
+msgid "months"
+msgstr "meses"
+
+msgid "day"
+msgstr "dia"
+
+msgid "days"
+msgstr "dias"
+
+msgid "hour"
+msgstr "hora"
+
+msgid "hours"
+msgstr "horas"
+
+msgid "minute"
+msgstr "minuto"
+
+msgid "second"
+msgstr "segundo"
+
+# download
+msgid "loading"
+msgstr "Cargando"
+
+msgid "close"
+msgstr "Cerrar"
+
+msgid "share_this"
+msgstr "Comparte este enlace:"
+
+msgid "share_facebook"
+msgstr "compartir en facebook"
+
+msgid "share_twitter"
+msgstr "compartir en twitter"
+
+msgid "send_by_email"
+msgstr "enviar por correo"
+
+msgid "download"
+msgstr "Descargar"
+
+msgid "watch"
+msgstr "Ver"
+
+msgid "your_comments"
+msgstr "Tus comentarios"
+
+msgid "since"
+msgstr "hace %(since)s"
+
+msgid "post_comment"
+msgstr "Enviar comentario"
+
+msgid "add_comment"
+msgstr "Añadir un comentario"
+
+msgid "from"
+msgstr "desde"
+
+msgid "i_like_it"
+msgstr "¡Me gusta!"
+
+msgid "booo"
+msgstr "¡Buuu!"
+
+msgid "comment_published_succesfully"
+msgstr "Comentario publicado con éxito"
+
+msgid "related_files"
+msgstr "Archivos relacionados"
+
+# user profile
+msgid "login_required"
+msgstr "Debes iniciar sesión para ver esta página."
+
+msgid "user_profile"
+msgstr "Perfil de usuario"
+
+msgid "your_password"
+msgstr "Elige tu contraseña:"
+
+msgid "insert_your_password"
+msgstr "Introduce tu contraseña (si, otra vez):"
+
+msgid "fill_sing_up_form"
+msgstr "Por favor, rellena este formulario para ser un usuario registrado de Foofind:"
+
+msgid "nickname"
+msgstr "Nick:"
+
+msgid "edit_profile"
+msgstr "editar perfil"
+
+msgid "edit_your_profile"
+msgstr "Edita tu perfil"
+
+msgid "profile_edited_succesfully"
+msgstr "Tu perfil se ha actualizado con éxito"
+
+msgid "hello"
+msgstr "hola"
+
+msgid "logout"
+msgstr "salir"
+
+msgid "login"
+msgstr "iniciar sesión"
+
+msgid "new_user"
+msgstr "nuevo usuario"
+
+msgid "or"
+msgstr "o"
+
+msgid "register"
+msgstr "Registrarse"
+
+msgid "if_new_user"
+msgstr "Si eres un nuevo usuario, por favor"
+
+msgid "register_here"
+msgstr "regístrate aquí"
+
+msgid "choose_nickname"
+msgstr "Elige un nick:"
+
+msgid "user_login"
+msgstr "Acceder"
+
+msgid "remember_me"
+msgstr "Recordarme"
+
+msgid "your_location"
+msgstr "Tu ubicación:"
+
+msgid "new_password"
+msgstr "Introduce una nueva contraseña (si no deseas cambiarla, deja este campo en blanco)"
+
+msgid "save_profile"
+msgstr "Guardar cambios"
+
+msgid "not_allowed_view_page"
+msgstr "No tienes permisos para acceder a esta página"
+
+msgid "username_taken"
+msgstr "Ese nombre de usuario ya existe. Por favor, elige otro diferente."
+
+msgid "email_taken"
+msgstr "Ese email ya existe en nuestra base de datos. Por favor, usa otro diferente."
+
+msgid "forgot"
+msgstr "¿Olvidaste"
+
+msgid "your_password?"
+msgstr "tu contraseña?"
+
+msgid "passwords_not_match"
+msgstr "Las contraseñas introducidas no coinciden."
+
+msgid "sure_delete_account"
+msgstr "¿Estás seguro de querer borrar tu cuenta de Foofind?"
+
+msgid "yes"
+msgstr "Si"
+
+msgid "account_deleted"
+msgstr "Tu cuenta ha sido eliminada."
+
+msgid "nice_to_hear_that"
+msgstr "Nos alegramos por ello"
+
+msgid "profile"
+msgstr "perfil"
+
+msgid "username"
+msgstr "Nick:"
+
+msgid "member_since"
+msgstr "Miembro desde:"
+
+msgid "last_comments"
+msgstr "Últimos %(comments)d comentarios:"
+
+msgid "location"
+msgstr "Ubicación:"
+
+msgid "delete_account"
+msgstr "Eliminar tu cuenta de Foofind"
+
+msgid "forgot_password"
+msgstr "¿Olvidaste tu contraseña?"
+
+msgid "wrong_email_password"
+msgstr "Dirección de correo o contraseña erronea. Inténtalo de nuevo."
+
+msgid "welcome"
+msgstr "Bienvenido "
+
+msgid "finish_register"
+msgstr "Por favor, haz click en este enlace para completar tu proceso de registro:"
+
+msgid "token_not_exist"
+msgstr "Lo sentimos, esa url de autenticación no existe o ya ha sido usada"
+
+msgid "confirm_email"
+msgstr ", confirma tu email"
+
+msgid "check_inbox_email_finish"
+msgstr "Comprueba tu correo para completar el proceso de registro"
+
+msgid "foofind_team"
+msgstr "El equipo de Foofind."
+
+msgid "user_not_exist"
+msgstr "Este usuario no existe"
+
+msgid "logged_in"
+msgstr "Has iniciado sesión,"
+
+msgid "registered_user"
+msgstr "Si ya eres un usuario registrado, por favor"
+
+msgid "login_here"
+msgstr "accede aquí"
+
+msgid "send"
+msgstr "Enviar"
+
+# user.forgot
+msgid "enter_email"
+msgstr "Por favor, introduce tu dirección de email. Te enviaremos un mensaje para recuperar el acceso."
+
+msgid "email_same_register"
+msgstr "La dirección de email debe ser la misma que utilizaste para registrarte."
+
+msgid "email_not_database"
+msgstr "La dirección de correo introducida no está en nuestra base de datos. Por favor, inténtalo de nuevo."
+
+msgid "check_inbox_email_restore"
+msgstr "Comprueba tu correo para recuperar tu acceso a Foofind"
+
+# user.forgot email
+msgid "restore_access"
+msgstr ", restaura tu acceso a Foofind"
+
+msgid "restore_account"
+msgstr "Alguien, probablemente tu, ha solicitado restaurar el acceso a tu cuenta de Foofind. Haz click en esta url para recuperar tu cuenta:"
+
+msgid "ignore_message"
+msgstr "En caso contrario, ignora este mensaje."
+
+# file.vote
+msgid "login_vote"
+msgstr "Por favor, accede para votar"
+
+msgid "login_comment"
+msgstr "Por favor, accede para añadir un comentario"
+
+msgid "technical_problems"
+msgstr "Lo sentimos, estamos teniendo problemas técnicos con el servicio de %(service)s."
+
+msgid "allow_access_account"
+msgstr "Para utilizar esta funcionalidad deberías permitir a Foofind acceder a tu cuenta de %(account)s."
+
+msgid "submit_registration"
+msgstr "Registrarse"
+
+msgid "submit_login"
+msgstr "Iniciar sesión"
+
+msgid "submit_edit"
+msgstr "Guardar cambios"
+
+msgid "submit_search"
+msgstr "Buscar"
+
+# contact
+msgid "contact_form"
+msgstr "Formulario de contacto"
+
+msgid "report_form"
+msgstr "formulario de reclamación"
+
+msgid "link_removal"
+msgstr "Importante: Si desea reclamar la supresión de un enlace, debe utilizar exclusivamente el %(report_form)s."
+
+msgid "complaints_ignored"
+msgstr "La reclamaciones realizadas a través de este formulario serán ignoradas."
+
+msgid "your_message"
+msgstr "Tu mensaje:"
+
+msgid "insert_characters"
+msgstr "Por favor, introduce los 5 caracteres que se muestran:"
+
+msgid "captcha_wrong"
+msgstr "Los caracteres introducidos no coinciden con los de la imagen"
+
+msgid "no_valid_hostname"
+msgstr "%(hostname)s no es nombre correcto de dominio para la dirección de correo %(value)s"
+
+msgid "local_network"
+msgstr "%(value)s parece ser una dirección de red local"
+
+msgid "no_dns_hostname"
+msgstr "%(value)s no concide con la estructura requerida para un nombre de dominio DNS"
+
+msgid "no_tld_known"
+msgstr "%(value)s parece ser un nombre de dominio pero no coincide con ningun TLD conocido"
+
+msgid "message_sent"
+msgstr "Tu mensaje se ha enviado correctamente."
+
+# complaint
+msgid "your_name"
+msgstr "Tu nombre:"
+
+msgid "your_surname"
+msgstr "Tus apellidos:"
+
+msgid "your_company"
+msgstr "Tu empresa:"
+
+msgid "your_phone"
+msgstr "Tu número de teléfono:"
+
+msgid "link_reviewed"
+msgstr "Por favor, introduce el enlace que cree que debe ser revisado:"
+
+msgid "url_content"
+msgstr "Por favor, introduce la url donde aparece el contenido reclamado:"
+
+msgid "reason_complaint"
+msgstr "Motivo de tu reclamación:"
+
+msgid "non_alphabetic_digits"
+msgstr "%(value)s contiene caracteres que no son letras ni números."
+
+msgid "accept_tos"
+msgstr "He leído y acepto los %(tos)s y la %(privacy)s."
+
+msgid "accept_terms"
+msgstr "Por favor, debes leer y aceptar los términos de uso y la política de privacidad"
+
+msgid "not_foofind_page"
+msgstr "El enlace no puede ser una página de Foofind."
+
+msgid "not_foofind_link"
+msgstr "La dirección debe corresponder a una página de descarga de Foofind válida."
+
+msgid "include_reported_links"
+msgstr "Por favor, incluye los enlaces a revisar en el campo apropiado del formulario."
+
+# submit links
+msgid "submit_links"
+msgstr "Enviar enlaces"
+
+msgid "include_link_per_line"
+msgstr "Por favor, incluye un enlace http, ftp, ed2k o magnet por linea.<br />Estos serán analizados automáticamente y añadidos a los resultados de búsqueda en breve."
+
+msgid "link_sent"
+msgstr "Los enlaces han sido enviados. ¡Gracias por la ayuda!"
+
+# footer
+msgid "footer"
+msgstr "Sitio web bajo licencia %(cc)s. %(code)s bajo licencia %(gpl)s."
+
+# privacy
+msgid "safe_privacy"
+msgstr '<b>Finalidad y responsable del fichero</b><br />Por la presente y de conformidad con la Ley Orgánica 15/1999, de 13 de Diciembre, de Protección de Datos de Carácter Personal, Foofind Labs, S.L. (en adelante LA EMPRESA) le informa de la existencia de un fichero automatizado de datos creado por la misma y bajo su responsabilidad.<br /><br />La finalidad de dicho fichero es la de gestionar las funciones de acceso a la web de los usuarios registrados, dar el trámite que sea necesario a las dudas y comentarios dirigidos a LA EMPRESA, optimizar el orden de los resultados de las búsquedas en función de la ubicación geográfica de quien las realiza y de los votos del resto de usuarios, así como atender a las reclamaciones efectuadas por quien desee notificar la existencia de resultados y enlaces que dirijan a contenidos que considere ilícitos o difundidos sin la preceptiva autorización.  <br /><br />LA EMPRESA podrá  enviar correos electrónicos a la cuenta facilitada por el usuario con objeto de informarle sobre la tramitación de la reclamación por él efectuada, para responder a la duda o comentario que le haya sido remitido utilizando cualquiera de nuestros formularios de contacto y, especialmente, para informar a los usuarios registrados sobre los cambios producidos en el servicio, en sus términos de uso o en su política de privacidad. Una vez cumplimentado y enviado el formulario de registro, el usuario recibirá en la cuenta de correo electrónico que haya facilitado información sobre los pasos a seguir para la activación de su cuenta.<br /> <br />LA EMPRESA no archivará el documento electrónico en el que se formalice la aceptación de esta política de privacidad.<br /> <br />El envío de datos personales mediante cualquiera de nuestros formularios supone la aceptación expresa de su tratamiento automatizado. <br /> <br /><b>Prohibiciones de uso por razón de edad</b><br />No se aceptarán datos de usuarios menores de 18 años. LA EMPRESA eliminará los datos y cuentas de usuarios de los que tenga constancia o fundadas sospechas de que son menores de edad.<br /><br /><b>Derechos de acceso, rectificación, cancelación y oposición</b><br />El usuario podrá ejercer sus derechos de acceso, rectificación, cancelación y oposición comunicando con el responsable del fichero en la siguiente dirección:<br /><br /><img src="/static/privacy.png" /><br />Foofind Labs, S.L.<br />Avda. Mediterráneo, 24. Esc. C. 1 C. 28007 Madrid. Spain.<br /><br /><b>Datos recabados del usuario registrado</b><br />Los datos mínimos que han de comunicarse a LA EMPRESA obligatoriamente al crear su cuenta como usuario registrado de Foofind son nombre de usuario/nick y correo electrónico. Opcionalmente usted podrá aportar a su perfil de usuario la dirección de su página web así como su país y ciudad de residencia.<br /><br />Su nombre de usuario/nick, su ciudad y país de residencia, así como su dirección de página web serán visibles para el resto de usuarios, sean o no usuarios registrados. Su dirección de correo electrónico no será visible para el resto de usuarios en ningún caso.<br /><br />El usuario registrado puede votar positiva o negativamente los enlaces ofrecidos por Foofind así como los comentarios de otros usuarios, siendo consciente y aceptando que esos votos pueden ser asociados a su cuenta de usuario tanto por LA EMPRESA como por el resto de usuarios.<br /><br />Con la cancelación de su cuenta de usuario, sus datos de perfil serán eliminados y dejarán de ser visibles para el resto de usuarios, si bien los votos o comentarios realizados mientras era usuario de Foofind podrían seguir permaneciendo accesibles.<br /><br /><b>Servicio de mensajes entre usuarios registrados</b><br />Foofind pone a disposición de sus usuarios registrados un servicio de mensajes a fin de que puedan enviarlos y recibirlos de otros usuarios registrados desde su propia cuenta. Con objeto de proteger la privacidad de sus comunicaciones, Foofind ha incorporado a este servicio las siguientes medidas de seguridad: cifrado de los mensajes mediante algoritmo criptográfico.<br /><br />El usuario podrá  configurar su perfil para solicitar que Foofind le remita un aviso al correo facilitado al completar el proceso de registro cada vez que un usuario del servicio le envíe un mensaje a su cuenta de usuario de Foofind. La activación de esta opción en la configuración de su perfil supondrá la autorización expresa para el envío a su cuenta de correo de los mensajes de aviso referidos por parte de Foofind. <br /><br />Cuando el usuario proceda a darse de baja, se borrarán automáticamente los mensajes que guarde en su cuenta de Foofind, tanto los enviados como los recibidos.<br /><br /><b>Uso de cookies y datos capturados automáticamente por los servidores de Foofind</b><br />El usuario conoce y consiente el uso de cookies que, en ningún caso, permitirán la identificación del mismo, a fin de facilitar su navegación en esta página web. No obstante lo anterior, el usuario podrá en cualquier momento deshabilitar las cookies mediante la oportuna configuración de su navegador a tal efecto.<br /></br>Los servidores de Foofind capturan de forma automática algunos datos que no permiten la identificación del usuario tales como: fecha y hora de visita de la web,  navegador y sistema operativo que utiliza, dirección de Foofind que ha sido visitada y el nombre de dominio del proveedor y/o dirección IP que les da acceso a la red. Estos datos se guardan con objeto de diagnosticar posibles problemas técnicos eventuales y son eliminados de forma automática a los 24 horas.<br /><br /><b>Google Analytics</b><br />Esta página web utiliza Google Analytics, un servicio analítico de web prestado por Google, Inc., una compañía de Delaware cuya oficina principal está en 1600 Amphitheatre Parkway, Mountain View (California), CA 94043, Estados Unidos (“Google”). Google Analytics utiliza “cookies”, que son archivos de texto ubicados en su ordenador, para ayudar al website a analizar el uso que hacen los usuarios del sitio web. La información que genera la cookie acerca de su uso del website (incluyendo su dirección IP) será directamente transmitida y archivada por Google en los servidores de Estados Unidos. Google usará esta información por cuenta nuestra con el propósito de seguir la pista de su uso del website, recopilando informes de la actividad del website y prestando otros servicios relacionados con la actividad del website y el uso de Internet. Google podrá transmitir dicha información a terceros cuando así se lo requiera la legislación, o cuando dichos terceros procesen la información por cuenta de Google. Google no asociará su dirección IP con ningún otro dato del que disponga Google. Puede Usted rechazar el tratamiento de los datos o la información rechazando el uso de cookies mediante la selección de la configuración apropiada de su navegador, sin embargo, debe Usted saber que si lo hace puede ser que no pueda usar la plena funcionabilidad de este website. Al utilizar este website Usted consiente el tratamiento de información acerca de Usted por Google en la forma y para los fines arriba indicados. <br /><br />A fin de proteger su privacidad, ni Google Analytics ni LA EMPRESA guardarán registro alguno de las concretas búsquedas realizadas por los usuarios de foodind, sean o no registrados, de modo que los términos de búsqueda y sus resultados generados en ningún caso podrán vincularse a personas concretas e identificables.<br /><br /><b>Cambios en esta política de privacidad.</b><br />LA EMPRESA se reserva el derecho a modificar la presente política de privacidad. Cualquier cambio en la política de privacidad será inmediatamente comunicada al usuario por medio de la dirección de correo electrónico que el mismo haya facilitado a LA EMPRESA en su registro como usuario. <br />El uso del servicio con posterioridad a la modificación de la política de privacidad supone el conocimiento y aceptación de la nueva versión modificada de la misma.'
+
+# about
+msgid "about_text"
+msgstr "Foofind es un motor de búsqueda universal. En Foofind trabajamos creando software que recorre todas las redes e indexa todos los archivos. De esta forma, pretendemos ofrecer el mayor compendio de enlaces disponible.<br /><br />Foofind es una idea de Pablo Soto, creador de tecnologías P2P, desarrollada en Madrid, España por Foofind Labs S.L. en consorcio con MP2P Technologies."
+
+# tos
+msgid "safe_tos"
+msgstr '<b>1.- Objeto y modo de aceptación de los términos de uso</b><br />El presente acuerdo regula el acceso y uso de la página web %(domain)s que Foofind Labs, S.L. (en adelante LA EMPRESA) pone a disposición de los usuarios interesados en el servicio.<br>El uso de los servicios prestados en esta web supone la aceptación por parte del usuario de estos términos de uso.<br />LA EMPRESA podrá cesar en cualquier momento y sin previo aviso en la prestación de sus servicios a través de %(domain)s así como modificar el servicio prestado, ya sea en aspectos accidentales o sustanciales.<br />LA EMPRESA no garantiza que el servicio prestado a través de Foofind sea ininterrumpido o sin errores.<br />LA EMPRESA podrá  cancelar o suspender la cuenta o el acceso a la web sin previo aviso del USUARIO que, según su criterio unilateral, considere que está incumplimiento los presentes Términos de Uso y/o la legalidad vigente. <br /><br /><b>2.- Precio por el uso del servicio</b><br>La utilización de este servicio por parte de sus usuarios, sean o no usuarios registrados, es completamente gratuita.<br /><br /><b>3.- Idioma de los “términos de uso”.</b><br />Los presentes términos de uso se presentan en idioma español.<br />En el caso de que desde esta web se le proporcione una traducción de estos términos de uso en cualquier otro idioma distinto al español, usted reconoce que se realiza por razones de conveniencia y que su relación con LA EMPRESA se regirá por lo dispuesto en estos términos de uso en en su versión en español.<br /><br /><b>4.- Privacidad</b><br />Con la aceptación de estos términos de uso el USUARIO declara conocer y aceptar igualmente nuestra <a href="/es/privacy">política de privacidad</a>.<br />Los datos personales remitidos por el USUARIO utilizando cualquiera de nuestros formularios se incorporarán a un fichero automatizado creado por LA EMPRESA y bajo su responsabilidad.<br /><br /><b>5.- Responsabilidad por la posible ilicitud de los archivos enlazados en los resultados de la búsqueda.</b><br />Foofind ofrece un servicio de búsqueda de archivos que genera resultados de forma automática. Desde esta página web no se reproduce, distribuye, comunica públicamente o transforma obra intelectual alguna. Los resultados generados por las búsquedas de sus usuarios muestran únicamente los enlaces a los archivos o páginas que respondan a los criterios de búsqueda introducidos y se encuentran alojados en lugares ajenos a esta página web.<br />El usuario es consciente de que LA EMPRESA no asume ninguna obligación de control, vigilancia e inspección de los archivos o páginas que se enlazan como resultados de la búsqueda. No obstante lo anterior, en estricto cumplimiento del artículo 17 de la Ley de Servicios de la Sociedad de la Información, Foofind  eliminará todos aquellos resultados y enlaces de cuya ilicitud tenga conocimiento efectivo.<br />LA EMPRESA no se responsabiliza de la fiabilidad o seguridad de los archivos que aparezcan enlazados como resultados de las búsquedas ni de que estos estén libres de virus, debiendo el usuario encargarse personalmente de proteger su equipo con las medidas de seguridad necesarias.<br /><br /><b>6.- Notificación de enlaces a archivos ilícitos o difundidos sin autorización.</b><br />El USUARIO podrá reportar a LA EMPRESA la existencia de todos aquellos archivos enlazados desde Foofind y de cuya ilicitud tenga conocimiento o fundadas sospechas.EL USUARIO que ponga en conocimiento de LA EMPRESA la existencia de páginas o archivos presumiblemente ilícitos odifundidos sin la correspondiente autorización utilizará exclusivamente el <a href="/es/complaint">formulario de reclamación ofrecido al efecto</a> por LA EMPRESA y facilitará fielmente los datos requeridos en el mismo. Para ello, el usuario debe previamente leer y aceptar la política de privacidad de LA EMPRESA.<br /><br />A fin de facilitar la tarea de revisión para reportar aquellos enlaces que pudieran dirigir a contenido presuntamente ilícito o difundido sin autorización, Foofind muestra de forma transparente los archivos que están siendo indexados por el buscador en tiempo real y ordenándolos cronológicamente en un listado de acceso público y gratuito. <br /><br />LA EMPRESA se reserva el derecho a retirar los enlaces a archivos o páginas cuya ilicitud le conste o de las que tenga fundadas sospechas. LA EMPRESA se reserva también el derecho a utilizar cuantas medidas tecnológicas estén en su mano con objeto de eliminar de los resultados de las búsquedas aquellos que enlacen a contenidos que pudieran ser ilícitos o difundidos sin la preceptiva autorización. No obstante el usuario reconoce que la eficacia plena de estas medidas para lograr en todos los casos el fin para el que han sido diseñadas no puede garantizarse.<br><br><b>7.- Usuarios registrados </b><br/>Los USUARIOS pueden registrarse en Foofind de forma gratuita para acceder a servicios añadidos, que actualmente consisten, y con reserva de la opción de añadir otros en el futuro, en la posibilidad de realizar comentarios en la ficha de los archivos enlazados, votar positiva o negativamente a esos enlaces o a los comentarios de otros usuarios registrados en el servicio y enviar mensajes privados a la cuenta de otros usuarios de Foofind. <br /><br />Los usuarios registrados pueden cancelar su cuenta en cualquier momento desde la página de configuración de su perfil.<br /><br />LA EMPRESA no archivará el documento electrónico en el que se formalice la aceptación de estos términos de uso.<br /><br /><b>8.- Responsabilidad por uso indebido del servicio e infracción de derechos.</b><br />EL USUARIO reconoce que LA EMPRESA no es responsable de la posible ilicitud o lesión de derechos de las actividades realizadas por los usuarios.<br />El USUARIO se compromete a utilizar el servicio conforme a legislación vigente y, a título enunciativo, se abstendrá de:<br/><br />&nbsp;&nbsp;&nbsp;&nbsp;1.- Publicar comentarios ofensivos, injuriosos, calumniosos, racistas,  discriminatorios o que de cualquier otro modo puedan lesionar derechos de  terceros.<br />&nbsp;&nbsp;&nbsp;&nbsp;2.- Publicar con sus comentarios datos o información privada de terceros.<br />&nbsp;&nbsp;&nbsp;&nbsp;3.- Crear perfiles falsos suplantando la personalidad de terceros.<br />&nbsp;&nbsp;&nbsp;&nbsp;4.- Utilizar el servicio para realizar comunicaciones comerciales no  autorizadas.<br /><br />Asimismo, el USUARIO se compromete a reportar a LA EMPRESA todos aquellos contenidos o actividades cuya ilicitud le conste o de la que tenga fundadas sospechas.<br /><br />LA EMPRESA se reserva el derecho a cancelar y eliminar la cuenta del usuario que realice actividades contrarias a la ley o a estos términos de uso, así como a borrar los comentarios que pudieran infringir la ley o lesionar derechos de terceros.<br /><br /><b>9.- Publicidad </b><br />El usuario es consciente y acepta que LA EMPRESA puede ahora o en el futuro incluir publicidad en el sitio web, ya sea de sus propias actividades, productos o servicios o de terceros. <br /><br /><b>10.- Ley y jurisdicción aplicable</b><br />Para cuantas controversias pudieran surgir en la interpretación o cumplimiento de los presentes Términos de Uso, así como los derivados de la utilización del servicio, ambas partes acuerdan que serán competentes los Juzgados y Tribunales de Madrid (España).<br /><br /><b>11.- Cambios en los términos de uso</b><br />LA EMPRESA podrá modificar estos términos de uso.<br />Los usuarios deben supervisar estos términos de uso con frecuencia a fin de conocer los posibles cambios realizados desde la última vez que accedieron al sitio web.<br />Los usuarios registrados son conscientes y aceptan que es posible que se les envíe un correo electrónico a la cuenta que hayan facilitado al completar el proceso de registro para informarles de que estos términos de uso o la política de privacidad han sido  modificados.<br />El uso del servicio con posterioridad a la modificación de los términos de uso supone el conocimiento y aceptación por parte del usuario de la nueva versión modificada de los mismos."
+
+msgid "safe_legal"
+msgstr 'Foofind Labs, S.L.<br>Avda. Mediterráneo, 24. Esc. C. 1 C. 28007 Madrid. Spain.<br /><br /><img src="/static/legal.png" /><br />Inc. en el R.M. de Madrid,<br />Tomo 28.498, Folio 129, Sección 8, Hoja M-513051.<br />N.I.F. B-86116035<br /><br />Foofind ofrece un servicio de búsqueda de archivos que genera resultados de forma automática. Foofind no aloja y, en consecuencia, no reproduce ni comunica públicamente los archivos enlazados que aparecen como resultados de las búsquedas. Foofind no asume ninguna obligación de control, vigilancia e inspección de las obras que se enlazan como resultados de la búsqueda. No obstante lo anterior, en estricto cumplimiento del artículo 17 LSSI, Foofind  eliminará todos aquellos resultados y enlaces de cuya ilicitud tenga conocimiento efectivo.<br /><br />Si considera que alguna o algunas de las obras enlazadas se están difundiendo sin la correspondiente autorización de los titulares de derechos o que infringe derechos de terceros, le rogamos nos solicite su retirada exclusivamente desde el siguiente <a href="/es/complaint">formulario de reclamación.</a><br /><br />Usted debe leer y aceptar nuestros <a href="/es/tos">términos de uso</a> y nuestra <a href="/es/privacy">política de privacidad</a> antes de usar los servicios suministrados desde %(domain)s.'
+
+# error
+msgid "under_maintenance"
+msgstr "Foofind está en parada de mantenimiento. Por favor, vuelve dentro de un rato."
+
+msgid "link_not_exist"
+msgstr "¡Este enlace no existe o ha sido eliminado!"
+
+# translate
+msgid "translate"
+msgstr "Traducir"
+
+msgid "translate_to_your_language"
+msgstr "Ayúdanos a traducir Foofind a tu idioma"
+
+msgid "translate_description"
+msgstr "Actualmente, Foofind está disponible en unos pocos idiomas, pero puedes ayudarnos a traducirlo al tuyo. Elígelo de la lista de idiomas que se encuentra a continuación y rellena los campos con los textos traducidos. No es necesario que completes todos los campos, cualquier aportación que puedas realizar será de gran ayuda.<br/><br/>Si no encuentras tu idioma en la lista, ponte en contacto con nosotros para que lo añadamos."
+
+msgid "choose_language"
+msgstr "Elegir idioma"
+
+msgid "translation_sent"
+msgstr "Tu traducción ha sido enviada. ¡Gracias por la ayuda!"
+
+msgid "translate_at_least_one"
+msgstr "Por favor, traduce al menos una frase antes de enviar."
+
+msgid "here"
+msgstr "aquí"
+
+msgid "translation_beta"
+msgstr "Esta traduccion está en fase de pruebas. Si encuentras algún fallo o texto sin traducir, por favor infórmanos %(here)s."
+
+msgid "other"
+msgstr "Otro"
+
+# Felipe <felipe@mp2p.net>, 2011.
+msgid "go_home"
+msgstr "Volver al buscador"
+
+msgid "error_404_message"
+msgstr "404: Página no encontrada."
+
+msgid "error_404_description"
+msgstr "La url no ha sido encontrada. ¿La dirección es correcta? Si es así, agradeceríamos que nos avisaras."
+
+msgid "error_502_message"
+msgstr "502: Pasarela incorrecta."
+
+msgid "error_502_description"
+msgstr "Se ha intentado acceder al servicio web con una ubicación incorrecta."
+
+msgid "admin_prefix"
+msgstr "Administración"
+
+msgid "admin_overview_msg"
+msgstr "Sección de administración, vista general."
+
+msgid "admin_overview"
+msgstr "Vista general"
+
+msgid "admin_locks"
+msgstr "Bloqueo de ficheros"
+
+msgid "admin_locks_none"
+msgstr "No se han reportado nuevos ficheros"
+
+msgid "admin_locks_locked"
+msgstr "El archivo ha sido bloqueado"
+
+msgid "admin_locks_unlocked"
+msgstr "El archivo ha sido desbloqueado"
+
+msgid "admin_locks_not_locked"
+msgstr "El archivo no será bloqueado"
+
+msgid "admin_locks_fileinfo"
+msgstr "Más información"
+
+msgid "admin_locks_block"
+msgstr "Bloquear archivo"
+
+msgid "admin_locks_unblock"
+msgstr "Desbloquear fichero"
+
+msgid "admin_locks_confirm"
+msgstr "Bloquear fichero"
+
+msgid "admin_locks_cancel"
+msgstr "Ignorar"
+
+msgid "admin_locks_complaint_info"
+msgstr "Información de queja"
+
+msgid "admin_locks_complaint_fileinfo"
+msgstr "Información de fichero"
+
+msgid "admin_locks_complaint_noinfo"
+msgstr "Sin información de queja"
+
+msgid "admin_locks_complaint_nofileinfo"
+msgstr "Sin información de fichero"
+
+msgid "admin_translation"
+msgstr "Contribuciones de traducción"
+
+msgid "admin_translation_none"
+msgstr "No se han reportado nuevos errores de traducción"
+
+msgid "admin_translation_review"
+msgstr "Revisar traducción"
+
+msgid "admin_showall"
+msgstr "todos"
+
+msgid "admin_showold"
+msgstr "antiguos"
+
+msgid "admin_shownew"
+msgstr "nuevos"
+
+msgid "admin_locks_new"
+msgstr "Hay nuevas quejas de ficheros"
+
+msgid "admin_translations_new"
+msgstr "Hay nuevas traducciones"
+
+msgid "admin_origins"
+msgstr "Gestión de orígenes"
+
+msgid "admin_users"
+msgstr "Gestión de usuarios"
+
+msgid "admin_users_save"
+msgstr "Guardar cambios"
+
+msgid "admin_users_info"
+msgstr "Información de usuario"
+
+msgid "admin_users_updated"
+msgstr "Usuario actualizado"
+
+msgid "admin_users_search"
+msgstr "Buscar usuario"
+
+msgid "admin_users_not_found"
+msgstr "Usuario no encontrado"
+
+msgid "admin_users_mode_username"
+msgstr "nombre de usuario"
+
+msgid "admin_users_mode_email"
+msgstr "email"
+
+msgid "admin_users_mode_id"
+msgstr "mongoid en hexadecimal"
+
+msgid "admin_users_mode_oauth"
+msgstr "oauth"
+
+msgid "admin_no_new"
+msgstr "Sin novedades"
+
+msgid "admin_select_all"
+msgstr "Seleccionar todos"
+
+msgid "admin_select_none"
+msgstr "Deseleccionar todos"
+
+msgid "admin_translation_confirm"
+msgstr "Aplicar"
+
+msgid "admin_translation_cancel"
+msgstr "Rechazar"
+
+msgid "admin_showcurrent"
+msgstr "actuales"
+
+msgid "admin_showblocked"
+msgstr "bloqueados"
+
+msgid "admin_origins_none"
+msgstr "Ningún origen"
+
+msgid "admin_translation_info"
+msgstr "Información"
+
+msgid "admin_translation_fields"
+msgstr "Campos de traducción"
+
+msgid "admin_multiselection_select_all"
+msgstr "Seleccionar todo"
+
+msgid "admin_multiselection_select_none"
+msgstr "Quitar selección"
+
+msgid "admin_deploy"
+msgstr "Despliegue de aplicación"
+
+msgid "admin_deploy_datetime"
+msgstr "Último despliegue"
+
+msgid "admin_deploy_config"
+msgstr "Configuración de despliegue"
+
+msgid "admin_deploy_mode"
+msgstr "Modo de despliegue"
+
+msgid "admin_deploy_phase_deploy"
+msgstr "Despliegue"
+
+msgid "admin_deploy_deploy"
+msgstr "Despliegue automático"
+
+msgid "admin_deploy_phase_restart"
+msgstr "Reinicio"
+
+msgid "admin_deploy_restart"
+msgstr "Reiniciar servicios"
+
+msgid "admin_deploy_phase_clean"
+msgstr "Limpieza"
+
+msgid "admin_deploy_clean_local"
+msgstr "Limpieza local"
+
+msgid "admin_deploy_clean_remote"
+msgstr "Limpieza remota"
+
+msgid "admin_deploy_phase_configuration"
+msgstr "Configurar"
+
+msgid "admin_deploy_phase_preparation"
+msgstr "Distribuír"
+
+msgid "admin_deploy_phase_commit"
+msgstr "Activar"
+
+msgid "admin_deploy_phase_publish"
+msgstr "Distribución pública"
+
+msgid "admin_deploy_publish_version"
+msgstr "Código de versión"
+
+msgid "admin_deploy_publish_message"
+msgstr "Mensaje de publicación"
+
+msgid "admin_deploy_publish_mode"
+msgstr "Despliegue a publicar"
+
+msgid "admin_deploy_package"
+msgstr "Empaquetar desde git"
+
+msgid "admin_deploy_publish"
+msgstr "Publicar versión"
+
+msgid "admin_deploy_rollback"
+msgstr "Versión anterior"
+
+msgid "admin_deploy_prepare"
+msgstr "Preparar cambio de versión"
+
+msgid "admin_deploy_commit"
+msgstr "Ejecutar cambio"
+
+msgid "admin_deploy_backups"
+msgstr "Copias de seguridad"
+
+msgid "admin_deploy_in_progress"
+msgstr "Se está ejecutando la tarea de despliegue"
+
+msgid "admin_deploy_manual_restart"
+msgstr "Por razones de estabilidad este despliegue no reiniciará el servidor automáticamente"
+
+msgid "admin_deploy_debug"
+msgstr "Información de debug"
+
+msgid "admin_locks_search_mode"
+msgstr "Buscar por"
+
+msgid "admin_locks_search"
+msgstr "Ir"
+
+msgid "admin_lock_mode_hexid"
+msgstr "identificador en hexadecimal"
+
+msgid "admin_lock_mode_url"
+msgstr "url completa"
+
+msgid "admin_lock_mode_b64"
+msgstr "identificador en base64"
+
+msgid "admin_search_field"
+msgstr "Búsqueda"
+
+msgid "admin_origins_save"
+msgstr "Guardar cambios"
+
+msgid "admin_origins_info"
+msgstr "Datos de origen"
+
+msgid "opensearch_description"
+msgstr "Buscar usando Foofind"

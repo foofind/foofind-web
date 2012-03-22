@@ -1,0 +1,636 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: 1\n"
+"Report-Msgid-Bugs-To: ismael@mp2p.net\n"
+"POT-Creation-Date: 2011-12-09 11:49+0100\n"
+"PO-Revision-Date: 2011-12-09 11:49+0100\n"
+"Last-Translator: Foofind <hola@foofind.com>\n"
+"Language-Team: ca <hola@foofind.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Foofind awesome legacy-csv importer\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgid "your_email"
+msgstr "El teu email:"
+
+msgid "password"
+msgstr "Contrasenya:"
+
+msgid "submit"
+msgstr "Enviar"
+
+msgid "required_empty"
+msgstr "Aquest camp no pot estar buit"
+
+msgid "about"
+msgstr "Quant a"
+
+msgid "contact"
+msgstr "Contacte"
+
+msgid "legal"
+msgstr "Avís legal"
+
+msgid "tos"
+msgstr "Temes d'ús"
+
+msgid "privacy"
+msgstr "Política de privacitat"
+
+msgid "complaint"
+msgstr "Reclamar enllaç"
+
+msgid "source_code"
+msgstr "Codi font"
+
+msgid "files_indexed"
+msgstr "arxius indexats"
+
+msgid "last_indexed_files"
+msgstr "Darrers arxius indexats"
+
+msgid "i_want_that_file"
+msgstr "Vull. Aquest. Arxiu."
+
+msgid "all"
+msgstr "Tots"
+
+msgid "direct_downloads"
+msgstr "Descàrregues directes"
+
+msgid "audio"
+msgstr "Àudio"
+
+msgid "video"
+msgstr "Vídeo"
+
+msgid "image"
+msgstr "Imatge"
+
+msgid "document"
+msgstr "Document"
+
+msgid "software"
+msgstr "Programari"
+
+msgid "archive"
+msgstr "Arxiu"
+
+msgid "no_results_for"
+msgstr "No hi ha resultats per:"
+
+msgid "write_something"
+msgstr "Ep! Escriu alguna cosa"
+
+msgid "previous"
+msgstr "Anterior"
+
+msgid "next"
+msgstr "Següent"
+
+msgid "sources"
+msgstr "Fonts"
+
+msgid "of_about"
+msgstr "d'aprox."
+
+msgid "results_for"
+msgstr "resultats per"
+
+msgid "not_allow_browse_results"
+msgstr "Foofind no permet navegar resultats posteriors a la pàgina 100."
+
+msgid "how_to_download"
+msgstr "Com fer la descàrrega?"
+
+msgid "download_explanation"
+msgstr ""
+"Per descarregar l'arxiu enllaçat en aquesta pàgina es pot necessitar un "
+"software extern. Aquí tens alguns programes compatibles:"
+
+msgid "did_you_mean"
+msgstr "Volies dir %(text)s?"
+
+msgid "all_sizes"
+msgstr "Tots els tamanys"
+
+msgid "advanced_search"
+msgstr "Cerca avançada"
+
+msgid "hide_advanced_search"
+msgstr "amagar cerca avançada"
+
+msgid "smaller_than"
+msgstr "Menor de"
+
+msgid "larger_than"
+msgstr "Major de"
+
+msgid "all_qualities"
+msgstr "Qualsevol qualitat"
+
+msgid "or_better"
+msgstr "o superior"
+
+msgid "all_years"
+msgstr "Tots els anys"
+
+msgid "before"
+msgstr "Previ a"
+
+msgid "last_year"
+msgstr "Darrer any"
+
+msgid "artist"
+msgstr "Artista"
+
+msgid "title"
+msgstr "Títol"
+
+msgid "author"
+msgstr "Autor"
+
+msgid "format"
+msgstr "Format"
+
+msgid "pages"
+msgstr "Pàgines"
+
+msgid "album"
+msgstr "Àlbum"
+
+msgid "length"
+msgstr "Duració"
+
+msgid "bitrate"
+msgstr "Tasa de bits"
+
+msgid "genre"
+msgstr "Gènere"
+
+msgid "seconds"
+msgstr "segons"
+
+msgid "minutes"
+msgstr "minuts"
+
+msgid "source"
+msgstr "Font"
+
+msgid "height"
+msgstr "Alt"
+
+msgid "width"
+msgstr "Ample"
+
+msgid "track"
+msgstr "Pista"
+
+msgid "quality"
+msgstr "Qualitat"
+
+msgid "num_pages"
+msgstr "Nombre de pàgines"
+
+msgid "include_results_from"
+msgstr "Incloure resultats de:"
+
+msgid "size"
+msgstr "Tamany"
+
+msgid "unpacked_size"
+msgstr "Tamany&nbsp;sense&nbsp;comprimir"
+
+msgid "colors"
+msgstr "Colors"
+
+msgid "version"
+msgstr "Versió"
+
+msgid "name"
+msgstr "Nom"
+
+msgid "description"
+msgstr "Descripció"
+
+msgid "files"
+msgstr "Arxius"
+
+msgid "soundtype"
+msgstr "Tipus de so"
+
+msgid "year"
+msgstr "any"
+
+msgid "years"
+msgstr "anys"
+
+msgid "month"
+msgstr "mes"
+
+msgid "months"
+msgstr "mesos"
+
+msgid "day"
+msgstr "dia"
+
+msgid "days"
+msgstr "dies"
+
+msgid "hour"
+msgstr "hora"
+
+msgid "hours"
+msgstr "hores"
+
+msgid "minute"
+msgstr "minut"
+
+msgid "second"
+msgstr "segon"
+
+msgid "loading"
+msgstr "Carregant"
+
+msgid "close"
+msgstr "Tancar"
+
+msgid "share_this"
+msgstr "Comparteix aquest enllaç:"
+
+msgid "share_facebook"
+msgstr "compartir a facebook"
+
+msgid "share_twitter"
+msgstr "compartir a twitter"
+
+msgid "send_by_email"
+msgstr "enviar per correu"
+
+msgid "download"
+msgstr "Descarregar"
+
+msgid "watch"
+msgstr "Veure"
+
+msgid "your_comments"
+msgstr "Els teus comentaris"
+
+msgid "since"
+msgstr "fa since s "
+
+msgid "post_comment"
+msgstr "Enviar comentari"
+
+msgid "add_comment"
+msgstr "Afegir un comentari"
+
+msgid "from"
+msgstr "desde"
+
+msgid "i_like_it"
+msgstr "M'agrada!"
+
+msgid "booo"
+msgstr "Buuu!"
+
+msgid "comment_published_succesfully"
+msgstr "Comentari publicat amb èxit!"
+
+msgid "related_files"
+msgstr "Arxius relacionats"
+
+msgid "user_profile"
+msgstr "Perfil d'usuari"
+
+msgid "your_password"
+msgstr "Tria la teva contrasenya"
+
+msgid "insert_your_password"
+msgstr "Torna a escriure la contrasenya (sí, un altre cop):"
+
+msgid "fill_sing_up_form"
+msgstr ""
+"Si us plau, omple aquest formulari per ser usuari registrat de Foofind:"
+
+msgid "nickname"
+msgstr "Àlies:"
+
+msgid "edit_profile"
+msgstr "editar perfil"
+
+msgid "edit_your_profile"
+msgstr "Modifica el teu perfil"
+
+msgid "profile_edited_succesfully"
+msgstr "S'ha modificat el teu perfil!"
+
+msgid "hello"
+msgstr "hola,"
+
+msgid "logout"
+msgstr "sortir"
+
+msgid "login"
+msgstr "iniciar sessió"
+
+msgid "new_user"
+msgstr "nou usuari"
+
+msgid "or"
+msgstr "o"
+
+msgid "register"
+msgstr "Registrar-se"
+
+msgid "if_new_user"
+msgstr "Si ets un nou usuari, si us plau"
+
+msgid "register_here"
+msgstr "registra't aquí"
+
+msgid "choose_nickname"
+msgstr "Tria un àlies:"
+
+msgid "user_login"
+msgstr "Accedir"
+
+msgid "remember_me"
+msgstr "Recorda'm"
+
+msgid "your_location"
+msgstr "La teva ubicació:"
+
+msgid "new_password"
+msgstr ""
+"Introdueix una nova contrasenya: (si no la vols canviar, deixa aquest camp "
+"en blanc)"
+
+msgid "save_profile"
+msgstr "Desar canvis"
+
+msgid "not_allowed_view_page"
+msgstr "No tens permisos per accedir a aquesta pàgina"
+
+msgid "username_taken"
+msgstr "Aquest nom d'usuari ja existeix. Si us plau, tria'n un altre"
+
+msgid "email_taken"
+msgstr ""
+"Aquest email ja existeix a la nostra base de dades. Si us plau, utilitza'n "
+"un altre."
+
+msgid "forgot"
+msgstr "Has oblidat"
+
+msgid "your_password?"
+msgstr "la teva contrasenya?"
+
+msgid "passwords_not_match"
+msgstr "Les contrasenyes no coincideixen."
+
+msgid "sure_delete_account"
+msgstr "Estàs segur de voler eliminar el teu compte de Foofind?"
+
+msgid "yes"
+msgstr "Sí"
+
+msgid "account_deleted"
+msgstr "El teu compte ha estat eliminat."
+
+msgid "nice_to_hear_that"
+msgstr "Ens n'alegrem"
+
+msgid "profile"
+msgstr "perfil"
+
+msgid "username"
+msgstr "Nom usuari:"
+
+msgid "member_since"
+msgstr "Membre des de:"
+
+msgid "last_comments"
+msgstr "Darrers %(comments)d comentaris:"
+
+msgid "location"
+msgstr "Ubicació:"
+
+msgid "delete_account"
+msgstr "Eliminar el teu compte de Foofind"
+
+msgid "forgot_password"
+msgstr "Has oblidat la teva contrasenya ?"
+
+msgid "wrong_email_password"
+msgstr "Adreça de correu o contrasenya errònia. Prova-ho de nou"
+
+msgid "welcome"
+msgstr "Benvingut"
+
+msgid "finish_register"
+msgstr ""
+"Si us plau, fes click en aquest enllaç per completar el teu procés de "
+"registre:"
+
+msgid "token_not_exist"
+msgstr "Ho sentim, aquest token no existeix o ja ha estat utilitzat"
+
+msgid "confirm_email"
+msgstr ", comfirma el teu email"
+
+msgid "check_inbox_email_finish"
+msgstr "Comprova la teva bústia de correu per completar el procés de registre"
+
+msgid "foofind_team"
+msgstr "L'equip de Foofind"
+
+msgid "user_not_exist"
+msgstr "L'usuari no existeix"
+
+msgid "logged_in"
+msgstr "Has iniciat sessió,"
+
+msgid "registered_user"
+msgstr "Si ja ets un usuari registrat, si us plau"
+
+msgid "login_here"
+msgstr "accedeix aquí"
+
+msgid "enter_email"
+msgstr ""
+"Si us plau, introdueix el teu email. T'enviarem un missatge per recuperar "
+"l'accés."
+
+msgid "email_same_register"
+msgstr ""
+"L'adreça de correu ha de ser la mateixa que vas utilitzar per registrar-te."
+
+msgid "email_not_database"
+msgstr ""
+"L'adreça de correu introduida no és a la nostra base de dades. Si us plau, "
+"torna-ho a provar."
+
+msgid "check_inbox_email_restore"
+msgstr "Comprova el teu correu per recuperar el teu accés a Foofind"
+
+msgid "restore_access"
+msgstr ", restaura el teu accés a Foofind"
+
+msgid "restore_account"
+msgstr ""
+"Algú, probablement tú, ha sol·licitat restaurar l'accés al teu compte de "
+"Foofind. Clica sobre aquesta url per recuperar el teu compte:"
+
+msgid "ignore_message"
+msgstr "En cas contrari, ignora aquest missatge."
+
+msgid "login_vote"
+msgstr "Si us plau, accedeix per votar"
+
+msgid "login_comment"
+msgstr "Si us plau, accedeix per afegir un comentari"
+
+msgid "technical_problems"
+msgstr ""
+"Ens sap greu, estem tenint problemes técnics amb el servei de %(service)s"
+
+msgid "allow_access_account"
+msgstr ""
+"Per utilitzar aquesta funcionalitat hauríes de permetre a Foofind accedir al"
+" teu compte de %(account)s"
+
+msgid "submit_search"
+msgstr "Cercar"
+
+msgid "contact_form"
+msgstr "Formulari de contacte"
+
+msgid "link_removal"
+msgstr ""
+"Important: Si desitges reclamar la supressió d'un ellaç, hauràs d'utilitzar "
+"exclusivament el %(report_form)s."
+
+msgid "complaints_ignored"
+msgstr ""
+"Les reclamacions realitzades a través d'aquest formulari seran ignorades."
+
+msgid "your_message"
+msgstr "El teu missatge:"
+
+msgid "insert_characters"
+msgstr "Si us plau, introdueix els 5 caracters mostrats:"
+
+msgid "captcha_wrong"
+msgstr "Els caràcters introduïts no tenen coincidència amb els de la imatge"
+
+msgid "message_sent"
+msgstr " El teu missatge s'ha enviat correctament!"
+
+msgid "your_name"
+msgstr "El teu nom:"
+
+msgid "your_surname"
+msgstr "Els teus cognoms:"
+
+msgid "your_company"
+msgstr "La teva empresa:"
+
+msgid "your_phone"
+msgstr "El teu número de telèfon:"
+
+msgid "link_reviewed"
+msgstr "Si us plau, introdueix l'enllaç que cal ser revisat:"
+
+msgid "url_content"
+msgstr "Si us plau, introdueix la url on apareix el contingut:"
+
+msgid "reason_complaint"
+msgstr "Motiu de la reclamació:"
+
+msgid "accept_terms"
+msgstr "Si us plau, has d'acceptar els termes d'ú i la política de privacitat"
+
+msgid "not_foofind_page"
+msgstr "L'enllaç no pot ser una pàgina Foofind"
+
+msgid "not_foofind_link"
+msgstr ""
+"La direcció deu correspondre a una pàgina de descàrrega Foofind vàlida."
+
+msgid "include_reported_links"
+msgstr ""
+"Si us plau, inclou els enllaços en els camps corresponents del formulari."
+
+msgid "submit_links"
+msgstr "Enviar enllaços"
+
+msgid "include_link_per_line"
+msgstr ""
+"Si us plau, inclou un enllaç http, ftp, ed2k o magnet per línia.<br "
+"/>Aquests seran analitzats automàticament i, ben aviat, seran afegits als "
+"resultats de la cerca."
+
+msgid "link_sent"
+msgstr "Els enllaços s'han enviat. Gràcies per l'ajuda!"
+
+msgid "footer"
+msgstr ""
+"Lloc web sota llicència Creative Commons <a rel='license content' "
+"href='http://creativecommons.org/licenses/by-sa/3.0/deed.ca'>BY-SA</a>. <a "
+"href='http://code.google.com/p/Foofind/'>Codi font</a> sota llicència <a "
+"rel='license source code' "
+"href='http://www.gnu.org/licenses/agpl.html'>Affero GPL</a>."
+
+msgid "about_text"
+msgstr ""
+"Foofind és un motor de cerca universal. A Foofind treballem creant software "
+"que recorre totes les xarxes i indexa tots els arxius. D'aquesta manera, "
+"volem oferir la major quantitat d´enllaços disponibles. Foofind és una idea "
+"de Pablo Soto, creador de tecnologies P2P, desenvolupades a Madrid, España "
+"per MP2P Technologies."
+
+msgid "under_maintenance"
+msgstr ""
+"Foofind està aturat per manteniment. Si us plau, torna-ho a provar més tard."
+
+msgid "link_not_exist"
+msgstr "Aquest enllaç no existeix o ha sigut eliminat!"
+
+msgid "translate"
+msgstr "Traduïr"
+
+msgid "translate_to_your_language"
+msgstr "Ajudans a traduïr Foofind a la teva llengua"
+
+msgid "translate_description"
+msgstr ""
+"Actualment, Foofind és disponible en poques llengues, però tu pots ajudar-"
+"nos a traduïr-lo a la teva. Tria de la llista la llengua que es troba a "
+"continuació i omple els camps amb els textos traduïts. No cal omplir tots "
+"els camps, qualsevol aportació que puguis realitzar serà de gran ajuda. Si "
+"no trobes la teva llengua a la llista, posa't en contacte amb nosaltres per "
+"a afegir-la."
+
+msgid "choose_language"
+msgstr "Tria llengua"
+
+msgid "translation_sent"
+msgstr "La teva traducció ha sigut enviada. Gràcies per la teva ajuda!"
+
+msgid "translate_at_least_one"
+msgstr "Si us plau, entra un mínim d'una frase abans d'enviar."
+
+msgid "here"
+msgstr "ací"
+
+msgid "translation_beta"
+msgstr ""
+"Aquesta traducció està en fase de proves. Si trobes algun error o text sense"
+" traduir, si us plau informa'ns %(here)s."
+
+msgid "other"
+msgstr "Un altre"

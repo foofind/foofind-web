@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% from "helpers.html" import render_field %}
+{% block header %}{% endblock %}
+{% block content %}
+    <div id="search">
+        <img src="/static/logo.png" alt="foofind" />
+        <span{%- if g.lang in ["zh", "pt"] %} class="small"{% endif %}>{{_('i_want_that_file')}}</span>
+        {{flash()}}
+        <ul class="tabs">
+            <li><a {% if request.args.get('type','')=="" %}class="actual" {% endif %}href="{{ url_for('.home') }}">{{_('all')}}</a></li>
+            <li><a {% if request.args['type']=="audio" %}class="actual" {% endif %}id="audio" href="{{ url_for('.home',type='audio') }}">{{_('audio')}}</a></li>
+            <li><a {% if request.args['type']=="video" %}class="actual" {% endif %}id="video" href="{{ url_for('.home',type='video') }}">{{_('video')}}</a></li>
+            <li><a {% if request.args['type']=="image" %}class="actual" {% endif %}id="image" href="{{ url_for('.home',type='image') }}">{{_('image')}}</a></li>
+            <li><a {% if request.args['type']=="document" %}class="actual" {% endif %}id="document" href="{{ url_for('.home',type='document') }}">{{_('document')}}</a></li>
+            <li><a {% if request.args['type']=="software" %}class="actual" {% endif %}id="software" href="{{ url_for('.home',type='software') }}">{{_('software')}}</a></li>
+            <li><a {% if request.args['type']=="archive" %}class="actual" {% endif %}id="archive" href="{{ url_for('.home',type='archive') }}">{{_('archive')}}</a></li>
+        </ul>
+        <form method="get" action="{{ url_for('files.search') }}">
+            <fieldset id="q-element">
+                {{ form.q(autocomplete="off") }}
+                {{ form.type(value=request.args['type']) }}
+                {{ form.submit(class="awesome") }}
+            </fieldset>
+                {{render_field(form.src)}}
+        </form>
+    </div>
+    <div id="social_widgets">
+        <div id="fb-root"></div>
+        <div class="fb-like" data-href="{{ g.domain }}" data-send="false" data-width="420" data-height="25" data-show-faces="false" data-font="arial"></div>
+        <a href="http://twitter.com/share" class="twitter-share-button" data-url="{{ g.domain }}" data-text="Foofind" data-count="horizontal" data-via="foofind">Tweet</a>
+        <div class="g-plusone" data-size="medium" data-href="{{ g.domain }}"></div>
+    </div>
+    <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+    <script type="text/javascript">
+        (function(d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0];
+          if (d.getElementById(id)) return;
+          js = d.createElement(s); js.id = id;
+          js.src = "//connect.facebook.net/es_ES/all.js#xfbml=1";
+          fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+        window.___gcfg = {lang: '{{ g.lang }}'};
+        (function() {
+            var po = document.createElement('script');
+            po.type = 'text/javascript';
+            po.async = true;
+            po.src = 'https://apis.google.com/js/plusone.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(po, s);
+        })();
+    </script>
+{% endblock %}
+{% block logos %}
+    <div>
+        <img src="/static/planavanza2_mini.png" alt="plan_avanza" />
+        <img src="/static/ministerio_mini.png" alt="ministerio" />
+    </div>
+{% endblock %}

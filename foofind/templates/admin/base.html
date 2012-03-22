@@ -1,0 +1,34 @@
+{% from "helpers.html" import flash %}
+<!doctype html>
+<html>
+    <head>
+        <title>{{ title }}</title>
+        {% assets "js_admin" %}<script type="text/javascript" src="{{ ASSET_URL }}"></script>{% endassets %}
+        {% assets "css_admin" %}<link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet" />{% endassets %}
+        {% block head %}{% endblock %}
+    </head>
+    <body>
+    {% block header %}
+    <div class="header" >
+        <h1><a href="{{ url_for('admin.index') }}" class="logo">File search engine - foofind.com</a></h1>
+    </div>
+    {% endblock %}
+    <div class="wrapper">
+        <div class="menu">
+            <ul>
+                <li><a href="{{ url_for('admin.index', size=page_size) }}">{{_('admin_overview')}}</a></li>
+                <li><a href="{{ url_for('admin.locks', size=page_size) }}">{{_('admin_locks')}}</a></li>
+                <li><a href="{{ url_for('admin.translations', size=page_size) }}">{{_('admin_translation')}}</a></li>
+                <li><a href="{{ url_for('admin.deploy', size=page_size) }}">{{_('admin_deploy')}}</a></li>
+                <li><a href="{{ url_for('admin.users', size=page_size) }}">{{_('admin_users')}}</a></li>
+                <li><a href="{{ url_for('admin.origins', size=page_size) }}">{{_('admin_origins')}}</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <h2>{{ page_title }}</h2>
+            {{ flash() }}
+            {% block page %}{% endblock %}
+        </div>
+    </div>
+    </body>
+</html>

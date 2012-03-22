@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+    <ShortName>{{ shortname }}</ShortName>
+    <Description>{{ _("opensearch_description") }}</Description>
+    <InputEncoding>UTF-8</InputEncoding>
+    <Image height="16" width="16">{{ url_for('index.favicon',_external=True) }}</Image>
+    <Url type="text/html" method="GET" template="{{ url_for('files.search') }}">
+        {% raw %}<Param name="q" value="{searchTerms}"/>{% endraw %}
+    </Url>
+    <SearchForm>{{ url_for('files.search',_external=True) }}</SearchForm>
+</OpenSearchDescription>

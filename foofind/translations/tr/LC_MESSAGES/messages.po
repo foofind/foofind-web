@@ -1,0 +1,629 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: 1\n"
+"Report-Msgid-Bugs-To: ismael@mp2p.net\n"
+"POT-Creation-Date: 2011-12-09 11:49+0100\n"
+"PO-Revision-Date: 2011-12-09 11:49+0100\n"
+"Last-Translator: Foofind <hola@foofind.com>\n"
+"Language-Team: tr <hola@foofind.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Foofind awesome legacy-csv importer\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgid "your_email"
+msgstr "E-mail adresiniz:"
+
+msgid "password"
+msgstr "Şifre:"
+
+msgid "submit"
+msgstr "Gönder"
+
+msgid "required_empty"
+msgstr "Bu alan gereklidir ve boş bırakılamaz."
+
+msgid "about"
+msgstr "Hakkımızda"
+
+msgid "contact"
+msgstr "İletişim"
+
+msgid "legal"
+msgstr "Hukuki"
+
+msgid "tos"
+msgstr "Koşullar"
+
+msgid "privacy"
+msgstr "Gizlilik"
+
+msgid "complaint"
+msgstr "Bağlantı rapor et"
+
+msgid "source_code"
+msgstr "Kaynak kod"
+
+msgid "files_indexed"
+msgstr "endekslenmiş dosya"
+
+msgid "last_indexed_files"
+msgstr "Son eklenen dosyalar"
+
+msgid "i_want_that_file"
+msgstr "Bu. Dosyayı. İstiyorum."
+
+msgid "all"
+msgstr "Tümü"
+
+msgid "direct_downloads"
+msgstr "Doğrudan indirim"
+
+msgid "audio"
+msgstr "Ses"
+
+msgid "video"
+msgstr "Video"
+
+msgid "image"
+msgstr "Görüntü"
+
+msgid "document"
+msgstr "Döküman"
+
+msgid "software"
+msgstr "Yazılım"
+
+msgid "archive"
+msgstr "Arşiv"
+
+msgid "no_results_for"
+msgstr "Sonuç bulunamadı:"
+
+msgid "write_something"
+msgstr "Hey! Bir şeyler yazın"
+
+msgid "previous"
+msgstr "Önceki"
+
+msgid "next"
+msgstr "Sonraki"
+
+msgid "sources"
+msgstr "Kaynak"
+
+msgid "of_about"
+msgstr "toplam"
+
+msgid "results_for"
+msgstr "sonuç için, arama:"
+
+msgid "not_allow_browse_results"
+msgstr "Foofind 100. sayfadan sonra sonuç göstermez, üzgünüz."
+
+msgid "how_to_download"
+msgstr "Nasıl indirebilirim?"
+
+msgid "download_explanation"
+msgstr ""
+"Bağlantısı bulunan dosyayı indirmek için harici bir yazılıma ihtiyacınız "
+"olabilir. İşte birkaç uyumlu uygulamalar:"
+
+msgid "did_you_mean"
+msgstr "Bunu mu demek istediniz %(text)s?"
+
+msgid "all_sizes"
+msgstr "Tüm boyutlar"
+
+msgid "advanced_search"
+msgstr "Gelişmiş Arama"
+
+msgid "hide_advanced_search"
+msgstr "Gelişmiş aramayı sakla"
+
+msgid "smaller_than"
+msgstr "Bu değerden küçük"
+
+msgid "larger_than"
+msgstr "Bu değerden büyük"
+
+msgid "all_qualities"
+msgstr "Tüm kaliteler"
+
+msgid "or_better"
+msgstr "ya da iyisi"
+
+msgid "all_years"
+msgstr "Tüm yıllar"
+
+msgid "before"
+msgstr "Bu tarihten önce:"
+
+msgid "last_year"
+msgstr "Geçen sene"
+
+msgid "artist"
+msgstr "Sanatçı"
+
+msgid "title"
+msgstr "Başlık"
+
+msgid "author"
+msgstr "Yaratıcı"
+
+msgid "format"
+msgstr "Format"
+
+msgid "pages"
+msgstr "Sayfa"
+
+msgid "album"
+msgstr "Albüm"
+
+msgid "length"
+msgstr "Süre"
+
+msgid "bitrate"
+msgstr "Veri akışı"
+
+msgid "genre"
+msgstr "Tarz"
+
+msgid "seconds"
+msgstr "saniye"
+
+msgid "minutes"
+msgstr "dakika"
+
+msgid "source"
+msgstr "Kaynak"
+
+msgid "height"
+msgstr "Yükseklik"
+
+msgid "width"
+msgstr "Genişlik"
+
+msgid "track"
+msgstr "Parça"
+
+msgid "quality"
+msgstr "Kalite"
+
+msgid "num_pages"
+msgstr "Sayfa sayısı"
+
+msgid "include_results_from"
+msgstr "Bu ağdan sonuçları ekle:"
+
+msgid "size"
+msgstr "Boyut"
+
+msgid "unpacked_size"
+msgstr "Sıkıştırılmamış boyut"
+
+msgid "colors"
+msgstr "Renkler"
+
+msgid "version"
+msgstr "Sürüm"
+
+msgid "name"
+msgstr "İsim"
+
+msgid "description"
+msgstr "Açıklama"
+
+msgid "files"
+msgstr "Dosyalar"
+
+msgid "soundtype"
+msgstr "Ses tipi"
+
+msgid "year"
+msgstr "sene"
+
+msgid "years"
+msgstr "sene"
+
+msgid "month"
+msgstr "ay"
+
+msgid "months"
+msgstr "ay"
+
+msgid "day"
+msgstr "gün"
+
+msgid "days"
+msgstr "gün"
+
+msgid "hour"
+msgstr "saat"
+
+msgid "hours"
+msgstr "saat"
+
+msgid "minute"
+msgstr "dakika"
+
+msgid "second"
+msgstr "saniye"
+
+msgid "loading"
+msgstr "Yükleniyor"
+
+msgid "close"
+msgstr "Kapat"
+
+msgid "share_this"
+msgstr "Paylaş"
+
+msgid "share_facebook"
+msgstr "facebook ile paylaş"
+
+msgid "share_twitter"
+msgstr "twitter ile paylaş"
+
+msgid "send_by_email"
+msgstr "e-mail ile yolla"
+
+msgid "download"
+msgstr "İndir"
+
+msgid "watch"
+msgstr "İzle"
+
+msgid "your_comments"
+msgstr "Yorumlarınız"
+
+msgid "since"
+msgstr " since s nce"
+
+msgid "post_comment"
+msgstr "Yorum yazın"
+
+msgid "add_comment"
+msgstr "Yorum ekleyin"
+
+msgid "from"
+msgstr "'den"
+
+msgid "i_like_it"
+msgstr "Beğendim bunu!"
+
+msgid "booo"
+msgstr "Öf ki ne öf!"
+
+msgid "comment_published_succesfully"
+msgstr "Yorum başarıyla yayınlandı!"
+
+msgid "related_files"
+msgstr "Benzer dosyalar"
+
+msgid "user_profile"
+msgstr "Kullanıcı profili"
+
+msgid "your_password"
+msgstr "Şifrenizi seçiniz:"
+
+msgid "insert_your_password"
+msgstr "Şifrenizi giriniz (evet, yeniden):"
+
+msgid "fill_sing_up_form"
+msgstr "Foofind'a kayıt olmak için lütfen bu formu doldurunuz:"
+
+msgid "nickname"
+msgstr "Rumuz:"
+
+msgid "edit_profile"
+msgstr "profili düzenle"
+
+msgid "edit_your_profile"
+msgstr "Profilinizi düzenleyin"
+
+msgid "profile_edited_succesfully"
+msgstr "Profiliniz başarıyla düzenlendi!"
+
+msgid "hello"
+msgstr "merhaba,"
+
+msgid "logout"
+msgstr "çıkış"
+
+msgid "login"
+msgstr "oturum aç"
+
+msgid "new_user"
+msgstr "yeni kullanıcı"
+
+msgid "or"
+msgstr "ya da"
+
+msgid "register"
+msgstr "Kayıt ol"
+
+msgid "if_new_user"
+msgstr "yeni kullanıcıysanız, lütfen"
+
+msgid "register_here"
+msgstr "burada kayıt olunuz"
+
+msgid "choose_nickname"
+msgstr "Bir rumuz seçiniz:"
+
+msgid "user_login"
+msgstr "Kullanıcı girişi"
+
+msgid "remember_me"
+msgstr "Beni hatırla"
+
+msgid "your_location"
+msgstr "Konumunuz:"
+
+msgid "new_password"
+msgstr ""
+"Şifrenizi burada değiştiriniz: (istemiyorsanız bu alanı boş bırakınız)"
+
+msgid "save_profile"
+msgstr "Profili kaydet"
+
+msgid "not_allowed_view_page"
+msgstr "Bu sayfayı görüntüleme izniniz yok"
+
+msgid "username_taken"
+msgstr ""
+"Bu kullanıcı adı halihazırda kullanılmaktadır. Başka bir tane seçiniz."
+
+msgid "email_taken"
+msgstr "Bu email alınmıştır. Başka bir email seçiniz."
+
+msgid "forgot"
+msgstr "Unuttunuz mu"
+
+msgid "your_password?"
+msgstr "şifrenizi?"
+
+msgid "passwords_not_match"
+msgstr "Girilen şifreler eşleşmiyor, değişik."
+
+msgid "sure_delete_account"
+msgstr "Hesabınızı silmek istediğinizden emin misiniz?"
+
+msgid "yes"
+msgstr "Evet"
+
+msgid "account_deleted"
+msgstr "Hesabınız silinmiştir."
+
+msgid "nice_to_hear_that"
+msgstr "Bunu duyduğumuza memnunuz"
+
+msgid "profile"
+msgstr "profil"
+
+msgid "username"
+msgstr "Kullanıcı adı:"
+
+msgid "member_since"
+msgstr "Bu tarihten beri üye:"
+
+msgid "last_comments"
+msgstr "Son %(comments)d yorumu:"
+
+msgid "location"
+msgstr "Konumu:"
+
+msgid "delete_account"
+msgstr "Foofind hesabını sil"
+
+msgid "forgot_password"
+msgstr "Şifrenizi mi unuttunuz?"
+
+msgid "wrong_email_password"
+msgstr "Hatalı e-mail ya da şifre, tekrar deneyiniz"
+
+msgid "welcome"
+msgstr "Hoş geldiniz"
+
+msgid "finish_register"
+msgstr "Kayıt işlemlerini tamamlamak için bu bağlantıyı tıklayınız:"
+
+msgid "token_not_exist"
+msgstr "Üzgünüz, bu jeton yoktur ya da zaten kullanılmıştır. "
+
+msgid "confirm_email"
+msgstr ", e-mail adresinizi teyit ediniz"
+
+msgid "check_inbox_email_finish"
+msgstr ""
+"Kayıt işlemlerini tamamlamak için e-mail adresinize gelen mesajları kontrol "
+"ediniz."
+
+msgid "foofind_team"
+msgstr "Foofind ekibi."
+
+msgid "user_not_exist"
+msgstr "Bu isimde bir kullanıcı yoktur"
+
+msgid "logged_in"
+msgstr "Oturum açılmıştır,"
+
+msgid "registered_user"
+msgstr "Hesabınız varsa, lütfen"
+
+msgid "login_here"
+msgstr "buradan giriş yapın"
+
+msgid "enter_email"
+msgstr ""
+"E-mail adresinizi giriniz. Hesabınıza erişimi yeniden kazanmanız için bir "
+"e-mail size gönderilecektir."
+
+msgid "email_same_register"
+msgstr "Bu e-mail kayıtta kullanılan e-mail'in aynısı olmalıdır."
+
+msgid "email_not_database"
+msgstr "Bu e-mail veritabanımızda bulunmamaktadır. Yeniden deneyiniz."
+
+msgid "check_inbox_email_restore"
+msgstr ""
+"Hesabınıza erişimi yeniden kazanmak için e-mail adresinize gelen mesajları "
+"kontrol ediniz."
+
+msgid "restore_access"
+msgstr ", Foofind hesabınızı tekrar etkinleştiriniz"
+
+msgid "restore_account"
+msgstr ""
+"Birisi, muhtemelen siz, Foofind oturumunuzu tekrar etkinleştirmek istiyor. "
+"Bu bağlantıyı tıklayarak Foofind hesabınızı tekrar etkinleştirebilirsiniz:"
+
+msgid "ignore_message"
+msgstr "Yoksa bu mesajı görmezden geliniz."
+
+msgid "login_vote"
+msgstr "Oy vermek için giriş yapınız."
+
+msgid "login_comment"
+msgstr "Yorumlamak için giriş yapınız."
+
+msgid "technical_problems"
+msgstr "%(service)s servisimizde teknik bir sorun çıkmıştır, özür dileriz."
+
+msgid "allow_access_account"
+msgstr ""
+"Bu işlevi kullanmak için Foofind'ın %(account)s oturumunuza erişmesine izin "
+"vermelisiniz."
+
+msgid "submit_search"
+msgstr "Ara"
+
+msgid "contact_form"
+msgstr "İletişim formu"
+
+msgid "link_removal"
+msgstr ""
+"Not: Bir bağlantının kaldırılmasını istiyorsanız, %(report_form)s "
+"kullanmanız gerekir."
+
+msgid "complaints_ignored"
+msgstr "Bu formdan yapılan şikâyetler dikkate alınmayacaktır."
+
+msgid "your_message"
+msgstr "Mesajınız:"
+
+msgid "insert_characters"
+msgstr "Lütfen gösterilen 5 karakteri giriniz:"
+
+msgid "captcha_wrong"
+msgstr "Captcha karakterleri yanlış."
+
+msgid "message_sent"
+msgstr "Mesaj başarıyla gönderilmiştir!"
+
+msgid "your_name"
+msgstr "İsminiz:"
+
+msgid "your_surname"
+msgstr "Soyadınız:"
+
+msgid "your_company"
+msgstr "Firmanız:"
+
+msgid "your_phone"
+msgstr "Telefon numaranız:"
+
+msgid "link_reviewed"
+msgstr "Lütfen incelenecek bağlantıyı giriniz:"
+
+msgid "url_content"
+msgstr "Lütfen bu içeriğin bulunduğu URL'i giriniz:"
+
+msgid "reason_complaint"
+msgstr "Şikâyetinizin nedeni:"
+
+msgid "accept_terms"
+msgstr "Lütfen kullanım şartlarını ve gizlilik kurallarını kabul ediniz"
+
+msgid "not_foofind_page"
+msgstr "Bağlantı bir Foofind sayfası olamaz"
+
+msgid "not_foofind_link"
+msgstr "URL'in geçerli bir Foofind indirme sayfası olması lâzımdır"
+
+msgid "include_reported_links"
+msgstr ""
+"Şikâyet ettiğiniz bağlantıları lütfen formda gereken alanlara giriniz."
+
+msgid "submit_links"
+msgstr "Bağlantı önerimi"
+
+msgid "include_link_per_line"
+msgstr ""
+"Lütfen satır başına bir http, ftp, ed2k ya da magnet bağlantısı giriniz.<br "
+"/>Bunlar otomatik olarak taranacak ve kısa bir süre sonra arama sonuçlarına "
+"eklenecektir."
+
+msgid "link_sent"
+msgstr "Bağlantılar gönderilmiştir. Teşekkür ederiz!"
+
+msgid "footer"
+msgstr ""
+"Web sitesi Creative Commons <a rel='license content' "
+"href='http://creativecommons.org/licenses/by-sa/3.0/deed.tr'>BY-SA</a> "
+"lisansı altındadır. <a href='http://code.google.com/p/Foofind/'>Kaynak "
+"kodu</a> <a rel='license source code' "
+"href='http://www.gnu.org/licenses/agpl.html'>Affero GPL</a> lisansı "
+"altındadır."
+
+msgid "about_text"
+msgstr ""
+"Foofind evrensel bir arama motorudur. Foofind'da tüm ağları tarayan ve her "
+"dosyayı endeksleyen yazılımlar üzerinde çalışmaktayız. Bu şekilde mümkün "
+"olan en geniş bağlantı koleksiyonunu sunmayı amaçlıyoruz.<br /><br />Foofind"
+" P2P teknoloji tasarımcısı Pablo Soto'nun eseri olup, Madrid, İspanya'da "
+"MP2P Technologies tarafından geliştirilmektedir."
+
+msgid "under_maintenance"
+msgstr "Foofind bakımdadır. Daha sonra tekrar ziyaret ediniz."
+
+msgid "link_not_exist"
+msgstr "Bu bağlantı yoktur ya da silinmiş olabilir!"
+
+msgid "translate"
+msgstr "Tercüme"
+
+msgid "translate_to_your_language"
+msgstr "Foofind'ı dilinize çevirmemize yardım edin"
+
+msgid "translate_description"
+msgstr ""
+"Foofind şu anda birkaç dilde hizmet sunmaktadır, ama çeviri için bize "
+"yardımda bulunabilirsiniz. Aşağıdaki listeden dilinizi seçip gereken "
+"alanları tercümeniz ile doldurmanız yeterli olacaktır. Bütün alanları "
+"doldurmanıza gerek yoktur, tüm yardımlar makbûle geçecektir.<br/><br/>Eğer "
+"diliniz listede mevcut değilse, eklememiz için bizimle iletişime geçmenizi "
+"rica ederiz."
+
+msgid "choose_language"
+msgstr "Dil seçimi"
+
+msgid "translation_sent"
+msgstr "Tercümeniz gönderilmiştir. Yardımınız için teşekkür ederiz!"
+
+msgid "translate_at_least_one"
+msgstr "Lütfen en az bir metin tercüme ediniz."
+
+msgid "here"
+msgstr "bunu rapor ediniz"
+
+msgid "translation_beta"
+msgstr ""
+"Bu dilin tercümesi test aşamasındadır. Yanlış ya da eksik bir çeviri "
+"bulursanız, lütfen %(here)s."
+
+msgid "other"
+msgstr "Diğer"
