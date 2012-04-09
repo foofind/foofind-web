@@ -27,6 +27,26 @@ msgstr "Contraseña:"
 msgid "submit"
 msgstr "Enviar"
 
+# errors
+msgid "go_home"
+msgstr "Volver al buscador"
+
+msgid "error_404_message"
+msgstr "Página no encontrada."
+
+msgid "error_404_description"
+msgstr "La url no ha sido encontrada. ¿La dirección es correcta? Si es así, agradeceríamos que nos avisaras."
+
+msgid "error_502_message"
+msgstr "Pasarela incorrecta."
+
+msgid "error_502_description"
+msgstr "Se ha intentado acceder al servicio web con una ubicación incorrecta."
+
+# mail errors
+msgid "error_mail_send"
+msgstr "Ha ocurrido un error al enviar el mensaje a la dirección de correo indicada. Por favor elija otra o inténtelo de nuevo más tarde."
+
 # validators
 msgid "non_alphabetic_digits"
 msgstr "%(value)s contains characters which are non alphabetic and no digits"
@@ -649,7 +669,10 @@ msgid "under_maintenance"
 msgstr "Foofind está en parada de mantenimiento. Por favor, vuelve dentro de un rato."
 
 msgid "link_not_exist"
-msgstr "¡Este enlace no existe o ha sido eliminado!"
+msgstr "Este enlace no existe o ha sido eliminado."
+
+msgid "error_link_removed"
+msgstr "Lo sentimos, este enlace ha sido eliminado de su origen."
 
 # translate
 msgid "translate"
@@ -680,21 +703,6 @@ msgid "other"
 msgstr "Otro"
 
 # Felipe <felipe@mp2p.net>, 2011.
-msgid "go_home"
-msgstr "Volver al buscador"
-
-msgid "error_404_message"
-msgstr "404: Página no encontrada."
-
-msgid "error_404_description"
-msgstr "La url no ha sido encontrada. ¿La dirección es correcta? Si es así, agradeceríamos que nos avisaras."
-
-msgid "error_502_message"
-msgstr "502: Pasarela incorrecta."
-
-msgid "error_502_description"
-msgstr "Se ha intentado acceder al servicio web con una ubicación incorrecta."
-
 msgid "admin_prefix"
 msgstr "Administración"
 
@@ -857,6 +865,9 @@ msgstr "Despliegue"
 msgid "admin_deploy_deploy"
 msgstr "Despliegue automático"
 
+msgid "admin_deploy_deploy_rollback"
+msgstr "Rollback automático"
+
 msgid "admin_deploy_phase_restart"
 msgstr "Reinicio"
 
@@ -892,6 +903,12 @@ msgstr "Mensaje de publicación"
 
 msgid "admin_deploy_publish_mode"
 msgstr "Despliegue a publicar"
+
+msgid "admin_deploy_publish_empty"
+msgstr "Todos los campos de publicación son obligatorios"
+
+msgid "admin_deploy_publish_bad_version"
+msgstr "El código de versión no es válido"
 
 msgid "admin_deploy_package"
 msgstr "Empaquetar desde git"
@@ -941,8 +958,20 @@ msgstr "Búsqueda"
 msgid "admin_origins_save"
 msgstr "Guardar cambios"
 
+msgid "admin_saved"
+msgstr "Cambios guardados"
+
 msgid "admin_origins_info"
 msgstr "Datos de origen"
+
+msgid "admin_nochanges"
+msgstr "Sin cambios"
+
+msgid "admin_edit"
+msgstr "Edición"
+
+msgid "admin_edit_submit"
+msgstr "Guardar cambios"
 
 msgid "opensearch_description"
 msgstr "Buscar usando Foofind"

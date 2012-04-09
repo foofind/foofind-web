@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from flask import Blueprint, jsonify, render_template, request, redirect, url_for, flash, current_app, abort, send_file
+from werkzeug.datastructures import MultiDict
 from flaskext.babel import gettext as _
 from wtforms import BooleanField, TextField, TextAreaField, HiddenField
 from foofind.utils import lang_path, expanded_instance, fileurl2mid, mid2hex, hex2mid, url2mid
@@ -14,6 +15,10 @@ from collections import OrderedDict
 import polib
 import itertools
 import deploy.fabfile as fabfile
+import json
+import hashlib
+import datetime
+import types
 
 import multiprocessing
 import time
@@ -124,6 +129,17 @@ def deploy_backups():
     backups = fabfile.get_backups()
     backups.sort(key=lambda x:x.split("/")[-1])
     return itertools.groupby(backups, lambda x: x[x.rfind("/")+1:-4 if x.endswith(".txt") else x.rfind("_")])
+
+def deploy_backups_datetimes():
+    '''
+    Lista los archivos de backup que retorna el fabfile con fechas
+    '''
+    tr = [
+        (i, "%s | %s" % (j.isoformat("T").replace("T", " | ").split(".")[0], i.split("/")[-1].split("_")[0]))
+        for i, j in fabfile.get_backups_datetimes().iteritems()]
+    # Ordeno por fecha, de más reciente a más antigua
+    tr.sort(key=lambda x:x[1], reverse=True)
+    return tr
 
 def admin_required(fn):
     '''
@@ -313,68 +329,27 @@ def users():
     Administración de usuarios
     '''
     # Esta plantilla tiene 2 formularios, filtramos según cuál haya sido enviado
-    searchformrequest = request.form if request.form.get("searchform_submit", False) else None
-    userformrequest = request.form if request.form.get("userform_submit", False) else None
 
-    searchform = SearchUserForm(searchformrequest, prefix="searchform_")
-    userform = None
-
-    fieldnames = ("karma", "token", "username", "email", "password", "lang", "location", "karma", "active", "type", "oauthid")
-
-    properties = ()
+    searchform = SearchUserForm(request.form, prefix="searchform_")
 
     if request.method == "POST":
         user_data = None
-        if searchformrequest:
-            mode = searchform.mode.data
-            identifier = searchform.identifier.data
-            if mode == "username": user_data = usersdb.find_username(identifier)
-            elif mode == "email": user_data = usersdb.find_email(identifier)
-            elif mode == "hexid": user_data = usersdb.find_userid(identifier)
-            elif mode == "oauth": user_data = usersdb.find_oauthid(identifier)
-        elif userformrequest:
-            user_data = {i.strip():None for i in request.form.get("userform_props","").split(";")}
+        mode = searchform.mode.data
+        identifier = searchform.identifier.data
+        if mode == "username": user_data = usersdb.find_username(identifier)
+        elif mode == "email": user_data = usersdb.find_email(identifier)
+        elif mode == "hexid": user_data = usersdb.find_userid(identifier)
+        elif mode == "oauth": user_data = usersdb.find_oauthid(identifier)
 
         if user_data:
-            password_hash = user_data.pop("password") if "password" in user_data else None
-            created = ""
-            if "created" in user_data:
-                if user_data["created"] is None: created = user_data["created"]
-                else: created = user_data["created"].strftime("%Y-%m-%d %H:%M:%S.%f")
-            user_data.update((i, "") for i in fieldnames if not i in user_data)
-            properties = user_data.keys()
-            if "password" in user_data:
-                properties.remove("password") # Añadimos password al formulario manualmente
-            if "created" in user_data:
-                properties.remove("created") # Añadimos password al formulario manualmente
-            if "_id" in user_data: properties.remove("_id")
-            fields = {"field_%s" % key:
-                TextField(key, default=user_data[key], description=key)
-                for key in properties}
-            fields["field_password"] = TextField("password", default="", description=password_hash)
-            userform = expanded_instance(EditUserForm, fields, userformrequest, prefix="userform_")
-            if "_id" in user_data: userform.userid.data = user_data["_id"]
-            if created: userform.created.data = created
-            userform.props.data = ";".join(properties)
-
-            if userformrequest and userform.submit.data:
-                data = {key[6:]: userform[key].data for key, value in fields.iteritems() if userform[key].data.strip()}
-                data["_id"] = userform.userid.data
-                usersdb.update_user(data)
-                if data["username"]:
-                    searchform["identifier"].data = data["username"]
-                    searchform["mode"].data = "username"
-                flash("admin_users_updated","success")
+            return redirect(url_for("admin.db_edit", collection="user", document_id=mid2hex(user_data["_id"])))
         else:
             flash("admin_users_not_found","error")
 
     return render_template('admin/users.html',
         page_title=_('admin_users'),
         blocked=False,
-        user_properties=properties,
-        search_form=searchform,
-        user_form=userform,
-        title=admin_title('admin_locks_fileinfo'))
+        search_form=searchform)
 
 @admin.route('/<lang>/admin/translations')
 @admin_required
@@ -496,6 +471,7 @@ def deploy_status():
     return jsonify(
         available = available,
         backups=[(i,tuple(j)) for i, j in deploy_backups()],
+        publish=deploy_backups_datetimes(),
         stdout=deployTask.stdout.get_data(),
         stderr=deployTask.stderr.get_data()
         )
@@ -511,12 +487,7 @@ def deploy():
     size = request.args.get("size", 15, int)
     form = DeployForm(request.form)
     form.mode.choices = [(i,i) for i in fabfile.get_modes()]
-    form.publish_mode.choices = [
-        (i, "%s | %s" % (j.isoformat("T").replace("T", " | ").split(".")[0], i.split("/")[-1].split("_")[0]))
-        for i, j in fabfile.get_backups_datetimes().iteritems()
-        ]
-    # Ordeno por fecha, de más reciente a más antigua
-    form.publish_mode.choices.sort(key=lambda x:x[1], reverse=True)
+    form.publish_mode.choices = deploy_backups_datetimes()
 
     if request.method == "POST" and not deployTask.busy:
         flash("admin_deploy_in_progress", "message in_progress_message")
@@ -524,6 +495,7 @@ def deploy():
         config = None
         task = (
             "deploy" if form.deploy.data else
+            "deploy-rollback" if form.deploy_rollback.data else
             "clean-local" if form.clean_local.data else
             "clean-remote" if form.clean_remote.data else
             "restart" if form.restart.data else
@@ -533,17 +505,22 @@ def deploy():
             "commit-deploy" if form.commit.data else
             "publish" if form.publish.data else None
             )
-        if task == "deploy" and fabfile.is_self_target(mode, task):
-            task = "deploy-safely"
+        if task.startswith("deploy") and fabfile.is_self_target(mode, task):
+            task += "-safely"
             flash("admin_deploy_manual_restart", "message")
         elif task == "publish":
             path = form.publish_mode.data
             message = form.publish_message.data.strip()
             version = form.publish_version.data.strip()
             for i in (path, message, version):
-                if not i: break
+                if not i:
+                    flash("admin_deploy_publish_empty", "error")
+                    break
             else:
-                config = {"path":path,"message":message,"version":version}
+                if " " in version or any(not i.isdigit() for i in version.split("-")[0].split(".")):
+                    flash("admin_deploy_publish_bad_version", "error")
+                else:
+                    config = {"path":path,"message":message,"version":version}
         if task: deployTask.run(mode, task, config)
         else: abort(502)
 
@@ -616,50 +593,196 @@ def origins():
         page_size=limit,
         page=page)
 
-@admin.route('/<lang>/admin/origins/<int:originid>', methods=("GET","POST"))
+# Pares de parsers para diccionario de parsers
+db_data_int = (
+    lambda x: (
+        "%d" % x if isinstance(x, (int,float)) else
+        x if isinstance(x, basestring) and x.count(".") in (0,1) and x.replace(".","").isdigit() else "0"
+        ),
+    lambda x: int(float(x)) if x.count(".") in (0,1) and x.replace(".","").isdigit() else 0
+    )
+db_data_float = (
+    lambda x: (
+        "%g" % x if isinstance(x, (int,float)) else
+        x if isinstance(x, basestring) and x.count(".") in (0,1) and x.replace(".","").isdigit() else "0.0"
+        ),
+    lambda x: float(x) if x.count(".") in (0,1) and x.replace(".","").isdigit() else 0.0
+    )
+db_data_bool = (
+    lambda x: "1" if x else "0",
+    lambda x: 1 if x.lower() in ("1","true") else 0,
+    )
+db_data_list_str = (
+    lambda x: ",".join(x) if isinstance(x, list) else "",
+    lambda x: [i.strip() for i in x.split(",")]
+    )
+# Diccionario de parsers [collection][prop] = (data to form, form to data)
+db_parsers = {
+    "origin": {
+        "g": db_data_list_str,
+        "crbl": db_data_int,
+        },
+    "user":{
+        "karma": db_data_float,
+        "active": db_data_bool,
+        "type": db_data_float,
+        "token": (
+            lambda x: x if x else "",
+            lambda x: x if x else None
+            )
+        }
+    }
+# MongoDB data to form
+db_dtf = lambda a, b, c: db_parsers[a][b][0](c) if a in db_parsers and b in db_parsers[a] else c
+# form to MongoDB data
+db_ftd = lambda a, b, c: db_parsers[a][b][1](c) if a in db_parsers and b in db_parsers[a] else c
+# fieldname
+db_fnm = lambda x: "field_%s" % x.replace(" ","_")
+# json_fixer
+fjson = lambda x: x if isinstance(x,( dict, list, unicode, int, long, float, bool, types.NoneType)) else str(x)
+@admin.route('/<lang>/admin/db/edit/<collection>/<document_id>', methods=("GET","POST"))
 @admin_required
-def manage_origin(originid):
+def db_edit(collection, document_id=None):
     '''
-    Edición de origen
+    Edición de base de datos
     '''
     page = request.args.get("page", 0, int)
     grps = request.args.get("mode", "all", str)
     mode = request.args.get("show", "current", str)
     size = request.args.get("size", 15, int)
 
-    if "props" in request.form:
-        origin = None
-        props = request.form["props"].split(",")
+    page_title = "admin_edit"
+    form_title = "admin_edit"
+    data = None
+
+    form_force_fields = ()
+    form_readonly_fields = ("_id",)
+    document = {}
+    if collection == "user":
+        page_title = 'admin_users'
+        form_title = 'admin_users_info'
+        form_force_fields += ("karma", "token", "username", "email", "new password", "lang", "location", "karma", "active", "type", "oauthid")
+        form_readonly_fields += ("created","password")
+        data = usersdb.find_userid(document_id) if document_id else {}
+    elif collection == "origin":
+        page_title = 'admin_origins_info'
+        form_title = 'admin_origins_info'
+        form_force_fields += ("tb", "crbl", "d", "g")
+        #form_readonly_fields += ()
+        data = filesdb.get_source_by_id(float(document_id)) if document_id else {}
     else:
-        origin = filesdb.get_source_by_id(originid)
-        if not "crbl" in origin: origin["crbl"] = 0
-        props = origin.keys()
-        props.remove("_id")
+        abort(500)
 
-    fn = "field_%s"
-    fields = {fn % i: TextField(i,
-            default=(", ".join(origin[i]) if i == "g" else origin[i])
-            if origin and i in origin else None)
-        for i in props}
-    originform = expanded_instance(OriginForm, fields, request.form)
-    originform.props.data = ",".join(props)
+    document.update((i, db_ftd(collection, i,"")) for i in form_force_fields)
+    document.update(data)
 
-    if request.method == "POST" and originform.validate():
-        req = {i: originform[fn % i].data for i in props}
-        req["_id"] = originid
-        filesdb.update_source(req)
-        return redirect(url_for('admin.origins', page=page, mode=grps, show=mode, size=size))
+    document_defaults = {fjson(i):fjson(j) for i, j in document.iteritems()}
+    document_writeable = [k for k in document.iterkeys() if k not in form_readonly_fields]
 
-    return render_template('admin/origin.html',
-        page_title=_('admin_origins_info'),
-        title=admin_title('admin_origins_info'),
-        originid = originid,
-        origin_properties = props,
-        origin_form = originform,
-        list_mode=grps,
-        mode=mode,
-        page_size=size,
-        page=page)
+    edit_form = expanded_instance(EditForm,
+        {db_fnm(k): TextField(k, default=db_dtf(collection, k, document[k])) for k in document_writeable},
+        request.form)
+
+    edit_form.defaults.data = json.dumps(document_defaults)
+    edit_form.editable.data = json.dumps(document_writeable)
+
+    return render_template('admin/edit.html',
+        collection=collection,
+        document_id=document_id,
+        title = admin_title(page_title),
+        page_title = _(page_title),
+        edit_form = edit_form,
+        form_title = _(form_title),
+        fieldname = db_fnm,
+        document_writeable = [(k, document[k]) for k in document_writeable],
+        document_readonly = [(k, document[k]) for k in document if not k in document_writeable],
+        list_mode = grps, mode = mode, page_size = size, page = page)
+
+@admin.route('/<lang>/admin/db/confirm/<collection>/<document_id>', methods=("POST",))
+@admin_required
+def db_confirm(collection, document_id=None):
+    '''
+    Confirmación de edición de base de datos
+    '''
+    page = request.args.get("page", 0, int)
+    grps = request.args.get("mode", "all", str)
+    mode = request.args.get("show", "current", str)
+    size = request.args.get("size", 15, int)
+
+    goback = lambda: redirect(url_for(url_id, page = page, mode = grps, show = mode, size = size))
+
+    document = json.loads(request.form.get("defaults"))
+    document_writeable = json.loads(request.form.get("editable"))
+
+    request_form_dict = MultiDict(request.form)
+
+    success_msgid = "admin_saved"
+    unchanged_msgid = "admin_nochanges"
+
+    if collection == "user":
+        page_title = 'admin_users'
+        form_title = 'admin_users_info'
+        success_msgid = "admin_users_updated"
+        url_id = "admin.users"
+        save_fnc = lambda data: usersdb.update_user(data)
+        new_password = request_form_dict.pop(db_fnm("new password"), None)
+        if new_password:
+            document_writeable.append("password")
+            request_form_dict[db_fnm("password")] = new_password
+    elif collection == "origin":
+        page_title = 'admin_origins_info'
+        form_title = 'admin_origins_info'
+        url_id = "admin.origins"
+        save_fnc = lambda data: filesdb.update_source(data)
+
+    if request.form.get("confirmed", "False")=="True":
+        # La petición ha sido realizada por el formulario de confirmación,
+        # lo procesamos.
+        check_form = expanded_instance(EditForm,
+            {db_fnm(k): BooleanField(k) for k in document_writeable},
+            request_form_dict)
+        data = {k: document[k] for k in document_writeable if check_form[db_fnm(k)].data}
+        if data:
+            data["_id"] = hex2mid(document_id)
+            save_fnc(data)
+            flash(success_msgid, "success")
+            return goback()
+        else:
+            flash(unchanged_msgid, "error")
+            return goback()
+    else:
+        # No se trata del petición confirmada, procesamos el formulario como
+        # viene de db_edit, generamos el formulario de confirmación.
+
+        edit_form = expanded_instance(EditForm,
+            {db_fnm(k): TextField(k, default=db_dtf(collection, k, document[k])) for k in document_writeable},
+            request_form_dict)
+        document_changes = [
+            (k, document[k], db_ftd(collection, k, edit_form[db_fnm(k)].data))
+            for k in document_writeable if edit_form[db_fnm(k)].data != db_dtf(collection, k, document[k])
+            ]
+        if document_changes:
+            check_form = expanded_instance(EditForm,
+                {db_fnm(k): BooleanField(k, default=False) for k, w, w in document_changes})
+            check_form.defaults.data = json.dumps({k:v for k, w, v in document_changes})
+            check_form.editable.data = json.dumps([k for k, w, v in document_changes])
+            check_form.confirmed.data = True
+        else:
+            flash(unchanged_msgid, "error")
+            return goback()
+
+    return render_template('admin/confirm.html',
+        collection=collection,
+        document_id=document_id,
+        title = admin_title(page_title),
+        page_title = _(page_title),
+        check_form = check_form,
+        form_title = _(form_title),
+        fieldname = db_fnm,
+        repr=repr,
+        document_changes = document_changes,
+        list_mode = grps, mode = mode, page_size = size, page = page)
+
 
 def add_admin(app):
     pomanager.init_lang_repository(app)

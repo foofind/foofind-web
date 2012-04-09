@@ -27,8 +27,8 @@ SERVICE_SPHINX = "sphinx.foofind.com"
 SERVICE_SPHINX_PORT = 33000
 SERVICE_SPHINX_MAX_QUERY_TIME = 1500
 
-SERVICE_TAMING_SERVER = ("tamming.foofind.com",24642)
-SERVICE_TAMING_TIMEOUT = 500
+SERVICE_TAMING_SERVERS = (("taming.foofind.com",24642))
+SERVICE_TAMING_TIMEOUT = 1.0
 
 CACHE_SEARCHES = True
 CACHE_FILES = True
@@ -37,6 +37,8 @@ CACHE_TAMING = True
 CACHE_KEY_PREFIX = "foofind/"
 CACHE_MEMCACHED_SERVERS = ()
 CACHE_TYPE = "memcached"
+
+PROFILER_KEYS = ["taming_dym","taming_tags","mongo","sphinx"]
 
 EXTENSIONS = {"264":2, "3d":5, "3ds":5, "3dr":5, "3g2":2, "3gp":2, "7z":7, "7zip":7,
     "aac":1, "abr":5, "abw":9, "ace":7, "act":5, "aeh":3, "afp":9, "ai":5, "aif":1,
@@ -125,6 +127,7 @@ LANGS = ('en', 'es')
 BETA_LANGS = [lang for lang in ALL_LANGS if lang not in LANGS]
 
 COUNT_UPDATE_INTERVAL = 300
+FOOCONN_UPDATE_INTERVAL = 300
 
 ADMIN_HOSTS = ()
 ADMIN_LANG_LOCAL_REPO = "repo/lang"

@@ -16,7 +16,7 @@
         {% if files_data %}
             <h3 class="list">{{_('admin_locks_complaint_fileinfo')}}</h3>
             {% for fileid, file_data in files_data.iteritems() %}
-            <dl class="list">
+            <dl class="list {% if not loop.index is divisibleby(2) %}alternate{% endif %}">
                 {% for prop in file_data %}
                 <dt>{{prop}}</dt>
                 <dd>{{file_data[prop]}}</dd>

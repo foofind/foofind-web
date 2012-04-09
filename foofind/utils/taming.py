@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 
 import socket
-import logging
+import logging, random
 from threading import Thread
 from flask import json
 
 class TamingClient():
 
-    def __init__(self, address, timeout):
+    def __init__(self, addresses, timeout):
         '''
             @param timeout: número de segundos máximos de espera. Puede
             ser un valor con decimales.
         '''
-        self.address = address
+        self.addresses = addresses
         self.timeout = timeout
         self.connection = None
         
@@ -20,7 +20,7 @@ class TamingClient():
         if self.connection is None:
             try:
                 self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                self.connection.connect(self.address)
+                self.connection.connect(random.choice(self.addresses))
                 self.connection.settimeout(self.timeout)
             except Exception as e:
                 logging.exception("Error connecting to taming service.")
@@ -48,6 +48,9 @@ class TamingClient():
             lenrec = ord(lenrec[0])*256+ord(lenrec[1])
             line = self.connection.recv(lenrec)
             result = json.loads(line[:-1])
+        except socket.timeout as e:
+            logging.warn("Timeout when calling taming service.")
+            result = None
         except Exception as e:
             logging.exception("Error talking to taming service.")
             result = None

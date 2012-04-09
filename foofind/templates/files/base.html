@@ -10,7 +10,7 @@
 {% block header %}
         <h1>
             <a href="{{ url_for('index.home') }}">
-                <img src="/static/foofind3.png" alt="File search engine - foofind.com" title="foofind.com"/>
+                <img src="/static/foofind3.png" alt="File search engine - Foofind" title="Foofind"/>
             </a>
         </h1>
         {%- if args["q"] -%}
@@ -29,7 +29,6 @@
         {%- endif -%}
             <form method="get" action="{{ url_search() }}" class="searchbox">
                 <fieldset>
-                    <div id="tamingresults" style="display: none;"></div>
                     {{ search_form.q(autocomplete="off",value=args["q"]) }}
                     {{ search_form.type(value=args["type"]) }}
                     <input type="hidden" id="src" name="src" value="{{args['src']}}" />

@@ -4,13 +4,12 @@
 """
 from flask import Blueprint, g, render_template, request, flash, current_app, redirect, url_for, abort
 from flaskext.babel import gettext as _
-from flaskext.mail import Message
 from wtforms import Form,FieldList,TextField,TextAreaField,SubmitField
 from babel import localedata
 from foofind.forms.pages import ContactForm, SubmitLinkForm, ReportLinkForm, SelectLanguageForm, TranslateForm, JobsForm
 from foofind.services import *
 from foofind.translations.samples_values import samples
-from foofind.utils import lang_path, expanded_instance
+from foofind.utils import lang_path, expanded_instance, nocache
 from functools import cmp_to_key
 import locale
 import polib
@@ -23,15 +22,9 @@ page = Blueprint('page', __name__)
 def page_globals():
     return {"zone": "page"}
 
-def send_mail(subject,form,to="CONTACT_EMAIL",attachment=None):
-    '''
-    Envía los correos de los formularios
-    '''
-    msg=Message(_(subject),[current_app.config[to]],html=render_template('email/pages.html',form=form,request=request))
-    if attachment is not None:
-        msg.attach(attachment[0],attachment[1],attachment[2])
-
-    mail.send(msg)
+@page.before_request
+def set_search_form():
+    g.title+=" - "
 
 @page.route('/<lang>/page/<pname>')
 def old_show(pname):
@@ -51,10 +44,12 @@ def show(pname):
     '''
     if not pname in valid_pages:
         abort(404)
-        
+
+    g.title+=_(pname)
     return render_template('pages/page.html',page_title=_(pname),page_text=valid_pages[pname],domain=g.domain)
 
 @page.route('/<lang>/jobs', methods=['GET', 'POST'])
+@nocache
 def jobs():
     '''
     Página de oferta de trabajo
@@ -66,26 +61,29 @@ def jobs():
         if ufile.filename:
             attach=(ufile.filename,ufile.content_type,ufile.read())
 
-        send_mail("Ofertas de empleo",form,"JOBS_EMAIL",attach)
-        flash("message_sent")
-        return redirect(url_for('index.home'))
+        if send_mail("Ofertas de empleo",current_app.config["JOBS_EMAIL"],"pages",attach,form=form):
+            flash("message_sent")
+            return redirect(url_for('index.home'))
 
+    g.title+="Ofertas de empleo"
     return render_template('pages/jobs.html',page_title="Ofertas de empleo",form=form)
 
 @page.route('/<lang>/contact', methods=['GET', 'POST'])
+@nocache
 def contact():
     '''
     Muestra el formulario de contacto
     '''
     form = ContactForm(request.form)
-    if request.method=='POST' and form.validate():
-        send_mail("contact",form)
+    if request.method=='POST' and form.validate() and send_mail("contact",current_app.config["CONTACT_EMAIL"],"pages",form=form):
         flash("message_sent")
         return redirect(url_for('index.home'))
 
+    g.title+=_("contact")
     return render_template('pages/contact.html',page_title=_("contact"),form=form)
 
 @page.route('/<lang>/submitlink', methods=['GET', 'POST'])
+@nocache
 def submit_link():
     '''
     Muestra el formulario para agregar enlaces
@@ -96,9 +94,11 @@ def submit_link():
         flash("link_sent")
         return redirect(url_for('index.home'))
 
+    g.title+=_("submit_links")
     return render_template('pages/submit_link.html',page_title=_("submit_links"),form=form)
 
 @page.route('/<lang>/complaint', methods=['GET', 'POST'])
+@nocache
 def complaint():
     '''
     Muestra el formulario para reportar enlaces
@@ -108,9 +108,12 @@ def complaint():
         pagesdb.create_complaint(dict([("ip",request.remote_addr)]+[(field.name,field.data) for field in form]))
         flash("message_sent")
         return redirect(url_for('index.home'))
+
+    g.title+=_("complaint")
     return render_template('pages/complaint.html',page_title=_("complaint"),form=form)
 
 @page.route('/<lang>/translate',methods=['GET','POST'])
+@nocache
 def translate():
     '''
     Edita la traducción a un idioma
@@ -188,7 +191,7 @@ def translate():
                     description=msgstr[1]
 
                 # si la traduccion es mayor de 80 caracteres se utiliza un textarea en vez de un input text
-                length=len(new_lang[msgid] or msg)                
+                length=len(new_lang[msgid] or msg)
                 if length>80:
                     formfields[msgid]=TextAreaField(msg,default=new_lang[msgid],description=description)
                     # se le establecen las filas al text area dependiendo del tamaño de la traduccion
@@ -207,9 +210,10 @@ def translate():
             pagesdb.create_translation({"ip":request.remote_addr,"user_lang":g.lang,"dest_lang":lang_edit,"texts":{field.short_name: field.data for field in form if not field.short_name in ("captcha", "submit_form") and field.data!=new_lang[field.short_name]}})
             flash("translation_sent")
             return redirect(url_for('index.home'))
-            
+
     if lang_edit: forml.lang.data = lang_edit
     # sino se muestra la seleccion de idioma a traducir
+    g.title+=_("translate_to_your_language")
     return render_template('pages/translate.html',
         page_title=_("translate_to_your_language"),
         lang=lang_edit,

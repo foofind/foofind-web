@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import pymongo
-from foofind.utils import hex2mid
+from foofind.utils import hex2mid, end_request
 from hashlib import sha256
 from datetime import datetime
 
@@ -31,6 +31,7 @@ class PagesStore(object):
         d = {key: data[key] for key in ('name', 'surname', 'company', 'email','phonenumber','linkreported','urlreported','reason','message')}
         d.update((("ip", sha256(data["ip"]).hexdigest()),("created",datetime.utcnow()),("processed",False)))
         self.pages_conn.foofind.complaint.insert(d)
+        self.pages_conn.end_request()
 
     def get_complaints(self, skip=None, limit=None, processed=False):
         '''
@@ -51,7 +52,7 @@ class PagesStore(object):
         complaints = self.pages_conn.foofind.complaint.find(None if processed is None else {"processed":processed}).sort("created",-1)
         if not skip is None: complaints.skip(skip)
         if not limit is None: complaints.limit(limit)
-        return complaints
+        return end_request(complaints)
 
     def get_complaint(self, hexid):
         '''
@@ -63,7 +64,7 @@ class PagesStore(object):
         @rtype: MongoDB document or None
         @return: resultado
         '''
-        return self.pages_conn.foofind.complaint.find_one({"_id":hex2mid(hexid)})
+        return end_request(self.pages_conn.foofind.complaint.find_one({"_id":hex2mid(hexid)}), self.pages_conn)
 
     def update_complaint(self, data, remove=None):
         '''
@@ -81,6 +82,7 @@ class PagesStore(object):
 
         del update["$set"]["_id"]
         self.pages_conn.foofind.complaint.update({"_id":hex2mid(data["_id"])}, update)
+        self.pages_conn.end_request()
 
     def count_complaints(self,  processed=False, limit=0):
         '''
@@ -91,10 +93,10 @@ class PagesStore(object):
         @rtype integer
         @return Número de enlaces reportados
         '''
-        return self.pages_conn.foofind.complaint.find(
+        return end_request(self.pages_conn.foofind.complaint.find(
             None if processed is None else {"processed":processed},
             limit=limit
-            ).count(True)
+            ).count(True), self.pages_conn)
 
     def create_translation(self, data):
         '''
@@ -106,6 +108,7 @@ class PagesStore(object):
         d = data.copy()
         d.update((("ip",sha256(data["ip"]).hexdigest()),("created", datetime.utcnow()),("processed",False)))
         self.pages_conn.foofind.translation.insert(d)
+        self.pages_conn.end_request()
 
     def count_translations(self, processed=False, limit=0):
         '''
@@ -116,10 +119,10 @@ class PagesStore(object):
         @rtype integer
         @return Número de traducciones
         '''
-        return self.pages_conn.foofind.translation.find(
+        return end_request(self.pages_conn.foofind.translation.find(
             None if processed is None else {"processed":processed},
             limit=limit
-            ).count(True)
+            ).count(True), self.pages_conn)
 
     def get_translations(self, skip=None, limit=None, processed=False):
         '''
@@ -140,7 +143,7 @@ class PagesStore(object):
         translations = self.pages_conn.foofind.translation.find(None if processed is None else {"processed":processed}).sort("created",-1)
         if not skip is None: translations.skip(skip)
         if not limit is None: translations.limit(limit)
-        return translations
+        return end_request(translations)
 
     def get_translation(self, hexid):
         '''
@@ -152,7 +155,9 @@ class PagesStore(object):
         @rtype: MongoDB document or None
         @return: resultado
         '''
-        return self.pages_conn.foofind.translation.find_one({"_id":hex2mid(hexid)})
+        return end_request(
+            self.pages_conn.foofind.translation.find_one({"_id":hex2mid(hexid)}),
+            self.pages_conn)
 
     def update_translation(self, data, remove=None):
         '''
@@ -170,3 +175,4 @@ class PagesStore(object):
 
         del update["$set"]["_id"]
         self.pages_conn.foofind.translation.update({"_id":hex2mid(data["_id"])}, update)
+        self.pages_conn.end_request()

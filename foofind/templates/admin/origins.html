@@ -27,7 +27,7 @@
                 <li>{{ data["d"] }}</li>
                 <li>{{ data["crbl"] }}</li>
                 <li>{% for g in data["g"] %}{{g}}{% if not loop.last %}, {% endif %}{% endfor %}</li>
-                <li class="edit_row"><a href="{{url_for('admin.manage_origin', originid=data['_id'], page=page, show=show_mode, mode=list_mode, size=page_size)}}">{{_('admin_locks_fileinfo')}}</a></li>
+                <li class="edit_row"><a href="{{url_for('admin.db_edit', collection='origin', document_id=data['_id'], page=page, show=show_mode, mode=list_mode, size=page_size)}}">{{_('admin_locks_fileinfo')}}</a></li>
             </ul>
         {% endfor %}
         </div>

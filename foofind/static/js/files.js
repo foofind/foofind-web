@@ -32,11 +32,12 @@ function highlight(data,t)
 $(document).ready(function()
 {
     //autocompletado de busqueda
+    var form=$('form[method="get"]').attr("action");
     if($('#q').length)
         $('#q').focus()
         .autocomplete(
         {
-            source:$('form[method="get"]').attr("action").substr(0,$('form[method="get"]').attr("action").indexOf('/',5))+"/autocomplete?t="+$("#type").val(),
+            source:form.substr(0,(form.indexOf('?')!=-1)?form.indexOf('?'):form.length)+"/autocomplete?t="+$("#type").val(),
             select:function(event,ui)
             {
                 if(ui.item)
@@ -44,14 +45,15 @@ $(document).ready(function()
 
                 $("#submit").click()
             },
-            appendTo: ($('#search').length)?'#search':'body',
+            appendTo:($('#search').length)?'#search':'body',
+            delay:0,
             minLength: 2
         })
         .data("autocomplete")
         ._renderItem=function(ul,item){return $("<li></li>").data("item.autocomplete",item ).append("<a>"+highlight(item.label,this.term)+"</a>").appendTo(ul)};
 
     //campos en blanco
-    $('form[method="get"]').submit(function()
+    $('.home form,.searchbox form').submit(function()
     {
         $.each($(":input",this), function()
         {
@@ -62,7 +64,7 @@ $(document).ready(function()
     .keyup(function(e){if(e.keyCode==13){
         $(":input").removeAttr("disabled")}
     })
-    .mousemove(function(){
+    .click(function(){
         $(":input").removeAttr("disabled")
     })
     //mostrar y ocultar aviso idioma
@@ -75,7 +77,7 @@ $(document).ready(function()
         $(this).parent().slideUp();
     });
     //buscador index
-    $(".tabs a").click(function(event)
+    $(".home .tabs a").click(function(event)
     {
         event.preventDefault();
         $(".tabs a").removeClass("actual");
@@ -83,7 +85,7 @@ $(document).ready(function()
         $("#type").val($(this).attr("id"));
         taming();
     });    
-    //thumbnail
+    //thumbnails
     $('.thumblink img').mouseenter(function()
     {
         if (thumbani!=0)
@@ -117,7 +119,7 @@ $(document).ready(function()
             $("span",this).text("▶")
     });
     if($(location).attr('href').search("size|brate|year")>0)
-        $("#show_options").click();
+        $("#advsearch>a").click();
     //download
     $(".download_source input").click(function(){$(this).select()});
     $('.file_comment_vote a').click(function(event)

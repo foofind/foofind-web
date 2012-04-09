@@ -92,7 +92,6 @@ div.list{
     display:table;
     }
 dl.list{
-    margin:0 0 5px;
     display:table;
     width:100%;
     }
@@ -103,19 +102,16 @@ dl.list{
     .list ul{
         display:table-row;
         }
-        .list ul:nth-child(1) li{
-            border-top:none;
-            }
         .list ul:nth-child(2n) li{
-            background:#DDD;
+            background:#FFEAEA;
             }
         .list ul .edit_row{
             font-weight:bold;
             }
     .list li{
         display:table-cell;
-        padding:2px;
-        border-left:1px solid #cd0069; border-top:1px solid #cd0069;
+        padding:3px;
+        border-left:1px solid #cd0069;
         vertical-align:middle;
         white-space:normal;
         width:auto;
@@ -133,19 +129,18 @@ h3.list{
     text-align:center;
     font-weight:bold;
     color:white; background-color:#cd0069;
-    margin:0;
+    margin:5px 0 0;
     padding:5px;
     border-radius:4px;
     border-bottom-right-radius:0px;
     }
 input[type="submit"].list, input[type="button"].list{
-    margin-top:-6px;
     margin-left:200px;
     border-top-left-radius:0px;
     }
 dl.list input, dl.list textarea, dl.list input[type="submit"], dl.list input[type="button"]{
     margin:0;
-    padding:1px 5px;
+    padding:3px 5px;
     border-width:1px;
     border-radius:2px;
     margin-right:4px;
@@ -171,6 +166,9 @@ dl.list > dd{
     margin-left:200px; padding-left:5px;
     border-left:1px solid #cd0069;
     white-space:pre-wrap;
+    }
+dl.list.alternate > dd{
+    background:#FFEAEA;
     }
 div.list_mode{
     text-align:right;

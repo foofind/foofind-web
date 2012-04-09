@@ -6,21 +6,16 @@ from foofind.services.db.filesstore import FilesStore
 from foofind.services.db.pagesstore import PagesStore
 from foofind.services.db.usersstore import UsersStore
 from foofind.services.db.feedbackstore import FeedbackStore
-from foofind.utils.countupdater import CountUpdater
-import extensions
+from foofind.utils.profiler import Profiler
+from foofind.utils.event import EventManager
+from extensions import *
 
-__all__ = ['babel', 'cache', 'auth', 'mail', 'sentry', 'filesdb', 'usersdb', 'pagesdb', 'feedbackdb', 'countupdater']
-
-babel = extensions.babel
-cache = extensions.cache
-auth = extensions.auth
-mail = extensions.mail
-sentry = extensions.sentry
+__all__ = ['babel', 'cache', 'auth', 'mail', 'send_mail', 'profiler', 'sentry', 'filesdb', 'usersdb', 'pagesdb', 'feedbackdb', 'eventmanager']
 
 filesdb = FilesStore()
 usersdb = UsersStore()
 pagesdb = PagesStore()
 feedbackdb = FeedbackStore()
 
-countupdater = CountUpdater()
-
+eventmanager = EventManager()
+profiler = Profiler()

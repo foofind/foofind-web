@@ -7,6 +7,7 @@ from wtforms import *
 from flaskext.babel import lazy_gettext as _
 from flaskext.babel import gettext
 
+
 class ValidateTranslationForm(Form):
     submit = SubmitField(_('admin_translation_confirm'), default="confirm")
     cancel = SubmitField(_('admin_translation_cancel'), default="cancel")
@@ -42,6 +43,7 @@ class OriginForm(Form):
 class DeployForm(Form):
     mode = SelectField(_("admin_deploy_mode"), default="production")
     deploy = SubmitField(_("admin_deploy_deploy"), default="deploy")
+    deploy_rollback = SubmitField(_("admin_deploy_deploy_rollback"), default="deploy-rollback")
     clean_local = SubmitField(_("admin_deploy_clean_local"), default="clean_local")
     clean_remote = SubmitField(_("admin_deploy_clean_remote"), default="clean_remote")
     restart = SubmitField(_("admin_deploy_restart"), default="restart")
@@ -54,5 +56,8 @@ class DeployForm(Form):
     prepare = SubmitField(_("admin_deploy_prepare"), default="prepare")
     commit = SubmitField(_("admin_deploy_commit"), default="commit")
 
-
-
+class EditForm(Form):
+    defaults = HiddenField()
+    editable = HiddenField()
+    confirmed = HiddenField(default="false", filters=(lambda x: x.strip().lower() == "true" ,))
+    submit =  SubmitField(_('admin_edit_submit'), default="submit")

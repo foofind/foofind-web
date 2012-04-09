@@ -56,7 +56,7 @@ h3{font-size:1.3em;font-weight:normal}
 #advice p{padding:0}
 #advice .close_advice{float:right;padding:0 5px;margin-top:-4px;margin-right:-5px;color:#000;background:#CCC;text-decoration:none;font-size:1.5em;font-family:Times New Roman, Times}
 #advice .close_advice:hover{background:#666;color:#FFF}
-input#q{height:18px;width:380px;z-index:1000}
+input#q{height:18px;width:380px}
 #container{min-height:100%;position:relative}
 #content{padding:10px 10px 60px;font-size:1.3em}
 /* pie */
@@ -125,7 +125,7 @@ input#q{height:18px;width:380px;z-index:1000}
 #content.files #tabnav{font-weight:bold;border-bottom:1px solid #CD0069;list-style-type:none;padding:20px 0 0 42px}
 #content.files #tabnav li{display:inline-block;padding:3px 7px}
 #content.files #tabnav a{padding-top:5px;padding-left:12px;padding-right:12px;padding-bottom:3px;border:1px solid #CD0069;background:#FFF;color:#CD0069;text-decoration:none;border-bottom:none}
-#content.files #tabnav a.actual,#content.files #tabnav a.actual:hover{background:#FBEFFB;color:#000;border-bottom:1px solid #FBEFFB}
+#content.files #tabnav a.actual,#content.files #tabnav a.actual:hover{background:#FBEFFB;color:#000;padding-bottom:4px;}
 #content.files #tabnav a:hover{background:#FFF;color:#000}
 #content.files h2{margin:10px}
 /* resultados */

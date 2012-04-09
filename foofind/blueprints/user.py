@@ -2,10 +2,9 @@
 """
     Controladores de páginas de usuario.
 """
-from flask import Blueprint, request, render_template, redirect, flash, url_for, session, abort, current_app
+from flask import Blueprint, request, render_template, redirect, flash, url_for, session, abort, current_app, g
 from flaskext.babel import gettext as _
 from flaskext.login import login_required, login_user, logout_user, current_user
-from flaskext.mail import Message
 from flaskext.oauth import OAuth
 
 from foofind.forms.user import RegistrationForm, LoginForm, ForgotForm, EditForm
@@ -27,6 +26,10 @@ o_facebook = None
 @user.context_processor
 def user_globals():
     return {"zone": "user"}
+
+@user.before_request
+def set_search_form():
+    g.title+=" - "
 
 def init_oauth(app):
     global o_twitter, o_facebook, oauth_authorized
@@ -76,20 +79,21 @@ def register():
     form = RegistrationForm(request.form)
     if request.method=='POST' and form.validate():
         if not usersdb.find_username(form.username.data) is None:
-            error=_("username_taken")
+            flash("username_taken")
         elif not usersdb.find_email(form.email.data) is None:
-            error=_("email_taken")
+            flash("email_taken")
         else:
             data["token"]=md5(str(uuid.uuid4())).hexdigest();
             for field in form:
                 data[field.id]=field.data
 
-            mail.send(Message(data["username"]+_("confirm_email"),[data["email"]],html=render_template('email/register.html', token=data["token"])))
-            usersdb.create_user(data)
-            flash("check_inbox_email_finish")
-            return redirect(url_for('index.home'))
+            if send_mail(data["username"]+_("confirm_email"),data["email"],'register',token=data["token"]):
+                usersdb.create_user(data)
+                flash("check_inbox_email_finish")
+                return redirect(url_for('index.home'))
 
-    return render_template('user/register.html',form=form,error=error)
+    g.title+=_("new_user").capitalize()
+    return render_template('user/register.html',form=form)
 
 def login_redirect(data,rememberme=True):
     '''
@@ -97,9 +101,9 @@ def login_redirect(data,rememberme=True):
     '''
     flash(_("logged_in")+" "+data["username"])
     login_user(User(data["_id"], data),rememberme)
-
     if "next" in request.args:
         return redirect(unquote(request.args["next"]))
+
     return redirect(url_for('index.home',lang=None))
 
 @user.route('/<lang>/user/login', methods=['GET', 'POST'])
@@ -114,9 +118,10 @@ def login():
         if data is not None:
             return login_redirect(data,form.rememberme.data)
         else:
-            error=_("wrong_email_password")
+            flash("wrong_email_password")
 
-    return render_template('user/login.html',form=form,error=error)
+    g.title+=_("user_login")
+    return render_template('user/login.html',form=form)
 
 def clean_username(username):
     '''
@@ -151,19 +156,25 @@ def oauth_token():
     '''
     return session.get('oauth_token')
 
+def oauth_redirect():
+    '''
+    Realiza la redirección a la página que corresponda al hacer un login por oauth
+    '''
+    return request.args.get('next') or (request.referrer if request.referrer!=url_for('.login',_external=True) else url_for('index.home'))
+
 @user.route('/<lang>/user/login/twitter')
 def twitter():
     '''
     Acceso a traves de twitter
     '''
     try:
-        logout_oauth()
-        return o_twitter.authorize()
+        logout_oauth()        
+        return o_twitter.authorize(url_for('.twitter_authorized',next=oauth_redirect()))
     except BaseException as e:
         logging.exception(e)
+
     flash(_("technical_problems", service="twitter"))
     return redirect(url_for('.login'))
-
 
 def twitter_authorized(resp):
     '''
@@ -175,7 +186,7 @@ def twitter_authorized(resp):
 
     session['oauth_token']=(resp['oauth_token'],resp['oauth_token_secret'])
     # peticion para obtener los datos extra
-    extra = o_twitter.get('account/verify_credentials.json')
+    extra=o_twitter.get('account/verify_credentials.json')
     # se busca el usuario por id y si no existe en la base de datos se crea el usuario
     data=usersdb.find_oauthid(resp["user_id"]+"@twitter.com")
     if data is None:
@@ -201,15 +212,16 @@ def facebook():
     '''
     try:
         logout_oauth()
-        return o_facebook.authorize(url_for('user.facebook_authorized',_external=True))
+        return o_facebook.authorize(url_for('.facebook_authorized',next=oauth_redirect(),_external=True))
     except BaseException as e:
         logging.exception(e)
+
     flash(_("technical_problems", service="facebook"))
     return redirect(url_for('.login'))
 
 def facebook_authorized(resp):
     '''
-    Manejador de la autorizacion a traves de twitter
+    Manejador de la autorizacion a traves de facebook
     '''
     if resp is None:
         flash("token_not_exist")
@@ -269,6 +281,7 @@ def profile():
     '''
     Página de perfil de usuario
     '''
+    g.title+=_("user_profile")
     return render_template('user/profile.html')
 
 @user.route("/<lang>/user/edit", methods=['GET', 'POST'])
@@ -293,9 +306,10 @@ def edit():
             flash('profile_edited_succesfully')
             return redirect(url_for('user.profile'))
         else:
-            error=_("username_taken")
+            flash("username_taken")
 
-    return render_template('user/edit.html',form=form,error=error)
+    g.title+=_("edit_your_profile")
+    return render_template('user/edit.html',form=form)
 
 @user.route("/<lang>/validate/<token>", methods=['GET', 'POST'])
 def validate(token):
@@ -314,7 +328,6 @@ def validate(token):
 
     return redirect(url_for('index.home'))
 
-
 @user.route("/<lang>/forgot", methods=['GET', 'POST'])
 def forgot():
     '''
@@ -325,12 +338,13 @@ def forgot():
     if request.method=='POST' and form.validate():
         data=usersdb.find_email(form.email.data)
         if data is not None:
-            flash("check_inbox_email_restore")
             data["token"]=md5(str(uuid.uuid4())).hexdigest();
-            usersdb.update_user(data)
-            mail.send(Message(data["username"]+_("restore_access"),[data["email"]],html=render_template('email/forgot.html', token=data["token"])))
-            return redirect(url_for('index.home',lang=None))
+            if send_mail(data["username"]+_("restore_access"),data["email"],'forgot',token=data["token"]):
+                usersdb.update_user(data)
+                flash("check_inbox_email_restore")
+                return redirect(url_for('index.home',lang=None))
         else:
-            error=_("email_not_database")
+            flash("email_not_database")
 
-    return render_template('user/forgot.html',form=form,error=error)
+    g.title+=_("forgot")
+    return render_template('user/forgot.html',form=form)

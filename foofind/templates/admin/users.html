@@ -3,26 +3,4 @@
     <form method="post">
         {{ search_form.identifier.label }} {{ search_form.identifier }} {{search_form.mode }} {{ search_form.submit }}
     </form>
-    {% if user_form %}
-    <form method="post">
-        {{user_form.userid}}
-        {{user_form.props}}
-        {{user_form.created}}
-            <h3 class="list">{{_('admin_users_info')}}</h3>
-            <dl class="list">
-                <dt>_id</dt>
-                <dd>{{user_form.userid.data}}</dd>
-                {% for prop in user_properties %}
-                <dt>{{user_form["field_%s" % prop].label}}</dt>
-                <dd>{{user_form["field_%s" % prop]}}</dd>
-                {% endfor %}
-                <dt>{{user_form.field_password.label}}</dt>
-                <dd>{{user_form.field_password}}{% if user_form.field_password.description %} {{user_form.field_password.description}}{% endif %}</dd>
-                <dt>created</dt>
-                <dd>{{user_form.created.data}}</dd>
-            </dl>
-            {{ user_form.submit(class="list") }}
-    </form>
-    {% endif %}
-
 {% endblock %}

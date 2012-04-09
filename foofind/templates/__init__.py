@@ -5,6 +5,7 @@ from babel.numbers import format_decimal, get_decimal_symbol
 from math import log
 from datetime import datetime,timedelta
 from foofind.utils.htmlcompress import HTMLCompress
+from foofind.utils import u, fixurl
 
 # Registra filtros de plantillas
 def register_filters(app):
@@ -53,7 +54,7 @@ def search_params_filter(new_params, delete_params=[], args=None):
 def format_timedelta_filter(date,granularity='second', threshold=.85, locale=""):
     '''
     Devuelve la diferencia entre la fecha enviada y la actual
-    '''    
+    '''
     TIMEDELTA_UNITS = (
         ('year',   3600 * 24 * 365),
         ('month',  3600 * 24 * 30),
@@ -87,5 +88,7 @@ def url_lang_filter(url,lang):
     '''
     Devuelve la url con la parte del idioma indicada
     '''
-    l=url.split("/")[3]    
-    return "/"+lang+url[url.find("/"+l+"/")+len(l)+1:]
+    url = fixurl(url)
+    if url.count("/") > 1:
+        return "/%s/%s" % (lang, "/".join(url.split("/")[2:]))
+    return "/%s" % lang

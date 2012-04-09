@@ -5,9 +5,6 @@
     <h2>{{_("user_login")}}</h2>
     {{ flash() }}
     <p>({{_("if_new_user")}} <a href="{{ url_for('user.register') }}" title="user register">{{_("register_here")}}</a>)</p>    
-    {% if error %}
-    <div class="error">{{ error }}</div>
-    {% endif %}
     <form method="post">
         <fieldset>
             {{ render_field(form.email) }}            

@@ -6,10 +6,8 @@ from foofind.forms.validators import *
 from foofind.services import cache
 
 import Image, ImageFont, ImageDraw, ImageFilter, StringIO
-import hashlib
-import random
 
-CAPTCHA_KEY = "foofind.com_capt";
+import random
 
 def generate_image(txt):
     def random_color(total=False):
@@ -55,17 +53,15 @@ def captcha(form,field):
     '''
     Validador para controlar que la coinciden la imagen y el texto enviado por el usuario
     '''
-    hasher = hashlib.sha256()
-    hasher.update(CAPTCHA_KEY+field.data)
-    captcha_id = session.pop("captcha_id",None)
-    if hasher.hexdigest()!=captcha_id:
+    if field.data != cache.get("captcha/"+request.form["captcha_id"]):
         raise ValidationError(_('captcha_wrong'))
+    cache.delete("captcha/"+request.form["captcha_id"])
 
 class Captcha(object):
     def __call__(self, field, **kwargs):
-        session["captcha_id"]=field.captcha_id
         return u'''
             <img src="/captcha/%(id)s" alt="captcha" />
+            <input type="hidden" name="%(name)s_id" id="%(name)s_id" value="%(id)s" />
             <input type="text" name="%(name)s" id="%(name)s" />''' % {'id': field.captcha_id, "name":field.name}
 
 class CaptchaField(Field):
@@ -80,11 +76,8 @@ class CaptchaField(Field):
         imgtext = ''.join([random.choice('ABCDEFGHIJKLMNOPQRSTUVWZYZ0123456789') for i in range(5)])
 
         # Encriptarlo
-        hasher = hashlib.sha256()
-        hasher.update(CAPTCHA_KEY+imgtext)
-
-        captcha_id = hasher.hexdigest()
-        cache.set("captcha_"+captcha_id, generate_image(imgtext))
+        captcha_id=imgtext
+        cache.set("captcha/"+captcha_id, imgtext)
 
         # Devolverlo codificado para poder usado en una URL
         return captcha_id

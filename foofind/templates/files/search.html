@@ -88,9 +88,9 @@
                 {{ file['file']['z']|numbersizeformat }} -
             {% endif -%}
             {% for source,source_data in file['view']['sources'].items() %}
-            <a href="{{ source_data['urls'][0] }}" title="{{ source_data['tip'] }}" class="source" target="_blank">
+            <a href="{{ source_data['urls'][0] }}" title="{{ source_data['tip'] }}" class="source">
                 <span class="icon icon24 {{ source_data['icon'] }}d24"></span>
-                {{ source_data['tip'] }}{% if source_data['count']>1 %} ({{ source_data['count'] }} Fuentes){% endif %}
+                {{ source_data['tip'] }}{% if source_data['count']>1 %} ({{ source_data['count'] }} {{_('sources')}}){% endif %}
             </a>
             {% endfor %}
         </li>

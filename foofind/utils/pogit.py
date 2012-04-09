@@ -6,6 +6,7 @@ import polib
 import collections
 import time
 import logging
+import subprocess
 
 from . import touch_path
 
@@ -51,6 +52,7 @@ class LangRepoManager(object):
     base = None
     local_dir = None
     repo = None
+    default = "en"
 
     def __init__(self, attemps_on_fail = 3, file_lifetime=3600):
 
@@ -91,8 +93,10 @@ class LangRepoManager(object):
 
         touch_path(self.local_dir) # nos aseguramos que el árbol existe
 
-        self.repo = git.Repo.init(self.base, mkdir=False)
+        self.repo = git.Repo.init(self.base, mkdir=True)
+
         if len(self.repo.remotes) == 0:
+            #git.remote.Remote.add(self.repo, "origin", self.repo_url)
             self.repo.create_remote("origin", self.repo_url)
 
         assert self.repo.git.version_info[:2] >= (1,7), "Se requiere git 1.7 como mínimo."
@@ -108,48 +112,51 @@ class LangRepoManager(object):
 
     def _refresh_tree(self, new_langs=()):
         '''Actualiza las rutas seguidas'''
+        # logging.debug("\n".join(self.sparsepath+" << "+"%s/%s" % (self.lang_folder, c) for c in set(self.get_current_langs() + new_langs)))
         f = open(self.sparsepath, "w")
-        f.writelines("%s/%s\n" % (self.lang_folder, c) for c in (self.get_current_langs() + new_langs))
+        f.writelines("%s/%s/LC_MESSAGES/\n" % (self.lang_folder, c) for c in set(self.get_current_langs() + new_langs))
         f.close()
         if self.repo.active_branch.is_valid():
             # Si ya está inicializado HEAD relee la ruta, hace merge and update.
             for attemp in xrange(self._attemps_on_fail):
                 try:
                     self.repo.git.read_tree("-mu", self.repo.active_branch.name)
-                except AssertionError as a:
-                    logging.error("pogit.py _refresh_tree intento %d:\n\t%s" % (attemp, a))
-                finally: break
+                    #self.repo.heads.master.checkout()
+                    break
+                except BaseException as a:
+                    logging.error(("LangRepoManager._refresh_tree intento %d fallido." % attemp, a))
+                    time.sleep(0.1)
             else:
-                raise Exception("No se ha podido refrescar la rama de traducciones.")
+                logging.error("No se ha podido refrescar la rama de traducciones.")
 
     def _refresh_langs(self):
         '''Pull de los ficheros conocidos'''
         for attemp in xrange(self._attemps_on_fail):
-            print "%s:%s" % (self.branch, self.repo.active_branch.path)
             try:
-                self.repo.remotes[0].pull(
-                    "%s:%s" % (self.branch, self.repo.active_branch.path))
-            except AssertionError as a:
-                logging.error("pogit.py _refresh_langs intento %d:\n\t%s" % (attemp, a))
-            finally:
+                self.repo.remote().pull("master")
+                #self.repo.remotes[0].pull(
+                #    "%s:%s" % (self.branch, self.repo.active_branch.path))
                 self._time = time.time()
                 break
+            except BaseException as a:
+                logging.error(("LangRepoManager._refresh_langs intento %d fallido." % attemp, a))
+                time.sleep(0.1)
         else:
-            raise Exception("No se pueden descargar los ficheros de idioma")
+            logging.error("No se pueden descargar los ficheros de idioma.")
 
     def get_pofile(self, code, refresh=None):
         '''Retorna un pofile para en lenguaje dado.'''
         if not self.is_current_lang(code):
-            self._refresh_tree()
-            self._refresh_langs((code,))
+            self._refresh_tree((code,))
+            self._refresh_langs()
         elif refresh or (refresh is None and time.time() - self._time > self._file_lifetime):
             self._refresh_langs()
 
         podir = os.path.join(self.local_dir, code, "LC_MESSAGES")
         popath = os.path.join(podir, "messages.po")
         if not os.path.isfile(popath):
-            assert code != "en", "No se puede encontrar el idioma %s." % code
-            en = self.get_pofile("en")
+            assert code != self.default, "No se puede encontrar el idioma %s." % code
+            en = self.get_pofile(self.default)
             touch_path(podir)
             pofile = polib.POFile(fpath=popath)
             pofile.metadata = en.metadata
@@ -176,7 +183,7 @@ class LangRepoManager(object):
         @rype commit: bool
         @param commit: True por defecto, si se hace push
         '''
-        en = self.get_pofile("en", refresh) # Fichero base
+        en = self.get_pofile(self.default, refresh) # Fichero base
         new = self.get_pofile(code, False)
 
         esi = 0 # Contador para insertar en new

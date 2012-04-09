@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import pymongo, logging
 from collections import defaultdict
-from foofind.utils import hex2mid
+from foofind.utils import hex2mid, end_request
 from foofind.utils.async import MultiAsync
 from foofind.services.extensions import cache
 
@@ -44,26 +44,19 @@ class FilesStore(object):
             if self.current_server is None:
                 self.current_server = sid
 
-            connect = True
-            if sid in self.servers_conn:
-                # si el servidor ya existía y no ha cambiado su ubicación, no se conecta
-                if all([server[k]==self.servers_conn[sid]["info"][k] for k in ["ip", "p", "rip", "rp"]]):
-                    connect = False
-            else:
-                self.servers_conn[sid] = {"info":server}
-
             # define la conexión
-            if connect:
-                for murl in ("mongodb://%(rip)s:%(rp)d,%(ip)s:%(p)d","mongodb://%(rip)s:%(rp)d","mongodb://%(ip)s:%(p)d"):
-                    try:
-                        self.servers_conn[sid]["conn"] = conn = pymongo.Connection(
-                            murl % server,
-                            read_preference=pymongo.ReadPreference.SECONDARY,
-                            max_pool_size=self.max_pool_size)
-                        conn.end_request()
-                        break
-                    except BaseException as e:
-                        logging.exception(e)
+            try:
+                if not sid in self.servers_conn or any(server[k] != self.servers_conn[sid]["info"][k] for k in ("ip", "p", "rip", "rp")):
+                    self.servers_conn[sid] = {
+                        "info": server,
+                        "conn": pymongo.Connection(
+                        "mongodb://%(rip)s:%(rp)d,%(ip)s:%(p)d" % server,
+                        read_preference=pymongo.ReadPreference.SECONDARY,
+                        max_pool_size=self.max_pool_size)
+                        }
+                    self.servers_conn[sid]["conn"].end_request()
+            except BaseException as e:
+                logging.exception(e)
 
         # avisa que ya no necesita la conexión
         self.server_conn.end_request()
@@ -94,7 +87,7 @@ class FilesStore(object):
         @return Generador con los documentos de ficheros
         '''
 
-        if len(ids) == 0: return (i for i in ())
+        if len(ids) == 0: return ()
 
         sids = defaultdict(list)
         # si conoce los servidores en los que están los ficheros,
@@ -114,16 +107,15 @@ class FilesStore(object):
             self.server_conn.end_request()
 
         if len(sids) == 0: # Si no hay servidores, no hay ficheros
-            return (i for i in ())
+            return tuple()
         elif len(sids) == 1: # Si todos los ficheros pertenecen al mismo servidor, evita MultiAsync
             sid = sids.keys()[0]
             if not "conn" in self.servers_conn[sid]: return ()
             conn = self.servers_conn[sid]["conn"]
-            tr = conn.foofind.foo.find(
-                {"_id":{"$in": sids[sid]}} if bl is None else
-                {"_id":{"$in": sids[sid]},"bl":bl})
-            conn.end_request()
-            return (i for i in tr)
+            return end_request(
+                conn.foofind.foo.find(
+                    {"_id":{"$in": sids[sid]}} if bl is None else
+                    {"_id":{"$in": sids[sid]},"bl":bl}))
 
         # función que recupera ficheros
         def get_server_files(async, sid, ids):
@@ -134,11 +126,11 @@ class FilesStore(object):
             '''
             if not "conn" in self.servers_conn[sid]: return
             conn = self.servers_conn[sid]["conn"]
-            async.return_value(conn.foofind.foo.find(
+
+            async.return_value(end_request(conn.foofind.foo.find(
                 {"_id": {"$in": ids}}
                 if bl is None else
-                {"_id": {"$in": ids},"bl":bl}))
-            conn.end_request()
+                {"_id": {"$in": ids},"bl":bl})))
 
         # obtiene la información de los ficheros de cada servidor
         return MultiAsync(get_server_files, sids.items()).get_values(self.get_files_timeout)
@@ -170,11 +162,9 @@ class FilesStore(object):
 
         if not "conn" in self.servers_conn[sid]: return None
         conn = self.servers_conn[sid]["conn"]
-        tr = conn.foofind.foo.find_one(
+        return end_request(conn.foofind.foo.find_one(
             {"_id":mfid} if bl is None else
-            {"_id":mfid,"bl":bl})
-        conn.end_request()
-        return tr
+            {"_id":mfid,"bl":bl}), conn)
 
     def update_file(self, data, remove=None, direct_connection=False, update_sphinx=True):
         '''
@@ -224,7 +214,7 @@ class FilesStore(object):
         Cuenta los ficheros totales indexados
         '''
         count = self.server_conn.foofind.server.group(None, None, {"c":0}, "function(o,p) { p.c += o.c; }")
-        return count[0]['c'] if count else 0
+        return end_request(count[0]['c'] if count else 0, self.server_conn)
 
     def get_last_files(self):
         '''
@@ -232,12 +222,11 @@ class FilesStore(object):
         '''
         if not "conn" in self.servers_conn[self.current_server]: return ()
         conn = self.servers_conn[self.current_server]["conn"]
-        tr = conn.foofind.foo.find({"bl":0}).sort([("$natural",-1)]).limit(25)
-        conn.end_request()
-        return (i for i in tr)
+        return end_request(
+            conn.foofind.foo.find({"bl":0}).sort([("$natural",-1)]).limit(25))
 
     @cache.memoize()
-    def get_source_by_id(self,source):
+    def get_source_by_id(self, source):
         '''
         Obtiene un origen a través del id
 
@@ -248,7 +237,9 @@ class FilesStore(object):
         @return origen o None
 
         '''
-        return self.server_conn.foofind.source.find_one({"_id":source})
+        return end_request(
+            self.server_conn.foofind.source.find_one({"_id":source}),
+            self.server_conn)
 
     _sourceParse = { # Parseo de datos para base de datos
         "crbl":lambda x:int(float(x)),
@@ -282,6 +273,7 @@ class FilesStore(object):
             for key, value in update["$set"].iteritems())
 
         self.server_conn.foofind.source.update({"_id":oid}, update)
+        self.server_conn.end_request()
 
     @cache.memoize()
     def get_sources(self, skip=None, limit=None, blocked=False, group=None, must_contain_all=False):
@@ -316,9 +308,8 @@ class FilesStore(object):
         sources = self.server_conn.foofind.source.find(query).sort("d")
         if not skip is None: sources.skip(skip)
         if not limit is None: sources.limit(limit)
-        return list(sources)
+        return list(end_request(sources))
 
-    #@cache.memoize()
     def count_sources(self, blocked=False, group=None, must_contain_all=False, limit=None):
         '''
         Obtiene el número de orígenes
@@ -342,7 +333,8 @@ class FilesStore(object):
             if isinstance(group, basestring): query["g"] = group
             elif must_contain_all: query["g"] = {"$all": group}
             else: query["g"] = {"$in": group}
-        return self.server_conn.foofind.source.find(query).count(True)
+
+        return end_request(self.server_conn.foofind.source.find(query).count(True), self.server_conn)
 
     @cache.memoize()
     def get_sources_groups(self):
@@ -351,11 +343,13 @@ class FilesStore(object):
 
         @return set de grupos de orígenes
         '''
-        return set(j for i in self.server_conn.foofind.source.find() for j in i["g"])
+        return set(j for i in end_request(self.server_conn.foofind.source.find()) if "g" in i for j in i["g"])
 
     @cache.memoize()
     def get_image_server(self,server):
         '''
         Obtiene el servidor que contiene una imagen
         '''
-        return self.server_conn.foofind.serverImage.find_one({"_id":server})
+        return end_request(
+            self.server_conn.foofind.serverImage.find_one({"_id":server}),
+            self.server_conn)

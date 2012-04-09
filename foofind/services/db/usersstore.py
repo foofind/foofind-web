@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import pymongo
 from bson.code import Code
-from foofind.utils import hex2mid
+from foofind.utils import hex2mid, end_request
 from hashlib import sha256
 from datetime import datetime
 from time import time
@@ -35,8 +35,7 @@ class UsersStore(object):
 
         @param data: Diccionario con los datos del usuario a guardar.
         '''
-        self.user_conn.foofind.users.insert({"username":data["username"],"email":data["email"],"password":sha256(data["password"]).hexdigest(),"karma":0.2,"token":data["token"],"created": datetime.utcnow()})
-
+        return end_request(self.user_conn.foofind.users.insert({"username":data["username"],"email":data["email"],"password":sha256(data["password"]).hexdigest(),"karma":0.2,"token":data["token"],"created": datetime.utcnow()}),self.user_conn)
 
     _userParse = { # Parseo de datos para base de datos
         "active": lambda x:int(float(x)),
@@ -70,6 +69,7 @@ class UsersStore(object):
             for key, value in update["$set"].iteritems())
 
         self.user_conn.foofind.users.update({"_id":hex2mid(data["_id"])}, update)
+        self.user_conn.end_request()
 
     def find_login(self,email,password):
         '''
@@ -93,7 +93,8 @@ class UsersStore(object):
         '''
         Busca por un nombre de usuario
         '''
-        return self.user_conn.foofind.users.find({"username":{'$regex':'^'+username+'(_\\d+)?$'}})
+        return end_request(
+            self.user_conn.foofind.users.find({"username":{'$regex':'^'+username+'(_\\d+)?$'}}))
 
     def find_email(self,email):
         '''
@@ -117,7 +118,7 @@ class UsersStore(object):
         '''
         Busqueda por los campos que se reciban
         '''
-        return self.user_conn.foofind.users.find_one(data)
+        return end_request(self.user_conn.foofind.users.find_one(data), self.user_conn)
 
     def set_file_vote(self,file_id,user,lang,vote):
         '''
@@ -152,36 +153,43 @@ class UsersStore(object):
         #tercer parametro para devolverlo en vez de generar una coleccion nueva
         votes=self.user_conn.foofind.vote.map_reduce(map_function,reduce_function,{"inline":1},query={'_id':{'$regex':"^%s"%file_id}})
         #devolver un diccionario de la forma idioma:valores
-        return {values["_id"]:values["value"] for values in votes["results"]}
+        return end_request({values["_id"]:values["value"] for values in votes["results"]}, self.user_conn)
 
     def get_file_vote(self,file_id,user,lang):
         '''
         Recupera el voto de un usuario para un archivo
         '''
-        return self.user_conn.foofind.vote.find_one({"_id":"%s_%s"%(file_id,user.id),"l":lang})
+        return end_request(
+            self.user_conn.foofind.vote.find_one({"_id":"%s_%s"%(file_id,user.id),"l":lang}),
+            self.user_conn)
 
     def set_file_comment(self,file_id,user,lang,comment):
         '''
         Guarda un comentario de un archivo
         '''
-        return self.user_conn.foofind.comment.insert({"_id":"%s_%s"%(user.id,int(time())),"f":file_id,"l":lang,"d":datetime.utcnow(),"k":user.karma,"t":comment})
+        return end_request(
+            self.user_conn.foofind.comment.insert({
+                "_id": "%s_%s" % (user.id,int(time())),
+                "f": file_id,
+                "l": lang,
+                "d": datetime.utcnow(),
+                "k": user.karma,
+                "t": comment}),
+            self.user_conn)
 
     def get_file_comments_sum(self,file_id):
         '''
         Cuenta los comentarios que hay para cada idioma
         '''
-        langs=self.user_conn.foofind.comment.group({"l":1},{'f':hex2mid(file_id)},{"c":0},Code("function(o,p){p.c++}"))
-        comments={}
-        for lang in langs:
-            comments[lang["l"]]=lang["c"]
-
-        return comments
+        return end_request({
+            lang["l"]:lang["c"] for lang in self.user_conn.foofind.comment.group({"l":1},{'f':hex2mid(file_id)},{"c":0},Code("function(o,p){p.c++}"))},
+            self.user_conn)
 
     def get_file_comments(self,file_id,lang):
         '''
         Recupera los comentarios de un archivo
         '''
-        return self.user_conn.foofind.comment.find({"f":hex2mid(file_id),"l":lang})
+        return end_request(self.user_conn.foofind.comment.find({"f":hex2mid(file_id),"l":lang}))
 
     def set_file_comment_vote(self,comment_id,user,file_id,vote):
         '''
@@ -222,10 +230,11 @@ class UsersStore(object):
         #crear diccionario de la forma idioma:valores, actualizar el comentario con el y devolverlo
         data={values["_id"]:values["value"] for values in votes["results"]}
         self.user_conn.foofind.comment.update({"_id":comment_id},{"$set":{"vs":data}})
+        self.user_conn.end_request()
         return data
 
     def get_file_comment_votes(self,file_id):
         '''
         Recuper los votos de los comentarios de un archivo
         '''
-        return self.user_conn.foofind.comment_vote.find({"f":hex2mid(file_id)})
+        return end_request(self.user_conn.foofind.comment_vote.find({"f":hex2mid(file_id)}))

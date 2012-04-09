@@ -3,12 +3,13 @@
     Controladores de las páginas de búsqueda y de fichero.
 """
 
-from flask import Blueprint, request, render_template, g, current_app, jsonify, flash, redirect, url_for
+from flask import Blueprint, request, render_template, g, current_app, jsonify, flash, redirect, url_for, abort
 from flaskext.login import login_required, current_user
+from flaskext.babel import gettext as _
 from foofind.services import *
 from foofind.services.search import search_files, search_related, get_ids, block_files
 from foofind.forms.files import SearchForm, CommentForm
-from foofind.utils import mid2url, url2mid, hex2mid, mid2hex, mid2bin, bin2hex, to_seconds, multipartition
+from foofind.utils import mid2url, url2mid, hex2mid, mid2hex, mid2bin, bin2hex, to_seconds, multipartition, u
 from foofind.utils.splitter import split_file
 from foofind.utils.taming import TamingClient
 from foofind.utils.pagination import Pagination
@@ -85,7 +86,7 @@ def choose_filename(f,text=False):
             else:
                 fns[crc]['c']=srcfn['m']
 
-            if text!=False:
+            if text:
                 if fnn.upper().find(text.upper())!=-1:
                     thisHasText = 2000
                 else:
@@ -179,7 +180,7 @@ def build_source_links(f, prevsrc=False):
     srcs=f['file']['src']
     max_weight=0
     for hexuri,src in srcs.items():
-        if 'bl' in src and src['bl']!=0:
+        if not src.get('bl',None) in (0, None):
             continue
 
         join=False
@@ -212,7 +213,7 @@ def build_source_links(f, prevsrc=False):
             link_weight=0.1
             tip="ED2K"
             source=icon="ed2k"
-            url="ed2k://|file|"+f['view']['efn']+"|"+str(f['file']['z'])+"|"+src['url']+"|/"
+            url="ed2k://|file|"+f['view']['efn']+"|"+str(f['file']['z'] if "z" in f["file"] else 1)+"|"+src['url']+"|/"
             count=int(src['m'])
         elif source_data["d"]=="BitTorrent":
             link_weight=0.8
@@ -237,9 +238,11 @@ def build_source_links(f, prevsrc=False):
             count=int(src['m'])
             part="xt:urn:btih="+src['url']
             if 'torrent:tracker' in f['file']['md']:
-                part+='&tr:'+urllib.quote_plus(f['file']['md']['torrent:trackers'])
+                part += '&tr=' + urllib.quote_plus(f['file']['md']['torrent:tracker'])
             elif 'torrent:trackers' in f['file']['md']:
-                part+='&tr='.join(urllib.quote_plus(tr) for tr in f['file']['md']['torrent:trackers'].split(' '))
+                trackers = f['file']['md']['torrent:trackers']
+                if isinstance(trackers, basestring):
+                    part += '&tr='.join(urllib.quote_plus(tr) for tr in trackers.split(" "))
 
         else:
             continue
@@ -419,8 +422,8 @@ def format_metadata(f,details):
                             " %s" % file_md["formatversion"]
                             if "formatversion" in file_md else "")
                     version = []
-                    if "version" in file_md: version.append(int(file_md["version"]))
-                    if "revision" in file_md: version.append(int(file_md["revision"]))
+                    if "version" in file_md: version.append(float(file_md["version"]))
+                    if "revision" in file_md: version.append(float(file_md["revision"]))
                     if version: view_md["revision"] = " ".join(version)
             elif file_type == 'image': #title, artist, description, width, height, colors
                 pass
@@ -432,7 +435,7 @@ def format_metadata(f,details):
             elif file_type == 'video':
                 if details:
                     quality = []
-                    if 'framerate' in file_md: quality.append("%d fps%s" % int(file_md["framerate"]))
+                    if 'framerate' in file_md: quality.append("%d fps" % float(file_md["framerate"]))
                     if 'codec' in file_md: quality.append(str(file_md["codec"]))
                     if quality: view_md["quality"] = " - ".join(quality)
         except BaseException as e:
@@ -463,8 +466,8 @@ def save_visited(files):
         if result!=[]:
             feedbackdb.visited_links(result)
 
-@async_generator
-def taming_search(config, query, ct):
+@async_generator(1000)
+def taming_search(config, query, ct, contextg):
     '''
     Obtiene los resultados que se muestran en el taming
     '''
@@ -475,15 +478,14 @@ def taming_search(config, query, ct):
         tag = res[2][querylen+1:]
         return (tag[querylen+1:] if tag.startswith(query+" ") else tag, 100*max(min(1.25, res[0]/mean), 0.75))
 
+    profiler.checkpoint(opening=["taming_tags"], contextg=contextg)
     tamingWeight = {"c":1, "lang":200}
     if ct in config["CONTENTS_CATEGORY"]:
         for cti in config["CONTENTS_CATEGORY"][ct]:
             tamingWeight[config["TAMING_TYPES"][cti]] = 200
 
-    tc = TamingClient(config["SERVICE_TAMING_SERVER"], config["SERVICE_TAMING_TIMEOUT"])
+    tc = TamingClient(config["SERVICE_TAMING_SERVERS"], config["SERVICE_TAMING_TIMEOUT"])
     if not tc.open_connection():
-        yield ()
-        yield None
         return
 
     #tags relacionados
@@ -502,6 +504,8 @@ def taming_search(config, query, ct):
 
     yield tags
 
+    profiler.checkpoint(opening=["taming_dym"], closing=["taming_tags"], contextg=contextg)
+
     #quiso decir
     try:
         suggest = tc.tameText(query, tamingWeight, 1, 3, 0.8, 1, 0)
@@ -517,8 +521,9 @@ def taming_search(config, query, ct):
         pass
 
     yield didyoumean
+    profiler.checkpoint(closing=["taming_dym"], contextg=contextg)
 
-@files.route('/<lang>/search/')
+@files.route('/<lang>/search')
 def search():
     '''
     Realiza una búsqueda de archivo
@@ -531,23 +536,33 @@ def search():
         return redirect(url_for("index.home"))
 
     page = int(request.args.get("page", 1))
-    g.title += " - Search " + query
+    g.title = query+" - "+g.title
     results = {"total_found":0,"total":0,"time":0}
 
+    didyoumean = None
+    tags = None
     if 0 < page < 101:
         #obtener los tags y el quiso decir
-        taming = taming_search(current_app.config, query, request.args.get("type", None))
-        tags = taming.next()
-        didyoumean = taming.next()
+        taming = taming_search(current_app.config, query, request.args.get("type", None), contextg=g._get_current_object())
+
         #obtener los resultados y sacar la paginación
+        profiler.checkpoint(opening=["sphinx"])
         results = search_files(query,request.args,page) or results
         ids = get_ids(results)
+        profiler.checkpoint(opening=["mongo"], closing=["sphinx"])
         files_dict = {mid2hex(file_data["_id"]):fill_data(file_data, False, query) for file_data in get_files(ids)}
+        profiler.checkpoint(opening=["visited"], closing=["mongo"])
         save_visited(files_dict.values())
+        profiler.checkpoint(closing=["visited"])
         files=(files_dict[bin2hex(file_id[0])] for file_id in ids if bin2hex(file_id[0]) in files_dict)
+
+        # recupera los resultados del taming
+        try:
+            tags = taming.next()
+            didyoumean = taming.next()
+        except:
+            pass
     else:
-        didyoumean = None
-        tags = None
         files = ()
 
     return render_template('files/search.html',
@@ -594,9 +609,10 @@ def download(file_id,file_name=None):
 
         return comment_votes
 
-    g.title += " - Download "
     if file_name is not None:
-        g.title += file_name
+        g.title = _("download").capitalize()+" "+file_name+" - "+g.title
+    else:
+        g.title =_("download").capitalize()
 
     #guardar los parametros desde donde se hizo la busqueda si procede
     args={}
@@ -605,15 +621,34 @@ def download(file_id,file_name=None):
         if querystring:
             for params in querystring.split("&"):
                 param=params.split("=")
-                args[param[0]]=urllib.unquote_plus(param[1])
+                if len(param) == 2:
+                    args[param[0]]=u(urllib.unquote_plus(param[1]))
 
-    file_id=url2mid(file_id)
+    try:
+        file_id=url2mid(file_id)
+    except BaseException as e:
+        logging.warn((e, file_id))
+        abort(404)
+
+    data = filesdb.get_file(file_id, bl = None)
+
+    if data:
+        if not data["bl"] in (0, None):
+            if data["bl"] == 1: flash("link_not_exist", "error")
+            elif data["bl"] == 3: flash("error_link_removed", "error")
+            goback = True
+            #block_files( mongo_ids=(data["_id"],) )
+            abort(404)
+    else:
+        flash("link_not_exist", "error")
+        abort(404)
+
     #obtener los datos
-    file_data=fill_data(filesdb.get_file(file_id), True, file_name)
+    file_data=fill_data(data, True, file_name)
     save_visited([file_data])
 
     #obtener los archivos relacionados
-    related_files = search_related(split_file(file_data["file"])[0])
+    related_files = search_related(split_file(file_data["file"])[0][0:50])
     bin_file_id=mid2bin(file_id)
     ids=sorted({fid for related in related_files for fid in get_ids(related) if fid[0]!=bin_file_id})[:5]
     files_related=[choose_filename_related(data) for data in get_files(ids)]
@@ -680,8 +715,19 @@ def last_files():
 
     return render_template('files/last_files.html',files=files,date=datetime.utcnow())
 
-@cache.cached
 @files.route("/<lang>/search/autocomplete")
+# TODO(felipe): Descomentar esto, y cambiar la asignación a make_cache_key
+#               cuando se hayan solucionado los bugs de flask-cache:
+#                   https://github.com/thadeusb/flask-cache/pull/18
+#                   https://github.com/thadeusb/flask-cache/pull/17
+#
+# @cache.cached(
+#    timeout = 1800,
+#    key_prefix = lambda: "view/%%s/%s:%s" % (
+#        request.args.get("term",""),
+#        request.args.get("ct","").lower())
+#    )
+@cache.cached()
 def autocomplete():
     '''
     Devuelve la lista para el autocompletado de la búsqueda
@@ -690,12 +736,20 @@ def autocomplete():
     ct = request.args.get("t",None)
     if ct: ct = ct.lower()
 
-    tc = TamingClient(current_app.config["SERVICE_TAMING_SERVER"], current_app.config["SERVICE_TAMING_TIMEOUT"])
+    tc = TamingClient(current_app.config["SERVICE_TAMING_SERVERS"], current_app.config["SERVICE_TAMING_TIMEOUT"])
 
     tamingWeight = {"c":1, "lang":200}
     if ct:
         for cti in current_app.config["CONTENTS_CATEGORY"][ct]:
             tamingWeight[current_app.config["TAMING_TYPES"][cti]] = 200
 
-    results = [result[2] for result in tc.tameText(query, tamingWeight, 5, 3, 0.2)]
+    options = tc.tameText(query, tamingWeight, 5, 3, 0.2)
+    if options is None:
+        results = []
+    else:
+        results = [result[2] for result in options]
     return json.dumps(results)
+
+autocomplete.make_cache_key = lambda: "view/%%s/%s:%s" % (
+        request.args.get("term","").replace(" ","_"),
+        request.args.get("ct","").lower().replace(" ","_"))

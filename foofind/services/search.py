@@ -9,7 +9,7 @@ from foofind.services.extensions import cache
 from foofind.services import filesdb
 from datetime import datetime
 
-@cache.memoize()
+@cache.memoize(timeout=21600) # Mantener cache máximo 4 horas
 def search_files(query, filters, page=1):
     '''
     Busqueda simple de archivos con filtros
@@ -27,25 +27,24 @@ def search_files(query, filters, page=1):
     sph.SetFilter('bl', [0])
 
     #todos los filtros posibles de busqueda
-    if 'type' in filters and len(filters["type"])>0 and filters["type"] in current_app.config["CONTENTS_CATEGORY"]:
+    if 'type' in filters and filters["type"] and filters["type"] in current_app.config["CONTENTS_CATEGORY"]:
         sph.SetFilter('ct', current_app.config["CONTENTS_CATEGORY"][filters["type"]])
 
-    if 'src' in filters and len(filters["src"])>0:
+    if 'src' in filters and filters["src"]:
         sph.SetFilter('t', [int(i["_id"]) for i in filesdb.get_sources(group=tuple(filters['src']))])
     else:
         sph.SetFilter('t', [int(i["_id"]) for i in filesdb.get_sources()])
 
-
-    if 'size' in filters and len(filters["size"])>0:
-        if filters['size']<4:
-            sph.SetFilterRange('z', 1, 1048576*(10**(int(filters['size'])-1)))
+    if 'size' in filters and filters["size"]:
+        if int(filters['size'])<4:
+            sph.SetFilterRange('z', 1, 1048576*(10**(int(filters['size'])-1)), False)
         else:
             sph.SetFilterRange('z', 0, 104857600, True)
 
-    if 'brate' in filters and len(filters["brate"])>0:
+    if 'brate' in filters and filters["brate"]:
         sph.SetFilterRange('mab', 0, [127,191,255,319][int(filters['brate'])-1], True)
 
-    if 'year' in filters and len(filters["year"])>0:
+    if 'year' in filters and filters["year"]:
         sph.SetFilterRange('may', [0,60,70,80,90,100,datetime.utcnow().year-1][int(filters['year'])-1], [59,69,79,89,99,109,datetime.utcnow().year][int(filters['year'])-1])
 
     query = sph.Query(query, "idx_files")
@@ -68,23 +67,31 @@ def block_files(sphinx_ids=(), mongo_ids=(), block=True):
     if mongo_ids:
         # Si recibo ids de mongo, ejecuto una petición múltiple para encontrar
         # los ids de sphinx
-        for mongoid in mongo_ids:
-            uri1, uri2, uri3 = struct.unpack('III', mid2bin(mongoid))
-            sph.ResetFilters()
-            sph.SetFilter('uri1', [uri1])
-            sph.SetFilter('uri2', [uri2])
-            sph.SetFilter('uri3', [uri3])
-            sph.AddQuery("", "idx_files", "Searching fileid %s" % mid2hex(mongoid))
-        results = sph.RunQueries()
-        if not results:
-            logging.error( sph.GetLastError() )
-            return False
-        sphinx_ids.extend(r["matches"][0]["id"] for r in results)
+        for i in xrange(0, len(mongo_ids), 32):
+            # Proceso los ids de mongo en grupos de 32, que es el límite que
+            # me permite sphinx
+            for mongoid in mongo_ids[i:i+32]:
+                uri1, uri2, uri3 = struct.unpack('III', mid2bin(mongoid))
+                sph.ResetFilters()
+                sph.SetFilter('uri1', [uri1])
+                sph.SetFilter('uri2', [uri2])
+                sph.SetFilter('uri3', [uri3])
+                sph.AddQuery("", "idx_files", "Searching fileid %s" % mid2hex(mongoid))
+            results = sph.RunQueries()
+            if results:
+                for result in results:
+                    if "matches" in result and result["matches"]:
+                        sphinx_ids.append(result["matches"][0]["id"])
+                    if "warning" in result and result["warning"]:
+                        logging.warning(result["warning"])
+            else:
+                logging.error( sph.GetLastError() )
     sph.ResetFilters()
-    tr = sph.UpdateAttributes("idx_files", ["bl"], {i:1 if block else 0 for i in sphinx_ids})
+    tr = sph.UpdateAttributes("idx_files", ["bl"], {i:[1 if block else 0] for i in sphinx_ids})
     sph.Close()
     return tr == len(sphinx_ids) and tr == len(mongo_ids)
 
+@cache.memoize(timeout=3600) # Mantener cache máximo 1 hora
 def search_related(phrases):
     '''
     Busqueda de archivos relacionados
@@ -107,7 +114,7 @@ def search_related(phrases):
         sph.AddQuery(" ".join(words), "idx_files")
 
     # añade busquedas más cortas
-    if minlen>4:
+    if minlen > 4 and phrases:
         words = [word for word in phrases[0] if len(word)>1]
         sph.AddQuery(" ".join(words[0:3]), "idx_files")
         sph.AddQuery(" ".join(words[-3:]), "idx_files")

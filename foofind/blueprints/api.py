@@ -38,7 +38,7 @@ def api_v1():
     return render_template("api/v1.xml",
         api_method=method,
         results=results,
-        success = succeeded
+        success = success
         )
 
 _api_v2_md_parser = {
@@ -52,7 +52,6 @@ def api_v2():
     '''
     {'file': {u'md': {u'video:category': u'comedy', u'video:duration': 6287L, u'video:description': u'asdf'}, u'c': -1, u'fs': datetime.datetime(2011, 4, 7, 7, 19, 49), 'name': u'http://www.veoh.com/veohplayer.swf?permalinkId=v19638583pbHaJywJ', u'src': {u'6d25345e0114c0424a06af6c': {u'url': u'http://www.veoh.com/watch/v19638583pbHaJywJ', u'm': 1, u't': 17, u'fn': {u'1361703869': {u'm': 1, u'l': 1}}, u'l': 1}, u'fe6d3bedce035eebe2a1e051': {u'url': u'http://www.veoh.com/veohplayer.swf?permalinkId=v19638583pbHaJywJ', u'm': 1, u't': 17, u'fn': {u'1361703869': {u'm': 1, u'l': 1}}, u'l': 1}}, u'bl': 0, u'tt': 1, u'm': 1, u's': 3, u'ls': datetime.datetime(2011, 4, 7, 7, 19, 49), u'_id': ObjectId('fe6d3bedce035eebe2a1e051'), 'id': '-m077c4DXuvioeBR', u'fn': {u'1361703869': {u'x': u'', 'c': 2, 'tht': 0, u'n': u'asdf'}}, u'ct': 2}, 'view': {'md': {}, 'file_type': 'video', 'source': u'veoh.com', 'url': '-m077c4DXuvioeBR', 'nfn': u'asdf', 'fnx': '', 'sources': {u'veoh.com': {'count': 2, 'join': False, 'tip': u'veoh.com', 'parts': [], 'urls': [u'http://www.veoh.com/watch/v19638583pbHaJywJ', u'http://www.veoh.com/veohplayer.swf?permalinkId=v19638583pbHaJywJ', u'magnet:?dn=asdf&'], 'icon': 'web'}}, 'efn': u'asdf', 'action': 'Download', 'fn': u'asdf', 'fnh': u'<strong>asdf</strong>'}}
     '''
-
 
     if method == "search":
         result = []

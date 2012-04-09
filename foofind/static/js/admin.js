@@ -25,6 +25,13 @@ $(document).ready(function(){
                                 }
                             dl.append('<dd>'+dd+'</dd>');
                             }
+                        var select=$("#publish_mode");
+                        select.empty();
+                        for(var i0=0,j0=data["publish"].length;i0<j0;i0++){
+                            section=data["publish"][i0];
+                            select.append('<option value="'+section[0]+'">'+section[1]+'</option>');
+                            }
+                        select.children().first().attr("selected","selected");
                         }
                     });
                 }, 2000);

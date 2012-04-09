@@ -1,0 +1,18 @@
+{% extends "admin/base.html" %}
+{% block page %}
+    {%- if check_form %}
+    <form method="post">
+        {{ check_form.defaults }}
+        {{ check_form.editable}}
+        {{ check_form.confirmed }}
+        <h3 class="list">{{form_title}}</h3>
+        <dl class="list">
+            {%- for key, old_value, new_value in document_changes %}
+                <dt>{{ check_form[fieldname(key)].label }}</dt>
+                <dd><span style="min-width:100px;display:inline-block;text-align:right">{{ repr(old_value) }} <span style="font-weight:bold;">&rarr;</span></span><span style="min-width:100px;display:inline-block;"> {{ repr(new_value) }}</span>{{check_form[fieldname(key)]}}</dd>
+            {%- endfor %}
+        </dl>
+        {{ check_form.submit(class="list") }}
+    </form>
+    {%- endif %}
+{%- endblock %}

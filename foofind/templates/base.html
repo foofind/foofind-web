@@ -2,7 +2,7 @@
 <!doctype html>
 <html>
     <head>
-        <title>{{ title }}</title>
+        <title>{{ g.title }}</title>
         <meta charset="utf-8">
         <meta name="description" content="{{_('i_want_that_file')}}"/>
         <link rel="shortcut icon" href="{{ url_for('index.favicon') }}" />
@@ -52,7 +52,7 @@
                 {%- block header %}
                 <h1>
                     <a href="{{ url_for('index.home') }}">
-                        <img src="/static/foofind3.png" alt="File search engine - foofind.com" title="foofind.com"/>
+                        <img src="/static/foofind3.png" alt="File search engine - {{ g.domain }}" title="{{ g.domain }}"/>
                     </a>
                 </h1>
                 <hr />

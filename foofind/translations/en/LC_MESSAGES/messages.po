@@ -27,6 +27,26 @@ msgstr "Password:"
 msgid "submit"
 msgstr "Send"
 
+# errors
+msgid "go_home"
+msgstr "Go back to search engine"
+
+msgid "error_404_message"
+msgstr "Page not found."
+
+msgid "error_404_description"
+msgstr "Requested url not found. Please check you wrote the url correctly, if so, please notify web administrators."
+
+msgid "error_502_message"
+msgstr "Bad gateway."
+
+msgid "error_502_description"
+msgstr "Cannot access to service due wrong gateway."
+
+# mail errors
+msgid "error_mail_send"
+msgstr "There was an error sending the message to the address specified. Please choose another or try again later."
+
 # validators
 msgid "non_alphabetic_digits"
 msgstr "%(value)s contains characters which are non alphabetic and no digits"
@@ -705,7 +725,10 @@ msgid "under_maintenance"
 msgstr "Foofind is under maintenance. Please, come back later."
 
 msgid "link_not_exist"
-msgstr "This link does not exist or may have been deleted!"
+msgstr "This link does not exist or has been deleted."
+
+msgid "error_link_removed"
+msgstr "We're sorry: this link has been removed by its source."
 
 # translate
 msgid "translate"
@@ -736,21 +759,6 @@ msgid "other"
 msgstr "Other"
 
 # Felipe <felipe@mp2p.net>, 2011.
-msgid "go_home"
-msgstr "Go back to search engine"
-
-msgid "error_404_message"
-msgstr "404: Page not found."
-
-msgid "error_404_description"
-msgstr "Requested url not found. Please check you wrote the url correctly, if so, please notify web administrators."
-
-msgid "error_502_message"
-msgstr "502: Bad gateway."
-
-msgid "error_502_description"
-msgstr "Cannot access to service due wrong gateway."
-
 msgid "admin_prefix"
 msgstr "Admin"
 
@@ -925,6 +933,9 @@ msgstr "Deploy"
 msgid "admin_deploy_deploy"
 msgstr "Auto-deploy"
 
+msgid "admin_deploy_deploy_rollback"
+msgstr "Auto-rollback"
+
 msgid "admin_deploy_phase_restart"
 msgstr "Restarting"
 
@@ -954,6 +965,12 @@ msgstr "Release message"
 
 msgid "admin_deploy_publish_mode"
 msgstr "Deploy to release"
+
+msgid "admin_deploy_publish_empty"
+msgstr "All publish fields are required"
+
+msgid "admin_deploy_publish_bad_version"
+msgstr "Version code is invalid"
 
 msgid "admin_deploy_rollback"
 msgstr "Rollback"
@@ -997,8 +1014,20 @@ msgstr "Search"
 msgid "admin_origins_save"
 msgstr "Save changes"
 
+msgid "admin_saved"
+msgstr "Changes were saved"
+
 msgid "admin_origins_info"
 msgstr "Origin data"
+
+msgid "admin_nochanges"
+msgstr "No changes"
+
+msgid "admin_edit"
+msgstr "Edit"
+
+msgid "admin_edit_submit"
+msgstr "Save changes"
 
 msgid "opensearch_description"
 msgstr "Search using Foofind"

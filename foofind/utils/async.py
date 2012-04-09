@@ -4,7 +4,7 @@
 """
 import threading
 import Queue
-import functools
+import logging
 
 class MultiAsync(object):
     '''
@@ -46,18 +46,27 @@ class AsyncThread(threading.Thread):
         self.kwargs = target_kwargs
 
     def run(self):
-        for ret in self.target(*self.args, **self.kwargs):
-            self.results.put(ret)
-        self.results.join()
+        try:
+            for ret in self.target(*self.args, **self.kwargs):
+                self.results.put(ret)
+            self.results.put(Queue.Empty())
+        except Exception, e:
+            logging.exception("Error while performing an asynchronous task.")
+            self.results.put(Queue.Empty())
 
-def async_generator(f):
-    @functools.wraps(f)
-    def inner(*args, **kwargs):
-        results = Queue.Queue()
-        at = AsyncThread(results, target=f, target_args=args, target_kwargs=kwargs)
-        at.start()
-        while at.is_alive:
-            yield results.get()
-            results.task_done()
 
-    return inner
+def async_generator(timeout):
+    def wrap(f):
+        def inner(*args, **kwargs):
+            results = Queue.Queue()
+            at = AsyncThread(results, target=f, target_args=args, target_kwargs=kwargs)
+            at.start()
+            while True:
+                item = results.get(timeout=timeout)            
+                results.task_done()
+                if isinstance(item, Queue.Empty):
+                    break
+                else:
+                    yield item
+        return inner
+    return wrap

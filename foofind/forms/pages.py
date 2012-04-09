@@ -50,7 +50,7 @@ class SubmitLinkForm(Form):
     captcha = CaptchaField()
     submit = SubmitField(_("submit"))
     _permited_links = ["https:/","http://","magnet:","ed2k://"]
-    
+
     def validate_urls(form, field):
         '''
         Validador de los enlaces
@@ -58,7 +58,7 @@ class SubmitLinkForm(Form):
         for link in re.split(r'^.*\\n', form.urls.data):
             if link[:7] not in form._permited_links:
                 raise ValidationError(_("no_valid_url"))
-        
+
 class ReportLinkForm(Form):
     '''
     Formulario para reportar enlaces
@@ -68,8 +68,8 @@ class ReportLinkForm(Form):
     company = TextField(_("your_company"))
     email = TextField(_("your_email"), [require(),email()])
     phonenumber = TextField(_("your_phone"))
-    linkreported = TextField(_("link_reviewed"), [require(),url(),Regexp("^(?!https?://[^/]*foofind.com/?).*$",re.IGNORECASE,_("not_foofind_page"))])
-    urlreported = TextField(_("url_content"), [require(),url(),Regexp("^https?://foofind.com/\w\w/download/[a-zA-Z0-9!-]{16}(/.*)?$",re.IGNORECASE,_("not_foofind_link"))])
+    linkreported = TextField(_("link_reviewed"), [require(),url(),Regexp("^(?!https?://[^/]*foofind.[com|is]/?).*$",re.IGNORECASE,_("not_foofind_page"))])
+    urlreported = TextField(_("url_content"), [require(),url(),Regexp("^https?://foofind.[com|is]/\w\w/download/[a-zA-Z0-9!-]{16}(/.*)?$",re.IGNORECASE,_("not_foofind_link"))])
     reason = TextField(_("reason_complaint"), [require()])
     message = TextAreaField(_('your_message'), [require()])
     captcha = CaptchaField()
@@ -80,7 +80,7 @@ class ReportLinkForm(Form):
         '''
         Validador de los enlaces
         '''
-        if re.match(r'.*https?://[^/]*foofind.com/?.*',field.data,re.IGNORECASE):
+        if re.match(r'.*https?://[^/]*foofind.[com|is]/?.*',field.data,re.IGNORECASE):
             raise ValidationError(_("include_reported_links"))
 
 class SelectLanguageForm(Form):

@@ -4,10 +4,13 @@ import re
 import os
 import bson
 import logging
+import chardet
+import pymongo
 from base64 import b64encode, b64decode
 from os.path import isfile, isdir
 from urlparse import urlparse
-
+from functools import wraps
+from flask import make_response
 
 def bin2mid(binary):
     '''
@@ -171,3 +174,78 @@ def multipartition(x, s):
     else:
         for i in x:
             yield i
+
+def generator_with_callback(iterator, callback):
+    '''
+    Recibe un iterador y ejecuta un callback
+    '''
+    for i in iterator:
+        yield i
+    callback()
+
+def end_request(r, conn=None):
+    if isinstance(r, pymongo.cursor.Cursor):
+        return generator_with_callback(r, r.collection.database.connection.end_request)
+    elif conn:
+        conn.end_request()
+        return r
+    raise AttributeError("Cannot obtain connection from %s" % r)
+
+def u(txt):
+    ''' Parse any basestring (ascii str, encoded str, or unicode) to unicode '''
+    if isinstance(txt,unicode):
+        return txt
+    else:
+        try:
+            return unicode(txt, chardet.detect(txt)["encoding"])
+        except:
+            pass
+        return unicode("")
+
+def fixurl(url):
+    '''
+    Si recibe una url interna con basura, intenta recuperarla.
+
+    @return url válida en unicode
+    '''
+    # http://foofind.is/en/download/ZVbSk3bxVF9dgPBk/asdf%20style%20qwerty.MP4.html
+    if url.startswith("http"):
+        url = "/%s" % "/".join(url.split("/")[3:])
+    elif not url.startswith("/"):
+        return url # Uri no relativa
+
+    # TODO: si algún día se necesita usar para urls externas
+    # if not url.startswith("/"):
+    #
+    #    for i in ("http://foofind.", "https://foofind.", "http://www.foofind.", "https://www.foofind.", "http://localhost"):
+    #        if url.startswith(i):
+    #            # Si la url es nuestra, relativizamos
+    #            url = "/%s" % "/".join(url.split("/")[i.count("/")+1:])
+    #            break
+    #    else:
+    #        # Significa que la url no es de foofind, no la arreglamos
+    #        return url
+
+    if url.count("/") < 3:
+        return url
+
+    url_splitted = url.split("/")
+
+    if url_splitted[2] == "download":
+        # Caso para download
+        for possible_valid_url in (url, url[:url.rfind("/")]):
+            unicode_url = u(possible_valid_url)
+            if unicode_url:
+                return unicode_url
+    return url
+
+
+def nocache(fn):
+    @wraps(fn)
+    def decorated_view(*args, **kwargs):
+        resp = make_response(fn(*args, **kwargs))
+        resp.cache_control.no_cache = True
+        resp.cache_control.no_store = True
+        resp.cache_control.must_revalidate = True
+        return resp
+    return decorated_view

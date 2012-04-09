@@ -6,14 +6,13 @@
     <dt>{{ form.mode.label }}</dt>
     <dd>{{ form.mode }}</dd>
     <dt>{{ _("admin_deploy_phase_deploy") }}</dt>
-    <dd>{{ form.deploy(class="deploybtn") if deploy_available else form.deploy(class="deploybtn", disabled="disabled") }}</dd>
+    <dd>{{ form.deploy(class="deploybtn") if deploy_available else form.deploy(class="deploybtn", disabled="disabled") }}{{ form.deploy_rollback(class="deploybtn") if deploy_available else form.deploy_rollback(class="deploybtn", disabled="disabled") }}</dd>
     <dt class="deploy_advanced">{{ _("admin_deploy_phase_configuration") }}</dt>
     <dd class="deploy_advanced">{{ form.package(class="deploybtn") if deploy_available else form.package(class="deploybtn", disabled="disabled") }}{{ form.rollback(class="deploybtn") if deploy_available else form.rollback(class="deploybtn", disabled="disabled") }}</dd>
     <dt class="deploy_advanced">{{ _("admin_deploy_phase_preparation") }}</dt>
     <dd class="deploy_advanced">{{ form.prepare(class="deploybtn") if deploy_available else form.prepare(class="deploybtn", disabled="disabled") }}</dd>
     <dt class="deploy_advanced">{{ _("admin_deploy_phase_commit") }}</dt>
     <dd class="deploy_advanced">{{ form.commit(class="deploybtn") if deploy_available else form.commit(class="deploybtn", disabled="disabled") }}</dd>
-
     <dt class="deploy_advanced">{{ _("admin_deploy_phase_clean") }}</dt>
     <dd class="deploy_advanced">{{ form.clean_local(class="deploybtn") if deploy_available else form.clean_local(class="deploybtn", disabled="disabled") }}{{ form.clean_remote(class="deploybtn") if deploy_available else form.clean_remote(class="deploybtn", disabled="disabled") }}</dd>
     <dt class="deploy_advanced">{{ _("admin_deploy_phase_restart") }}</dt>
@@ -22,9 +21,9 @@
 <h3 class="list">{{_('admin_deploy_phase_publish')}}</h3>
 <dl class="list">
     <dt>{{ form.publish_version.label }}</dt>
-    <dd>{{ form.publish_version }}</dd>
+    <dd>{{ form.publish_version(placeholder="0.0") }}</dd>
     <dt>{{ form.publish_message.label }}</dt>
-    <dd>{{ form.publish_message }}</dd>
+    <dd>{{ form.publish_message(placeholder="0.0 (alpha)") }}</dd>
     <dt>{{ form.publish_mode.label }}</dt>
     <dd>{{ form.publish_mode }}</dd>
 </dl>

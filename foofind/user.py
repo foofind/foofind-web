@@ -26,9 +26,11 @@ class User(UserMixin):
 
     def load_data(self, data):
         self.username = data["username"]
-        self.email = data["email"]
-        self.karma = data["karma"]
         self.has_data = True
+        if "email" in data:
+            self.email = data["email"]
+        if "karma" in data:
+            self.karma = data["karma"]
         if "created" in data:
             self.created = data["created"].strftime("%d-%m-%Y, %H:%M:%S")
         if "lang" in data:

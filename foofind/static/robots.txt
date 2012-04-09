@@ -4,6 +4,8 @@
 # irresponsible, your access to the site may be blocked.
 #
 
+User-agent: *
+Disallow: /captcha/
 
 # Crawlers that are kind enough to obey, but which we'd rather not have
 # unless they're feeding search engines.
