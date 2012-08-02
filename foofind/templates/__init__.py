@@ -20,7 +20,7 @@ def number_size_format_filter(size):
     '''
     Formatea un tamaño de fichero en el idioma actual
     '''
-    size=log(size,1024)
+    size=log(float(size),1024)
     decsep = get_decimal_symbol(locale=g.lang)
     intpart = format_decimal(round(1024**(size-int(size)), 2), locale=g.lang)
     if decsep in intpart:
@@ -42,7 +42,7 @@ def search_params_filter(new_params, delete_params=[], args=None):
     '''
     if not args: args = request.args
     p={}
-    for param in ['q','src','opt','type','size','year','brate','page']:
+    for param in ['q','src','type','size','year','brate','page','alt']:
         if param in new_params:
             p[param]=new_params[param]
         elif "all" not in delete_params and param not in delete_params and param in args:
@@ -84,7 +84,7 @@ def format_timedelta_filter(date,granularity='second', threshold=.85, locale="")
 
     return u''
 
-def url_lang_filter(url,lang):
+def url_lang_filter(url, lang):
     '''
     Devuelve la url con la parte del idioma indicada
     '''

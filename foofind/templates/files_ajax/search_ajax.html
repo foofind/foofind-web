@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{%- macro url_search(delete_params=['page'],catch_kwargs=true) -%}
+    {{url_for('files_ajax.searcha',**kwargs|search_params(delete_params,args=args))}}
+{%- endmacro -%}
+{%- macro searched(param,value="",empty=false) %}
+    {%- if (value=="" and param not in args) or args[param]==value or ((args[param]=="" or not param in args) and empty==true) -%}
+        class="actual{% if args["type"]!="" %} {{ args["type"] }}{% endif %}"
+    {%- endif -%}
+{% endmacro -%}
+{% block head %}
+    <script type="text/javascript" src="/static/js/jquery.hoverIntent.js"></script>
+    <script type="text/javascript" src="/static/js/search.js"></script>
+    {%- assets "css_search" %}
+        <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet" />
+    {%- endassets %}
+{% endblock %}
+{% block global_message %}{{_('change_classic_search')}} <a href="{{url_for('files.search')}}">{{_('classic_search')}}</a>{% endblock %}
+{% block header %}
+    <h1>
+        <a href="{{ url_for('index.home') }}">
+            <img src="/static/foofind3.png" alt="File search engine - Foofind" title="Foofind"/>
+        </a>
+    </h1>
+    <div id="search_file">
+        <form method="get" action="{{ url_search()[:-1] }}" class="searchbox">
+            <fieldset class="small">
+                {{ search_form.q(autocomplete="off") }}
+                <span></span>
+                {#<a href="#favorite" title="Guardar como favorito"></a>
+                <a href="#share" title="Compartir"></a>#}
+                <!--{{ search_form.type(value=args["type"]) }}
+                <input type="hidden" id="src" name="src" value="{{args['src']}}" />-->
+                {{ search_form.search_submit(class="large magenta awesome") }}
+                <div id="search_info"></div>
+            </fieldset>
+        </form>
+    </div>
+{% endblock %}
+{% block content %}
+    <div id="fondo"></div>
+    <div id="subcontent">
+        <div id="flecha"><span></span></div>
+        <div id="download">
+            <div>
+                <img alt="cargando" src="/static/img/search/cargando150.png" />
+                <img alt="cargando" src="/static/img/search/cargando150.png" />
+            </div>
+        </div>
+        {{ flash() }}
+        <section>
+            <aside>
+                <dl>
+                    <!--<dt>Busquedas relacionadas</dt>
+                    <dd id="q">
+                    </dd>-->
+                    <dt>¿Qué?</dt>
+                    <dd id="type">
+                        <ul>
+                            <li><a href="#" data-filter="" title="{{_('all')}}">{{_('all')}}</a></li>
+                            <li><a href="#" data-filter="audio" title="{{_('audio')}}">{{_('audio')}}</a></li>
+                            <li><a href="#" data-filter="video" title="{{_('video')}}">{{_('video')}}</a></li>
+                            <li><a href="#" data-filter="image" title="{{_('image')}}">{{_('image')}}</a></li>
+                            <li><a href="#" data-filter="document" title="{{_('document')}}">{{_('document')}}</a></li>
+                            <li><a href="#" data-filter="software" title="{{_('software')}}">{{_('software')}}</a></li>
+                        </ul>
+                        <!--<a href="#">Opciones avanzadas</a>-->
+                    </dd>
+                    <dt>¿Dónde?</dt>
+                    <dd id="src">
+                        <ul>
+                            <li><a href="#" data-filter="" class="all" title="{{_('all')}}">{{_('all')}}</a></li>
+                            <li><a href="#" data-filter="s" class="streaming" title="Streaming">Streaming</a></li>
+                            <li><a href="#" data-filter="wf" class="web" title="{{_('direct_downloads')}}">{{_('direct_downloads')}}</a></li>
+                            <li><a href="#" data-filter="p" class="p2p" title="P2P">P2P</a></li>
+                            <!--<li><a href="#" data-filter="swftge">{{_('all')}}</a></li>
+                            <li><a href="#" data-filter="wf">{{_('direct_downloads')}}</a></li>
+                            <li><a href="#" data-filter="t">Torrents</a></li>
+                            <li><a href="#" data-filter="s">Streaming</a></li>
+                            <li><a href="#" data-filter="g">Gnutella</a></li>
+                            <li><a href="#" data-filter="e">Ed2k</a></li>-->
+                        </ul>
+                        <!--<a href="#">Opciones avanzadas</a>-->
+                    </dd>
+                    <dt>Tamaño</dt>
+                    <dd id="size">
+                        <!--
+                        <ul>
+                            <li><a href="#" data-filter="0">{{_('all_sizes')}}</a></li>
+                            <li><a href="#" data-filter="1">{{_('smaller_than')}} 1MiB</a></li>
+                            <li><a href="#" data-filter="2">{{_('smaller_than')}} 10MiB</a></li>
+                            <li><a href="#" data-filter="3">{{_('smaller_than')}} 100MiB</a></li>
+                            <li><a href="#" data-filter="4">{{_('larger_than')}} 100MiB</a></li>
+                        </ul>
+                        -->
+                        <div></div>
+                        <span>< 1 Kib</span><span>> 16 GiB</span>
+                    </dd>
+                    {#<dt>Calidad</dt>
+                    <dd id="quality">
+                        <!--
+                        <ul>
+                            <li><a href="#" data-filter="0">{{_('all_qualities')}}</a></li>
+                            <li><a href="#" data-filter="1">128 kbps {{_('or_better')}}</a></li>
+                            <li><a href="#" data-filter="2">192 kbps {{_('or_better')}}</a></li>
+                            <li><a href="#" data-filter="3">256 kbps {{_('or_better')}}</a></li>
+                            <li><a href="#" data-filter="4">320 kbps {{_('or_better')}}</a></li>
+                        </ul>
+                        -->
+                    </dd>
+                    <dt>Año</dt>
+                    <!--
+                    <dd id="year">
+                        <ul>
+                            <li><a href="#" data-filter="0">{{_('all_years')}}</a></li>
+                            <li><a href="#" data-filter="1">{{_('before')}} 1960</a></li>
+                            <li><a href="#" data-filter="2">60's</a></li>
+                            <li><a href="#" data-filter="3">70's</a></li>
+                            <li><a href="#" data-filter="4">80's</a></li>
+                            <li><a href="#" data-filter="5">90's</a></li>
+                            <li><a href="#" data-filter="6">00's</a></li>
+                            <li><a href="#" data-filter="7">{{_('last_year')}}</a></li>
+                        </ul>
+                    </dd>
+                    -->#}
+                </dl>
+            </aside>
+            <ul id="results">
+                <li id="no_results" class="loading">
+                    <img alt="cargando" src="/static/img/search/cargando.png" />
+                    <img alt="cargando" src="/static/img/search/cargando.png" />
+                </li>
+            </ul>
+            <a href="#" id="more"></a>
+        </section>
+    </div>
+{% endblock %}

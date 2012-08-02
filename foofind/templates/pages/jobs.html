@@ -6,7 +6,7 @@
     <p>El trabajo es presencial y a jornada completa, en nuestra oficina de Madrid.</p>
     <p>Ofrecemos incorporación a un proyecto de larga duración y flexibilidad de horarios.</p>
     <div id="joboffer">
-        <h2>Programadores Python</h2>
+        <h3>Programadores Python</h3>
         <p>Buscamos programadores con experiencia en desarrollo con Python e interés en alguna de estas áreas:</p>
         <ul>
             <li>Extracción de información de contenidos multimedia de Internet.</li>
@@ -28,12 +28,12 @@
             <li>MongoDB</li>
         </ul>
     </div>
-    <h2>Envíanos tus datos</h2>
-    <form enctype="multipart/form-data" action="" method="post">
+    <h3>Envíanos tus datos</h3>
+    <form method="post" enctype="multipart/form-data">
         <fieldset>
             {{ render_field(form.email) }}
             {{ render_field(form.offer) }}
-            {{ render_field(form.message,rows=10,cols=60) }}
+            {{ render_field(form.message,cols=40,rows=10) }}
             {{ render_field(form.cv) }}
             {{ render_field(form.captcha) }}
             {{ render_field(form.accept_tos) }}

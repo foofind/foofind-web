@@ -7,6 +7,7 @@ import collections
 import time
 import logging
 import subprocess
+import shutil
 
 from . import touch_path
 
@@ -69,23 +70,26 @@ class LangRepoManager(object):
     def is_current_lang(self, x):
         return os.path.isdir(os.path.join(self.local_dir, x))
 
-    def init_lang_repository(self, app):
+    def init_lang_repository(self, app=None):
         '''Inicializa la clase y los repositorios aprovechando la
         configuración de aplicación.
         '''
+        if app:
+            #self.remote = app.config["ADMIN_LANG_REMOTE"]
+            self.git_author = app.config["ADMIN_GIT_AUTHOR"]
+            self.git_email = app.config["ADMIN_GIT_EMAIL"]
+            self.repo_url = app.config["ADMIN_LANG_REMOTE_REPO"]
 
-        #self.remote = app.config["ADMIN_LANG_REMOTE"]
-        self.git_author = app.config["ADMIN_GIT_AUTHOR"]
-        self.git_email = app.config["ADMIN_GIT_EMAIL"]
-        self.repo_url = app.config["ADMIN_LANG_REMOTE_REPO"]
+            self.branch = app.config["ADMIN_LANG_REMOTE_BRANCH"]
 
-        self.branch = app.config["ADMIN_LANG_REMOTE_BRANCH"]
+            # Directorio remoto de traducciones
+            self.lang_folder = app.config["ADMIN_LANG_FOLDER"]
 
-        # Directorio remoto de traducciones
-        self.lang_folder = app.config["ADMIN_LANG_FOLDER"]
+            # Directorio del repositorio local
+            self.base = app.config["ADMIN_LANG_LOCAL_REPO"]
 
-        # Directorio del repositorio local
-        self.base = app.config["ADMIN_LANG_LOCAL_REPO"]
+        if os.path.exists(self.base):
+            shutil.rmtree(self.base, True)
 
         # Directorio local de traducciones (git replica el árbol de directorios
         # completo con sparse-checkout)
@@ -94,10 +98,14 @@ class LangRepoManager(object):
         touch_path(self.local_dir) # nos aseguramos que el árbol existe
 
         self.repo = git.Repo.init(self.base, mkdir=True)
-
-        if len(self.repo.remotes) == 0:
-            #git.remote.Remote.add(self.repo, "origin", self.repo_url)
-            self.repo.create_remote("origin", self.repo_url)
+        self.repo.create_remote("origin", self.repo_url)
+        try:
+            self.repo.remote().fetch("master")
+        except AssertionError as e:
+            logging.exception(
+                "Fallo de GitPython: no anda bien con versiones nuevas de git.\n"
+                "    Última versión funcional probada: 1.7.5.4"
+                )
 
         assert self.repo.git.version_info[:2] >= (1,7), "Se requiere git 1.7 como mínimo."
 
@@ -121,7 +129,7 @@ class LangRepoManager(object):
             for attemp in xrange(self._attemps_on_fail):
                 try:
                     self.repo.git.read_tree("-mu", self.repo.active_branch.name)
-                    #self.repo.heads.master.checkout()
+                    self.repo.heads.master.checkout()
                     break
                 except BaseException as a:
                     logging.error(("LangRepoManager._refresh_tree intento %d fallido." % attemp, a))
@@ -167,6 +175,20 @@ class LangRepoManager(object):
                 })
             return pofile
         return polib.pofile(popath)
+
+    def preload(self, codes):
+        '''Precarga una lista de idiomas.
+
+        @type codes: iterable de str de dos bytes
+        @param codes: lista de códigos de lenguajes
+        '''
+        for code in codes:
+            if not self.is_current_lang(code):
+                break
+        else:
+            return
+        self._refresh_tree(new_langs=codes)
+        self._refresh_langs()
 
     def update_lang(self, code, dictionary, refresh=True, commit=True):
         '''Actualiza el fichero de lenguaje con el diccionario dado.
@@ -216,12 +238,12 @@ class LangRepoManager(object):
         @raises CommitException: si falla add, commit o push (ver su atributo status, diccionario)
         '''
         tr = collections.OrderedDict(add="No branch.", commit="Not reached.", push="Not reached.")
-        error = bool(self.repo.branches)
+        error = False
         if error is False:
             try:
                 tr["add"] = self.repo.git.add("--all") or "OK"
             except Exception as e:
-                tr["add"] = str(e)
+                tr["add"] = e
                 error = True
         if error is False:
             try:
@@ -230,13 +252,13 @@ class LangRepoManager(object):
                     "--author=\"%s <%s>\"" % (self.git_author, self.git_email)
                     ) or "OK"
             except Exception as e:
-                tr["commit"] = str(e)
+                tr["commit"] = e
                 error = True
         if error is False:
             try:
                 tr["push"] = self.repo.git.push() or "OK"
             except Exception as e:
-                tr["push"] = str(e)
+                tr["push"] = e
                 error = True
         if error:
             raise CommitException("Error al hacer commit.", tr)
@@ -249,7 +271,7 @@ class LangRepoManager(object):
         @rtype bool
         @return True si x está en los lenguajes conocidos
         '''
-        return x in self._langs
+        return self.is_current_lang(x)
 
 pomanager = LangRepoManager()
 

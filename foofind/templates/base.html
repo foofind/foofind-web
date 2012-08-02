@@ -1,68 +1,88 @@
-{% from "helpers.html" import flash %}
-<!doctype html>
+{% from "helpers.html" import flash -%}
+<!DOCTYPE html>
 <html>
     <head>
         <title>{{ g.title }}</title>
-        <meta charset="utf-8">
+        <meta charset="utf-8"/>
         <meta name="description" content="{{_('i_want_that_file')}}"/>
         <link rel="shortcut icon" href="{{ url_for('index.favicon') }}" />
         <link rel="search" type="application/opensearchdescription+xml" href="{{ url_for('index.opensearch') }}" title="Foofind" />
         {%- for id,name,beta in g.languages %}
-        <link rel="alternate" hreflang="{{ id }}" href="{{ request.url|url_lang(id) }}" />
+        <link rel="alternate" hreflang="{{ id }}" href="{{ u(request.url)|url_lang(id) }}" />
         {%- endfor %}
-        {%- assets "css_all" %}
-        <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet" />
-        {%- endassets %}
-        <!--[if lt IE 8]>
-        {%- assets "css_ie7" %}
-        <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet" />
-        {%- endassets %}
+        {%- block assets_css -%}
+            {%- assets "css_all" -%}
+                <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet" />
+            {%- endassets -%}
+        {%- endblock -%}
+        {%- block assets_js -%}
+            {%- assets "js_all" -%}
+                <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+            {%- endassets -%}
+        {%- endblock -%}
+        {%- block head %}{%- endblock -%}
+        <!--[if lt IE 9]>
+        {%- assets "js_ie" -%}<script type="text/javascript" src="{{ ASSET_URL }}"></script>{%- endassets -%}
+        {%- assets "css_ie" %}<link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet" />{%- endassets %}
         <![endif]-->
-        {%- assets "js_all" %}
-        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
-        {%- endassets %}
-        {%- block head %}{%- endblock %}
-        <script type="text/javascript">var _gaq = _gaq || [];_gaq.push(['_setAccount', 'UA-808946-19']);_gaq.push(['_trackPageview']);(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);})();</script>
+        <!--[if lt IE 8]>
+        {%- assets "css_ie7" %}<link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet" />{%- endassets %}
+        <![endif]-->
+        <!--[if IE ]>
+        <script type="text/javascript" src="/static/js/PIE.js"></script>
+        <![endif]-->
+        <script type="text/javascript">var _gaq=_gaq||[];_gaq.push(['_setAccount', 'UA-808946-19']);_gaq.push(['_trackPageview']);(function(){var ga=document.createElement('script');ga.type='text/javascript';ga.async=true;ga.src=('https:'==document.location.protocol?'https://ssl':'http://www')+'.google-analytics.com/ga.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(ga,s);})();</script>
     </head>
-    <body>
+    <body{% if body_class %} class="{{body_class}}"{% endif %}>
         <div id="container">
-            <div id="header" >
-                <div id="header-navigation" >
-                    {%- if current_user.is_authenticated() %}
-                    {{_('hello')}} <strong><a href="{{ url_for('user.profile')}}">{{current_user.username}}</a></strong> | <a href="{{ url_for('user.logout')}}">{{_('logout')}}</a>
-                    {%- else %}
-                    <a href="{{ url_for('user.register') }}">{{_('new_user')}}</a> {{_('or')}} <a href="{{ url_for('user.login') }}">{{_('login')}}</a>
-                    {%- endif %}
-                    <div id="select_language_box">
-                        {%- for id,name,beta in g.languages %}
-                        <a {% if g.lang==id %}class="active" {% endif %}href="{{ url_for('index.setlang',lang=id) }}">
-                            <span class="flag {{ id }}{% if beta %} beta"></span><span class="beta_lang"></span>{% else %}"></span>{% endif %}
-                            <span class="lang_name">{{ name }}</span>
-                        </a>
-                        {%- endfor %}
-                        <a href="{{ url_for('page.translate') }}">{{_('other')}}...</a>
+            <header>
+                <section>
+                    <p>{% block global_message %}{% endblock %}</p>
+                    <div id="header_navigation"
+                        {%- if current_user.is_authenticated() %}
+                        ><a href="{{ url_for('user.profile')}}"><span></span>{{current_user.username}}</a> <a href="{{ url_for('user.logout')}}"><span></span>{{_('logout')}}</a>
+                        {%- else %}
+                        class="login"><a href="{{ url_for('user.login') }}"><span></span>{{_('login')}}</a>
+                        {%- endif %}
+                        <ul id="select_language_box">
+                            {%- for id,name,beta in g.languages if g.lang==id %}
+                            <li><a><span></span>{{ name|lower }}</a></li>
+                            {%- endfor %}
+                            {%- for id,name,beta in g.languages if g.lang!=id %}
+                            <li><a href="{{ url_for('index.setlang',lang=id) }}">{{ name|lower }} {%- if beta -%}<small>BETA</small>{%- endif -%}</a></li>
+                            {%- endfor %}
+                            <li><a href="{{ url_for('page.translate') }}">{{_('other')|lower}}...</a></li>
+                        </ul>
+                        {%- if g.beta_lang %}
+                        <div id="advice">
+                            <span></span>
+                            <a href="#" class="close_advice">×</a>
+                            <p>{{_('translation_beta',here='<a href="%s?lang=%s">%s</a>'|safe % (url_for('page.translate'),g.lang,_('here'))) }}</p>
+                        </div>
+                        {% endif %}
                     </div>
-                </div>
-                {%- if g.beta_lang %}
-                <div id="advice">
-                    <a href="#" class="close_advice">×</a>
-                    <p>{{_('translation_beta',here='<a href="%s?lang=%s">%s</a>'|safe % (url_for('page.translate'),g.lang,_('here'))) }}</p>
-                </div>
-                {% endif%}
+                </section>
                 {%- block header %}
                 <h1>
-                    <a href="{{ url_for('index.home') }}">
+                    <a href="{{ url_for('index.home',lang=none) }}">
                         <img src="/static/foofind3.png" alt="File search engine - {{ g.domain }}" title="{{ g.domain }}"/>
                     </a>
                 </h1>
-                <hr />
                 {%- endblock %}
-            </div>
-            <div id="content" class="{{ zone }}">
+            </header>
+            <section id="{{ zone }}">
                 {%- block content %}{%- endblock %}
-            </div>
-            <div id="footer">
+            </section>
+            <footer>
                 {%- block logos %}{%- endblock %}
+                <ul>
+                    <li><a href="{{ url_for('page.show',pname='about') }}">{{_('about')}}</a></li>
+                    <li><a href="{{ url_for('page.show',pname='legal') }}">{{_('legal')}}</a></li>
+                    {%- if g.lang == "es" -%}
+                    <li><a href="{{ url_for('page.show',pname='jobs') }}">Trabaja con nosotros</a></li>
+                    {%- endif -%}
+                    <li><a href="{{ url_for('page.show',pname='lastfiles') }}">{{ g.count_files|numberformat }} {{_("files_indexed")}}</a></li>
+                </ul>
                 <p>
                     {{_("footer",
                         cc='Creative Commons <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.'|safe+g.lang+'">BY-SA</a>'|safe,
@@ -70,15 +90,7 @@
                         gpl='<a rel="license" href="http://www.gnu.org/licenses/agpl.html">Affero GPL</a>'|safe
                     )}}
                 </p>
-                <ul>
-                    <li><a class="navtype" href="{{ url_for('page.show',pname='about') }}">{{_('about')}}</a></li>
-                    <li><a class="navtype" href="{{ url_for('page.show',pname='legal') }}">{{_('legal')}}</a></li>
-                    {%- if g.lang == "es" -%}
-                    <li><a class="navtype" href="{{ url_for('page.show',pname='jobs') }}">Trabaja con nosotros</a></li>
-                    {%- endif -%}
-                    <li><a class="navtype" href="{{ url_for('page.show',pname='lastfiles') }}">{{ g.count_files|numberformat }} {{_("files_indexed")}}</a></li>
-                </ul>
-            </div>
+            </footer>
         </div>
     </body>
 </html>

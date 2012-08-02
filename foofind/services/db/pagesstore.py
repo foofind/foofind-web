@@ -176,3 +176,10 @@ class PagesStore(object):
         del update["$set"]["_id"]
         self.pages_conn.foofind.translation.update({"_id":hex2mid(data["_id"])}, update)
         self.pages_conn.end_request()
+
+    def get_alternative_config(self, altid):
+        '''
+
+
+        '''
+        return None

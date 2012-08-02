@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+{#- Salto de línea para que jinja2 no haga de las suyas #}
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    {%- for url, lastmod in rules -%}
+    <sitemap>
+        <loc>{{url}}</loc>
+        <lastmod>{{lastmod.isoformat()+"Z"}}</lastmod>
+    </sitemap>
+    {%- endfor -%}
+</sitemapindex>

@@ -29,6 +29,16 @@ class UsersStore(object):
         # Inicia conexiones
         self.user_conn = pymongo.Connection(app.config["DATA_SOURCE_USER"], slave_okay=True, max_pool_size=self.max_pool_size)
 
+    def remove_userid(self, userid):
+        '''
+        Borra un usuario con el userid dado
+
+        @type userid: hex u ObjectID
+        @param userid: identificador del usuario
+        '''
+        self.user_conn.foofind.users.remove({"_id":hex2mid(userid)})
+
+
     def create_user(self,data):
         '''
         Guarda los datos del usuario.
@@ -232,6 +242,9 @@ class UsersStore(object):
         self.user_conn.foofind.comment.update({"_id":comment_id},{"$set":{"vs":data}})
         self.user_conn.end_request()
         return data
+
+    def count_users(self):
+        return self.user_conn.foofind.users.find({"active":1}).count()
 
     def get_file_comment_votes(self,file_id):
         '''

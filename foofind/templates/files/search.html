@@ -12,7 +12,7 @@
             {{_('of_about')}}
             {{ results["total_found"]|numberformat }} {{_('results_for')}}
             {%- for word in search %}
-                <a href="{{ url_search(q=word,src='swftge',delete_params='all') }}">{{ word }}</a>
+                <a href="{{ url_search(q=word,src='swftge',delete_params=['all']) }}">{{ word }}</a>
             {% endfor -%}
             ({{ results["time"]|float|numberformat }} {{_('seconds')}})
         {%- endif %}
@@ -29,33 +29,13 @@
         <a href="#"><span>▶</span>{{_('advanced_search')}}</a>
         <div>
             <ul class="size">
-                <li><a href="{{ url_search(delete_params=['page', 'size']) }}" {{ searched('size') }}>{{_('all_sizes')}}</a></li>
+                <li><a href="{{ url_search(delete_params=['size']) }}" {{ searched('size') }}>{{_('all_sizes')}}</a></li>
                 <li><a href="{{ url_search(size=1) }}" {{ searched('size','1') }}>{{_('smaller_than')}} 1MiB</a></li>
                 <li><a href="{{ url_search(size=2) }}" {{ searched('size','2') }}>{{_('smaller_than')}} 10MiB</a></li>
                 <li><a href="{{ url_search(size=3) }}" {{ searched('size','3') }}>{{_('smaller_than')}} 100MiB</a></li>
                 <li><a href="{{ url_search(size=4) }}" {{ searched('size','4') }}>{{_('larger_than')}} 100MiB</a></li>
             </ul>
-            {% if args["type"]=="audio" %}
-            <ul class="quality">
-                <li><a href="{{ url_search(delete_params=['page', 'brate']) }}" {{ searched('brate') }}>{{_('all_qualities')}}</a></li>
-                <li><a href="{{ url_search(brate=1) }}" {{ searched('brate','1') }}>128 kbps {{_('or_better')}}</a></li>
-                <li><a href="{{ url_search(brate=2) }}" {{ searched('brate','2') }}>192 kbps {{_('or_better')}}</a></li>
-                <li><a href="{{ url_search(brate=3) }}" {{ searched('brate','3') }}>256 kbps {{_('or_better')}}</a></li>
-                <li><a href="{{ url_search(brate=4) }}" {{ searched('brate','4') }}>320 kbps {{_('or_better')}}</a></li>
-            </ul>
-            {% endif %}
-            {% if args["type"]=="audio" or args["type"]=="video" %}
-            <ul class="year">
-                <li><a href="{{ url_search(delete_params=['page', 'year']) }}" {{ searched('year') }}>{{_('all_years')}}</a></li>
-                <li><a href="{{ url_search(year=1) }}" {{ searched('year','1') }}>{{_('before')}} 1960</a></li>
-                <li><a href="{{ url_search(year=2) }}" {{ searched('year','2') }}>60's</a></li>
-                <li><a href="{{ url_search(year=3) }}" {{ searched('year','3') }}>70's</a></li>
-                <li><a href="{{ url_search(year=4) }}" {{ searched('year','4') }}>80's</a></li>
-                <li><a href="{{ url_search(year=5) }}" {{ searched('year','5') }}>90's</a></li>
-                <li><a href="{{ url_search(year=6) }}" {{ searched('year','6') }}>00's</a></li>
-                <li><a href="{{ url_search(year=7) }}" {{ searched('year','7') }}>{{_('last_year')}}</a></li>
-            </ul>
-            {% endif %}
+            
         </div>
     </div>
     {% if tags %}
@@ -70,26 +50,30 @@
     {% endif %}
     {%- if results["total_found"]>0 %}
     <ul id="results">
-        {% for file in files %}
+        {% for file_info in files %}
+            {% set file = file_info["file"] %}
+            {% set search = file_info["search"] %}
         <li>
             {% if 'images_server' in file['view'] %}
             <a class="thumblink" href="{{ url_for('.download',file_id=file['file']['id'],file_name=file['view']['fn']) }}.html">
-                <img id="{{ file['file']['id'] }}" alt="{{ file['file']['id'] }}" class="img_{{ file['view']['images_server'] }}" src="http://images{{ file['view']['first_image_server'] }}.foofind.com/{{ file['file']['_id'] }}0" />
+                <span>
+                    <img id="{{ file['file']['id'] }}" alt="{{ file['file']['id'] }}" class="img_{{ file['view']['images_server'] }}" src="http://{{ file['view']['first_image_server'] }}/{{ file['file']['_id'] }}0" />
+                </span>
             </a>
             {% endif %}
-            <h3><a href="{{ url_for('.download',file_id=file['file']['id'],file_name=file['view']['fn']) }}.html">{{ file['view']['fnh']|safe }}</a></h3>
+            <h3><a href="{{ url_for('.download',file_id=file['file']['id'],file_name=file['view']['qfn']) }}.html">{{ file['view']['fnh']|safe }}</a></h3>
             <dl>
             {% for metadata,value in file['view']['md'].items() %}
                 <dt>{{_(metadata)}}: </dt>
                 <dd>{{ value }}. </dd>
             {% endfor %}
             </dl>
-            {%- if 'z' in file['file'] %}
+            {%- if 'z' in file['file'] and file['file']['z'] %}
                 {{ file['file']['z']|numbersizeformat }} -
             {% endif -%}
             {% for source,source_data in file['view']['sources'].items() %}
             <a href="{{ source_data['urls'][0] }}" title="{{ source_data['tip'] }}" class="source">
-                <span class="icon icon24 {{ source_data['icon'] }}d24"></span>
+                <span class="icon24 {{ source_data['icon'] }}d24"></span>
                 {{ source_data['tip'] }}{% if source_data['count']>1 %} ({{ source_data['count'] }} {{_('sources')}}){% endif %}
             </a>
             {% endfor %}
@@ -101,7 +85,7 @@
         {%- if 0 < pagination.page < 101 -%}
             {{_('no_results_for')}}
             {%- for word in search %}
-                 <a href="{{ url_search(q=word,src='swftge',delete_params='all') }}">{{ word }}</a>
+                 <a href="{{ url_search(q=word,src='swftge',delete_params=['all']) }}">{{ word }}</a>
             {% endfor -%}
         {%- else -%}
             {{_('not_allow_browse_results')}}

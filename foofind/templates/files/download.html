@@ -1,8 +1,8 @@
 {% extends "files/base.html" %}
 {%- macro print_source(source_data,url="") %}
     <div class="download_source">
-        <input type="text" readonly="readonly" value="{% if url=='' %}{{ source_data['urls'][0] }}{% else %}{{url}}{% endif %}"/>
-        <span class="icon icon30 {{ source_data['icon'] }}30"></span>
+        <input type="text" readonly="readonly" value="{% if url=='' %}{{ source_data['urls'][0] }}{% else %}{{url}}{% endif %}" class="no" />
+        <span class="icon30 {{ source_data['icon'] }}30"></span>
         <a href="{% if url=='' %}{{ source_data['urls'][0] }}{% else %}{{url}}{% endif %}">{{ source_data['tip'] }}
         <br/>
         <span>
@@ -22,25 +22,25 @@
         <p>{{_("download_explanation")}}</p>
         <ul>
             <li>
-                <span class="icon icon24 ed2k24" title="eMule, MLDonkey, aMule"></span>
+                <span class="icon24 ed2k24" title="eMule, MLDonkey, aMule"></span>
                 eMule, MLDonkey, aMule.
             </li>
             <li>
-                <span class="icon icon24 gnutella24" title="Frostwire, Shareaza, Phex"></span>
+                <span class="icon24 gnutella24" title="Frostwire, Shareaza, Phex"></span>
                 FrostWire, Shareaza, Phex.
             </li>
             <li>
-                <span class="icon icon24 torrent24" title="Vuze, µTorrent, Transmission"></span>
+                <span class="icon24 torrent24" title="Vuze, µTorrent, Transmission"></span>
                 Vuze, µTorrent, Transmission.
             </li>
         </ul>
     </div>
     <div class="file_download">
         <div class="file_download_vote{% if vote['k']>0 %} upactive{% elif vote['k']<0 %} downactive{% endif %}">
-            <a class="vote_up {% if current_user.is_authenticated() %} vote_login{% endif %}" href="{{ url_for('.vote',t='file',server=file['file']['s'],file_id=file['file']['id'],vote=1,login=current_user.is_authenticated()|int) }}">
+            <a rel="nofollow" class="vote_up {% if current_user.is_authenticated() %} vote_login{% endif %}" href="{{ url_for('.vote',t='file',server=file['file']['s'],file_id=file['file']['id'],vote=1,login=current_user.is_authenticated()|int) }}">
                 <span>{{_('i_like_it')}}<br/>(<strong>{% if 'vs' in file['file'] and g.lang in file['file']['vs'] %}{{ file['file']['vs'][g.lang]['c'][0]|int }}{% else %}0{% endif %}</strong>)</span>
             </a>
-            <a class="vote_down {% if current_user.is_authenticated() %} vote_login{% endif %}" href="{{ url_for('.vote',t='file',server=file['file']['s'],file_id=file['file']['id'],vote=2,login=current_user.is_authenticated()|int) }}">
+            <a rel="nofollow" class="vote_down {% if current_user.is_authenticated() %} vote_login{% endif %}" href="{{ url_for('.vote',t='file',server=file['file']['s'],file_id=file['file']['id'],vote=2,login=current_user.is_authenticated()|int) }}">
                 <span>{{_('booo')}}<br/>(<strong>{% if 'vs' in file['file'] and g.lang in file['file']['vs'] %}{{ file['file']['vs'][g.lang]['c'][1]|int }}{% else %}0{% endif %}</strong>)</span>
             </a>
         </div>
@@ -49,28 +49,30 @@
             <div class="download_button">
                 {% if 'images_server' in file['view'] %}
                 <a class="thumblink" href="{{ file['view']['sources'][file['view']['source']]['urls'][0] }}">
-                    <img id="{{ file['file']['id'] }}" class="img_{{ file['view']['images_server'] }}" src="http://images{{ file['view']['first_image_server'] }}.foofind.com/{{ file['file']['_id'] }}0" />
+                    <img id="{{ file['file']['id'] }}" class="img_{{ file['view']['images_server'] }}" src="http://{{ file['view']['first_image_server'] }}/{{ file['file']['_id'] }}0" />
                 </a>
                 {% else %}
-                <span class="icon icon50 {{ file['view']['file_type'] }}50"></span><br />
+                <span class="icon50 {{ file['view']['file_type'] }}"></span><br />
                 {% endif %}
+                {% if "source" in file["view"] %}
                 <a href="{{ file['view']['sources'][file['view']['source']]['urls'][0] }}" class="superlarge magenta awesome" title="{{_('download')}}">
                     {{_(file['view']['action'])}}
-                    {% if 'z' in file['file'] %}
+                    {% if 'z' in file['file'] and file['file']['z'] %}
                         ({{ file['file']['z']|numbersizeformat }})
                     {% endif %}
                 </a>
+                {% endif %}
             </div>
             <div class="download_file_metadata">
                 <table>
                     <tbody>
                         <tr>
-                            <td>{{_("name")}}:</td>
+                            <th>{{_("name")}}:</th>
                             <td><a href="{{ url_search(q=file['view']['nfn']) }}">{{ file['view']['nfn'] }}</a></td>
                         </tr>
                         {% for metadata,value in file['view']['md'].items() %}
                         <tr>
-                            <td>{{_(metadata)}}:</td>
+                            <th>{{_(metadata)}}:</th>
                             <td>{{ value | safe }}</td>
                         </tr>
                         {% endfor %}
@@ -99,17 +101,17 @@
         </div>
         {% if files_related|length>0 %}
         <div class="download_section related">
-            <span class="icon link"></span>
+            <span class="link"></span>
             <h4>{{_('related_files')}}</h4>
             <ul>
                 {% for file_related in files_related %}
-                <li><a href="{{ url_for('.download',file_id=file_related['file']['id'],file_name=file_related['view']['fn']) }}.html">{{ file_related['view']['fn'] }}</a> {% if 'z' in file_related['file'] %}- {{ file_related['file']['z']|numbersizeformat }}{% endif %}</li>
+                <li><a href="{{ url_for('.download',file_id=file_related['file']['id'],file_name=file_related['view']['qfn']) }}.html">{{ file_related['view']['fn'] }}</a> {% if 'z' in file_related['file'] and file_related['file']['z'] %}- {{ file_related['file']['z']|numbersizeformat }}{% endif %}</li>
                 {% endfor %}
             </ul>
         </div>
         {% endif %}
         <div class="download_section comments">
-            <span class="icon balloon"></span>
+            <span class="balloon"></span>
             <h4>{{_('your_comments')}}</h4>
             {% if comments!=[] %}
             <div class="comment">
@@ -119,10 +121,10 @@
                         <a href="#c{{ i }}">#{{ i }}</a>
                     </div>
                     <div id="comment_{{ comment['_id'] }}" class="file_comment_vote small {% if comment['_id'] in votes and votes[comment['_id']][2]>0 %} upactive{% elif comment['_id'] in votes and votes[comment['_id']][2]<0 %} downactive{% endif %}">
-                        <a class="vote_up {% if current_user.is_authenticated() %} vote_login{% endif %}" href="{{ url_for('.vote',t='comment',server=file['file']['s'],file_id=file['file']['id'],comment_id=comment['_id'],vote=1,login=1) }}">
+                        <a rel="nofollow" class="vote_up {% if current_user.is_authenticated() %} vote_login{% endif %}" href="{{ url_for('.vote',t='comment',server=file['file']['s'],file_id=file['file']['id'],comment_id=comment['_id'],vote=1,login=1) }}">
                             <span>(<strong>{% if comment['_id'] in votes %}{{ votes[comment['_id']][0] }}{% else %}0{% endif %}</strong>)</span>
                         </a>
-                        <a class="vote_down {% if current_user.is_authenticated() %} vote_login{% endif %}" href="{{ url_for('.vote',t='comment',server=file['file']['s'],file_id=file['file']['id'],comment_id=comment['_id'],vote=2,login=1) }}">
+                        <a rel="nofollow" class="vote_down {% if current_user.is_authenticated() %} vote_login{% endif %}" href="{{ url_for('.vote',t='comment',server=file['file']['s'],file_id=file['file']['id'],comment_id=comment['_id'],vote=2,login=1) }}">
                             <span>(<strong>{% if comment['_id'] in votes %}{{ votes[comment['_id']][1] }}{% else %}0{% endif %}</strong>)</span>
                         </a>
                     </div>
@@ -137,15 +139,15 @@
             </div>
             {% endif %}
             {% if not current_user.is_authenticated() %}
-            <a href="{{ url_for('user.login',next=url_for('.download',file_id=file['file']['id'],file_name=file['view']['fn'])) }}.html">{{_('add_comment')}}</a>
+            <a href="{{ url_for('user.login',next=url_for('.download',file_id=file['file']['id'],file_name=file['view']['qfn'])) }}.html">{{_('add_comment')}}</a>
             {% else %}
             <div class="comment_form">
                 <!--{% if error %}
                 <div class="error">{{ error }}</div>
                 {% endif %}-->
-                <form action="{{ url_for('.download',file_id=file['file']['id'],file_name=file['view']['fn']) }}.html" method="post">
+                <form action="{{ url_for('.download',file_id=file['file']['id'],file_name=file['view']['qfn']) }}.html" method="post">
                     <fieldset>
-                        {{ form.t(cols=80,rows=24) }}
+                        {{ form.t(cols=47,rows=24) }}
                         {{ form.submit_comment(class="magenta awesome") }}
                     </fieldset>
                 </form>

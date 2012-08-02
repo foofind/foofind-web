@@ -2,21 +2,26 @@
 {% block page %}
     {%- if edit_form %}
     <form method="post" action="{{ url_for('admin.db_confirm', collection=collection, document_id=document_id, page=page, mode=list_mode, show=mode, size=page_size) }}">
-        {{edit_form.defaults}}
-        {{edit_form.editable}}
-        {{edit_form.confirmed}}
         <h3 class="list">{{form_title}}</h3>
+        {{edit_form.defaults}}{{edit_form.editable}}{{edit_form.confirmed}}
         <dl class="list">
-            {%- for key, value in document_writeable %}
-                <dt>{{edit_form[fieldname(key)].label}}</dt>
-                <dd>{{edit_form[fieldname(key)]}}</dd>
-            {%- endfor %}
             {%- for key, value in document_readonly %}
                 <dt>{{key}}</dt>
                 <dd>{{value}}</dd>
             {%- endfor %}
+            {%- for key, value in document_writeable %}
+                <dt>{{edit_form[fieldname(key)].label}}</dt>
+                <dd>{%- if key in fieldparams -%}
+                    {{edit_form[fieldname(key)](**fieldparams[key]) }}
+                    {%- else -%}
+                    {{edit_form[fieldname(key)]}}
+                    {%- endif -%}
+                    {%- if edit_form[fieldname(key)].description %} ({{ edit_form[fieldname(key)].description }}){% endif %}</dd>
+            {%- endfor %}
         </dl>
-        {{ edit_form.submit(class="list") }}
+        {{ edit_form.submit(class="list") -}}
+        {%- if deleteable %} <a class="button" href="{{url_for('admin.db_remove', collection='user', document_id=document_id, page=page, show=mode, mode=list_mode, size=page_size)}}">{{_('admin_remove')}}</a>
+        {%- endif -%}
     </form>
     {%- endif %}
 {%- endblock %}

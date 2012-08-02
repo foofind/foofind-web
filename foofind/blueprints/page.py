@@ -8,8 +8,9 @@ from wtforms import Form,FieldList,TextField,TextAreaField,SubmitField
 from babel import localedata
 from foofind.forms.pages import ContactForm, SubmitLinkForm, ReportLinkForm, SelectLanguageForm, TranslateForm, JobsForm
 from foofind.services import *
-from foofind.translations.samples_values import samples
+
 from foofind.utils import lang_path, expanded_instance, nocache
+from foofind.utils.translations import fix_lang_values
 from functools import cmp_to_key
 import locale
 import polib
@@ -36,7 +37,13 @@ def old_show(pname):
     else:
         return redirect(url_for("page.show",pname=pname),301)
 
-valid_pages = {"about":"about_text", "legal":"safe_legal", "tos":"safe_tos", "privacy":"safe_privacy"}
+valid_pages = {
+    "about":["about_text","jobs","technology",1,4],
+    "technology":["technology_text","about","contact",2,4],
+    "legal":["safe_legal","complaint","tos",1,4],
+    "tos":["safe_tos","legal","privacy",2,4],
+    "privacy":["safe_privacy","tos","complaint",3,4]
+}
 @page.route('/<lang>/<pname>')
 def show(pname):
     '''
@@ -46,7 +53,19 @@ def show(pname):
         abort(404)
 
     g.title+=_(pname)
-    return render_template('pages/page.html',page_title=_(pname),page_text=valid_pages[pname],domain=g.domain)
+    return render_template(
+        'pages/page.html',
+        page_title=_(pname),
+        page_text=valid_pages[pname][0],
+        pagination=[
+            "contact" if pname=="about" and g.lang!="es" else valid_pages[pname][1],
+            valid_pages[pname][2],
+            valid_pages[pname][3],
+            3 if pname in ["about","technology","contact"] and g.lang!="es" else valid_pages[pname][4]
+        ],
+        domain=g.domain,
+        pname=pname
+    )
 
 @page.route('/<lang>/jobs', methods=['GET', 'POST'])
 @nocache
@@ -66,7 +85,7 @@ def jobs():
             return redirect(url_for('index.home'))
 
     g.title+="Ofertas de empleo"
-    return render_template('pages/jobs.html',page_title="Ofertas de empleo",form=form)
+    return render_template('pages/jobs.html',page_title="Ofertas de empleo",pagination=["contact","about",4,4],form=form,pname="jobs")
 
 @page.route('/<lang>/contact', methods=['GET', 'POST'])
 @nocache
@@ -80,7 +99,13 @@ def contact():
         return redirect(url_for('index.home'))
 
     g.title+=_("contact")
-    return render_template('pages/contact.html',page_title=_("contact"),form=form)
+    return render_template(
+        'pages/contact.html',
+        page_title=_("contact"),
+        pagination=["technology","jobs" if g.lang=="es" else "about",3,4 if g.lang=="es" else 3],
+        form=form,
+        pname="contact"
+    )
 
 @page.route('/<lang>/submitlink', methods=['GET', 'POST'])
 @nocache
@@ -95,7 +120,7 @@ def submit_link():
         return redirect(url_for('index.home'))
 
     g.title+=_("submit_links")
-    return render_template('pages/submit_link.html',page_title=_("submit_links"),form=form)
+    return render_template('pages/submit_link.html',page_title=_("submit_links"),pagination=["translate","translate",1,2],form=form,pname="submitlink")
 
 @page.route('/<lang>/complaint', methods=['GET', 'POST'])
 @nocache
@@ -110,7 +135,7 @@ def complaint():
         return redirect(url_for('index.home'))
 
     g.title+=_("complaint")
-    return render_template('pages/complaint.html',page_title=_("complaint"),form=form)
+    return render_template('pages/complaint.html',page_title=_("complaint"),pagination=["privacy","legal",4,4],form=form,pname="complaint")
 
 @page.route('/<lang>/translate',methods=['GET','POST'])
 @nocache
@@ -118,32 +143,6 @@ def translate():
     '''
     Edita la traducción a un idioma
     '''
-    def fix_values(entry,sample=False):
-        '''
-        Si la traduccion contiene campos de valores los sustituimos por ______[X] y ponemos un ejemplo de uso,
-        además se eliminan los saltos de linea
-        '''
-        result=re.finditer(r'(%\(([^\)]+)\)([s|d]))', entry.msgstr)
-        subs=dict()
-        # se cargan los ejemplos si es necesario
-        if entry.msgid in samples:
-            subs=samples[entry.msgid]
-
-        # para cada valor encontrado se sustituye por _____[X]
-        for i,item in enumerate(result):
-            entry.msgstr=entry.msgstr.replace(item.group(1),"_____["+str(i+1)+"]")
-            # para los ejemplos numericos se utiliza uno aleatorio
-            if item.group(3)=="d":
-                subs[item.group(2)]=random.randint(2,10)
-
-        if sample:
-            if subs!={}:
-                return (entry.msgid,(entry.msgstr,_(entry.msgid,**subs)))
-            else:
-                return (entry.msgid,(entry.msgstr,False))
-
-        # se sustituyen los saltos de linea html y se devuelve todo
-        return (entry.msgid,entry.msgstr.replace("<br>","\n").replace("<br />","\n").replace("<br/>","\n") if "<br" in entry.msgstr else entry.msgstr)
 
     languages = localedata.load(g.lang)["languages"]
     keystrcoll = cmp_to_key(locale.strcoll)
@@ -167,16 +166,16 @@ def translate():
     if lang_edit is not None:
         forml.lang.default=lang_edit
         # cargar idioma actual
-        current_lang = dict(fix_values(entry,True) for entry in polib.pofile(lang_path(g.lang)))
+        current_lang = dict(fix_lang_values(entry,True) for entry in polib.pofile(lang_path(g.lang)))
 
         # si existe el idioma se carga, sino vacio
         lpath = lang_path(lang_edit)
-        new_lang = dict(fix_values(entry) for entry in polib.pofile(lpath)) if lpath else {}
+        new_lang = dict(fix_lang_values(entry) for entry in polib.pofile(lpath)) if lpath else {}
 
         # recorre los ids en ingles y los coge el mensaje del idioma actual y el valor del nuevo
-        for i, (msgid, msgstr) in enumerate(fix_values(entry,True) for entry in polib.pofile(lang_path("en"))):
+        for i, (msgid, msgstr) in enumerate(fix_lang_values(entry,True) for entry in polib.pofile(lang_path("en"))):
             # se excluyen los textos legales que concluyen con safe_
-            if not msgid.startswith(("safe_","admin_")):
+            if not msgid.startswith(current_app.config["PRIVATE_MSGID_PREFIXES"]):
                 # si no esta traducida la cadena en el idioma actual se deja vacio
                 if not msgid in new_lang:
                     no_translation+=1
@@ -192,10 +191,10 @@ def translate():
 
                 # si la traduccion es mayor de 80 caracteres se utiliza un textarea en vez de un input text
                 length=len(new_lang[msgid] or msg)
-                if length>80:
+                if length>50:
                     formfields[msgid]=TextAreaField(msg,default=new_lang[msgid],description=description)
                     # se le establecen las filas al text area dependiendo del tamaño de la traduccion
-                    formfields["_args_%s" % msgid]={"rows":length/50}
+                    formfields["_args_%s" % msgid]={"rows":length/15}
                 else:
                     formfields[msgid]=TextField(msg,default=new_lang[msgid],description=description)
                     formfields["_args_%s" % msgid]={}
@@ -216,8 +215,10 @@ def translate():
     g.title+=_("translate_to_your_language")
     return render_template('pages/translate.html',
         page_title=_("translate_to_your_language"),
+        pagination=["submitlink","submitlink",2,2],
         lang=lang_edit,
         forml=forml,
         form=form,
+        pname="translate",
         msgids=msgids,
         complete=round(((total-no_translation)/total)*100,2))

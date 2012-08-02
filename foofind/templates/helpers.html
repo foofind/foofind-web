@@ -24,10 +24,10 @@
         {%- else %}
             <label for="{{ field.name }}">{% if field.flags.required %}<span title="{{_('required_empty')}}">*</span>{% endif %} {{ field.label.text|safe }}</label>
         {%- endif %}
-        {{ field(**kwargs)|safe }}
+        {{ field(**kwargs)|safe }}{%- if field.type!="FileField" %}<span></span>{%- endif %}
     {%- endif %}
     {%- if field.description %}
-        <span class="description">{{ field.description }}</span>
+        <div class="description">{{ field.description }}</div>
     {%- endif %}
     {%- if field.errors %}
         <ul class="errors">

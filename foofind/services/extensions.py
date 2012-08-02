@@ -2,20 +2,23 @@
 from flask import render_template, flash, current_app
 from flaskext.babel import gettext as _
 from flaskext.babel import Babel
-from flaskext.cache import Cache
 from flaskext.login import LoginManager
 from flaskext.mail import Mail, Message
 from smtplib import SMTPRecipientsRefused
 from raven.contrib.flask import Sentry
 import logging
 
-__all__ = ['babel', 'cache', 'auth', 'mail', 'send_mail', 'sentry']
+from foofind.services.cache import Cache
+from foofind.services.unittest import UnitTester
+
+__all__ = ('babel', 'cache', 'auth', 'mail', 'send_mail', 'sentry', 'unit')
 
 babel = Babel()
-cache = Cache()
 auth = LoginManager()
 mail = Mail()
-sentry = Sentry()
+sentry = Sentry(logging = True)
+cache = Cache()
+unit = UnitTester()
 
 def send_mail(subject,to,template=None,attachment=None,**kwargs):
     '''
@@ -32,5 +35,5 @@ def send_mail(subject,to,template=None,attachment=None,**kwargs):
         flash("error_mail_send")
         # se extrae el código y el mensaje de error
         (code,message)=e[0].values()[0]
-        logging.exception("%d: %s"%(code,message))    
+        logging.warn("%d: %s"%(code,message))
         return False

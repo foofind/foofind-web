@@ -3,31 +3,34 @@
     Controladores de las páginas de búsqueda y de fichero.
 """
 
-from flask import Blueprint, request, render_template, g, current_app, jsonify, flash, redirect, url_for, abort
+from flask import Blueprint, request, render_template, g, current_app, jsonify, flash, redirect, url_for, abort, Markup
 from flaskext.login import login_required, current_user
 from flaskext.babel import gettext as _
 from foofind.services import *
-from foofind.services.search import search_files, search_related, get_ids, block_files
+from foofind.services.search import search_files, search_related, get_ids, block_files, get_id_server_from_search
 from foofind.forms.files import SearchForm, CommentForm
-from foofind.utils import mid2url, url2mid, hex2mid, mid2hex, mid2bin, bin2hex, to_seconds, multipartition, u
-from foofind.utils.splitter import split_file
-from foofind.utils.taming import TamingClient
+from foofind.utils import mid2url, url2mid, hex2mid, mid2hex, mid2bin, bin2hex, to_seconds, multipartition, u, uchr, slugify
+from foofind.utils.splitter import split_file, SEPPER
 from foofind.utils.pagination import Pagination
 from foofind.utils.async import async_generator
+from foofind.utils.fooprint import Fooprint
+from foofind.utils.content_types import *
 
+from collections import defaultdict
+from traceback import format_stack
+from hashlib import md5
 from urlparse import urlparse
 from datetime import datetime
-import urllib, logging, json, re, logging, unicodedata
+import urllib, logging, json, re, logging, unicodedata, random, sys
 
-files = Blueprint('files', __name__)
+files = Fooprint('files', __name__)
 
 @files.context_processor
 def file_var():
-    return {"zone":"files","search_form":g.search_form,"args":request.args}
+    if request.args.get("error",None)=="error":
+        abort(404)
 
-@files.before_request
-def set_search_form():
-    g.search_form = SearchForm(request.args)
+    return {"zone":"files","search_form":SearchForm(request.args),"args":request.args}
 
 def get_files(ids):
     '''
@@ -41,15 +44,19 @@ def get_files(ids):
     @yield: cada uno de los resultados de los ids en los mongos
 
     '''
+    toblock = []
     already = False
-    files = filesdb.get_files(ids, servers_known = True, bl = None)
-    for r in files:
-        if r["bl"] == 0 or r["bl"] is None:
-            yield r
-        elif not already:
-            already = True
-            id_list = {i[0]:i[2] for i in ids}
-            block_files( sphinx_ids=[id_list[mid2bin(i["_id"])] for i in files if i["bl"] != 0 and not i["bl"] is None ])
+    for f in filesdb.get_files(ids, servers_known = True, bl = None):
+        if f["bl"] == 0 or f["bl"] is None:
+            yield f
+        else:
+            toblock.append(mid2bin(f["_id"]))
+
+    # bloquea en sphinx los ficheros bloqueados
+    if toblock:
+        cache.cacheme = False
+        id_list = {i[0]:i[2] for i in ids}
+        block_files( sphinx_ids=[id_list[i] for i in toblock] )
 
 def init_data(file_data):
     '''
@@ -64,54 +71,57 @@ def choose_filename(f,text=False):
     '''
     Elige el archivo correcto
     '''
+    text=slugify(text) if text else text
     srcs = f['file']['src']
     fns = f['file']['fn']
-    hist= ""
-    chosen=""
-    maxCount = 0
-    hasText = 0
-    for hexuri,src in srcs.items():
-        if 'bl' in src and src['bl']!=0:
-            continue
-
-        srcfns = src['fn']
-        for crc,srcfn in srcfns.items():
-            fnn = fns[crc]['n']
-            if len(fnn.strip())==0:
+    chosen = None
+    max_count = -1
+    has_text = 0
+    try:
+        for hexuri,src in srcs.items():
+            if 'bl' in src and src['bl']!=0:
                 continue
 
-            thisHasText=0
-            if 'c' in fns[crc]:
-                fns[crc]['c']+=srcfn['m']
-            else:
-                fns[crc]['c']=srcfn['m']
-
-            if text:
-                if fnn.upper().find(text.upper())!=-1:
-                    thisHasText = 2000
+            this_has_text=0
+            for crc,srcfn in src['fn'].items():
+                #si no tiene nombre no se tiene en cuenta
+                m = srcfn['m'] if len(fns[crc]['n'])>0 else 0
+                if 'c' in fns[crc]:
+                    fns[crc]['c']+=m
                 else:
-                    matches = 0
-                    for word in [re.escape(w) for w in text.split(" ")]:
-                        matches += len(re.findall(r"/((?:\b|_)%s(?:\b|_))/i"%word, fnn))
+                    fns[crc]['c']=m
 
-                    if matches>0:
-                        thisHasText = 1000 + matches
+                if text:
+                    slugified_fn = slugify(fns[crc]['n']).strip()
+                    if len(slugified_fn)>0:
+                        #TODO hace lo mismo que para poner el nombre en negrita y sacar el mejor texto aunque no tenga tildes o no venga unido por espacios
+                        if slugified_fn.upper().find(text.upper())!=-1:
+                            this_has_text = 2000
+                        else:
+                            matches = 0
+                            for word in [re.escape(w) for w in text.split(" ")]:
+                                matches += len(re.findall(r"/((?:\b|_)%s(?:\b|_))/i"%word, slugified_fn))
 
-            f['file']['fn'][crc]['tht'] = thisHasText
-            better = fns[crc]['c']>maxCount
-            if thisHasText > hasText or (better and thisHasText==hasText):
-                hasText = thisHasText
-                chosen = crc
-                maxCount = fns[crc]['c']
+                            if matches>0:
+                                this_has_text = 1000 + matches
+
+                f['file']['fn'][crc]['tht'] = this_has_text
+                better = fns[crc]['c']>max_count
+                if this_has_text > has_text or (better and this_has_text==has_text):
+                    has_text = this_has_text
+                    chosen = crc
+                    max_count = fns[crc]['c']
+
+    except KeyError as e: #para los sources que tienen nombre pero no estan en el archivo
+        logging.exception(e)
 
     f['view']['url'] = mid2url(hex2mid(f['file']['_id']))
-    if chosen!="":
+    if chosen:
         filename = fns[chosen]['n']
         ext = fns[chosen]['x']
-    else:
-        #uses filename from src
+    else: #uses filename from src
         srcurl = ""
-        for crc,srcfn in srcfns.items():
+        for hexuri,src in srcs.items():
             if src['url'].find("/")!=-1:
                 srcurl = src['url']
 
@@ -122,7 +132,8 @@ def choose_filename(f,text=False):
         ext = srcurl[srcurl.rfind(".")+1:]
         filename = srcurl[0:srcurl.rfind(".")]
 
-    if not ext in current_app.config["EXTENSIONS"].keys():
+    filename = Markup(filename).striptags()[:512]
+    if not ext in EXTENSIONS:
         filename += ext
         ext=""
         nfilename = filename
@@ -134,30 +145,41 @@ def choose_filename(f,text=False):
         else:
             nfilename = filename.strip()[0:end]
 
-    f['view']['fn'] = filename
-    f['view']['efn'] = filename.replace(" ", "%20")
+    f['view']['fn'] = filename #TODO para los tipo archive buscar el tipo real en el nombre (mp3,avi...)
     f['view']['fnx'] = ext
+    f['view']['efn'] = filename.replace(" ", "%20")
 
-    #nombre del archivo con las palabras que coinciden con la busqueda resaltadas
-    if not text:
-        f['view']['fnh']=filename
-    else:
-        separators = u"".join({i for i in filename if not unicodedata.category(i)[0] in ("N","L")})
-        separated_text = tuple(multipartition(text.lower(), separators))
-        f['view']['fnh'] = u"".join(
-            (u"<strong>%s</strong>" % filename_part)
-            if filename_part.lower() in separated_text and not filename_part in separators
-            else filename_part
-            for filename_part in multipartition(filename, separators)
-            )
-
+    #poner bonito nombre del archivo
     if nfilename.find(" ")==-1:
         nfilename = nfilename.replace(".", " ")
 
-    nfilename = nfilename.replace("_", " ")
-    f['view']['nfn'] = nfilename
+    f['view']['nfn'] = nfilename.replace("_", " ")
 
-def build_source_links(f, prevsrc=False):
+    #nombre del archivo escapado para generar las url de descarga
+    f['view']['qfn'] = u(filename).encode("UTF-8")
+
+    #nombre del archivo con las palabras que coinciden con la busqueda resaltadas
+    if not text:# or not has_text:
+        f['view']['fnh'] = f['view']['fnhs'] = filename
+    else:
+        f['view']['fnh'], f['view']['fnhs'] = highlight(text,filename,True)
+
+    return has_text>0
+
+def highlight(text,match,length=False):
+    '''
+    Resalta la parte de una cadena que coincide con otra dada
+    '''
+    t=text.split(" ")
+    result=u"".join("<strong>%s</strong>" % part if slugify(part) in t else part for part in multipartition(match,u"".join({i for i in match if i in SEPPER})))
+    if length: #si se quiere acortar el nombre del archivo para que aparezca al principio la primera palabra resaltada
+        first_term=result.find("<strong>")
+        return (result,result if first_term<10 or len(text)<50 else result[:5]+"<span>...</span>"+result[first_term:])
+    else:
+        return result
+
+# FIXME: unify_torrents se puede eliminar cuando se cambie la búsqueda antigua para que se parezca a la nueva
+def build_source_links(f, prevsrc=False, unify_torrents=False):
     '''
     Construye los enlaces correctamente
     '''
@@ -176,9 +198,11 @@ def build_source_links(f, prevsrc=False):
         choose_filename(f)
 
     f['view']['action']='download'
-    f['view']['sources']={}
+    f['view']['sources']=defaultdict(dict)
     srcs=f['file']['src']
     max_weight=0
+    icon = ""
+
     for hexuri,src in srcs.items():
         if not src.get('bl',None) in (0, None):
             continue
@@ -187,8 +211,13 @@ def build_source_links(f, prevsrc=False):
         count=0
         part=url=""
         source_data=filesdb.get_source_by_id(src["t"])
-        #si es descarga directa
-        if "w" in source_data["g"] or "f" in source_data["g"] or "s" in source_data["g"]:
+
+        if source_data is None: #si no exite el origen del archivo
+            logging.error("El fichero contiene un origen inexistente en la tabla \"sources\": %s" % src["t"], extra={"file":f})
+            continue
+        elif "crbl" in source_data and source_data["crbl"]==1: #si el origen esta bloqueado
+            continue
+        elif "w" in source_data["g"] or "f" in source_data["g"] or "s" in source_data["g"]: #si es descarga directa
             link_weight=1
             tip=source_data["d"]
             icon="web"
@@ -201,7 +230,32 @@ def build_source_links(f, prevsrc=False):
             if "s" in source_data["g"]:
                 f['view']['action']='watch'
                 link_weight*=2
+        #torrenthash antes de torrent porque es un caso especifico
+        elif source_data["d"]=="BitTorrentHash":
+            link_weight=0.7 if 'torrent:tracker' in f['file']['md'] or 'torrent:trackers' in f['file']['md'] else 0.1
+            if unify_torrents:
+                tip=source=icon="torrent"
+            else:
+                tip="Torrent MagnetLink"
+                source=icon="tmagnet"
+            join=True
+            count=int(src['m'])
+            part="xt=urn:btih:"+src['url']
+            if 'torrent:tracker' in f['file']['md']:
+                part += unicode('&tr=' + urllib.quote_plus(u(f['file']['md']['torrent:tracker']).encode("UTF-8")), "UTF-8")
+            elif 'torrent:trackers' in f['file']['md']:
+                trackers = f['file']['md']['torrent:trackers']
+                if isinstance(trackers, basestring):
+                    part += unicode("".join('&tr='+urllib.quote_plus(tr) for tr in u(trackers).encode("UTF-8").split(" ")), "UTF-8")
 
+        elif "t" in source_data["g"]:
+            link_weight=0.8
+            url=src['url']
+            icon="torrent"
+            if unify_torrents:
+                tip=source="torrent"
+            else:
+                tip=source=get_domain(src['url'])
         elif source_data["d"]=="Gnutella":
             link_weight=0.2
             tip="Gnutella"
@@ -215,11 +269,6 @@ def build_source_links(f, prevsrc=False):
             source=icon="ed2k"
             url="ed2k://|file|"+f['view']['efn']+"|"+str(f['file']['z'] if "z" in f["file"] else 1)+"|"+src['url']+"|/"
             count=int(src['m'])
-        elif source_data["d"]=="BitTorrent":
-            link_weight=0.8
-            icon="torrent"
-            url=src['url']
-            tip=source=get_domain(src['url'])
         elif source_data["d"]=="Tiger":
             link_weight=0
             tip="Gnutella"
@@ -230,28 +279,12 @@ def build_source_links(f, prevsrc=False):
             tip="Gnutella"
             source=icon="gnutella"
             part="xt:urn:md5="+src['url']
-        elif source_data["d"]=="BitTorrentHash":
-            link_weight=0.7 if 'torrent:tracker' in f['file']['md'] or 'torrent:trackers' in f['file']['md'] else 0.1
-            tip="Torrent MagnetLink"
-            source=icon="tmagnet"
-            join=True
-            count=int(src['m'])
-            part="xt:urn:btih="+src['url']
-            if 'torrent:tracker' in f['file']['md']:
-                part += '&tr=' + urllib.quote_plus(f['file']['md']['torrent:tracker'])
-            elif 'torrent:trackers' in f['file']['md']:
-                trackers = f['file']['md']['torrent:trackers']
-                if isinstance(trackers, basestring):
-                    part += '&tr='.join(urllib.quote_plus(tr) for tr in trackers.split(" "))
-
         else:
             continue
 
-        if not source in f['view']['sources']:
-            f['view']['sources'][source]={}
-
         f['view']['sources'][source]['tip']=tip
         f['view']['sources'][source]['icon']=icon
+        f['view']['sources'][source]['logo']="http://%s/favicon.ico"%tip
         f['view']['sources'][source]['join']=join
         f['view']['sources'][source]['type']=source_data["g"]
         #para no machacar el numero si hay varios archivos del mismo source
@@ -294,10 +327,10 @@ def choose_file_type(f, file_type=None):
     if file_type is None:
         if "ct" in f["file"]:
             file_type = f["file"]["ct"]
-        if file_type is None and "fnx" in f["view"] and f['view']['fnx'] in current_app.config["EXTENSIONS"]:
-            file_type = current_app.config["EXTENSIONS"][f['view']['fnx']]
+        if file_type is None and "fnx" in f["view"] and f['view']['fnx'] in EXTENSIONS:
+            file_type = EXTENSIONS[f['view']['fnx']]
         if file_type is not None:
-            file_type = current_app.config["CONTENTS"][file_type]
+            file_type = CONTENTS[file_type]
 
     if file_type is not None:
         f['view']['file_type'] = file_type.lower();
@@ -310,22 +343,22 @@ def get_images(f):
         f["view"]["images_server"]=[]
         for image in f["file"]["i"]:
             server=filesdb.get_image_server(image)
-            f["view"]["images_server"].append(str(int(server["_id"])))
+            f["view"]["images_server"].append("%02d"%int(server["_id"]))
             if not "first_image_server" in f["view"]:
-                f["view"]["first_image_server"]=int(server["_id"])
+                f["view"]["first_image_server"]=server["ip"]
 
         f["view"]["images_server"]="_".join(f["view"]["images_server"])
 
-def format_metadata(f,details):
+def format_metadata(f,details,text):
     '''
     Formatea los metadatos de los archivos
     '''
     def searchable(value,details):
         '''
-        Añadie un enlace a la busqueda si es necesario
+        Añade un enlace a la busqueda si es necesario
         '''
         if details:
-            return "<a href='%s'>%s</a>" % (url_for(".search",q=value), value)
+            return '<a href="%s">%s</a>' % (url_for("files.search",q=value), value)
         else:
             return value
 
@@ -333,12 +366,12 @@ def format_metadata(f,details):
     file_type = f['view']['file_type'] if 'file_type' in f['view'] else None
     if 'md' in f['file']:
         #si viene con el formato tipo:metadato se le quita el tipo
-        file_md = {(meta.split(":")[-1] if ":" in meta else meta): value
-            for meta, value in f['file']['md'].iteritems()}
+        file_md = {(meta.split(":")[-1] if ":" in meta else meta): value for meta, value in f['file']['md'].iteritems()}
 
         # Duración para vídeo e imágenes
         put_duration = False
         duration = [0, 0, 0] # h, m, s
+
         try:
             if "seconds" in file_md:
                 put_duration = True
@@ -350,21 +383,28 @@ def format_metadata(f,details):
                 put_duration = True
                 duration[-3] = float(file_md["hours"])
         except BaseException as e:
-            logging.exception(e)
-        if "duration" in file_md and not put_duration:
+            logging.warn(e, extra=file_md)
+        if not put_duration and "length" in file_md:
+            # Si recibo length y no la he recibido duration de otra forma
+            try:
+                duration[-1] = to_seconds(file_md["length"])
+                put_duration = True
+            except BaseException as e:
+                logging.error("Problema al parsear duración: 'length'", extra=file_md)
+        if not put_duration and "duration" in file_md:
             # Si recibo duration y no la he recibido de otra forma
             try:
                 duration[-1] = to_seconds(file_md["duration"])
                 put_duration = True
             except BaseException as e:
-                logging.exception(e)
+                logging.error("Problema al parsear duración: 'duration'", extra=file_md)
         if put_duration:
             carry = 0
             for i in xrange(len(duration)-1,-1,-1):
-                unit = duration[i] + carry
+                unit = long(duration[i]) + carry
                 duration[i] = unit%60
                 carry = unit/60
-            view_md["length"] = ":".join("%02d" % i for i in (duration if duration[-3] > 0 else duration[-2:]))
+            view_md["length"] = "%d:%02d:%02d" % tuple(duration) if duration[-3] > 0 else "%02d:%02d" % tuple(duration[-2:])
 
         # Tamaño para vídeos e imágenes
         if "width" in file_md and 'height' in file_md:
@@ -379,7 +419,7 @@ def format_metadata(f,details):
                     else int(file_md["height"]))
                 view_md["size"] = "%dx%dpx" % (width, height)
             except BaseException as e:
-                logging.exception(e)
+                logging.warn(e)
 
         # Metadatos que no cambian
         try:
@@ -387,32 +427,57 @@ def format_metadata(f,details):
                 ("folders","description","fileversion","os","files","pages","format")
                 if details else ("files","pages","format")) if meta in file_md)
         except BaseException as e:
-            logging.exception(e)
+            logging.warn(e)
 
         # Metadatos multimedia
         try:
             if file_type in ("audio", "video", "image"):
                 view_md.update((meta, file_md[meta]) for meta in
-                    ("genre", "length", "track", "artist", "title", "author", "colors")
+                    ("genre", "track", "artist", "author", "colors")
                     if meta in file_md)
         except BaseException as e:
-            logging.exception(e)
+            logging.warn(e)
+
+        # No muestra titulo si es igual al nombre del fichero
+        title = None
+        if "name" in file_md:
+            title = u(file_md["name"])
+        elif "title" in file_md:
+            title = u(file_md["title"])
+
+        if title:
+            show_title = True
+            text_longer = title
+            text_shorter = f["view"]["fn"]
+            if len(text_shorter)>len(text_longer): text_longer, text_shorter = text_shorter, text_longer
+
+            if text_longer.startswith(text_shorter):
+                text_longer = text_longer[len(text_shorter):]
+                if len(text_longer)==0 or (len(text_longer)>0 and text_longer.startswith(".") and text_longer[1:] in EXTENSIONS):
+                    show_title = False
+
+            if show_title:
+                view_md["title"] = title
 
         # Los que cambian o son especificos de un tipo
         try:
             if file_type == 'audio': #album, year, bitrate, seconds, track, genre, length
                 if 'album' in file_md:
-                    year = int(file_md["year"]) if "year" in file_md and str(file_md["year"]).isdigit() else 0
-                    album = searchable(file_md["album"], details)
+                    year = 0
+                    if "year" in file_md:
+                        md_year = u(file_md["year"]).strip().split()
+                        for i in md_year:
+                            if i.isdigit() and len(i) == 4:
+                                year = int(i)
+                                break
+                    album = file_md["album"]
                     view_md["album"] = ("%s (%d)" % (album, year)) if 1900 <  year < 2100 else album
                 if 'bitrate' in file_md:
-                    bitrate = "%s kbps" % str(file_md["bitrate"]).replace("~","")
+                    bitrate = "%s kbps" % u(file_md["bitrate"]).replace("~","")
                     view_md["quality"] = ( # bitrate o bitrate - soundtype
                         ("%s - %s" % (bitrate, file_md["soundtype"]))
                         if details and "soundtype" in file_md else bitrate)
             elif file_type == 'archive': #title, name, unpackedsize, folders, files
-                if "title" in file_md or "name" in file_md:
-                    view_md["title"] = searchable(file_md["title" if "title" in file_md else "name"], details)
                 if "unpackedsize" in file_md:
                     view_md["unpackedsize"] = file_md["unpackedsize"]
             elif file_type == 'document': #title, author, pages, format, version
@@ -422,35 +487,52 @@ def format_metadata(f,details):
                             " %s" % file_md["formatversion"]
                             if "formatversion" in file_md else "")
                     version = []
-                    if "version" in file_md: version.append(float(file_md["version"]))
-                    if "revision" in file_md: version.append(float(file_md["revision"]))
-                    if version: view_md["revision"] = " ".join(version)
+                    if "version" in file_md: version.append(u(file_md["version"]))
+                    if "revision" in file_md: version.append(u(file_md["revision"]))
+                    if version: view_md["version"] = " ".join(version)
             elif file_type == 'image': #title, artist, description, width, height, colors
                 pass
             elif file_type == 'software': #title, version, fileversion, os
-                if "title" in file_md:
-                     view_md["title"] = "%s%s" % (
-                        searchable(file_md["title"], details),
-                        " %s" % file_md["version"] if "version" in file_md else "")
+                if "title" in view_md and "version" in file_md:
+                     view_md["title"] += " %s" % file_md["version"]
             elif file_type == 'video':
                 if details:
                     quality = []
-                    if 'framerate' in file_md: quality.append("%d fps" % float(file_md["framerate"]))
-                    if 'codec' in file_md: quality.append(str(file_md["codec"]))
+                    try:
+                        if 'framerate' in file_md: quality.append("%d fps" % int(float(file_md["framerate"])))
+                    except BaseException as e:
+                        logging.warn(e)
+                    if 'codec' in file_md: quality.append(u(file_md["codec"]))
                     if quality: view_md["quality"] = " - ".join(quality)
+                view_md.update((i, file_md[i]) for i in ("series", "episode", "season") if i in file_md)
+
         except BaseException as e:
-            logging.exception(e)
+            logging.warn("%s\n\t%s\n\t%s" % (e, f, view_md))
+
+        #if len(view_md)>0:
+        f['view']['mdh']={}
+        for metadata,value in view_md.items():
+            if isinstance(value, basestring):
+                final_value = Markup(value).striptags()
+                final_value = searchable(highlight(text,final_value) if text else final_value, details)
+            else:
+                final_value = value
+            f['view']['mdh'][metadata] = final_value
+    # TO-DO: mostrar metadatos con palabras buscadas si no aparecen en lo mostrado
 
 def fill_data(file_data,details=False,text=False):
     '''
     Añade los datos necesarios para mostrar los archivos
     '''
     f=init_data(file_data)
-    choose_filename(f,text)
+
+    # al elegir nombre de fichero, averigua si aparece el texto buscado
+    search_text = text if choose_filename(f,slugify(text) if text else None) else False
     build_source_links(f)
     choose_file_type(f)
     get_images(f)
-    format_metadata(f,details)
+    # si hace falta, muestra metadatos extras con el texto buscado
+    format_metadata(f,details,search_text)
     return f
 
 ROBOT_USER_AGENTS=("aol","ask","google","msn","yahoo")
@@ -466,68 +548,79 @@ def save_visited(files):
         if result!=[]:
             feedbackdb.visited_links(result)
 
-@async_generator(1000)
-def taming_search(config, query, ct, contextg):
+def taming_generate_tags(res, query, mean):
     '''
-    Obtiene los resultados que se muestran en el taming
+    Genera los tags
     '''
-    def generate_tags(res):
-        '''
-        Genera los tags
-        '''
-        tag = res[2][querylen+1:]
-        return (tag[querylen+1:] if tag.startswith(query+" ") else tag, 100*max(min(1.25, res[0]/mean), 0.75))
-
-    profiler.checkpoint(opening=["taming_tags"], contextg=contextg)
-    tamingWeight = {"c":1, "lang":200}
-    if ct in config["CONTENTS_CATEGORY"]:
-        for cti in config["CONTENTS_CATEGORY"][ct]:
-            tamingWeight[config["TAMING_TYPES"][cti]] = 200
-
-    tc = TamingClient(config["SERVICE_TAMING_SERVERS"], config["SERVICE_TAMING_TIMEOUT"])
-    if not tc.open_connection():
-        return
-
-    #tags relacionados
     querylen = len(query)
+    tag = res[2][querylen+1:]
+    return (tag[querylen+1:] if tag.startswith(query+" ") else tag, 100*max(min(1.25, res[0]/mean), 0.75))
+
+@async_generator(1000)
+def taming_tags(query, tamingWeight):
+    profiler.checkpoint(opening=["taming_tags"])
     try:
-        tags = tc.tameText(query+" ", tamingWeight, 20, 4, 0.7, 0)
+        tags = taming.tameText(
+            text=query+" ",
+            weights=tamingWeight,
+            limit=20,
+            maxdist=4,
+            minsimil=0.7,
+            dym=0
+            )
         if tags:
             mean = (tags[0][0] + tags[-1][0])/2
-            tags = map(generate_tags, tags)
+            tags = map(lambda res: taming_generate_tags(res, query, mean), tags)
             tags.sort()
         else:
             tags = ()
     except Exception as e:
         logging.exception("Error getting search related tags.")
         tags = ()
-
+    finally:
+        profiler.checkpoint(closing=["taming_tags"])
     yield tags
 
-    profiler.checkpoint(opening=["taming_dym"], closing=["taming_tags"], contextg=contextg)
-
-    #quiso decir
+@async_generator(1000)
+def taming_dym(query, tamingWeight):
+    profiler.checkpoint(opening=["taming_dym"])
     try:
-        suggest = tc.tameText(query, tamingWeight, 1, 3, 0.8, 1, 0)
+        suggest = taming.tameText(
+            text=query,
+            weights=tamingWeight,
+            limit=1,
+            maxdist=3,
+            minsimil=0.8,
+            dym=1,
+            rel=0
+            )
         didyoumean = None
         if suggest and suggest[0][2]!=query:
             didyoumean = suggest[0][2]
     except Exception as e:
         logging.exception("Error getting did you mean suggestion.")
-
-    try:
-        tc.close_connection()
-    except:
-        pass
-
+    finally:
+        profiler.checkpoint(closing=["taming_dym"])
     yield didyoumean
-    profiler.checkpoint(closing=["taming_dym"], contextg=contextg)
 
+def taming_search(query, ct):
+    '''
+    Obtiene los resultados que se muestran en el taming
+    '''
+    tamingWeight = {"c":1, "lang":200}
+    if ct in CONTENTS_CATEGORY:
+        for cti in CONTENTS_CATEGORY[ct]:
+            tamingWeight[TAMING_TYPES[cti]] = 200
+
+    return (taming_tags(query, tamingWeight), taming_dym(query, tamingWeight))
+
+@unit.observe
 @files.route('/<lang>/search')
 def search():
     '''
     Realiza una búsqueda de archivo
     '''
+
     # TODO: seguridad en param
     #si no se ha buscado nada se manda al inicio
     query = request.args.get("q", None)
@@ -535,15 +628,21 @@ def search():
         flash("write_something")
         return redirect(url_for("index.home"))
 
-    page = int(request.args.get("page", 1))
-    g.title = query+" - "+g.title
+    #para evitar errores cuando en page no viene un número
+    page = request.args.get("page", "1")
+    if page.isdigit():
+        page = int(page)
+    else:
+        abort(404)
+
+    g.title = "%s - %s" % (query, g.title)
     results = {"total_found":0,"total":0,"time":0}
 
     didyoumean = None
     tags = None
     if 0 < page < 101:
         #obtener los tags y el quiso decir
-        taming = taming_search(current_app.config, query, request.args.get("type", None), contextg=g._get_current_object())
+        tags, dym = taming_search(query, request.args.get("type", None))
 
         #obtener los resultados y sacar la paginación
         profiler.checkpoint(opening=["sphinx"])
@@ -554,12 +653,12 @@ def search():
         profiler.checkpoint(opening=["visited"], closing=["mongo"])
         save_visited(files_dict.values())
         profiler.checkpoint(closing=["visited"])
-        files=(files_dict[bin2hex(file_id[0])] for file_id in ids if bin2hex(file_id[0]) in files_dict)
+        files=({"file":files_dict[bin2hex(file_id[0])], "search":file_id} for file_id in ids if bin2hex(file_id[0]) in files_dict)
 
         # recupera los resultados del taming
         try:
-            tags = taming.next()
-            didyoumean = taming.next()
+            tags = tags.next()
+            didyoumean = dym.next()
         except:
             pass
     else:
@@ -572,6 +671,18 @@ def search():
         pagination=Pagination(page, 10, min(results["total_found"], 1000)),
         didyoumean=didyoumean,
         tags=tags)
+
+@search.test
+def test():
+    s = u"".join(
+        unichr(char)
+        for char in xrange(sys.maxunicode + 1) # 0x10ffff + 1
+        if unicodedata.category(unichr(char))[0] in ('LMNPSZ'))
+    for t in ("","audio","video","image","document","software","archive"):
+        for p in xrange(0, 10):
+            q = random.sample(s, 100)
+            r = unit.client.get('/es/search', query_string={"type":t,"q":q})
+            assert r.status_code == 200, u"Return code %d while searching %s in %s" % (r.status_code, repr(s), t)
 
 @files.route('/<lang>/download/<file_id>',methods=['GET','POST'])
 @files.route('/<lang>/download/<file_id>/<path:file_name>.html',methods=['GET','POST'])
@@ -609,28 +720,49 @@ def download(file_id,file_name=None):
 
         return comment_votes
 
-    if file_name is not None:
-        g.title = _("download").capitalize()+" "+file_name+" - "+g.title
-    else:
-        g.title =_("download").capitalize()
-
     #guardar los parametros desde donde se hizo la busqueda si procede
     args={}
     if request.referrer:
         querystring = urlparse(request.referrer).query
         if querystring:
-            for params in querystring.split("&"):
+            for params in u(querystring).encode("UTF-8").split("&"):
                 param=params.split("=")
                 if len(param) == 2:
                     args[param[0]]=u(urllib.unquote_plus(param[1]))
 
     try:
         file_id=url2mid(file_id)
-    except BaseException as e:
-        logging.warn((e, file_id))
-        abort(404)
+    except Exception as e:
+        # Comprueba que se trate de un ID antiguo
+        try:
+            possible_file_id = filesdb.get_newid(file_id)
+            if possible_file_id is None:
+                logging.warn("%s - %s" % (e, file_id))
+                flash("link_not_exist", "error")
+                abort(404)
+            return redirect(
+                url_for(".download", file_id=mid2url(possible_file_id), file_name=file_name),
+                code=301)
+        except filesdb.BogusMongoException as e:
+            logging.exception(e)
+            abort(503)
 
-    data = filesdb.get_file(file_id, bl = None)
+    try:
+        data = filesdb.get_file(file_id, bl = None)
+    except filesdb.BogusMongoException as e:
+        logging.exception(e)
+        abort(503)
+
+    # intenta sacar el id del servidor de sphinx,
+    # resuelve inconsistencias de los datos
+    if not data:
+        sid = get_id_server_from_search(file_id, file_name)
+        if sid:
+            try:
+                data = filesdb.get_file(file_id, sid = sid, bl = None)
+            except filesdb.BogusMongoException as e:
+                logging.exception(e)
+                abort(503)
 
     if data:
         if not data["bl"] in (0, None):
@@ -645,12 +777,24 @@ def download(file_id,file_name=None):
 
     #obtener los datos
     file_data=fill_data(data, True, file_name)
+    if file_data["view"]["sources"]=={}: #si tiene todos los origenes bloqueados
+        flash("error_link_removed", "error")
+        abort(404)
+
     save_visited([file_data])
+    # Título
+    title = u(file_data['view']['fn'])
+    g.title = u"%s \"%s%s\"%s%s" % (
+        _(file_data['view']['action']).capitalize(),
+        title[:50],
+        "..." if len(title) > 50 else "",
+        " - " if g.title else "",
+        g.title)
 
     #obtener los archivos relacionados
-    related_files = search_related(split_file(file_data["file"])[0][0:50])
+    related_files = search_related(split_file(file_data["file"])[0][:10])
     bin_file_id=mid2bin(file_id)
-    ids=sorted({fid for related in related_files for fid in get_ids(related) if fid[0]!=bin_file_id})[:5]
+    ids=sorted({fid[0:3] for related in related_files for fid in get_ids(related) if fid[0]!=bin_file_id})[:5]
     files_related=[choose_filename_related(data) for data in get_files(ids)]
 
     #si el usuario esta logueado se comprueba si ha votado el archivo para el idioma activo
@@ -708,7 +852,7 @@ def last_files():
     Muestra los ultimos archivos indexados
     '''
     files=[]
-    for f in filesdb.get_last_files():
+    for f in filesdb.get_last_files(200):
         f=init_data(f)
         choose_filename(f)
         files.append(f)
@@ -716,40 +860,30 @@ def last_files():
     return render_template('files/last_files.html',files=files,date=datetime.utcnow())
 
 @files.route("/<lang>/search/autocomplete")
-# TODO(felipe): Descomentar esto, y cambiar la asignación a make_cache_key
-#               cuando se hayan solucionado los bugs de flask-cache:
-#                   https://github.com/thadeusb/flask-cache/pull/18
-#                   https://github.com/thadeusb/flask-cache/pull/17
-#
-# @cache.cached(
-#    timeout = 1800,
-#    key_prefix = lambda: "view/%%s/%s:%s" % (
-#        request.args.get("term",""),
-#        request.args.get("ct","").lower())
-#    )
-@cache.cached()
+@cache.cached_GET(
+    unless=lambda:True, #TODO(felipe): BORRAR
+    params={
+        "t": lambda x: x.lower(),
+        "term": lambda x: x.lower()
+        })
 def autocomplete():
     '''
     Devuelve la lista para el autocompletado de la búsqueda
     '''
-    query = request.args["term"]
-    ct = request.args.get("t",None)
-    if ct: ct = ct.lower()
 
-    tc = TamingClient(current_app.config["SERVICE_TAMING_SERVERS"], current_app.config["SERVICE_TAMING_TIMEOUT"])
+    query = u(request.args.get("term", "")).lower()
+
+    if not query: return "[]"
+
+    ct = u(request.args.get("t","")).lower()
 
     tamingWeight = {"c":1, "lang":200}
     if ct:
-        for cti in current_app.config["CONTENTS_CATEGORY"][ct]:
-            tamingWeight[current_app.config["TAMING_TYPES"][cti]] = 200
+        for cti in CONTENTS_CATEGORY[ct]:
+            tamingWeight[TAMING_TYPES[cti]] = 200
 
-    options = tc.tameText(query, tamingWeight, 5, 3, 0.2)
+    options = taming.tameText(query, tamingWeight, 5, 3, 0.2)
     if options is None:
-        results = []
-    else:
-        results = [result[2] for result in options]
-    return json.dumps(results)
-
-autocomplete.make_cache_key = lambda: "view/%%s/%s:%s" % (
-        request.args.get("term","").replace(" ","_"),
-        request.args.get("ct","").lower().replace(" ","_"))
+        cache.cacheme = False
+        return "[]"
+    return json.dumps([result[2] for result in options])

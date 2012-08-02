@@ -1,23 +1,68 @@
 {% extends "admin/base.html" %}
-{% block page %}
-<form method="post">
+{% block header -%}
+<ul class="tabs">
+    <li>
+        {%- if show == "deploy" -%}
+        <span>{{_('admin_deploy_phase_deploy')}}</span>
+        {%- else -%}
+        <a href="{{url_for('admin.deploy', show='deploy', size=page_size)}}">{{_('admin_deploy_phase_deploy')}}</a>
+        {%- endif -%}
+    </li>
+    <li>
+        {%- if show == "script" -%}
+        <span>{{_('admin_deploy_phase_script')}}</span>
+        {%- else -%}
+        <a href="{{url_for('admin.deploy', show='script', size=page_size)}}" >{{_('admin_deploy_phase_script')}}</a>
+        {%- endif -%}
+    </li>
+    <li>
+        {%- if show == "publish" -%}
+        <span>{{_('admin_deploy_phase_publish')}}</span>
+        {%- else -%}
+        <a href="{{url_for('admin.deploy', show='publish', size=page_size)}}">{{_('admin_deploy_phase_publish')}}</a>
+        {%- endif -%}
+    </li>
+    <li>
+        {%- if show == "recover" -%}
+        <span>{{_('admin_deploy_failrecovery')}}</span>
+        {%- else -%}
+        <a href="{{url_for('admin.deploy', show='recover', size=page_size)}}">{{_('admin_deploy_failrecovery')}}</a>
+        {%- endif -%}
+    </li>
+</ul>
+{%- endblock %}
+{% block page -%}
+<form method="post" {#action="{{ url_for('admin.deploy', show=show, size=page_size ) }}"#} data-confirmation_message="{{_('admin_deploy_confirmation', action='__action__', target='__target__')|forceescape}}">
+{% if show == "deploy" %}
 <h3 class="list">{{_('admin_deploy_phase_deploy')}}</h3>
 <dl class="deploy_buttons list">
     <dt>{{ form.mode.label }}</dt>
     <dd>{{ form.mode }}</dd>
     <dt>{{ _("admin_deploy_phase_deploy") }}</dt>
-    <dd>{{ form.deploy(class="deploybtn") if deploy_available else form.deploy(class="deploybtn", disabled="disabled") }}{{ form.deploy_rollback(class="deploybtn") if deploy_available else form.deploy_rollback(class="deploybtn", disabled="disabled") }}</dd>
+    <dd>{{ form.deploy if deploy_available else form.deploy(disabled="disabled") }}{{ form.deploy_rollback if deploy_available else form.deploy_rollback(disabled="disabled") }}</dd>
     <dt class="deploy_advanced">{{ _("admin_deploy_phase_configuration") }}</dt>
-    <dd class="deploy_advanced">{{ form.package(class="deploybtn") if deploy_available else form.package(class="deploybtn", disabled="disabled") }}{{ form.rollback(class="deploybtn") if deploy_available else form.rollback(class="deploybtn", disabled="disabled") }}</dd>
+    <dd class="deploy_advanced">{{ form.package if deploy_available else form.package(disabled="disabled") }}{{ form.rollback if deploy_available else form.rollback(disabled="disabled") }}</dd>
     <dt class="deploy_advanced">{{ _("admin_deploy_phase_preparation") }}</dt>
-    <dd class="deploy_advanced">{{ form.prepare(class="deploybtn") if deploy_available else form.prepare(class="deploybtn", disabled="disabled") }}</dd>
+    <dd class="deploy_advanced">{{ form.prepare if deploy_available else form.prepare(disabled="disabled") }}</dd>
     <dt class="deploy_advanced">{{ _("admin_deploy_phase_commit") }}</dt>
-    <dd class="deploy_advanced">{{ form.commit(class="deploybtn") if deploy_available else form.commit(class="deploybtn", disabled="disabled") }}</dd>
+    <dd class="deploy_advanced">{{ form.commit if deploy_available else form.commit(disabled="disabled") }}</dd>
+    <dt>{{ _("admin_deploy_phase_restart") }}</dt>
+    <dd>{{ form.restart if deploy_available else form.restart(disabled="disabled") }}</dd>
     <dt class="deploy_advanced">{{ _("admin_deploy_phase_clean") }}</dt>
-    <dd class="deploy_advanced">{{ form.clean_local(class="deploybtn") if deploy_available else form.clean_local(class="deploybtn", disabled="disabled") }}{{ form.clean_remote(class="deploybtn") if deploy_available else form.clean_remote(class="deploybtn", disabled="disabled") }}</dd>
-    <dt class="deploy_advanced">{{ _("admin_deploy_phase_restart") }}</dt>
-    <dd class="deploy_advanced">{{ form.restart(class="deploybtn") if deploy_available else form.restart(class="deploybtn", disabled="disabled") }}</dd>
+    <dd class="deploy_advanced">{{ form.clean_local if deploy_available else form.clean_local(disabled="disabled") }}{{ form.clean_remote if deploy_available else form.clean_remote(disabled="disabled") }}</dd>
 </dl>
+{%- elif show == "script" -%}
+<h3 class="list">{{_('admin_deploy_phase_script')}}</h3>
+{{- form.script_available_hosts -}}
+<dl class="list">
+    <dt>{{ form.script_mode.label }}</dt>
+    <dd>{{ form.script_mode }}</dd>
+    <dt>{{ form.script_hosts.label }}</dt>
+    <dd>{{ form.script_hosts(class="labeled_input_list", checkbox_data_cool_on=_("yes"), checkbox_data_cool_off=_("no")) }}</dd>
+</dl>
+{{- form.script(class="list") if deploy_available else form.script(class="list", disabled="disabled")}} {{ form.script_clean_cache -}}
+<span class="right select_all_placeholder" data-select_none="{{_('admin_multiselection_select_none')}}" data-select_all="{{_('admin_multiselection_select_all')}}" data-select_or="{{_('or')}}"></span>
+{%- elif show == "publish" -%}
 <h3 class="list">{{_('admin_deploy_phase_publish')}}</h3>
 <dl class="list">
     <dt>{{ form.publish_version.label }}</dt>
@@ -27,7 +72,26 @@
     <dt>{{ form.publish_mode.label }}</dt>
     <dd>{{ form.publish_mode }}</dd>
 </dl>
-{{ form.publish(class="publishbtn list") if deploy_available else form.publish(class="publishbtn list", disabled="disabled")}}
+{{- form.publish(class="list") if deploy_available else form.publish(class="list", disabled="disabled") -}}
+{% elif show == "recover" %}
+<h3 class="list">{{_('admin_deploy_failrecovery')}}</h3>
+<dl class="list">
+    <dt></dt>
+    <dd>{{ form.remove_lock }}</dd>
+</dl>
+<h3 class="list">{{_('admin_deploy_backups')}}</h3>
+<dl class="list" id="backup_list">
+    {%- for mode, baks in backups -%}
+    <dt>{{ mode }}</dt>
+    <dd>
+        {%- for f in baks -%}
+        <a href="{{ url_for('admin.deploy_file', filename=f) }}">{{ f }}</a>
+        {%- if not loop.last %} | {% endif -%}
+        {%- endfor -%}
+    </dd>
+    {%- endfor -%}
+</dl>
+{% endif %}
 <h3 class="list">{{_('admin_deploy_debug')}}</h3>
 <dl class="list">
     <dt>stdout</dt>
@@ -35,13 +99,6 @@
     <dt>stderr</dt>
     <dd><pre id="stderr">{{stderr}}</pre></dd>
 </dl>
-<h3 class="list">{{_('admin_deploy_backups')}}</h3>
-<dl class="list" id="backup_list">
-    {% for mode, baks in backups %}
-    <dt>{{ mode }}</dt>
-    <dd>{% for f in baks %}<a href="{{ url_for('admin.deploy_file', filename=f) }}">{{ f }}</a>{% if not loop.last %} | {% endif %}{% endfor %}</dd>
-    {% endfor %}
-</dl>
+{{- form.clean_log(class="list",**({"data-noconfirm":"ok"})) -}}
 </form>
-
-{% endblock %}
+{%- endblock %}

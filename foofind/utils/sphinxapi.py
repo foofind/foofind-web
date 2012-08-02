@@ -381,7 +381,7 @@ class SphinxClient:
         assert iter(values)
 
         for value in values:
-            assert(isinstance(value, int))
+            AssertInt32(value)
 
         self._filters.append ( { 'type':SPH_FILTER_VALUES, 'attr':attribute, 'exclude':exclude, 'values':values } )
 
@@ -877,7 +877,7 @@ class SphinxClient:
         for attr in attrs:
             assert ( isinstance ( attr, str ) )
         for docid, entry in values.items():
-            assert ( isinstance ( docid, int ) )
+            assert ( isinstance ( docid, (int, long) ) )
             assert ( isinstance ( entry, list ) )
             assert ( len(attrs)==len(entry) )
             for val in entry:
@@ -1030,6 +1030,9 @@ class SphinxClient:
         tag = unpack ( '>L', response[0:4] )[0]
         return tag
 
+def AssertInt32 ( value ):
+	assert(isinstance(value, (int, long)))
+	assert(value>=-2**32-1 and value<=2**32-1)
 #
 # $Id: sphinxapi.py 2376 2010-06-29 14:08:19Z shodan $
 #

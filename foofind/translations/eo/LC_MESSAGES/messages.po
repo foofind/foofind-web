@@ -1,0 +1,580 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: 1\n"
+"Report-Msgid-Bugs-To: ismael@mp2p.net\n"
+"POT-Creation-Date: 2011-12-09 11:49+0100\n"
+"PO-Revision-Date: 2011-12-09 11:49+0100\n"
+"Last-Translator: Foofind <hola@foofind.com>\n"
+"Language-Team: eo <hola@foofind.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Foofind's pogit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgid "your_email"
+msgstr "Via retpoŝto:"
+
+msgid "password"
+msgstr "Pasvorto:"
+
+msgid "submit"
+msgstr "Sendi"
+
+msgid "go_home"
+msgstr "Reveni al serĉilo"
+
+msgid "error_404_message"
+msgstr "Paĝo ne trovita."
+
+msgid "error_503_message"
+msgstr "Nedisponebla servo."
+
+msgid "error_404_description"
+msgstr ""
+"La petita URL ne estis trovita. Bonvole kontrolu ĉu vi korekte skribis la "
+"URL. Se tiel, bonvole atentigu la retadministrantojn."
+
+msgid "error_502_message"
+msgstr "Malbona portalo."
+
+msgid "error_502_description"
+msgstr "La servo ne atingeblas pro malbona portalo."
+
+msgid "contact"
+msgstr "Kontakto"
+
+msgid "error_503_description"
+msgstr "La petita adreso provizore nedisponeblas. Bonvole provu denove poste."
+
+msgid "error_mail_send"
+msgstr ""
+"Eraro okazis dum la sendado de mesaĝo al la indikita retpoŝto. Bonvole "
+"elektu alian aŭ provu denove poste."
+
+msgid "no_valid_email"
+msgstr "Tio ne estas valida retpoŝtadreso en la aranĝo: uzanto@ekzemplo.eo"
+
+msgid "no_valid_url"
+msgstr "Nevalida URL"
+
+msgid "about"
+msgstr "Pri"
+
+msgid "legal"
+msgstr "Leĝa averto"
+
+msgid "direct_downloads"
+msgstr "Direktaj elŝultoj"
+
+msgid "tos"
+msgstr "Uzkondiĉoj"
+
+msgid "privacy"
+msgstr "Politiko pri privateco"
+
+msgid "complaint"
+msgstr "Raporti ligilon"
+
+msgid "source_code"
+msgstr "Fontkodo"
+
+msgid "files_indexed"
+msgstr "Indeksitaj dosieroj"
+
+msgid "last_indexed_files"
+msgstr "Laste indeksitaj dosieroj"
+
+msgid "i_want_that_file"
+msgstr "Mi. Volas. Tiun. Dosieron"
+
+msgid "index_change"
+msgstr "foofind estas ŝanĝanta"
+
+msgid "index_comunity"
+msgstr "Estu parto de nia komunumo."
+
+msgid "index_first"
+msgstr "Estu la unua persono por ricevi ĉiujn novaĵojn kaj partopreni."
+
+msgid "index_suggestion"
+msgstr "Ĉu iu sugesto?"
+
+msgid "all"
+msgstr "Ĉio"
+
+msgid "audio"
+msgstr "Sono"
+
+msgid "video"
+msgstr "Video"
+
+msgid "image"
+msgstr "Bildo"
+
+msgid "document"
+msgstr "Dokumento"
+
+msgid "software"
+msgstr "Programaro"
+
+msgid "archive"
+msgstr "Arkivo"
+
+msgid "previous"
+msgstr "Antaŭa"
+
+msgid "no_results_for"
+msgstr "Neniu rezulto por:"
+
+msgid "write_something"
+msgstr "Saluton! Skribu ion"
+
+msgid "next"
+msgstr "Sekva"
+
+msgid "sources"
+msgstr "fontoj"
+
+msgid "all_sizes"
+msgstr "Ĉiuj grandoj"
+
+msgid "of_about"
+msgstr "el ĉirkaŭ"
+
+msgid "results_for"
+msgstr "rezultoj por"
+
+msgid "other_categories"
+msgstr "aliaj kategorioj"
+
+msgid "no_type_count"
+msgstr ""
+"Neniu rezulto estas trovata por via serĉo pri %(search)s, sed estas ĉirkaŭ "
+"%(results)d rezultoj por via serĉo en %(category)s."
+
+msgid "not_allow_browse_results"
+msgstr "Foofind ne montras rezultoj preter paĝo 100."
+
+msgid "how_to_download"
+msgstr "kiel elŝuti?"
+
+msgid "download_explanation"
+msgstr ""
+"Por elŝuti la ligitan dosieron, vi eble necesas eksteran programaron. Ĉi tie"
+" estas kelkaj kongruaj aplikaĵoj:"
+
+msgid "did_you_mean"
+msgstr "Ĉu vi intenciis %(text)s?"
+
+msgid "year"
+msgstr "jaro"
+
+msgid "advanced_search"
+msgstr "detala serĉo"
+
+msgid "hide_advanced_search"
+msgstr "kaŝi detalan serĉon"
+
+msgid "smaller_than"
+msgstr "Malpligranda ol"
+
+msgid "larger_than"
+msgstr "Pligranda ol"
+
+msgid "all_qualities"
+msgstr "Ĉiuj kvalitoj"
+
+msgid "or_better"
+msgstr "aŭ plibone"
+
+msgid "all_years"
+msgstr "Ĉiuj jaroj"
+
+msgid "before"
+msgstr "Antaŭ ol"
+
+msgid "last_year"
+msgstr "Lastjare"
+
+msgid "artist"
+msgstr "Artisto"
+
+msgid "title"
+msgstr "Titolo"
+
+msgid "author"
+msgstr "Aŭtoro"
+
+msgid "format"
+msgstr "Aranĝo"
+
+msgid "pages"
+msgstr "Paĝoj"
+
+msgid "album"
+msgstr "Albumo"
+
+msgid "length"
+msgstr "Daŭro"
+
+msgid "bitrate"
+msgstr "Bitrapido"
+
+msgid "genre"
+msgstr "Ĝenro"
+
+msgid "seconds"
+msgstr "Sekundoj"
+
+msgid "minutes"
+msgstr "Minutoj"
+
+msgid "source"
+msgstr "Fonto"
+
+msgid "height"
+msgstr "Alto"
+
+msgid "width"
+msgstr "Larĝo"
+
+msgid "track"
+msgstr "Trako"
+
+msgid "quality"
+msgstr "Kvalito"
+
+msgid "series"
+msgstr "Serioj"
+
+msgid "episode"
+msgstr "Epizodo"
+
+msgid "season"
+msgstr "Periodo"
+
+msgid "num_pages"
+msgstr "Nombro de paĝoj"
+
+msgid "include_results_from"
+msgstr "Inkluzivi rezultojn el:"
+
+msgid "size"
+msgstr "Grando"
+
+msgid "unpacked_size"
+msgstr "Malpakita grando"
+
+msgid "colors"
+msgstr "Koloroj"
+
+msgid "version"
+msgstr "Versio"
+
+msgid "name"
+msgstr "Nomo"
+
+msgid "description"
+msgstr "Priskribo"
+
+msgid "files"
+msgstr "Dosieroj"
+
+msgid "years"
+msgstr "jaroj"
+
+msgid "month"
+msgstr "monato"
+
+msgid "months"
+msgstr "monatoj"
+
+msgid "day"
+msgstr "tago"
+
+msgid "days"
+msgstr "tagoj"
+
+msgid "hour"
+msgstr "horo"
+
+msgid "hours"
+msgstr "horoj"
+
+msgid "minute"
+msgstr "minuto"
+
+msgid "second"
+msgstr "sekundo"
+
+msgid "loading"
+msgstr "Ŝarganta"
+
+msgid "close"
+msgstr "Fermi"
+
+msgid "watch"
+msgstr "Vidi"
+
+msgid "share_this"
+msgstr "Kunhavigi ĉi tion:"
+
+msgid "share_facebook"
+msgstr "kunhavigi Vizaĵlibre"
+
+msgid "share_twitter"
+msgstr "kunhavigi Tvitere"
+
+msgid "send_by_email"
+msgstr "sendi retpoŝte"
+
+msgid "download"
+msgstr "Elŝuti"
+
+msgid "from"
+msgstr "ekde"
+
+msgid "your_comments"
+msgstr "Viaj komentoj"
+
+msgid "since"
+msgstr "ekde %(since)s"
+
+msgid "add_comment"
+msgstr "Aldoni komenton"
+
+msgid "i_like_it"
+msgstr "Mi ŝatas tion!"
+
+msgid "booo"
+msgstr "Buu!"
+
+msgid "user_profile"
+msgstr "Uzantprofilo"
+
+msgid "comment_published_succesfully"
+msgstr "Komento sukcese publikigita"
+
+msgid "related_files"
+msgstr "Rilataj dosieroj"
+
+msgid "login_required"
+msgstr "Vi devas ensaluti por akiri ĉi tiun paĝon."
+
+msgid "or"
+msgstr "aŭ"
+
+msgid "your_password"
+msgstr "Elektu vian pasvorton:"
+
+msgid "insert_your_password"
+msgstr "Entajpu vian pasvorton (jes, denove):"
+
+msgid "fill_sing_up_form"
+msgstr "Bonvole plenigu ĉi tiun formularon por iĝi registrita ano de Foofind:"
+
+msgid "nickname"
+msgstr "Kromnomo"
+
+msgid "edit_profile"
+msgstr "redakti profilon"
+
+msgid "edit_your_profile"
+msgstr "Redakti vian profilon"
+
+msgid "profile_edited_succesfully"
+msgstr "Via profilo estis sukcese redaktita!"
+
+msgid "hello"
+msgstr "saluton,"
+
+msgid "logout"
+msgstr "elsaluti"
+
+msgid "login"
+msgstr "ensaluti"
+
+msgid "new_user"
+msgstr "nova uzanto"
+
+msgid "your_message"
+msgstr "Via mesaĝo:"
+
+msgid "register"
+msgstr "registri"
+
+msgid "if_new_user"
+msgstr "Se vi estas nova uzanto, bonvole"
+
+msgid "register_here"
+msgstr "registri ĉi tie"
+
+msgid "choose_nickname"
+msgstr "Elektu kromnomon:"
+
+msgid "user_login"
+msgstr "Uzantensaluto"
+
+msgid "remember_me"
+msgstr "Rememorigi min"
+
+msgid "your_location"
+msgstr "Via loko:"
+
+msgid "new_password"
+msgstr "Ŝanĝu vian pasvorton ĉi tie (alikaze lasu ĝin malplenan):"
+
+msgid "save_profile"
+msgstr "Konservi profilon"
+
+msgid "not_allowed_view_page"
+msgstr "Vi ne rajtas vidi ĉi tiun paĝon"
+
+msgid "username_taken"
+msgstr "Ĉi tiu uzantnomo estas uzata. Bonvole elektu alian."
+
+msgid "email_taken"
+msgstr "Ĉi tiu retpoŝtadreso estas uzata. Bonvole uzu alian."
+
+msgid "forgot"
+msgstr "Ĉu vi forgesis"
+
+msgid "your_password?"
+msgstr "vian pasvorton?"
+
+msgid "passwords_not_match"
+msgstr "La entajpitaj pasvortoj ne kongruas."
+
+msgid "sure_delete_account"
+msgstr "Ĉu vi certe volas forigi vian konton ĉe Foofind?"
+
+msgid "yes"
+msgstr "Jes"
+
+msgid "no"
+msgstr "Ne"
+
+msgid "account_deleted"
+msgstr "Via konto estas forigita."
+
+msgid "username"
+msgstr "Kromonomo"
+
+msgid "member_since"
+msgstr "Ano ekde:"
+
+msgid "last_comments"
+msgstr "Lastaj %(comments)d komentoj:"
+
+msgid "location"
+msgstr "Loko:"
+
+msgid "delete_account"
+msgstr "Forigi vian konton ce Foofind"
+
+msgid "forgot_password"
+msgstr "Ĉu vi forgesis vian pasvorton?"
+
+msgid "wrong_email_password"
+msgstr "Malkorekta retpoŝtadreso aŭ pasvorto. Bonvole provu denove"
+
+msgid "welcome"
+msgstr "Bonvenon"
+
+msgid "foofind_team"
+msgstr "La skipo de Foofind"
+
+msgid "user_not_exist"
+msgstr "Ĉi tiu uzanto ne ekzistas"
+
+msgid "logged_in"
+msgstr "Vi nun estis ensalutita,"
+
+msgid "registered_user"
+msgstr "Se vi jan estas registrita uzanto, bonvole "
+
+msgid "login_here"
+msgstr "ensaluti ĉi tie"
+
+msgid "send"
+msgstr "Sendi"
+
+msgid "ignore_message"
+msgstr "Alikaze ignoru ĉi tiun mesaĝon."
+
+msgid "login_vote"
+msgstr "Bonvole ensaluti por voĉdoni"
+
+msgid "login_comment"
+msgstr "Bonvole ensaluti por komenti"
+
+msgid "submit_registration"
+msgstr "Registriĝi"
+
+msgid "submit_login"
+msgstr "Ensaluti"
+
+msgid "submit_edit"
+msgstr "Konservi profilon"
+
+msgid "submit_search"
+msgstr "Serĉi"
+
+msgid "your_name"
+msgstr "Via nomo:"
+
+msgid "insert_characters"
+msgstr "Bonvole entajpu la 5 montratajn karakterojn:"
+
+msgid "captcha_wrong"
+msgstr "CAPTCHA-valoro nekorektas "
+
+msgid "message_sent"
+msgstr "La mesago estas sukcese sendita!"
+
+msgid "your_company"
+msgstr "Via entrepreno:"
+
+msgid "your_surname"
+msgstr "Via familinomo:"
+
+msgid "your_phone"
+msgstr "Via telefonnumero:"
+
+msgid "translate"
+msgstr "Traduki"
+
+msgid "submit_links"
+msgstr "Sendi ligilojn"
+
+msgid "footer"
+msgstr "Retejo sub la permesilo %(cc)s. %(code)s sub la permesilo %(gpl)s."
+
+msgid "link_not_exist"
+msgstr "Ĉi ligilo ne ekzistas aŭ estis forigita."
+
+msgid "error_link_removed"
+msgstr "Ni pardonpetas: ĉi tiu ligilo estis forigita de fonto mem."
+
+msgid "choose_language"
+msgstr "Elektu lingvon"
+
+msgid "translate_to_your_language"
+msgstr "Helpu nin traduki Foofind al vian lingvon"
+
+msgid "here"
+msgstr "ĉi tie"
+
+msgid "translation_sent"
+msgstr "Via traduko estas sendita. Dankon pro via helpo!"
+
+msgid "translate_at_least_one"
+msgstr "Bonvole traduku ion antaŭ ol sendi."
+
+msgid "other"
+msgstr "Alia"
+
+msgid "opensearch_description"
+msgstr "Serĉi per Foofind"

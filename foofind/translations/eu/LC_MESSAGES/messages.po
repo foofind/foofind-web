@@ -25,8 +25,20 @@ msgstr "Bidali"
 msgid "required_empty"
 msgstr "Eremu hau ezin da hutsik utzi"
 
+msgid "go_home"
+msgstr "Bilatzailera itzuli"
+
+msgid "error_503_message"
+msgstr "Zerbitzu ez erabilgarria"
+
+msgid "error_503_description"
+msgstr "URLa ez dago momentuan erabilgarri. Mesedez, geroago saiatu."
+
 msgid "about"
 msgstr "Honi buruz"
+
+msgid "no_valid_url"
+msgstr "URLak ez du balio"
 
 msgid "contact"
 msgstr "Harremana"
@@ -57,6 +69,9 @@ msgstr "Fitxategi. Hori. Nahi. Dut."
 
 msgid "all"
 msgstr "Guztiak"
+
+msgid "index_change"
+msgstr "foofind aldatzen ari da"
 
 msgid "direct_downloads"
 msgstr "Deskarga zuzenak"
@@ -99,6 +114,9 @@ msgstr "ingurutik"
 
 msgid "not_allow_browse_results"
 msgstr "Foofinde-ek ez du onartzen 100 emaitzatik haratago nabigatzea"
+
+msgid "other_categories"
+msgstr "beste kategoriak"
 
 msgid "how_to_download"
 msgstr "Zelan jeitsi?"
@@ -320,7 +338,7 @@ msgid "logout"
 msgstr "irten"
 
 msgid "login"
-msgstr "sesioa hasi"
+msgstr "saioa hasi"
 
 msgid "new_user"
 msgstr "erabiltzaile berria"
@@ -385,6 +403,9 @@ msgstr "Bai"
 msgid "account_deleted"
 msgstr "Zure kontua ezabatua izan da."
 
+msgid "no"
+msgstr "Ez"
+
 msgid "nice_to_hear_that"
 msgstr "Pozgarria da hori"
 
@@ -445,6 +466,9 @@ msgstr ""
 "Mesedez, idatzi zure posta helbidea. Mezu bat bidaliko dizugu sarrera "
 "berreskuratzeko."
 
+msgid "send"
+msgstr "Bidali"
+
 msgid "email_same_register"
 msgstr "Eposta helbidea izena emateko erabili zenuen bera izan behar da."
 
@@ -481,11 +505,23 @@ msgstr ""
 msgid "submit_search"
 msgstr "Bilatu"
 
+msgid "submit_registration"
+msgstr "Izena eman"
+
+msgid "submit_login"
+msgstr "Saioa hasi"
+
+msgid "submit_edit"
+msgstr "Aldaketak gorde"
+
 msgid "contact_form"
 msgstr "Harremanetarako inprimakia"
 
 msgid "complaints_ignored"
 msgstr "Inprimaki honen bidez egindako erreklamazioak baztertuak izango dira."
+
+msgid "report_form"
+msgstr "erreklamazio formularioa"
 
 msgid "your_message"
 msgstr "Zure mezua:"
@@ -497,7 +533,7 @@ msgid "captcha_wrong"
 msgstr "Idatzitako karaktereak imajinakoekin ez datoz bat"
 
 msgid "message_sent"
-msgstr "Zure mezua ondo bidali da"
+msgstr "Zure mezua ondo bidali da."
 
 msgid "your_name"
 msgstr "Zure izena:"
@@ -525,6 +561,9 @@ msgstr ""
 "Mesedez, irakurri eta onartu behar dituzu erabilpen baldintzak eta "
 "pribatutasun politika"
 
+msgid "accept_tos"
+msgstr "%(tos)s eta %(privacy)s irakurri eta onartzen ditut."
+
 msgid "not_foofind_page"
 msgstr "Esteka ezin da izan Foofind-eko orrialde bat."
 
@@ -543,8 +582,8 @@ msgstr "Estekak bidaliak izan dira. Mila esker laguntzearren!!"
 
 msgid "footer"
 msgstr ""
-"Webguneko eduki guztiek Creative Commons BY-SA lizentziapean daude. Kode-"
-"iturria Affero GPL lizentziapean."
+"Webguneko eduki guztiek %(cc)s lizentziapean daude. %(code)s %(gpl)s "
+"lizentziapean."
 
 msgid "about_text"
 msgstr ""
@@ -558,13 +597,13 @@ msgid "under_maintenance"
 msgstr "Foofind mantentze geldialdian da. Mesedez, itzuli geroago."
 
 msgid "link_not_exist"
-msgstr "Esteka hau ezin da aurkitu edo ezabatua izan da!"
+msgstr "Esteka hau ezin da aurkitu edo ezabatua izan da."
 
 msgid "translate"
 msgstr "Itzuli"
 
 msgid "translate_to_your_language"
-msgstr "Lagun iezaguzu itzultzen Foofind zure hizkuntzara"
+msgstr "Lagun iezaguzu Foofind zure hizkuntzara itzultzen"
 
 msgid "translate_description"
 msgstr ""
@@ -584,7 +623,10 @@ msgid "translate_at_least_one"
 msgstr "Mesedez, behintzat esaldi bat itzuli bidali aurretik."
 
 msgid "here"
-msgstr "bunu rapor ediniz"
+msgstr "hemen"
 
 msgid "other"
 msgstr "Beste bat"
+
+msgid "opensearch_description"
+msgstr "Foodfind-ekin bilatu"

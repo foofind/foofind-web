@@ -1,164 +1,410 @@
+/*colores*/
+$magenta:#E1007A;
+$darkwhite:#FAFAFA;
+$darkerwhite:#F7F7F7;
+$lightestgray:#EDEDED;
+$lightgray:#C2C2C2;
+$gray:#ABA8A8;
+$darkgray:#919191;
+$darkergray:#828282;
+$lightestblack:#666;
+$lightblack:#333;
+/*otras variables*/
+$fuente:Arial,Verdana,Helvetica,sans-serif;
+/* importaciones */
+@import "icons.css";
+/*funciones generales*/
+/* lapiz que se pone en todos los inputs */
+@mixin pencil($status,$size:24,$color:transparent)
+{
+    @if $status==1{@include icon(307,$status,$size,$color);margin-right:-28px;position:relative;top:5px;left:5px;float:left}
+    @else{@include sprite(307,$status,$size)}
+}
+/* establece todos los estados posibles que puede tener un icono */
+@mixin states($icon,$size:50,$span:0,$active:true,$span_selector:span,$status1:1,$status2:2,$status3:3,$status4:4,$status1_color:$darkergray,$status2_color:$magenta,$status3_color:#000,$status4_color:#000)
+{
+    //por defecto se le aplican los estados al propio span, sino es al primer span que tenga como hijo y sino todo al 
+    @if $span==0{$parent:&;$selector:&}
+    @else if $span==1{$parent:&;$selector:$span_selector}
+    @else{$parent:&;$selector:$span_selector}
+    
+    //si se ha cambiado algun estado se cambia tambien el color que tiene asociado
+    @for $i from 1 through 4{@if $i!=$status#{$i}{$status#{$i}_color:$status#{$status#{$i}}_color}}
+
+    $parent{color:$status1_color;$selector{@include sprite($icon,$status1,$size)}}
+    $parent:hover{color:$status2_color;$selector{@include sprite($icon,$status2,$size)}}
+    @if $active
+    {
+        $parent.active{color:$status3_color;$selector{@include sprite($icon,$status3,$size)}}
+        $parent:active{color:$status4_color;$selector{@include sprite($icon,$status4,$size)}}
+    }
+}
+/* para poner un icono */
+@mixin icon($icon,$status:0,$size:50,$color:transparent,$span:0,$active:true)
+{
+    @include background_cached(/static/img/icons$size.png, $color);
+    @if $status>0{@include sprite($icon,$status,$size)}
+    @else if $status<0{@include states($icon,$size,$span,$active)}
+    
+    display:inline-block;
+    vertical-align:middle;
+    width:$size + px;
+    height:$size + px;
+    margin-right:$size/8 + px;
+}
+/* coloca un icono */
+@mixin sprite($icon,$status:0,$size:50)
+{
+    @if $status==1{$status='A'}
+    @else if $status==2{$status='B'}
+    @else if $status==3{$status='C'}
+    @else if $status==4{$status='D'}
+    @else if $status==11{$status='AA'}
+    @else if $status==12{$status='BB'}
+    @else if $status==13{$status='CC'}
+    @else if $status==14{$status='DD'}
+    @include icon-#{$size}px-#{$icon}-#{$status};
+}
+/* propiedades necesarias para hacer un text-overflow:ellipsis */
+@mixin ellipsis($width:100,$inline:block,$white-space:nowrap)
+{
+    max-width:#{$width}px;display:$inline;white-space:$white-space;overflow:hidden;text-overflow:ellipsis;
+}
 *{margin:0;padding:0}
 html,body{height:100%}
-body{font:normal 62.5% Arial,Verdana,Helvetica,sans-serif;min-height:490px;min-width:960px;position:absolute;bottom:0;left:0;right:0;top:0}
+body{font:normal 62.5% $fuente;min-height:625px;min-width:960px;position:absolute;bottom:0;left:0;right:0;top:0}
 ul{list-style:none}
 fieldset{padding:0px;text-align:left;border-width:0px}
-textarea{font:bold 62.5% Arial,Verdana,Helvetica,sans-serif}
+input,select,textarea{font-family:Arial,Verdana,Helvetica,sans-serif}
 form span.data{margin-bottom:10px}
 form span.data input[type="text"], form div.data input[type="password"]{width:200px}
-input[type="text"], input[type="password"],textarea{font-size:1.1em;border:1px solid #808080    ;padding:5px;margin-bottom:10px}
+input[type="text"],input[type="password"],select,textarea
+{
+    font-size:1.5em;color:$darkergray;border:1px solid $lightgray;border-radius:5px;box-shadow:2px 2px 5px transparentize($lightgray,.7);padding:5px;margin-bottom:10px;min-height:25px;
+    &:not(.no){padding-left:35px;&+span{@include pencil(1)}}
+    &:hover{color:$magenta;background:$darkwhite;border-color:$magenta;box-shadow:2px 2px 5px transparentize($magenta,.8);&:not(.no)+span{@include pencil(2)}}
+    &:focus{color:#000;background:$darkwhite;border-color:#000;box-shadow:2px 2px 5px transparentize(#000,.8);&:not(.no)+span{@include pencil(3)}}
+}
 input[type="radio"], input[type="checkbox"]{vertical-align:-2px;margin-right:3px}
 input[type="radio"]:focus, input[type="checkbox"]:focus{border-style:none;border:0px;border:0px;background-color:blue;color:green}
-input[type="submit"],a.awesome{font-size:1.1em;padding:4px 18px;background:#DB006E url('/static/foofind3.png') 0px -312px repeat-x;color:#fff;font-weight:bold;border-radius:5px;box-shadow:0px 1px 3px #999;text-shadow:0 -1px 1px #808080;border:0;border-bottom:1px solid #BA0060;cursor:pointer;position:relative}
-a.awesome{font-size:1.2em;padding:10px 18px;display:inline-block;text-decoration:none}
+input[type="submit"],a.awesome{font-size:1.5em;padding:6px 18px;background:$magenta;color:#fff;border-radius:5px;box-shadow:0px 1px 3px #999;border:none;cursor:pointer;position:relative}
+a.awesome{font-size:1.5em;padding:10px 18px;display:inline-block;text-decoration:none}
 input[type="submit"]:active{top:1px;box-shadow:0px 0.5px 1.5px #999}
-label{display:block}
-label span{color:#DB006E}
-label[for="captcha"]{margin-top:10px}
-#accept_tos{margin:10px 0}
-a{color:#cd0069}
+input[type="text"]:not(#q)#captcha{width:5em;letter-spacing:0.3em;&+span{left:210px}} //necesario el :not() para que lo coja
+label
+{
+    font-size:1.1em;display:block;
+    &[for*="captcha"]+img{display:inline-block;width:200px;height:40px}
+    span{color:#DB006E}
+}
+a{color:#cd0069;&[rel="external"]{padding-right:15px;background:url(/static/img/external.png) no-repeat right center}}
 img{border:0;vertical-align:middle}
-p{padding:0 6px 1em}
+p{padding-bottom:1em}
 em{font-weight:bold;font-style:normal}
 hr{position:relative;border:none;border-top:1px solid #cd0069;height:1px;top:12px;clear:left;padding-bottom:12px}
 cite{color:#df1279;font-style:normal}
 h2{margin-bottom:10px}
-h3{font-size:1.3em;font-weight:normal}
+h3{font-size:1.3em}
 .errors{color:#cd0069;padding-left:0px}
 /* cabecera */
-#header{font-size:1.3em}
-#header h1{clear:left;float:left;margin:13px 10px 0 15px;width:161px;height:67px;overflow:hidden}
-#header h1 img{}
-#header-navigation a, #footer a{color:#0003CC}
-#header-navigation{float:right;margin-right:100px;margin-top:10px}
-.user_login_box{text-align:right;display:inline-block;padding-top:4px}
-#select_language_box{position:absolute;right:2px;top:6px;padding-top: 24px;z-index:10;border:1px solid #FFF;display:inline-block;height:25px;overflow:hidden;vertical-align:top;width:92px}
-#select_language_box:hover{border:1px solid #999;background-color:#FBEFFB;height:auto}
-#select_language_box a{padding:2px 2px 2px 4px;line-height:16px;height:20px;display:none;width:100%;text-decoration:none}
-#select_language_box a span.lang_name{display:inline-block;text-decoration:underline}
-#select_language_box:hover a, #select_language_box a.active{display:block}
-#select_language_box a.active{position:absolute;top:0}
-#select_language_box a:hover{background-color:#999;text-decoration:none;color:#000}
-#select_language_box .beta_lang{font-size:4px;position:absolute;width:19px;height:6px;margin-left:-22px;margin-top:14px;background:url(/static/foofind3.png) -161px -290px}
-.flag{display:inline-block;background:url(/static/foofind3.png) no-repeat;height:11px;width:16px;margin-right:5px;margin-bottom:1px;vertical-align:middle}
-.flag.beta{margin-bottom:5px}
-.flag.en{background-position:-96px -301px}
-.flag.es{background-position:0px -290px}
-.flag.eu{background-position:-128px -301px}
-.flag.fr{background-position:-80px -290px}
-.flag.it{background-position:-80px -301px}
-.flag.pt{background-position:-16px -290px}
-.flag.tr{background-position:-128px -290px}
-.flag.zh{background-position:0px -301px}
-.flag.ca{background-position:-144px -301px}
-.flag.gl{background-position:-144px -290px}
-#advice{background:#FFFF99;font-weight:bold;padding:3px;margin-bottom:10px;max-width:60%;font-size:.92em;display:none}
-#advice p{padding:0}
-#advice .close_advice{float:right;padding:0 5px;margin-top:-4px;margin-right:-5px;color:#000;background:#CCC;text-decoration:none;font-size:1.5em;font-family:Times New Roman, Times}
-#advice .close_advice:hover{background:#666;color:#FFF}
-input#q{height:18px;width:380px}
-#container{min-height:100%;position:relative}
-#content{padding:10px 10px 60px;font-size:1.3em}
+header
+{
+    $header:$lightestblack;
+    font-size:1.3em;color:#dedede;
+    h1{clear:both;float:left;margin:13px 10px 0 15px;width:161px;height:67px;overflow:hidden;position:relative;z-index:10}
+    >section
+    {
+        background:$header;width:100%;height:30px;
+        >p{float:left;height:15px;padding:5px 1% 10px;font-weight:bold;a{color:$lightestgray;text-decoration:none}}
+    }
+    #header_navigation
+    {        
+        padding-right:140px;float:right;margin:0;height:30px;text-align:right;font-weight:bold;position:relative;z-index:2;/*para evitar problemas con poner el logo movido hacia abajo y section subido*/
+        a{display:inline-block;color:$lightestgray;text-decoration:none;&:hover{color:#FFF}}
+        >a{margin:3px 0px 3px 13px}
+        a:nth-child(1){span{@include icon(313,3,24)}&:hover span{@include sprite(313,2,24)}}
+        a:nth-child(2){span{@include icon(310,3,24)}&:hover span{@include sprite(310,2,24)}}
+        &.login a{span{@include icon(311,3,24)}&:hover span{@include sprite(311,2,24)}}
+        #advice
+        {
+            display:none;width:200px;position:absolute;right:10px;z-index:9;color:#FFF;
+            span{border:10px solid transparent;border-bottom-color:$darkgray;margin-top:-9px;margin-left:135px;float:left}
+            a
+            {
+                color:#FFF;font-style:italic;font-weight:bold;display:inline;
+                &:hover{background:#FFF;color:$darkergray}
+                &.close_advice{float:right;padding:0 5px;margin:10px 1px 100px 5px;font-size:1.5em;font-family:Times New Roman, Times;&:hover{background:$lightgray;color:#000}}
+            }    
+            p{background:$darkgray;margin-top:10px;padding:10px;font-weight:normal;font-size:1em;line-height:1.5em;text-align:left}
+        }
+        #select_language_box
+        {
+            position:absolute;right:4px;top:-5px;z-index:10;width:130px;overflow:hidden;text-align:left;
+            &:hover li{display:block;&:first-child span{@include icon(312,2,24)}}
+            li
+            {
+                display:none;background:$header;
+                small{font-variant:small-caps;font-style:italic;font-size:.8em;margin-left:5px;color:$magenta}
+                &:first-child
+                {
+                    display:block;min-height:35px;margin-left:0;background:$header;cursor:default;
+                    a{height:18px;padding:8px;margin:0;background:none}
+                    span{@include icon(312,3,24)}
+                }
+            }
+            a{height:auto;padding:5px;width:100%;&:hover{background:#999}}
+            span{text-decoration:none;display:none}
+        }
+    }    
+    #search_file{display:inline-block;fieldset{width:100%}}
+}
+input#q{height:18px;width:435px}
+#container
+{
+    min-height:100%;position:relative;overflow:hidden;
+    >section{padding:10px 10px 60px;font-size:1.3em;clear:both}
+}
 /* pie */
-#footer{border-top:1px #DDDDDD solid;position:absolute;bottom:0;left:0;right:0;text-align:left;font-size:1.2em;padding:10px;/*IE*/margin-top:480px}
-#footer li{display:inline;margin-right:10px}
-#footer p,#footer div{float:right;padding:0}
+footer
+{
+    background:#F6F6F6;border-top:1px #DDDDDD solid;position:absolute;bottom:0;left:0;right:0;text-align:left;font-size:1.2em;padding:10px;color:$darkergray;/*IE*/margin-top:480px
+    a{color:#0E65A6}
+    ul{display:inline-block}
+    li{display:inline;margin-right:10px}
+    p,div{float:right;padding:0}
+    #logos{height:40px}
+}
+/*selectmenu*/
+#type-button{font-size:2em}
+.ui-widget{font-family:$fuente}
+.ui-widget-content{background:none}
+.ui-state-default .ui-icon{background:none} //quitar la flecha
+//quitar la barra de scroll y colocar menu
+.ui-selectmenu-menu ul{overflow:hidden;margin:2px 0 0 4px;padding:7px 21px 8px 0;background:$darkwhite;border:1px solid $lightgray;box-shadow:0px 0px 5px $gray}
+.ui-selectmenu-menu li.type_img,.ui-selectmenu{width:200px;height:50px;left:-5px;background:none;border:none;border-radius:0;outline:none;text-transform:lowercase;color:#000;font-weight:normal}
+.ui-selectmenu-menu li.ui-selectmenu-hasIcon a, .ui-selectmenu-hasIcon .ui-selectmenu-status{padding:0 0 0 50px;width:100%}
+.ui-selectmenu-menu li.ui-selectmenu-hasIcon a{margin:0;font-size:2.4em}
+.ui-selectmenu-hasIcon .ui-selectmenu-status{padding:0 0 15px 50px;height:22px;top:7px}
+.ui-selectmenu-menu li .ui-icon, .ui-selectmenu-status .ui-icon{top:10px;left:10px}
+.ui-selectmenu-menu li.type_img.ui-selectmenu-item-selected,.ui-selectmenu-popup /*negro seleccionado*/
+{
+    a{color:#000}
+    .ui-icon{@include icon(101,3,32)}
+    &.img_audio .ui-icon{@include sprite(102,3,32)}
+    &.img_video .ui-icon{@include sprite(103,3,32)}
+    &.img_image .ui-icon{@include sprite(104,3,32)}
+    &.img_document .ui-icon{@include sprite(105,3,32)}
+    &.img_software .ui-icon{@include sprite(106,3,32)}
+    .ui-selectmenu-icon.ui-icon{display:none}
+}
+.ui-selectmenu-menu li.type_img, /*gris en reposo, magenta en hover*/
+{
+    height:40px;
+    a{color:$gray;&:hover{color:$magenta}}
+    .ui-icon{@include icon(101,1,32)}&:hover .ui-icon{@include sprite(101,2,32)}
+    &.img_audio{.ui-icon{@include sprite(102,1,32)}&:hover .ui-icon{@include sprite(102,2,32)}}
+    &.img_video{.ui-icon{@include sprite(103,1,32)}&:hover .ui-icon{@include sprite(103,2,32)}}
+    &.img_image{.ui-icon{@include sprite(104,1,32)}&:hover .ui-icon{@include sprite(104,2,32)}}
+    &.img_document{.ui-icon{@include sprite(105,1,32)}&:hover .ui-icon{@include sprite(105,2,32)}}
+    &.img_software{.ui-icon{@include sprite(106,1,32)}&:hover .ui-icon{@include sprite(106,2,32)}}
+}
 /* home */
-#content.home{position:absolute;bottom:0;left:0;right:0;top:17%;text-align:center}
-#content.home #search{width:600px;margin:0 auto}
-#content.home #search img{min-height:102px}
-#content.home #search span{font-size:1.2em;font-weight:bold;text-shadow:0em 0.1em 0.1em #ccc;color:#666;height:30px;margin:-25px 0 25px 125px;display:block}
-#content.home #search span.small{font-size:.92em}
-#content.home #search form{margin-top:-2px;margin-left:-1%;background-color:#FBEFFB;border:#EA1F85 2px solid;padding:5px}
-#content.home #search fieldset{text-align:center}
-#content.home #search .message{margin:-1.5em 1em 1.5em}
-#content.home #search .tabs{margin:4px 0}
-#content.home #search .tabs li{display:inline-block;height:1em;margin-right:2%}
-#content.home #search .tabs a{position:relative;border:#EA1F85 2px solid;border-bottom:none;background:#EA1F85;padding:3px 10px;color:#FFF;text-decoration:none;font-weight:bold;border-top-left-radius:5px;border-top-right-radius:5px;text-shadow:0 -1px 1px #808080}
-#content.home #search .tabs a:hover{padding:4px 10px;top:-1.5px;background:#EA1F85}
-#content.home #search .tabs a.actual{background-color:#FBEFFB;margin-bottom:0px;color:#000;padding:5px 10px;top:-1px;text-shadow:none}
-#content.home #search .tabs a.actual:focus{outline:none}
-#content.home #search .tabs a.actual:hover{margin-top:4px}
-#content.home #search #q{height:22px;width:420px;font-size:1.6em;line-height:20px;margin:20px 10px 3px 0}
-#content.home #search #tamingresults{margin-top:53px;margin-left: 30px}
-#content.home #search #submit{position:relative;top:-2px}
-#content.home #search label{display:inline-block;margin:8px 10px 12px 5px;vertical-align:middle}
-#content.home #social_widgets{position:absolute;bottom:18%;left:0;right:0;height:25px;overflow:hidden}
-#content.home #___plusone_0{font-size:2.4em;vertical-align:top}
-#content.home+#footer p{padding-bottom:10px;float:none}
+section#home
+{
+    position:absolute;bottom:0;left:0;right:0;top:17%;text-align:center;
+    #search
+    {        
+        text-align:center;position:relative;z-index:1;background:#FFF;margin-bottom:5px;
+        >img{width:350px}
+        >span
+        {
+            font-size:1.5em;font-weight:bold;text-shadow:0em 0.1em 0.1em #ccc;color:$lightestblack;height:30px;margin:-30px 0 45px 163px;display:block
+            &.small{font-size:1.2em}
+        }
+        form
+        {
+            width:900px;margin:30px auto 0;white-space:nowrap;text-align:left;position:relative;
+            input,select,option{border:none;font-weight:normal}
+            fieldset{display:inline-block;vertical-align:middle}
+            input:focus,select:focus{outline-style:none}
+            #params
+            {
+                background:$darkwhite;border:1px solid $lightgray;border-radius:5px;width:750px;margin:0;
+                &:hover,&:focus,&.hover{border-color:$darkergray;box-shadow:0px 0px 5px $gray;margin:0}
+                >a{@include pencil(1,32,$darkwhite);left:7px;margin-top:5px}
+                &:hover>a,&:focus>a,&.hover>a{@include pencil(3,32,$darkwhite);left:7px}
+                >span
+                {
+                    width:234px;overflow:hidden;display:inline-block;vertical-align:top;background:$darkwhite url(/static/img/home/flecha_desplegar.png) no-repeat 200px 17px;border-radius:5px;
+                    #type{background:transparent;width:255px;height:35px;border-left:1px solid $gray;font-size:1.8em;margin:7px 0 0 -2px;padding:5px 0 0 50px}
+                }                
+                #q{font-size:2em;color:$magenta;background:$darkwhite;width:460px;height:35px;padding:4px 10px 4px 40px;margin:5px 0;border-right:1px solid $gray;border-radius:0;box-shadow:0 0 0}
+            }
+            input[type=submit]{font-size:2em;margin-left:20px;padding:9px 23px;max-height:50px;text-transform:lowercase}
+        }
+        .message{margin:-35px auto -15px;width:30%}
+    }
+    #extra
+    {
+        background:url(/static/img/home/fondo.png) repeat-x;border-top:1px solid #DDD;padding-top:10px;position:absolute;z-index:0;bottom:55px;left:0;right:0;
+        #live
+        {
+            padding:15px;width:900px;height:165px;overflow:hidden;margin:0 auto;text-align:left;
+            .texto
+            {
+                width:250px;float:left;display:block;margin:15px 30px 0 30px;color:$lightestblack;
+                p{padding-bottom:5px}
+                h3{font-size:1.6em;font-weight:bold;margin-bottom:15px}
+                h4{font-size:1.4em;font-weight:normal;margin-top:5px;a{color:$lightestblack;text-decoration:none}}
+            }
+            .social
+            {
+                width:562px;height:146px;overflow:hidden;margin-top:5px;
+                .fb-like-box iframe{width:101%;position:relative;left:-1px;right:-1px;top:-10px}
+                .twitter-follow-button{top:-154px;left:345px;position:relative;}
+                #___plusone_0{top:-178px;left:435px;position:relative}
+            }
+            .facepile{overflow:scroll;background:transparent;border:0}
+        }
+    }
+    &+footer
+    {
+        ul{padding-bottom:10px}
+        p{float:none}
+    }
+}
 /* page */
-#content.page{margin-bottom:10px}
-#content.page>ul{width:150px;float:left;padding-left:10px}
-#content.page>ul li{height:1.1em}
-#content.page>div{padding-left:172px;padding-bottom:50px}
-#content.page #translate #lang{margin-bottom:30px;margin-left:170px;margin-top:10px;width:20%;height:25px}
-#content.page #translate #lang option{height:20px}
-#content.page #translate img{margin-bottom:10px}
-#content.page #translate li{overflow:hidden}
-#content.page #translate label{float:left;margin-right:10px}
-#content.page #translate span{display:block;font-style:italic;color: #666;margin-top:-25px}
-#content.page #translate textarea+span{top:-15px}
-#content.page #translate textarea{font-size:1.1em;font-weight:normal}
-#content.page #translate fieldset, .content.user fieldset{margin-bottom:10px}
-#content.page #translate form.texts{margin-left:0px}
-#content.page #translate input:focus, #translate textarea:focus{background-color:#FFFF99}
-#content.page #translate .texts *{width:40%}
-#content.page #translate .texts fieldset,#content.page #translate .texts img,#content.page #translate .texts input[type="submit"]{width:auto}
-#content.page #translate .texts #translate_captcha{width:5em}
-#content.page #translate #captcha{width:25.3%}
-#content.page #joboffer{margin-left:5px;margin-bottom:10px}
-#content.page #joboffer p{margin-top:7px}
-#content.page #joboffer ul{list-style:circle inside}
-#content.page #joboffer li{margin-left:20px}
+section#page
+{
+    padding-bottom:0;position:relative;top:-100px;
+    nav
+    {
+        width:200px;float:left;margin-left:15px;margin-top: 70px;
+        dt{height:1.1em;font-size:1.3em;font-weight:bold;margin-top:30px;margin-bottom:5px;color:$magenta;text-transform:lowercase}
+        a{color:$darkergray;font-size:1.3em;text-decoration:none;text-transform:lowercase}
+        .active{font-weight:bold}
+    }
+    >article
+    {
+        min-width:700px;margin:30px 10px 0 230px;border:1px solid $lightgray;border-bottom:65px solid $darkergray;border-radius:20px;box-shadow:10px 10px 15px $lightestgray;
+        input,textarea,select{font-size:1.1em}
+        input[type="text"]:not(#captcha),textarea{width:400px}
+        >a
+        {
+            width:30px;height:50px;display:block;margin:130px 15px 0;background:url(/static/img/pages/flecha.png);
+            &:first-of-type{float:left}
+            &:last-of-type{float:right;background-position:30px 0}
+        }
+        >span{float:right;font-size:1.8em;font-weight:bold;margin-top:10px}
+        h2{text-transform:lowercase;color:#000;font-size:2em}
+        >div{font-size:1.2em;color:$darkergray;border-radius:20px;margin-bottom:-65px;padding:55px 70px 115px;background:no-repeat right bottom transparent}
+        &#about>div{background-image:url(/static/img/pages/about.png);padding-bottom:225px;padding-right:250px}
+        &#contact>div{background-image:url(/static/img/pages/contact.png);label:last-child{margin-right:150px}}
+        &#jobs>div{background-image:url(/static/img/pages/jobs.png);padding-bottom:170px;label:last-child{margin-right:100px}}
+        &#submitlink>div{background-image:url(/static/img/pages/submitlink.png);padding-bottom:75px;label:last-child{margin-right:130px}}
+        &#translate
+        {
+            >div{background:url(/static/img/pages/translate.png) no-repeat left bottom;padding-bottom:280px}
+            label{float:left;margin-right:10px}
+            form{margin-left:90px}
+            form[method="post"]
+            {                
+                label,div{width:40%}
+                input,textarea{width:45%}
+                div{font-style:italic;color:$magenta;margin-top:-25px}
+                #translate_captcha{width:5em;&+span{left:210px}}
+            }
+            fieldset
+            {
+                margin-bottom:10px;
+                &:first-child{margin:50px 0 50px 25%;label{float:none;width:auto}}
+                &:last-child{margin-left:40%;padding-left:10px;}
+            }
+            select{margin:10px 0 0 25%;width:340px;background:#FFF}
+            option{height:1.2em}
+            #searchempty{font-size:2.2em;font-weight:bold;position:fixed;width:145px;left:250px;z-index:1;text-decoration:none;text-align:center;outline:none}
+        }
+        &#complaint>div{background-image:url(/static/img/pages/complaint.png);padding-right:0;label:last-child{margin-right:290px}}
+        &#legal>div{background-image:url(/static/img/pages/legal.png);padding-right:325px;padding-bottom:110px}
+        &#tos>div{background-image:url(/static/img/pages/tos.png);padding-bottom:190px}
+        &#privacy>div{background-image:url(/static/img/pages/privacy.png);padding-bottom:250px}
+    }
+    #joboffer
+    {
+        margin-left:5px;margin-bottom:10px
+        p{margin-top:7px}
+        ul{list-style:circle inside}
+        li{margin-left:20px}
+    }
+}
 /* busqueda */
 #container.files{}
 /* cabecera busqueda */
-#header #search_file{padding-top:15px}
-#header #search_file>ul{margin-left:170px;margin-bottom:5px;width:390px;text-align:center;overflow:hidden}
-#header #search_file>ul li{display:inline;margin-right:5px}
-#header #search_file>ul li a{padding:0 2px}
-#header #search_file>ul li a:visited{color:#DF1279}
-#header #search_file>ul li a.actual{color:#000;text-decoration:none;font-weight:bold}
+header #search_file
+{
+    padding-top:8px;
+    >ul
+    {
+        margin-bottom:5px;width:390px;text-align:center;overflow:hidden;
+        li
+        {
+            display:inline;margin-right:5px;
+            a{padding:0 2px;&:visited{color:#DF1279}&.actual{color:#000;text-decoration:none;font-weight:bold}}
+        }
+    }
+}
 /* cuerpo busqueda*/
-#content.files #search_info{text-align:right;margin:20px 0 -35px 0}
-#content.files #search_info a{color:#000;text-decoration:none;font-weight:bold}
-#content.files #tabnav{font-weight:bold;border-bottom:1px solid #CD0069;list-style-type:none;padding:20px 0 0 42px}
-#content.files #tabnav li{display:inline-block;padding:3px 7px}
-#content.files #tabnav a{padding-top:5px;padding-left:12px;padding-right:12px;padding-bottom:3px;border:1px solid #CD0069;background:#FFF;color:#CD0069;text-decoration:none;border-bottom:none}
-#content.files #tabnav a.actual,#content.files #tabnav a.actual:hover{background:#FBEFFB;color:#000;padding-bottom:4px;}
-#content.files #tabnav a:hover{background:#FFF;color:#000}
-#content.files h2{margin:10px}
-/* resultados */
-#content.files #results{margin:10px;text-align:left;overflow:hidden}
-#content.files #results li{display:block;margin-top:5px;margin-bottom:25px;clear:left}
-#content.files #results li dt,#results li dd{display:inline}
-#content.files #results li h3 a{color:#000}
-#content.files #results li>a{text-decoration:none;font-size:0.8em;color:#cd0069}
-#content.files #results li span.useract{display:inline-block;font-size:.92em;height:15px;text-align:left;padding-top:3px;padding-bottom:1px;vertical-align:top;margin:0px;color:#000;margin-left:5px;background-color:#FFEEEE;background-repeat:no-repeat;padding-right:4px}
-#content.files #results li div.comments{display:inline-block;background-image:url(/static/foofind3.png);background-position:-164px -120px;vertical-align:middle;width:19px;height:20px;margin-left:5px}
-#content.files #results li div.votes_up{display:inline-block;background-image:url(/static/foofind3.png);background-position:-120px -120px;vertical-align:middle;width:14px;height:20px;margin-left:5px}
-#content.files #results li div.votes_down{display:inline-block;background-image:url(/static/foofind3.png);background-position:-135px -120px;vertical-align:middle;width:14px;height:20px;margin-left:5px}
-#content.files #results .thumblink{float:left;display:block;border:1px solid #ccc;background:#000;overflow:hidden;width:120px;height:90px;text-align:center;vertical-align:middle;line-height:80px;margin-right:4px; margin-bottom:5px}
-#content.files #results .thumblink img{width:120px;height:auto}
-#content.files .alfa{overflow: hidden}
-#content.files .alfa li{float:left;margin-right:2px}
-#content.files #didyoumean{font-size:1.4em;font-style:italic;font-weight:bold;padding-top:1em}
-#content.files #tags{font-size:1.2em;background:#FBEFFB;max-width:80%;padding:10px;margin-bottom:5px}
-#content.files #tags li{display:inline}
-#content.files #tags a{padding:3px}
-#content.files #advsearch{text-align:right;float:right;padding:0 10px 10px}
-#content.files #advsearch div{display:none;text-align:left;clear:left;float:right}
-#content.files #advsearch ul{margin-top:10px;margin-left:10px;margin-bottom:15px}
-#content.files #advsearch .actual{color:#000;text-decoration:none;font-weight:bold}
-#content.files #advsearch>a{padding:4px;display:block}
-#content.files #advsearch>a span{font:normal 0.92em "Lucida Console",Monaco,monospace;text-decoration:none;display:inline-block;margin-right:5px}
+section#files
+{
+    #search_info{text-align:right;margin:13px 0 -35px 0}
+    #search_info a{color:#000;text-decoration:none;font-weight:bold}
+    #tabnav
+    {
+        font-weight:bold;border-bottom:1px solid #CD0069;list-style-type:none;padding:20px 0 0 42px;
+        li{display:inline-block;padding:3px 7px}
+        a{padding-top:5px;padding-left:12px;padding-right:12px;padding-bottom:3px;border:1px solid #CD0069;background:#FFF;color:#CD0069;text-decoration:none;border-bottom:none}
+        a.actual,#tabnav a.actual:hover{background:#FBEFFB;color:#000;padding-bottom:4px;}
+        a:hover{background:#FFF;color:#000}
+    }
+    >h2{margin:10px}
+    /* resultados */
+    #results
+    {
+        margin:10px;text-align:left;overflow:hidden;
+        >li{display:block;margin-top:5px;margin-bottom:25px;clear:left}
+        li dt, li dd{display:inline}
+        li h3 a{color:#000;font-weight:normal;span{font-weight:bold;padding:0 5px}}
+        li>a{text-decoration:none;}
+        .thumblink{float:left;display:block;border:1px solid #ccc;background:#000;overflow:hidden;width:120px;height:90px;vertical-align:middle;margin-right:4px; margin-bottom:5px}
+        .thumblink span{display:block;height:200px;position:relative;top:-56px;line-height:200px;}
+        .thumblink img{width:120px;height:auto;vertical-align:middle}
+    }
+    #didyoumean{font-size:1.4em;font-style:italic;font-weight:bold;padding-top:1em}
+    #tags
+    {
+        font-size:1.2em;background:#FBEFFB;max-width:80%;padding:10px;margin-bottom:5px;
+        li{display:inline}
+        a{padding:3px}
+    }
+    #advsearch
+    {
+        text-align:right;float:right;padding:0 10px 10px;
+        div{display:none;text-align:left;clear:left;float:right}
+        ul{margin-top:10px;margin-left:10px;margin-bottom:15px}
+        .actual{color:#000;text-decoration:none;font-weight:bold}
+        >a{padding:4px;display:block}
+        >a span{font:normal 0.92em "Lucida Console",Monaco,monospace;text-decoration:none;display:inline-block;margin-right:5px}
+    }
+}
 /* taming */
-.ui-autocomplete{width:390px;background:#fff;border:1px solid #dd157a;font-size:1.6em;text-align:left}
-.ui-autocomplete li {padding:2px;cursor:pointer}
-.ui-autocomplete a{display:block;color:#333}
-.ui-autocomplete #ui-active-menuitem{background:#dd157a;color:#fff}
+.ui-autocomplete
+{
+    background:#FFF;border:1px solid $darkergray;border-top:none;border-radius:0 0 5px 5px;font-size:1.6em;text-align:left;
+    li{padding:2px;cursor:pointer}
+    a{display:block;color:$lightestblack;padding-left:30px;&:hover{border-color:transparent}}
+    #ui-active-menuitem{background:$magenta;color:#FFF}
+}
 /* otras cosas */
-#searchempty{font-size:2.4em;z-index:1;right:30px;position:fixed;text-decoration:none}
 #agree{display:inline;line-height:10px;height:20px}
 .warning{background:url(/static/foofind3.png) no-repeat -162px -297px;padding-left:20px}
 /* mensajes de error */
@@ -178,25 +424,28 @@ input#q{height:18px;width:380px}
 .comments .cpagination a{text-decoration:none;color:#000}
 .comments .cpagination #current{font-weight:bold;color:#cd0096}
 .wrap_download{margin:20px 20px 20px 30px;text-align:left;display:block}
-.file_download{vertical-align:top;padding-right:260px}
-.file_download h2{padding-top:20px;font-size:1.6em}
-.file_download_vote, .file_comment_vote{margin-top:10px;float:right;text-align:center}
-.file_download_vote a, .file_comment_vote a{display:inline-block;text-decoration:none;color:#000;font-size:0.7em}
-.file_download_vote a, .file_comment_vote a{background-image:url(/static/foofind3.png);width:30px;height:40px;margin-left:10px;margin-right:10px}
-.file_download_vote span{display:block;margin:40px 0 0 -14px;width:55px}
-.file_comment_vote span{display:block;margin:20px 0 0 -14px;width:40px}
-.small .vote_up{background-position:-120px -140px;width:15px;height:20px}
-.small .vote_down{background-position:-135px -140px;width:15px;height:20px}
-.small.upactive .vote_up, .small .vote_up:hover{background-position:-120px -120px}
-.small.downactive .vote_down, .small .vote_down:hover{background-position:-135px -120px}
-.vote_up{background-position:-90px -120px}
-.vote_down{background-position:-30px -120px}
-.upactive .vote_up, .vote_up:hover{background-position:-60px -120px}
-.downactive .vote_down, .vote_down:hover{background-position:-0px -120px}
-.vote_up span{color:#808080 }
-.vote_down span{color:#cd0069}
+.file_download
+{
+    vertical-align:top;padding-right:260px;
+    h2{padding-top:20px;font-size:1.6em}
+}
+/* comentarios */
+.file_download_vote, .file_comment_vote{float:right;text-align:center;font-size:0.7em}
+.file_download_vote a{@include icon(302,1,32);text-decoration:none;margin:0 10px}
+.file_download_vote span{display:block;margin:35px 0 0 -14px;width:55px}
+a.vote_down{@include sprite(303,1,32)}
+a.vote_up span{color:$darkergray}
+a.vote_down span{color:$magenta}
+.upactive a.vote_up, a.vote_up:hover{@include sprite(302,2,32)}
+.downactive a.vote_down, a.vote_down:hover{@include sprite(303,3,32)}
+.file_comment_vote a{@include icon(302,1,24);text-decoration:none;margin:0 10px}
+.file_comment_vote span{display:block;margin:28px 0 0 -7px;width:40px}
+.small a.vote_down{@include sprite(303,1,24)}
+.small.upactive a.vote_up, .small a.vote_up:hover{@include sprite(302,2,24)}
+.small.downactive a.vote_down, .small a.vote_down:hover{@include sprite(303,3,24)}
 .top_download{text-align:left;clear:left;padding-bottom:20px;padding-top:30px;width:100%;min-height:120px}
 .download_button{position:relative;text-align:center;display:block;top:-20px;vertical-align:middle;float:left}
+.download_embed{background:black; text-align:center;height:315px;width:420px;margin:0px 48px;padding:2px}
 .download_file_metadata{width:65%;min-width:490px;display:inline-block;padding-left:40px;vertical-align:middle}
 .download_file_torrent_files{margin-top:10px;width:430px}
 .download_file_torrent_files ul{font-size:.92em;display:block;height:8em;max-height:15em;border:1px solid #cdcdcd;padding:2px;overflow:auto}
@@ -208,47 +457,50 @@ input#q{height:18px;width:380px}
 .download_source a{color:#000;text-decoration:none;display:inline-block;width:175px;font-weight:bold;vertical-align:middle;margin:5px}
 .download_source input{float:right;width:65%;padding:5px;border:1px solid #A9D0F5;color:#cd0069;display:inline-block;margin:4px}
 .download_source span{display:inline-block;font-weight:normal;font-size:.8em}
-/* iconos */
-.icon{background:url(/static/foofind3.png);overflow:hidden;display:inline-block;vertical-align:middle}
-.icon24{width:24px;height:24px}
-.ed2k24{background-position:-3px -264px}
-.ed2kd24{background-position:-3px -66px}
-.webd24{background-position:-33px -66px}
-.torrent24{background-position:-63px -264px}
-.torrentd24{background-position:-63px -66px}
-.tmagnetd24{background-position:-93px -66px}
-.gnutella24{background-position:-33px -264px}
-.gnutellad24{background-position:-123px -66px}
-.ftpd24{background-position:-153px -66px}
-.icon30{width:30px;height:30px}
-.ed2k30{background-position:-0px -90px}
-.web30{background-position:-30px -90px}
-.torrent30{background-position:-60px -90px}
-.tmagnet30{background-position:-90px -90px}
-.gnutella30{background-position:-120px -90px}
-.ftp30{background-position:-150px -90px}
-.icon50{width:60px;height:50px;margin-bottom:10px;background-position:-60px -210px}
-.archive50{background-position:-0px -160px}
-.audio50{background-position:-60px -160px}
-.document50{background-position:-120px -160px}
-.image50{background-position:-0px -210px}
-.file50{background-position:-60px -210px}
-.video50{background-position:-120px -210px}
-.icon.facebook{width:14px;margin-right:4px;height:20px;background-position:-150px -120px}
-.icon.twitter{width:14px;margin-right:4px;height:20px;background-position:-150px -140px}
-.icon.email{margin-right:2px;width:16px;height:20px;background-position:-164px -140px}
-.icon.balloon{float:left;width:32px;height:30px;background-position:-148px -260px}
-.icon.link{float:left;margin-left:3px;width:26px;height:30px;background-position:-120px -260px}
+/* icons */
+.icon24{@include icon(106,0,24)}
+.ed2k24{@include sprite(201,2,24)}
+.ed2kd24{@include sprite(201,12,24)}
+.webd24{@include sprite(204,12,24)}
+.torrent24{@include sprite(203,2,24)}
+.torrentd24{@include sprite(203,12,24)}
+.tmagnetd24{@include sprite(206,12,24)}
+.gnutella24{@include sprite(202,2,24)}
+.gnutellad24{@include sprite(202,12,24)}
+.ftpd24{@include sprite(204,2,24)}
+.icon30{@include icon(106,0,32)}
+.ed2k30{@include sprite(201,13,32)}
+.web30{@include sprite(204,13,32)}
+.torrent30{@include sprite(203,13,32)}
+.tmagnet30{@include sprite(206,13,32)}
+.gnutella30{@include sprite(202,13,32)}
+.ftp{@include sprite(204,3,32)}
+.icon50{@include icon(106);margin-bottom:10px}
+.archive{@include sprite(106,2)}
+.software{@include sprite(106,2)}
+.audio{@include sprite(102,2)}
+.document{@include sprite(105,2)}
+.image{@include sprite(104,2)}
+.file{@include sprite(106,2)}
+.video{@include sprite(103,2)}
+.icon
+{
+    background: url("/static/foofind3.png");display:inline-block;overflow:hidden;vertical-align:middle;
+    &.facebook{width:14px;margin-right:4px;height:20px;background-position:-150px -120px}
+    &.twitter{width:14px;margin-right:4px;height:20px;background-position:-150px -140px}
+    &.email{margin-right:2px;width:16px;height:20px;background-position:-164px -140px}
+}
+.balloon{float:left;@include icon(308,3,32)}
+.link{float:left;@include icon(314,3,32)}
 /* comentarios */
 .sharelinks{clear:right;text-align:right;right:120px;margin-bottom:20px}
 .sharelinks ul,.sharelinks li{display:inline}
 .download_section{margin-top:15px;clear:both;margin-bottom:5px}
-.download_section h4{margin-left:36px;border-bottom:2px solid #cd0069;margin-bottom:14px}
+.download_section h4{margin-left:36px;border-bottom:2px solid #cd0069;margin-bottom:15px}
 .download_section.related a{color:#000;display:inline-block;margin:5px 0}
 .comment{clear:both;padding:8px;border-bottom:1px solid #cd0069;overflow-x:hidden}
-.comment_form{margin-top:15px}
-.comment_form textarea{height:4em;border:1px solid #cd0069;font-weight:normal;margin-left:20px;padding:3px}
-.comment_form input{position:relative;left:-155px;top:25px}
+.comment_form fieldset{text-align:center}
+.comment_form textarea{height:4em;border:1px solid #cd0069;font-weight:normal;margin:20px;padding:3px;width:95%;min-width:580px}
 .comments_paginator{text-align:right}
 .file_comment_number a{float:left;font-size:1.8em;margin-right:8px;font-weight:bold;color:#000;text-decoration:none}
 .file_comment_nick{clear:left;margin-top:3px;font-size:0.9em}
@@ -259,8 +511,9 @@ input#q{height:18px;width:380px}
 .download_button .thumblink {margin:10px; display:block}
 .download_file_sources {clear:left}
 /* user */
-#content.user .oauth{width:89px;height:21px;display:inline-block;margin:5px}
-#content.user .oauth span{display:none}
-#content.user .oauth.tw{background:url(/static/foofind3.png) 0px -362px no-repeat}
-#content.user .oauth.fb{background:url(/static/foofind3.png) -89px -362px no-repeat}
-#content.user input[type="submit"],#content.page input[type="submit"]{margin:10px 0}
+section#user .oauth{width:89px;height:21px;display:inline-block;margin:5px}
+section#user .oauth span{display:none}
+section#user .oauth.tw{background:url(/static/foofind3.png) 0px -362px no-repeat}
+section#user .oauth.fb{background:url(/static/foofind3.png) -89px -362px no-repeat}
+section#user input[type="submit"],section#page input[type="submit"]{margin:10px 0;width:auto}
+section#user fieldset{margin-bottom:10px}

@@ -1,7 +1,21 @@
-input[type="submit"]{border:0;top:-10px}
-#content.home #search .tabs li{display:inline}
-#content.home #search #tamingresults{margin-left:0}
-#content.files #tabnav{line-height: 21px;height:25px}
-#content.files #tabnav li{display:inline;padding:3px 5px}
-#content.page #translate span{margin-top:0}
-#content.page>ul{margin-top:10px}
+input[type="submit"]{border:0;top:-10px;}
+label+input[type="text"]+span,label+input[type="password"]+span,label+textarea+span{display:none}
+label+input[type="text"]:focus+span,label+input[type="password"]:focus+span,label+textarea:focus+span{display:none}
+label+input[type="text"]:hover+span,label+input[type="password"]:hover+span,label+textarea:hover+span{display:none}
+section#home #search #tamingresults{margin-left:0}
+section#files #results .thumblink span{height:120px;top:0;line-height:120px}
+section#files #tabnav li{display:inline;padding:0 5px}
+section#page > article header h2{position:relative;left:-100px}
+section#page #translate span{margin-top:0}
+section#page>ul{margin-top:10px}
+/* nueva home */
+section#home #search form fieldset{display:inline}
+section#home #search form #params>span{margin-top:1px;z-index:5}
+section#home #search form #params>span a{cursor:pointer;display:block;z-index:5000}
+section#home #search form #params>span ul{cursor:pointer;display:block;z-index:5001}
+section#home #search form input[type="submit"]{top:0;left:20px;padding:4px 2px}
+section#home #extra #live > div.social{margin-top:0;height:500px}
+section#home #extra #live > div.social .twitter-follow-button{left:440px;top:-174px}
+/*footer*/
+section#home+#footer ul{float:none}
+#footer ul{float:left;}

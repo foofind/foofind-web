@@ -12,7 +12,7 @@ flask
 
 python-memcached
 
-flask-assets
+flask-assets==0.7
 cssutils
 
 flask-babel
@@ -23,7 +23,7 @@ flask-zen
 
 flask-cache
 
-flask-login
+flask-login==0.1.1
 
 flask-mail
 
@@ -41,7 +41,14 @@ pycrypto
 
 fabric
 
-raven
+raven>=2.0.3
 
-webassets
+webassets==0.7
 slimmer
+
+pyquery
+lxml
+
+pyScss
+
+greenlet

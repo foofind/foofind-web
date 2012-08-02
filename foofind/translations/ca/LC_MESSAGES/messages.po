@@ -14,19 +14,73 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 msgid "your_email"
-msgstr "El teu email:"
+msgstr "El teu correu:"
 
 msgid "password"
 msgstr "Contrasenya:"
 
 msgid "submit"
-msgstr "Enviar"
+msgstr "Envia"
 
 msgid "required_empty"
 msgstr "Aquest camp no pot estar buit"
 
+msgid "legal_info"
+msgstr "informació legal"
+
+msgid "go_home"
+msgstr "Torna al cercador"
+
+msgid "error_500_message"
+msgstr "Ha ocorregut un error"
+
+msgid "error_500_description"
+msgstr ""
+"Hi ha quelcom rar, els nostres especialistes investiguen aquesta activitat "
+"paranormal."
+
+msgid "error_404_message"
+msgstr "No s'ha trobat la pàgina"
+
+msgid "error_404_description"
+msgstr ""
+"L'URL no s'ha trobat.\r\n"
+"Si l'adreça no és correcta agrairíem que ens aviséssiu."
+
+msgid "error_502_message"
+msgstr "Passarel·la incorrecta."
+
+msgid "error_502_description"
+msgstr "S'ha intentat accedir al servei web amb una ubicació incorrecta."
+
+msgid "error_503_message"
+msgstr "Servei no disponible"
+
+msgid "error_503_description"
+msgstr ""
+"L'URL requerit no es troba disponible temporalment. Si us plau, proveu-ho "
+"més tard."
+
+msgid "error_mail_send"
+msgstr ""
+"Ha ocorregut un error en enviar el missatge a l'adreça de correu indicada. "
+"Per favor triï altra o intenti-ho de nou més tard."
+
+msgid "non_alphabetic_digits"
+msgstr "%(value)s conté caràcters que no són lletres ni nombres."
+
 msgid "about"
 msgstr "Quant a"
+
+msgid "no_valid_email"
+msgstr ""
+"Aquesta no és una adreça de correu vàlida amb el format: usuari@exemple.com"
+
+msgid "field_length"
+msgstr "Aquest camp ha de tenir de 2 a 10 caràcters"
+
+msgid "no_valid_url"
+msgstr "L'URL no és vàlid"
 
 msgid "contact"
 msgstr "Contacte"
@@ -35,13 +89,13 @@ msgid "legal"
 msgstr "Avís legal"
 
 msgid "tos"
-msgstr "Temes d'ús"
+msgstr "Termes d'ús"
 
 msgid "privacy"
 msgstr "Política de privacitat"
 
 msgid "complaint"
-msgstr "Reclamar enllaç"
+msgstr "Reclama l'enllaç"
 
 msgid "source_code"
 msgstr "Codi font"
@@ -58,8 +112,23 @@ msgstr "Vull. Aquest. Arxiu."
 msgid "all"
 msgstr "Tots"
 
+msgid "index_change"
+msgstr "foofind està canviant"
+
+msgid "index_comunity"
+msgstr "Forma part de la nostra comunitat."
+
+msgid "index_first"
+msgstr "Sigueu el primer en rebre totes les notícies i en participar-hi."
+
+msgid "index_suggestion"
+msgstr "algun suggeriment?"
+
 msgid "direct_downloads"
 msgstr "Descàrregues directes"
+
+msgid "direct_download"
+msgstr "descàrrega directa"
 
 msgid "audio"
 msgstr "Àudio"
@@ -83,7 +152,7 @@ msgid "no_results_for"
 msgstr "No hi ha resultats per:"
 
 msgid "write_something"
-msgstr "Ep! Escriu alguna cosa"
+msgstr "Ep! Escriviu alguna cosa"
 
 msgid "previous"
 msgstr "Anterior"
@@ -101,27 +170,36 @@ msgid "results_for"
 msgstr "resultats per"
 
 msgid "not_allow_browse_results"
-msgstr "Foofind no permet navegar resultats posteriors a la pàgina 100."
+msgstr ""
+"Foofind no us permet navegar per resultats posteriors als de la pàgina 100."
+
+msgid "other_categories"
+msgstr "altres categories "
+
+msgid "no_type_count"
+msgstr ""
+"No s'han trobat resultats de %(search)s, però existeixen aproximadament "
+"%(results)d resultats per a la vostra cerca en %(category)s."
 
 msgid "how_to_download"
 msgstr "Com fer la descàrrega?"
 
 msgid "download_explanation"
 msgstr ""
-"Per descarregar l'arxiu enllaçat en aquesta pàgina es pot necessitar un "
-"software extern. Aquí tens alguns programes compatibles:"
+"Per descarregar l'arxiu enllaçat en aquesta pàgina es pot necessitar "
+"programari extern. Aquí teniu alguns programes compatibles:"
 
 msgid "did_you_mean"
 msgstr "Volies dir %(text)s?"
 
 msgid "all_sizes"
-msgstr "Tots els tamanys"
+msgstr "Totes les mides"
 
 msgid "advanced_search"
 msgstr "Cerca avançada"
 
 msgid "hide_advanced_search"
-msgstr "amagar cerca avançada"
+msgstr "amaga la cerca avançada"
 
 msgid "smaller_than"
 msgstr "Menor de"
@@ -166,7 +244,7 @@ msgid "length"
 msgstr "Duració"
 
 msgid "bitrate"
-msgstr "Tasa de bits"
+msgstr "Taxa de bits"
 
 msgid "genre"
 msgstr "Gènere"
@@ -195,14 +273,23 @@ msgstr "Qualitat"
 msgid "num_pages"
 msgstr "Nombre de pàgines"
 
+msgid "series"
+msgstr "Sèries"
+
+msgid "episode"
+msgstr "Episodi"
+
+msgid "season"
+msgstr "Temporada"
+
 msgid "include_results_from"
-msgstr "Incloure resultats de:"
+msgstr "Inclou resultats de:"
 
 msgid "size"
 msgstr "Tamany"
 
 msgid "unpacked_size"
-msgstr "Tamany&nbsp;sense&nbsp;comprimir"
+msgstr "Mida sense comprimir"
 
 msgid "colors"
 msgstr "Colors"
@@ -256,40 +343,40 @@ msgid "loading"
 msgstr "Carregant"
 
 msgid "close"
-msgstr "Tancar"
+msgstr "Tanca"
 
 msgid "share_this"
 msgstr "Comparteix aquest enllaç:"
 
 msgid "share_facebook"
-msgstr "compartir a facebook"
+msgstr "comparteix a Facebook"
 
 msgid "share_twitter"
-msgstr "compartir a twitter"
+msgstr "comparteix a Twitter"
 
 msgid "send_by_email"
-msgstr "enviar per correu"
+msgstr "envia per correu"
 
 msgid "download"
-msgstr "Descarregar"
+msgstr "Descarrega"
 
 msgid "watch"
-msgstr "Veure"
+msgstr "Visualitza"
 
 msgid "your_comments"
-msgstr "Els teus comentaris"
+msgstr "Els vostres comentaris"
 
 msgid "since"
 msgstr "fa since s "
 
 msgid "post_comment"
-msgstr "Enviar comentari"
+msgstr "Envia un comentari"
 
 msgid "add_comment"
-msgstr "Afegir un comentari"
+msgstr "Afegeix un comentari"
 
 msgid "from"
-msgstr "desde"
+msgstr "des de"
 
 msgid "i_like_it"
 msgstr "M'agrada!"
@@ -298,7 +385,7 @@ msgid "booo"
 msgstr "Buuu!"
 
 msgid "comment_published_succesfully"
-msgstr "Comentari publicat amb èxit!"
+msgstr "Comentari publicat amb èxit."
 
 msgid "related_files"
 msgstr "Arxius relacionats"
@@ -306,21 +393,24 @@ msgstr "Arxius relacionats"
 msgid "user_profile"
 msgstr "Perfil d'usuari"
 
+msgid "login_required"
+msgstr "Heu d'iniciar la sessió per veure aquesta pàgina."
+
 msgid "your_password"
-msgstr "Tria la teva contrasenya"
+msgstr "Trieu la vostra contrasenya"
 
 msgid "insert_your_password"
-msgstr "Torna a escriure la contrasenya (sí, un altre cop):"
+msgstr "Torneu a escriure la contrasenya (sí, un altre cop):"
 
 msgid "fill_sing_up_form"
 msgstr ""
-"Si us plau, omple aquest formulari per ser usuari registrat de Foofind:"
+"Si us plau, ompliu aquest formulari per ser usuari registrat de Foofind:"
 
 msgid "nickname"
 msgstr "Àlies:"
 
 msgid "edit_profile"
-msgstr "editar perfil"
+msgstr "edita el perfil"
 
 msgid "edit_your_profile"
 msgstr "Modifica el teu perfil"
@@ -332,13 +422,13 @@ msgid "hello"
 msgstr "hola,"
 
 msgid "logout"
-msgstr "sortir"
+msgstr "surt"
 
 msgid "login"
-msgstr "iniciar sessió"
+msgstr "inicia sessió"
 
 msgid "new_user"
-msgstr "nou usuari"
+msgstr "usuari nou"
 
 msgid "or"
 msgstr "o"
@@ -347,16 +437,16 @@ msgid "register"
 msgstr "Registrar-se"
 
 msgid "if_new_user"
-msgstr "Si ets un nou usuari, si us plau"
+msgstr "Si sou un usuari nou, si us plau"
 
 msgid "register_here"
-msgstr "registra't aquí"
+msgstr "registreu-vos aquí"
 
 msgid "choose_nickname"
-msgstr "Tria un àlies:"
+msgstr "Trieu un àlies:"
 
 msgid "user_login"
-msgstr "Accedir"
+msgstr "Accedeix"
 
 msgid "remember_me"
 msgstr "Recorda'm"
@@ -366,28 +456,28 @@ msgstr "La teva ubicació:"
 
 msgid "new_password"
 msgstr ""
-"Introdueix una nova contrasenya: (si no la vols canviar, deixa aquest camp "
+"Introduïu una contrasenya nova: (si no la voleu canviar, deixeu aquest camp "
 "en blanc)"
 
 msgid "save_profile"
-msgstr "Desar canvis"
+msgstr "Desa els canvis"
 
 msgid "not_allowed_view_page"
-msgstr "No tens permisos per accedir a aquesta pàgina"
+msgstr "No teniu permisos per accedir a aquesta pàgina"
 
 msgid "username_taken"
 msgstr "Aquest nom d'usuari ja existeix. Si us plau, tria'n un altre"
 
 msgid "email_taken"
 msgstr ""
-"Aquest email ja existeix a la nostra base de dades. Si us plau, utilitza'n "
-"un altre."
+"Aquest correu ja existeix a la nostra base de dades. Si us plau, utilitzeu-"
+"ne un altre."
 
 msgid "forgot"
-msgstr "Has oblidat"
+msgstr "Heu oblidat"
 
 msgid "your_password?"
-msgstr "la teva contrasenya?"
+msgstr "la vostra contrasenya?"
 
 msgid "passwords_not_match"
 msgstr "Les contrasenyes no coincideixen."
@@ -399,7 +489,10 @@ msgid "yes"
 msgstr "Sí"
 
 msgid "account_deleted"
-msgstr "El teu compte ha estat eliminat."
+msgstr "El vostre compte ha estat eliminat."
+
+msgid "no"
+msgstr "No"
 
 msgid "nice_to_hear_that"
 msgstr "Ens n'alegrem"
@@ -408,7 +501,7 @@ msgid "profile"
 msgstr "perfil"
 
 msgid "username"
-msgstr "Nom usuari:"
+msgstr "Nom d'usuari:"
 
 msgid "member_since"
 msgstr "Membre des de:"
@@ -420,10 +513,10 @@ msgid "location"
 msgstr "Ubicació:"
 
 msgid "delete_account"
-msgstr "Eliminar el teu compte de Foofind"
+msgstr "Elimina el teu compte de Foofind"
 
 msgid "forgot_password"
-msgstr "Has oblidat la teva contrasenya ?"
+msgstr "Heu oblidat la vostra contrasenya?"
 
 msgid "wrong_email_password"
 msgstr "Adreça de correu o contrasenya errònia. Prova-ho de nou"
@@ -433,17 +526,18 @@ msgstr "Benvingut"
 
 msgid "finish_register"
 msgstr ""
-"Si us plau, fes click en aquest enllaç per completar el teu procés de "
+"Si us plau, feu clic en aquest enllaç per completar el vostre procés de "
 "registre:"
 
 msgid "token_not_exist"
 msgstr "Ho sentim, aquest token no existeix o ja ha estat utilitzat"
 
 msgid "confirm_email"
-msgstr ", comfirma el teu email"
+msgstr ", confirmeu el vostre correu"
 
 msgid "check_inbox_email_finish"
-msgstr "Comprova la teva bústia de correu per completar el procés de registre"
+msgstr ""
+"Comproveu la vostra bústia de correu per completar el procés de registre"
 
 msgid "foofind_team"
 msgstr "L'equip de Foofind"
@@ -452,47 +546,50 @@ msgid "user_not_exist"
 msgstr "L'usuari no existeix"
 
 msgid "logged_in"
-msgstr "Has iniciat sessió,"
+msgstr "Heu iniciat la sessió,"
 
 msgid "registered_user"
-msgstr "Si ja ets un usuari registrat, si us plau"
+msgstr "Si ja sou un usuari registrat, si us plau"
 
 msgid "login_here"
-msgstr "accedeix aquí"
+msgstr "accediu aquí"
 
 msgid "enter_email"
 msgstr ""
-"Si us plau, introdueix el teu email. T'enviarem un missatge per recuperar "
-"l'accés."
+"Si us plau, introduïu el vostre correu. Us enviarem un missatge per "
+"recuperar l'accés."
+
+msgid "send"
+msgstr "Envia"
 
 msgid "email_same_register"
 msgstr ""
-"L'adreça de correu ha de ser la mateixa que vas utilitzar per registrar-te."
+"L'adreça de correu ha de ser la mateixa que vau utilitzar per registrar-vos."
 
 msgid "email_not_database"
 msgstr ""
 "L'adreça de correu introduida no és a la nostra base de dades. Si us plau, "
-"torna-ho a provar."
+"proveu-ho de nou."
 
 msgid "check_inbox_email_restore"
-msgstr "Comprova el teu correu per recuperar el teu accés a Foofind"
+msgstr "Comproveu el vostre correu per recuperar l'accés a Foofind"
 
 msgid "restore_access"
-msgstr ", restaura el teu accés a Foofind"
+msgstr ", restaureu el vostre accés a Foofind"
 
 msgid "restore_account"
 msgstr ""
-"Algú, probablement tú, ha sol·licitat restaurar l'accés al teu compte de "
-"Foofind. Clica sobre aquesta url per recuperar el teu compte:"
+"Algú, probablement vós, ha sol·licitat restaurar l'accés al vostre compte de"
+" Foofind. Feu clic sobre aquest URL per recuperar el vostre compte:"
 
 msgid "ignore_message"
-msgstr "En cas contrari, ignora aquest missatge."
+msgstr "En cas contrari, ignoreu aquest missatge."
 
 msgid "login_vote"
-msgstr "Si us plau, accedeix per votar"
+msgstr "Si us plau, accediu per votar"
 
 msgid "login_comment"
-msgstr "Si us plau, accedeix per afegir un comentari"
+msgstr "Si us plau, accediu per afegir un comentari"
 
 msgid "technical_problems"
 msgstr ""
@@ -500,50 +597,82 @@ msgstr ""
 
 msgid "allow_access_account"
 msgstr ""
-"Per utilitzar aquesta funcionalitat hauríes de permetre a Foofind accedir al"
-" teu compte de %(account)s"
+"Per utilitzar aquesta funcionalitat hauríeu de permetre a Foofind accedir al"
+" vostre compte de %(account)s"
 
 msgid "submit_search"
-msgstr "Cercar"
+msgstr "Cerca"
+
+msgid "submit_registration"
+msgstr "Registreu-vos"
+
+msgid "submit_login"
+msgstr "Inicia sessió"
+
+msgid "submit_edit"
+msgstr "Desa els canvis "
 
 msgid "contact_form"
 msgstr "Formulari de contacte"
 
 msgid "link_removal"
 msgstr ""
-"Important: Si desitges reclamar la supressió d'un ellaç, hauràs d'utilitzar "
-"exclusivament el %(report_form)s."
+"Important: Si desitgeu reclamar la supressió d'un enllaç, hauríeu "
+"d'utilitzar exclusivament el %(report_form)s."
+
+msgid "report_form"
+msgstr "formulari de reclamació "
 
 msgid "complaints_ignored"
 msgstr ""
 "Les reclamacions realitzades a través d'aquest formulari seran ignorades."
 
 msgid "your_message"
-msgstr "El teu missatge:"
+msgstr "El vostre missatge:"
 
 msgid "insert_characters"
-msgstr "Si us plau, introdueix els 5 caracters mostrats:"
+msgstr "Si us plau, introduïu els 5 caràcters mostrats:"
 
 msgid "captcha_wrong"
-msgstr "Els caràcters introduïts no tenen coincidència amb els de la imatge"
+msgstr "Els caràcters introduïts no coincideixen amb els de la imatge"
 
 msgid "message_sent"
-msgstr " El teu missatge s'ha enviat correctament!"
+msgstr "El vostre missatge s'ha enviat correctament."
+
+msgid "no_valid_hostname"
+msgstr ""
+"%(hostname)s no és un nom de domini correcte per a l'adreça de correu "
+"%(value)s"
+
+msgid "local_network"
+msgstr ""
+"%(value)s sembla ser un nom de xarxa local, però els noms de la xarxa local "
+"no estan permesos."
+
+msgid "no_dns_hostname"
+msgstr ""
+"%(value)s no coincideix amb l'estructura requerida per a un nom de domini "
+"DNS"
+
+msgid "no_tld_known"
+msgstr ""
+"%(value)s sembla ser un nom de domini, però no coincideix amb cap TLD "
+"conegut"
 
 msgid "your_name"
-msgstr "El teu nom:"
+msgstr "El vostre nom:"
 
 msgid "your_surname"
-msgstr "Els teus cognoms:"
+msgstr "Els vostres cognoms:"
 
 msgid "your_company"
-msgstr "La teva empresa:"
+msgstr "La vostra empresa:"
 
 msgid "your_phone"
-msgstr "El teu número de telèfon:"
+msgstr "El vostre número de telèfon:"
 
 msgid "link_reviewed"
-msgstr "Si us plau, introdueix l'enllaç que cal ser revisat:"
+msgstr "Si us plau, introduïu l'enllaç que cal revisar:"
 
 msgid "url_content"
 msgstr "Si us plau, introdueix la url on apareix el contingut:"
@@ -554,8 +683,11 @@ msgstr "Motiu de la reclamació:"
 msgid "accept_terms"
 msgstr "Si us plau, has d'acceptar els termes d'ú i la política de privacitat"
 
+msgid "accept_tos"
+msgstr "He llegit i accepto els %(tos)s i la %(privacy)s."
+
 msgid "not_foofind_page"
-msgstr "L'enllaç no pot ser una pàgina Foofind"
+msgstr "L'enllaç no pot ser una pàgina de Foofind"
 
 msgid "not_foofind_link"
 msgstr ""
@@ -563,16 +695,15 @@ msgstr ""
 
 msgid "include_reported_links"
 msgstr ""
-"Si us plau, inclou els enllaços en els camps corresponents del formulari."
+"Si us plau, incloeu els enllaços en els camps corresponents del formulari."
 
 msgid "submit_links"
-msgstr "Enviar enllaços"
+msgstr "Envia els enllaços"
 
 msgid "include_link_per_line"
 msgstr ""
-"Si us plau, inclou un enllaç http, ftp, ed2k o magnet per línia.<br "
-"/>Aquests seran analitzats automàticament i, ben aviat, seran afegits als "
-"resultats de la cerca."
+"Si us plau, incloeu un enllaç HTTP, FTP, Ed2k o magnet per línia.\r\n"
+"Aquests seran analitzats automàticament i, ben aviat seran afegits als resultats de la cerca."
 
 msgid "link_sent"
 msgstr "Els enllaços s'han enviat. Gràcies per l'ajuda!"
@@ -587,50 +718,57 @@ msgstr ""
 
 msgid "about_text"
 msgstr ""
-"Foofind és un motor de cerca universal. A Foofind treballem creant software "
-"que recorre totes les xarxes i indexa tots els arxius. D'aquesta manera, "
-"volem oferir la major quantitat d´enllaços disponibles. Foofind és una idea "
-"de Pablo Soto, creador de tecnologies P2P, desenvolupades a Madrid, España "
-"per MP2P Technologies."
+"Foofind és un motor de cerca universal. A Foofind treballem creant "
+"programari que recorre totes les xarxes i indexa tots els arxius. D'aquesta "
+"manera volem oferir la major quantitat d´enllaços disponibles. Foofind és "
+"una idea de Pablo Soto, creador de tecnologies P2P, desenvolupades a Madrid,"
+" España per MP2P Technologies."
 
 msgid "under_maintenance"
 msgstr ""
-"Foofind està aturat per manteniment. Si us plau, torna-ho a provar més tard."
+"Foofind està aturat per manteniment. Si us plau, torneu-ho a provar més "
+"tard."
 
 msgid "link_not_exist"
 msgstr "Aquest enllaç no existeix o ha sigut eliminat!"
 
 msgid "translate"
-msgstr "Traduïr"
+msgstr "Tradueix"
+
+msgid "error_link_removed"
+msgstr "Ho sentim, aquest enllaç ha estat eliminat del seu origen."
 
 msgid "translate_to_your_language"
-msgstr "Ajudans a traduïr Foofind a la teva llengua"
+msgstr "Ajudeu-nos a traduïr Foofind en la vostra llengua"
 
 msgid "translate_description"
 msgstr ""
-"Actualment, Foofind és disponible en poques llengues, però tu pots ajudar-"
-"nos a traduïr-lo a la teva. Tria de la llista la llengua que es troba a "
-"continuació i omple els camps amb els textos traduïts. No cal omplir tots "
-"els camps, qualsevol aportació que puguis realitzar serà de gran ajuda. Si "
-"no trobes la teva llengua a la llista, posa't en contacte amb nosaltres per "
-"a afegir-la."
+"Actualment, Foofind està disponible en poques llengües, però podeu ajudar-"
+"nos a traduir-lo a la vostra. Trieu de la llista la llengua que es troba a "
+"continuació i ompliu els camps amb els textos traduïts. No cal que ompliu "
+"tots els camps, qualsevol aportació que pugueu realitzar ens serà de gran "
+"ajuda. Si no trobeu la vostra llengua a la llista, poseu-vos en contacte amb"
+" nosaltres per a afegir-la."
 
 msgid "choose_language"
-msgstr "Tria llengua"
+msgstr "Tria la llengua"
 
 msgid "translation_sent"
-msgstr "La teva traducció ha sigut enviada. Gràcies per la teva ajuda!"
+msgstr "La vostra traducció ha estat enviada. Gràcies per la vostra ajuda!"
 
 msgid "translate_at_least_one"
-msgstr "Si us plau, entra un mínim d'una frase abans d'enviar."
+msgstr "Si us plau, entreu un mínim d'una frase abans d'enviar."
 
 msgid "here"
 msgstr "ací"
 
 msgid "translation_beta"
 msgstr ""
-"Aquesta traducció està en fase de proves. Si trobes algun error o text sense"
-" traduir, si us plau informa'ns %(here)s."
+"Aquesta traducció està en fase de proves. Si trobeu alguna errada o text "
+"sense traduir, si us plau informeu-nos-en %(here)s."
 
 msgid "other"
 msgstr "Un altre"
+
+msgid "opensearch_description"
+msgstr "Buscar utilitzant Foofind"

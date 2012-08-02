@@ -48,3 +48,4 @@ class User(UserMixin):
 
     def set_lang(self, lang):
         session["user"]["lang"] = lang
+        session.modified = True

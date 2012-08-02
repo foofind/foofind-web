@@ -1,54 +1,48 @@
 {% extends "base.html" %}
-{% from "helpers.html" import render_field %}
 {% block header %}{% endblock %}
 {% block content %}
     <div id="search">
-        <img src="/static/logo.png" alt="foofind" />
-        <span{%- if g.lang in ["zh", "pt"] %} class="small"{% endif %}>{{_('i_want_that_file')}}</span>
+        <img src="/static/img/logo.png" alt="foofind" width="350" height="125" />
+        <span{%- if g.lang in ["zh","pt","eu"] %} class="small"{% endif %}>{{_('i_want_that_file')}}</span>
         {{flash()}}
-        <ul class="tabs">
-            <li><a {% if request.args.get('type','')=="" %}class="actual" {% endif %}href="{{ url_for('.home') }}">{{_('all')}}</a></li>
-            <li><a {% if request.args['type']=="audio" %}class="actual" {% endif %}id="audio" href="{{ url_for('.home',type='audio') }}">{{_('audio')}}</a></li>
-            <li><a {% if request.args['type']=="video" %}class="actual" {% endif %}id="video" href="{{ url_for('.home',type='video') }}">{{_('video')}}</a></li>
-            <li><a {% if request.args['type']=="image" %}class="actual" {% endif %}id="image" href="{{ url_for('.home',type='image') }}">{{_('image')}}</a></li>
-            <li><a {% if request.args['type']=="document" %}class="actual" {% endif %}id="document" href="{{ url_for('.home',type='document') }}">{{_('document')}}</a></li>
-            <li><a {% if request.args['type']=="software" %}class="actual" {% endif %}id="software" href="{{ url_for('.home',type='software') }}">{{_('software')}}</a></li>
-            <li><a {% if request.args['type']=="archive" %}class="actual" {% endif %}id="archive" href="{{ url_for('.home',type='archive') }}">{{_('archive')}}</a></li>
-        </ul>
         <form method="get" action="{{ url_for('files.search') }}">
-            <fieldset id="q-element">
-                {{ form.q(autocomplete="off") }}
-                {{ form.type(value=request.args['type']) }}
-                {{ form.submit(class="awesome") }}
+            <fieldset id="params">
+                <a></a>
+                {{- form.q(autocomplete="off",class="no") -}}
+                <span>
+                    <select id="type" class="no" name="type">
+                    {%- for value,option in form.type.choices %}
+                        <option value="{{ value }}" class="type_img img_{{ value }}">{{ option }}</option>
+                    {%- endfor %}
+                    </select>
+                </span>
             </fieldset>
-                {{render_field(form.src)}}
+            <fieldset>
+                {{- form.search_submit -}}
+            </fieldset>
         </form>
     </div>
-    <div id="social_widgets">
-        <div id="fb-root"></div>
-        <div class="fb-like" data-href="{{ g.domain }}" data-send="false" data-width="420" data-height="25" data-show-faces="false" data-font="arial"></div>
-        <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://{{ g.domain }}" data-text="Foofind" data-count="horizontal" data-via="foofind">Tweet</a>
-        <div class="g-plusone" data-size="medium" data-href="http://{{ g.domain }}"></div>
+    <div id="extra">
+        <div id="live">
+            <div class="texto">
+                <h3>{{_("index_change")}}</h3>
+                <p>{{_("index_comunity")}}</p>
+                <p>{{_("index_first")}}</p>
+                <h4><a href="{{ url_for('page.contact') }}">{{_("index_suggestion")}}</a></h4>
+            </div>
+            <div class="social">
+                <div id="fb-root"></div>
+                <div class="fb-like-box" data-href="http://www.facebook.com/foofind" data-width="600" data-height="180" data-show-faces="true" data-border-color="#F5F5F5" data-stream="false" data-header="false"></div>
+                <div class="g-plusone" data-size="medium" data-href="http://foofind.is"></div>
+                <a href="https://twitter.com/foofind" class="twitter-follow-button" data-show-count="false" data-lang="{{ g.lang }}">Seguir a @foofind</a>
+                <script>
+                    (function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id))return;js=d.createElement(s);js.id=id;js.src="//connect.facebook.net/{{ lang }}/all.js#xfbml=1";fjs.parentNode.insertBefore(js,fjs);}(document,'script','facebook-jssdk'));
+                    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+                    window.___gcfg={lang:'{{ g.lang }}'};(function(){var po=document.createElement('script');po.type='text/javascript';po.async=true;po.src='https://apis.google.com/js/plusone.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(po, s)})();
+                </script>
+            </div>
+        </div>
     </div>
-    <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
-    <script type="text/javascript">
-        (function(d, s, id) {
-          var js, fjs = d.getElementsByTagName(s)[0];
-          if (d.getElementById(id)) return;
-          js = d.createElement(s); js.id = id;
-          js.src = "//connect.facebook.net/es_ES/all.js#xfbml=1";
-          fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
-        window.___gcfg = {lang: '{{ g.lang }}'};
-        (function() {
-            var po = document.createElement('script');
-            po.type = 'text/javascript';
-            po.async = true;
-            po.src = 'https://apis.google.com/js/plusone.js';
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(po, s);
-        })();
-    </script>
 {% endblock %}
 {% block logos %}
     <div>

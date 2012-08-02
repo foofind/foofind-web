@@ -27,9 +27,22 @@ msgstr "Password:"
 msgid "submit"
 msgstr "Send"
 
+# microsite
+msgid "help_us"
+msgstr "help us!"
+
+msgid "legal_info"
+msgstr "legal information"
+
 # errors
 msgid "go_home"
 msgstr "Go back to search engine"
+
+msgid "error_500_message"
+msgstr "An error happened"
+
+msgid "error_500_description"
+msgstr "There is something odd, our specialists are investigating this paranormal activity."
 
 msgid "error_404_message"
 msgstr "Page not found."
@@ -42,6 +55,12 @@ msgstr "Bad gateway."
 
 msgid "error_502_description"
 msgstr "Cannot access to service due wrong gateway."
+
+msgid "error_503_message"
+msgstr "Service Unavailable"
+
+msgid "error_503_description"
+msgstr "Requested URL is temporarily unavailable. Please try again later."
 
 # mail errors
 msgid "error_mail_send"
@@ -71,6 +90,9 @@ msgstr "About"
 msgid "contact"
 msgstr "Contact"
 
+msgid "technology"
+msgstr "Technology"
+
 # legal
 msgid "legal"
 msgstr "Legal"
@@ -96,9 +118,25 @@ msgstr "last indexed files"
 msgid "i_want_that_file"
 msgstr "I. Want. That. File"
 
+# index
+msgid "index_change"
+msgstr "foofind is changing"
+
+msgid "index_comunity"
+msgstr "Become part of our community."
+
+msgid "index_first"
+msgstr "Be the first to get all the news and participate."
+
+msgid "index_suggestion"
+msgstr "Any suggestions?"
+
 # search"
 msgid "all"
 msgstr "All"
+
+msgid "direct_download"
+msgstr "direct download"
 
 msgid "direct_downloads"
 msgstr "Direct downloads"
@@ -159,6 +197,18 @@ msgstr "To download the linked file, you could need an external software. Here a
 
 msgid "did_you_mean"
 msgstr "Did you mean %(text)s?"
+
+msgid "classic_search"
+msgstr "classic search"
+
+msgid "ajax_search"
+msgstr "new search"
+
+msgid "change_classic_search"
+msgstr "If you want to return to"
+
+msgid "change_ajax_search"
+msgstr "If you want can switch to the"
 
 # advanced search
 msgid "all_sizes"
@@ -239,6 +289,15 @@ msgstr "Track"
 
 msgid "quality"
 msgstr "Quality"
+
+msgid "series"
+msgstr "Series"
+
+msgid "episode"
+msgstr "Episode"
+
+msgid "season"
+msgstr "Season"
 
 msgid "num_pages"
 msgstr "Num. of pages"
@@ -445,6 +504,9 @@ msgstr "Are you sure you want to delete your Foofind account?"
 
 msgid "yes"
 msgstr "Yes"
+
+msgid "no"
+msgstr "No"
 
 msgid "account_deleted"
 msgstr "Your account has been deleted."
@@ -674,6 +736,10 @@ msgstr ""
 msgid "about_text"
 msgstr "Foofind is a universal search engine. In Foofind we work creating software that crawls every network and indexes every file. This way, we intend to offer the largest collection of links available.<br /><br />Foofind is a creation by Pablo Soto, P2P technology designer, developed in Madrid, Spain by Foofind Labs S.L. in join venture with MP2P Technologies."
 
+# technology
+msgid "technology_text"
+msgstr "<p>The Foofind team develops most of the project's source code, but we also relay a lot on the work of the free software community. </p><p>Without all these incredible projects, Foofind would'nt be possible. Thanks a bunch! ;-)</p><ul><li><a href="http://twistedmatrix.com/">Twisted</a>: Twisted is an event-driven networking engine written in Python and licensed under the open source MIT license.</a><li><a href="http://scrapy.org/">Scrapy</a>: Scrapy is a fast high-level screen scraping and web crawling framework, used to crawl websites and extract structured data from their pages. It can be used for a wide range of purposes, from data mining to monitoring and automated testing.</li><li><a href="http://flask.pocoo.org/">Flask</a>: Flask is a microframework for Python based on Werkzeug, Jinja 2 and it's BSD licensed.</li><li><a href="http://www.mongodb.org/">MongoDB</a>: MongoDB (from "hu<strong>mongo</strong>us") is a scalable, high-performance, open source NoSQL database.</li><li><a href="http://github.com/dcramer/sentry">Sentry</a>: Sentry is a realtime event logging and aggregation platform. It specializes in monitoring errors and extracting all the information needed to do a proper post-mortem without any of the hassle of the standard user feedback loop.</li><li><a href="http://sphinxsearch.com/">Sphinx</a>: Sphinx is an open source full text search server, designed from the ground up with performance, relevance (aka search quality), and integration simplicity in mind. It's written in C++ and works on Linux (RedHat, Ubuntu, etc), Windows, MacOS, Solaris, FreeBSD, and a few other systems.<li><a href="http://www.komodomedia.com/blog/2009/06/social-network-icon-pack/">Social Network Icon Pack</a>: Social Network Icon Pack by Komodo Media, Rogie King is licensed under a Creative Commons Attribution-Share Alike 3.0 Unported License.</li></ul>"
+
 # tos
 msgid "safe_tos"
 msgstr ""
@@ -718,7 +784,7 @@ msgstr ""
 "<br />"
 "If you believe any of the linked works are being disseminated without the appropriate authorisation from the rights holders, or that they infringe the rights of third parties, you may request that we remove them using the following <a href=\"/en/complaint\">claim form.</a>"
 "<br /><br />"
-"You should read and accept our <a href="/en/tos">terms of use</a> and our <a href="/es/privacy">privacy policy</a>  before using the services provided by %(domain)s."
+"You should read and accept our <a href=\"/en/tos\">terms of use</a> and our <a href=\"/es/privacy\">privacy policy</a>  before using the services provided by %(domain)s."
 
 # error
 msgid "under_maintenance"
@@ -786,11 +852,20 @@ msgstr "File won't be marked blocked"
 msgid "admin_locks_fileinfo"
 msgstr "Info"
 
+msgid "admin_info"
+msgstr "Info"
+
+msgid "admin_remove"
+msgstr "Remove"
+
 msgid "admin_locks_block"
 msgstr "Block file"
 
 msgid "admin_locks_unblock"
 msgstr "Unblock file"
+
+msgid "admin_translation_empty"
+msgstr "No translation data"
 
 msgid "admin_locks_confirm"
 msgstr "Block"
@@ -819,6 +894,21 @@ msgstr "No translation error has been reported"
 msgid "admin_translation_review"
 msgstr "Review translation"
 
+msgid "admin_translation_msgstr_current"
+msgstr "Current language"
+
+msgid "admin_translation_msgstr_user_current"
+msgstr "User's current language"
+
+msgid "admin_translation_msgstr_old"
+msgstr "Current"
+
+msgid "admin_translation_msgstr_new"
+msgstr "Proposal"
+
+msgid "admin_translation_msgstr_confirm"
+msgstr "Approve?"
+
 msgid "admin_showall"
 msgstr "all"
 
@@ -839,6 +929,9 @@ msgstr "Source management"
 
 msgid "admin_users"
 msgstr "Users management"
+
+msgid "admin_users_count"
+msgstr "%(users)d active users"
 
 msgid "admin_users_save"
 msgstr "Save changes"
@@ -882,6 +975,15 @@ msgstr "Apply"
 msgid "admin_translation_cancel"
 msgstr "Refuse"
 
+msgid "admin_translation_saved"
+msgstr "Translation changes have been applied"
+
+msgid "admin_translation_reinitialize"
+msgstr "Resynchronize translation repository"
+
+msgid "admin_translation_reinitialized"
+msgstr "Translation repository have been resync'd"
+
 msgid "admin_showcurrent"
 msgstr "current"
 
@@ -906,6 +1008,9 @@ msgstr "Select none"
 msgid "admin_deploy"
 msgstr "App deployment"
 
+msgid "admin_deploy_confirmation"
+msgstr "Are you sure you want to perform \"%(action)s\" on \"%(target)s\"?"
+
 msgid "admin_deploy_datetime"
 msgstr "Last deploy"
 
@@ -923,6 +1028,24 @@ msgstr "Distribute"
 
 msgid "admin_deploy_phase_commit"
 msgstr "Run"
+
+msgid "admin_deploy_phase_script"
+msgstr "Remote script"
+
+msgid "admin_deploy_script"
+msgstr "Script"
+
+msgid "admin_deploy_script_hosts"
+msgstr "Remote hosts"
+
+msgid "admin_deploy_no_hosts"
+msgstr "No remote host has been selected"
+
+msgid "admin_deploy_run_script"
+msgstr "Run"
+
+msgid "admin_deploy_script_clean_cache"
+msgstr "Clean cache"
 
 msgid "admin_deploy_phase_publish"
 msgstr "Public distribution"
@@ -951,11 +1074,20 @@ msgstr "Clean local files"
 msgid "admin_deploy_clean_remote"
 msgstr "Clean remote files"
 
+msgid "admin_deploy_clean_log"
+msgstr "Clean message log"
+
+msgid "admin_deploy_remove_lock"
+msgstr "Force locks removal"
+
 msgid "admin_deploy_package"
 msgstr "Package from git"
 
 msgid "admin_deploy_publish"
 msgstr "Public release"
+
+msgid "admin_deploy_failrecovery"
+msgstr "Fail recovery"
 
 msgid "admin_deploy_publish_version"
 msgstr "Version code"
@@ -1014,6 +1146,21 @@ msgstr "Search"
 msgid "admin_origins_save"
 msgstr "Save changes"
 
+msgid "admin_alternatives"
+msgstr "Blueprint alternatives"
+
+msgid "admin_alternatives_none"
+msgstr "There is no alternative for any blueprint"
+
+msgid "admin_status_unknown"
+msgstr "Unknown status"
+
+msgid "admin_status_loading"
+msgstr "Loading"
+
+msgid "admin_status_processing"
+msgstr "Processing"
+
 msgid "admin_saved"
 msgstr "Changes were saved"
 
@@ -1026,8 +1173,26 @@ msgstr "No changes"
 msgid "admin_edit"
 msgstr "Edit"
 
+msgid "admin_confirm"
+msgstr "Confirmar"
+
+msgid "admin_search_mode"
+msgstr "Search mode"
+
+msgid "admin_edit_new"
+msgstr "Add new"
+
 msgid "admin_edit_submit"
 msgstr "Save changes"
+
+msgid "admin_filename"
+msgstr "Filename"
+
+msgid "admin_file_search_server"
+msgstr "Search file server"
+
+msgid "admin_file_search_server_not_found"
+msgstr "File server not found"
 
 msgid "opensearch_description"
 msgstr "Search using Foofind"

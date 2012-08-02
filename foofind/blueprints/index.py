@@ -4,17 +4,54 @@
 """
 import os
 from werkzeug import url_unquote
-from flask import Blueprint, render_template, redirect, url_for, g, make_response, current_app, request, send_from_directory, abort
+from flask import Blueprint, render_template, redirect, url_for, g, make_response, current_app, request, send_from_directory, abort, get_flashed_messages, session
 from flaskext.babel import get_translations, gettext as _
 from flaskext.login import current_user
 from foofind.forms.files import SearchForm
 from foofind.services import *
 from foofind.forms.captcha import generate_image
+from foofind.utils import u
 from urlparse import urlparse
 import urllib
 import logging
 
-index = Blueprint('index', __name__, template_folder="template")
+import datetime
+import httplib
+import urlparse
+import time
+import threading
+
+from foofind.utils.fooprint import Fooprint
+
+index = Fooprint('index', __name__, template_folder="template")
+
+def gensitemap(server, urlformat):
+    '''
+    Crea la ruta del índice de sitemap para el servidor de archivos dado.
+    Se conecta a los índices de segundo nivel y obtiene su fecha de modificación.
+
+    @type server: dict-like
+    @param server: Documento del servidor tal cual viene de MongoDB
+
+    @rtype tuple (str, datetime) o None
+    @return tupla con la url y su fecha de modificación, o None si no se puede
+            obtener la url.
+    '''
+    subdomain = server["ip"].split(".")[0]
+    serverno = int(subdomain[6:])
+    url = urlformat % serverno
+    domain = urlparse.urlparse(url)[1]
+    con = httplib.HTTPConnection(domain)
+    con.request("HEAD", url)
+    response =  con.getresponse()
+
+    if response.status == 200:
+        mtime = time.mktime(time.strptime(
+           response.getheader("last-Modified"),
+            "%a, %d %b %Y %H:%M:%S %Z"))
+        return (url, datetime.datetime.fromtimestamp(mtime))
+
+    return None
 
 # contenidos de la raiz del sitio
 @index.route('/favicon.ico')
@@ -25,31 +62,60 @@ def favicon():
 def robots():
     return send_from_directory(os.path.join(current_app.root_path, 'static'), 'robots.txt')
 
-#@index.route('/sitemap.xml')
+@cache.cached(
+    timeout=86400, # Un día
+    unless=lambda:True
+    )
+@index.route('/sitemap.xml')
 def sitemap():
-    return render_template('sitemap.xml', url_root=request.url_root[:-1], rules=current_app.url_map.iter_rules())
+    urlformat = current_app.config["FILES_SITEMAP_URL"]
+    servers = filesdb.get_servers()
+    rules = []
+    threads = [
+        threading.Thread(
+            target = lambda x: rules.append( gensitemap(x, urlformat ) ),
+            args = ( server, ) )
+        for server in servers ]
+    for t in threads:
+        t.start()
+    for t in threads:
+        if t.is_alive():
+            t.join()
+    if None in rules:
+        rules.remove(None)
+        logging.error("Hay sitemaps no disponibles", extra=(servers, rules))
+    return render_template('sitemap.xml', rules=rules)
 
 @index.route('/<lang>/opensearch.xml')
 def opensearch():
-    response = make_response(render_template('opensearch.xml', shortname="Foofind", description=urllib.quote_plus(_("opensearch_description"))))
+    response = make_response(
+        render_template('opensearch.xml',
+            shortname = "Foofind",
+            description = _("opensearch_description")
+                ))
     response.headers['content-type']='application/opensearchdescription+xml'
     return response
 
 
 @index.route('/')
 @index.route('/<lang>')
-@cache.cached(timeout=50)
+@cache.cached(
+    timeout=50,
+    key_prefix=lambda: "view/index_%s_%s" % (g.lang, request.args.get("type","all")),
+    unless=lambda: current_user.is_authenticated() or bool(get_flashed_messages())
+    )
 def home():
     '''
     Renderiza la portada.
     '''
-    return render_template('index.html',form=SearchForm(),zone="home")
+    return render_template('index.html',form=SearchForm(),lang=current_app.config["ALL_LANGS_COMPLETE"][g.lang],zone="home")
 
 @index.route('/<lang>/setlang')
 def setlang():
     '''
     Cambia el idioma
     '''
+    session["lang"]=g.lang
     # si el idioma esta entre los permitidos y el usuario esta logueado se actualiza en la base de datos
     if g.lang in current_app.config["ALL_LANGS"] and current_user.is_authenticated():
         current_user.set_lang(g.lang)

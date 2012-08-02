@@ -25,14 +25,56 @@ msgstr "Gönder"
 msgid "required_empty"
 msgstr "Bu alan gereklidir ve boş bırakılamaz."
 
+msgid "go_home"
+msgstr "Arama motoruna dön"
+
+msgid "error_404_message"
+msgstr "Sayfa bulunamadı"
+
+msgid "error_404_description"
+msgstr ""
+"İstenen URL bulunamadı. Bağlantıyı doğru yazıp yazmadığınızı kontrol ediniz,"
+" doğruysa bunu site yöneticilerine bildiriniz."
+
+msgid "error_502_message"
+msgstr "Bozuk ağ geçidi."
+
+msgid "error_502_description"
+msgstr "Yanlış geçit nedeniyle servise ulaşılamıyor."
+
+msgid "error_503_message"
+msgstr "Servis hizmette değildir."
+
+msgid "error_503_description"
+msgstr ""
+"İstenilen adres geçici olarak hizmet dışıdır. Bir süre sonra tekrar "
+"deneyiniz."
+
+msgid "error_mail_send"
+msgstr ""
+"Mesajın belirtilen adrese gönderilmesinde hata oluştu. Değiştirin ya da daha"
+" sonra deneyin."
+
+msgid "non_alphabetic_digits"
+msgstr "%(value)s ne sayısal ne de alfabetik olan karakterler içermektedir."
+
 msgid "about"
 msgstr "Hakkımızda"
+
+msgid "no_valid_email"
+msgstr "Bu kullanıcı@misal.com biçiminde geçerli bir e-posta adresi değildir"
+
+msgid "field_length"
+msgstr "Bu alan %(min)s ilâ %(max)s karakter içermelidir."
+
+msgid "no_valid_url"
+msgstr "Geçersiz URL"
 
 msgid "contact"
 msgstr "İletişim"
 
 msgid "legal"
-msgstr "Hukuki"
+msgstr "Hukukî"
 
 msgid "tos"
 msgstr "Koşullar"
@@ -102,6 +144,14 @@ msgstr "sonuç için, arama:"
 
 msgid "not_allow_browse_results"
 msgstr "Foofind 100. sayfadan sonra sonuç göstermez, üzgünüz."
+
+msgid "other_categories"
+msgstr "başka kategorilerde"
+
+msgid "no_type_count"
+msgstr ""
+"Aramanız için %(search)s kategorisinde hiçbir sonuç bulunamadı, ancak "
+"%(results)d kadar sonuç %(category)s mevcuttur."
 
 msgid "how_to_download"
 msgstr "Nasıl indirebilirim?"
@@ -194,6 +244,15 @@ msgstr "Kalite"
 
 msgid "num_pages"
 msgstr "Sayfa sayısı"
+
+msgid "series"
+msgstr "Dizi"
+
+msgid "episode"
+msgstr "Bölüm"
+
+msgid "season"
+msgstr "Sezon"
 
 msgid "include_results_from"
 msgstr "Bu ağdan sonuçları ekle:"
@@ -305,6 +364,9 @@ msgstr "Benzer dosyalar"
 
 msgid "user_profile"
 msgstr "Kullanıcı profili"
+
+msgid "login_required"
+msgstr "Bu sayfaya erişmek için oturum açmalısınız."
 
 msgid "your_password"
 msgstr "Şifrenizi seçiniz:"
@@ -462,6 +524,9 @@ msgstr ""
 "E-mail adresinizi giriniz. Hesabınıza erişimi yeniden kazanmanız için bir "
 "e-mail size gönderilecektir."
 
+msgid "send"
+msgstr "Gönder"
+
 msgid "email_same_register"
 msgstr "Bu e-mail kayıtta kullanılan e-mail'in aynısı olmalıdır."
 
@@ -501,6 +566,15 @@ msgstr ""
 msgid "submit_search"
 msgstr "Ara"
 
+msgid "submit_registration"
+msgstr "Hesap oluştur"
+
+msgid "submit_login"
+msgstr "Oturum aç"
+
+msgid "submit_edit"
+msgstr "Profili kaydet"
+
 msgid "contact_form"
 msgstr "İletişim formu"
 
@@ -508,6 +582,9 @@ msgid "link_removal"
 msgstr ""
 "Not: Bir bağlantının kaldırılmasını istiyorsanız, %(report_form)s "
 "kullanmanız gerekir."
+
+msgid "report_form"
+msgstr "Bağlantı rapor formu"
 
 msgid "complaints_ignored"
 msgstr "Bu formdan yapılan şikâyetler dikkate alınmayacaktır."
@@ -523,6 +600,23 @@ msgstr "Captcha karakterleri yanlış."
 
 msgid "message_sent"
 msgstr "Mesaj başarıyla gönderilmiştir!"
+
+msgid "no_valid_hostname"
+msgstr ""
+"%(hostname)s, %(value)s e-posta adresi için geçerli bir makine ismi değildir"
+
+msgid "local_network"
+msgstr ""
+"%(value)s yerel şebeke ismi gibi görünmektedir, ancak yerel şebeke "
+"isimlerine izin verilmez"
+
+msgid "no_dns_hostname"
+msgstr "%(value)s bir DNS makine isminden beklenen yapıyla uyumsuzdur"
+
+msgid "no_tld_known"
+msgstr ""
+"%(value)s bir DNS makine ismi gibi görünmektedir ancak TLD bilinen ekler "
+"listesinde bulunmamaktadır"
 
 msgid "your_name"
 msgstr "İsminiz:"
@@ -548,6 +642,9 @@ msgstr "Şikâyetinizin nedeni:"
 msgid "accept_terms"
 msgstr "Lütfen kullanım şartlarını ve gizlilik kurallarını kabul ediniz"
 
+msgid "accept_tos"
+msgstr "%(tos)s ve %(privacy)s maddelerini okudum ve kabul ediyorum."
+
 msgid "not_foofind_page"
 msgstr "Bağlantı bir Foofind sayfası olamaz"
 
@@ -563,9 +660,8 @@ msgstr "Bağlantı önerimi"
 
 msgid "include_link_per_line"
 msgstr ""
-"Lütfen satır başına bir http, ftp, ed2k ya da magnet bağlantısı giriniz.<br "
-"/>Bunlar otomatik olarak taranacak ve kısa bir süre sonra arama sonuçlarına "
-"eklenecektir."
+"Lütfen satır başına bir http, ftp, ed2k ya da magnet bağlantısı giriniz.\r\n"
+"Bunlar otomatik olarak taranacak ve kısa bir süre sonra arama sonuçlarına eklenecektir."
 
 msgid "link_sent"
 msgstr "Bağlantılar gönderilmiştir. Teşekkür ederiz!"
@@ -581,11 +677,9 @@ msgstr ""
 
 msgid "about_text"
 msgstr ""
-"Foofind evrensel bir arama motorudur. Foofind'da tüm ağları tarayan ve her "
-"dosyayı endeksleyen yazılımlar üzerinde çalışmaktayız. Bu şekilde mümkün "
-"olan en geniş bağlantı koleksiyonunu sunmayı amaçlıyoruz.<br /><br />Foofind"
-" P2P teknoloji tasarımcısı Pablo Soto'nun eseri olup, Madrid, İspanya'da "
-"MP2P Technologies tarafından geliştirilmektedir."
+"Foofind evrensel bir arama motorudur. Foofind'da tüm ağları tarayan ve her dosyayı endeksleyen yazılımlar üzerinde çalışmaktayız. Bu şekilde mümkün olan en geniş bağlantı koleksiyonunu sunmayı amaçlıyoruz.\r\n"
+"\r\n"
+"Foofind P2P teknoloji tasarımcısı Pablo Soto'nun eseri olup, Madrid, İspanya'da MP2P Technologies tarafından geliştirilmektedir."
 
 msgid "under_maintenance"
 msgstr "Foofind bakımdadır. Daha sonra tekrar ziyaret ediniz."
@@ -596,17 +690,17 @@ msgstr "Bu bağlantı yoktur ya da silinmiş olabilir!"
 msgid "translate"
 msgstr "Tercüme"
 
+msgid "error_link_removed"
+msgstr "Özür dileriz, bu bağlantı kaynağı tarafından kaldırılmıştır."
+
 msgid "translate_to_your_language"
 msgstr "Foofind'ı dilinize çevirmemize yardım edin"
 
 msgid "translate_description"
 msgstr ""
-"Foofind şu anda birkaç dilde hizmet sunmaktadır, ama çeviri için bize "
-"yardımda bulunabilirsiniz. Aşağıdaki listeden dilinizi seçip gereken "
-"alanları tercümeniz ile doldurmanız yeterli olacaktır. Bütün alanları "
-"doldurmanıza gerek yoktur, tüm yardımlar makbûle geçecektir.<br/><br/>Eğer "
-"diliniz listede mevcut değilse, eklememiz için bizimle iletişime geçmenizi "
-"rica ederiz."
+"Foofind şu anda birkaç dilde hizmet sunmaktadır, ama çeviri için bize yardımda bulunabilirsiniz. Aşağıdaki listeden dilinizi seçip gereken alanları tercümeniz ile doldurmanız yeterli olacaktır. Bütün alanları doldurmanıza gerek yoktur, tüm yardımlar makbûle geçecektir.\r\n"
+"\r\n"
+"Eğer diliniz listede mevcut değilse, eklememiz için bizimle iletişime geçmenizi rica ederiz."
 
 msgid "choose_language"
 msgstr "Dil seçimi"
@@ -627,3 +721,6 @@ msgstr ""
 
 msgid "other"
 msgstr "Diğer"
+
+msgid "opensearch_description"
+msgstr "Foofind ile Ara"

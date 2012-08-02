@@ -49,20 +49,21 @@ def generate_image(txt):
     image.save(buffer, "PNG")
     return buffer.getvalue()
 
-def captcha(form,field):
+def captcha(form, field):
     '''
     Validador para controlar que la coinciden la imagen y el texto enviado por el usuario
     '''
-    if field.data != cache.get("captcha/"+request.form["captcha_id"]):
+    captcha_id = request.form["%s_id" % field.name]
+    if field.data != cache.get("captcha/" + captcha_id):
         raise ValidationError(_('captcha_wrong'))
-    cache.delete("captcha/"+request.form["captcha_id"])
+    cache.delete("captcha/" + captcha_id)
 
 class Captcha(object):
     def __call__(self, field, **kwargs):
         return u'''
-            <img src="/captcha/%(id)s" alt="captcha" />
-            <input type="hidden" name="%(name)s_id" id="%(name)s_id" value="%(id)s" />
-            <input type="text" name="%(name)s" id="%(name)s" />''' % {'id': field.captcha_id, "name":field.name}
+            <img src="/captcha/%(captcha_id)s" alt="captcha" />
+            <input type="hidden" name="%(name)s_id" value="%(captcha_id)s" />
+            <input type="text" name="%(name)s" id="%(name)s" autocomplete="off" />''' % { "captcha_id":field.captcha_id, "name":field.name}
 
 class CaptchaField(Field):
     widget = Captcha()
@@ -73,7 +74,7 @@ class CaptchaField(Field):
 
     def generate_id(self):
         # Generar un texto aleatorio para el captcha
-        imgtext = ''.join([random.choice('ABCDEFGHIJKLMNOPQRSTUVWZYZ0123456789') for i in range(5)])
+        imgtext = ''.join(random.choice('ABCDEFGHIJKLMNPQRSTUVWZYZ123456789') for i in range(5))
 
         # Encriptarlo
         captcha_id=imgtext

@@ -14,10 +14,34 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 msgid "password"
-msgstr "パスワード"
+msgstr "パスワード："
+
+msgid "your_email"
+msgstr "あなたのメール："
 
 msgid "about"
 msgstr "について"
+
+msgid "submit"
+msgstr "送る"
+
+msgid "go_home"
+msgstr "サーチエンジンに戻る"
+
+msgid "error_404_message"
+msgstr "ページが見つかりません。"
+
+msgid "error_502_message"
+msgstr "間違いゲートウェイ。"
+
+msgid "error_502_description"
+msgstr "ゲートウェイが間違いですからサービスにアクセスできません。"
+
+msgid "error_503_message"
+msgstr "サービスは利用できない"
+
+msgid "no_valid_url"
+msgstr "URL がまちがいます"
 
 msgid "contact"
 msgstr "お問い合わせ"
@@ -48,6 +72,15 @@ msgstr "私は欲しいです。 それ。 ファイルします。"
 
 msgid "all"
 msgstr "すべて"
+
+msgid "index_change"
+msgstr "foofind は変化している"
+
+msgid "index_comunity"
+msgstr "我々のコミュニティのメンバーになる。"
+
+msgid "index_suggestion"
+msgstr "提案はありますか？"
 
 msgid "direct_downloads"
 msgstr "ダイレクト ダウンロード"
@@ -107,11 +140,32 @@ msgstr "全サイズ"
 msgid "artist"
 msgstr "アーティスト"
 
+msgid "advanced_search"
+msgstr "高度な検索"
+
+msgid "hide_advanced_search"
+msgstr "高度な検索を隠す"
+
+msgid "smaller_than"
+msgstr "小さいより"
+
+msgid "larger_than"
+msgstr "大より"
+
+msgid "before"
+msgstr "前"
+
+msgid "last_year"
+msgstr "前年"
+
 msgid "title"
 msgstr "タイトル"
 
 msgid "format"
 msgstr "フォーマット"
+
+msgid "author"
+msgstr "作家"
 
 msgid "pages"
 msgstr "ページ"
@@ -119,11 +173,29 @@ msgstr "ページ"
 msgid "minutes"
 msgstr "分"
 
+msgid "album"
+msgstr "アルバム"
+
+msgid "bitrate"
+msgstr "ビットレート"
+
+msgid "seconds"
+msgstr "秒"
+
 msgid "source"
 msgstr "ソース"
 
 msgid "size"
 msgstr "サイズ"
+
+msgid "height"
+msgstr "高"
+
+msgid "width"
+msgstr "幅"
+
+msgid "track"
+msgstr "線"
 
 msgid "colors"
 msgstr "色"
@@ -170,8 +242,47 @@ msgstr "秒"
 msgid "download"
 msgstr "ダウンロード"
 
+msgid "close"
+msgstr "閉じる"
+
+msgid "share_this"
+msgstr "これを共有"
+
+msgid "share_facebook"
+msgstr "facebook で共有"
+
+msgid "share_twitter"
+msgstr "twitter で共有"
+
+msgid "send_by_email"
+msgstr "メールで送信"
+
 msgid "hello"
 msgstr "こんにちは、"
+
+msgid "watch"
+msgstr "見る"
+
+msgid "your_comments"
+msgstr "あなたのご意見："
+
+msgid "since"
+msgstr "%(since)s から"
+
+msgid "from"
+msgstr "から"
+
+msgid "i_like_it"
+msgstr "これが好きだ！"
+
+msgid "your_password"
+msgstr "パスワードを書いてください:"
+
+msgid "insert_your_password"
+msgstr "パスワードを書いてください　（はい、も一度）："
+
+msgid "nickname"
+msgstr "ニックネーム"
 
 msgid "logout"
 msgstr "ログアウト"
@@ -182,8 +293,74 @@ msgstr "ログイン"
 msgid "yes"
 msgstr "はい"
 
+msgid "choose_nickname"
+msgstr "ニックネームをせんたくてくださ："
+
+msgid "forgot"
+msgstr "忘れた"
+
+msgid "your_password?"
+msgstr "あなたのパスワード"
+
 msgid "submit_search"
 msgstr "検索"
 
+msgid "no"
+msgstr "いいえ"
+
+msgid "welcome"
+msgstr "ようこそ"
+
+msgid "foofind_team"
+msgstr "Foofind のチーム。"
+
+msgid "user_not_exist"
+msgstr "このユーザーは存在しません"
+
+msgid "send"
+msgstr "送る"
+
+msgid "login_vote"
+msgstr "投票するために、ログインしてください"
+
+msgid "login_comment"
+msgstr "コメントするために、ログインしてください"
+
+msgid "submit_login"
+msgstr "ログイン"
+
 msgid "choose_language"
 msgstr "言語を選択してください"
+
+msgid "contact_form"
+msgstr "お問い合わせフォーム"
+
+msgid "report_form"
+msgstr "リンクを報告するフォーム"
+
+msgid "your_message"
+msgstr "あなたのメッセージ："
+
+msgid "your_name"
+msgstr "あなたの名前："
+
+msgid "your_surname"
+msgstr "あなたの姓："
+
+msgid "your_company"
+msgstr "あなたの社："
+
+msgid "your_phone"
+msgstr "あなたの電話番号："
+
+msgid "submit_links"
+msgstr "リンクを提出"
+
+msgid "link_sent"
+msgstr "リンクは提出ました。あなたの助けに感謝！"
+
+msgid "translate"
+msgstr "翻訳する"
+
+msgid "other"
+msgstr "その他"

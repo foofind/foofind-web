@@ -1,0 +1,7 @@
+{% if tags %}
+<ul>
+    {% for tag, size in tags %}
+    <li><a href="#" style="font-size:{{ size }}%">{{ tag }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}

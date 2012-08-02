@@ -25,8 +25,51 @@ msgstr "Envoyer"
 msgid "required_empty"
 msgstr "Ce champ est requis et ne peut être laissé vide"
 
+msgid "go_home"
+msgstr "Retourner au moteur de recherche"
+
+msgid "error_404_message"
+msgstr "Pas introuvable."
+
+msgid "error_404_description"
+msgstr ""
+"URL requis introuvable. Veuillez vérifier que vous n'avez pas fait d'erreur "
+"de frappe et avertissez les administrateurs du site le cas échéant."
+
+msgid "error_502_message"
+msgstr "Mauvaise passerelle."
+
+msgid "error_502_description"
+msgstr "Impossible d'accéder au service en raison d'une mauvaise passerelle."
+
+msgid "error_503_message"
+msgstr "Service indisponible"
+
+msgid "error_503_description"
+msgstr ""
+"L'URL demandé est temporairement indisponible. Veuillez réessayer "
+"ultérieurement."
+
+msgid "error_mail_send"
+msgstr ""
+"Une erreur est survenue lors de l'envoi du message à l'adresse spécifiée. "
+"Veuillez la modifier ou réessayer plus tard."
+
+msgid "non_alphabetic_digits"
+msgstr ""
+"%(value)s contient des caractères qui ne sont ni des lettres ni des chiffres"
+
 msgid "about"
 msgstr "Qui sommes-nous ?"
+
+msgid "no_valid_email"
+msgstr "Ce n'est pas une adresse e-mail au format utilisateur@exemple.com"
+
+msgid "field_length"
+msgstr "Ce champ doit comprendre de %(min)s à %(max)s caractères"
+
+msgid "no_valid_url"
+msgstr "URL invalide"
 
 msgid "contact"
 msgstr "Contact"
@@ -57,6 +100,18 @@ msgstr "Je. Veux. Ce. Fichier."
 
 msgid "all"
 msgstr "Tout"
+
+msgid "index_change"
+msgstr "foofind est en changement."
+
+msgid "index_comunity"
+msgstr "Fait partie de notre communité"
+
+msgid "index_first"
+msgstr "Soit le premier à connaître les nouveautés et participe."
+
+msgid "index_suggestion"
+msgstr "Quelque suggestion?"
 
 msgid "direct_downloads"
 msgstr "Téléchargement direct"
@@ -102,6 +157,14 @@ msgstr "résultats pour"
 
 msgid "not_allow_browse_results"
 msgstr "Foofind ne permet pas d'afficher les résultats après 100 pages."
+
+msgid "other_categories"
+msgstr "d'autres catégories"
+
+msgid "no_type_count"
+msgstr ""
+"Aucun résultat n'a été trouvé dans %(search)s, mais il y a environ "
+"%(results)d résultats pour votre recherche dans %(category)s"
 
 msgid "how_to_download"
 msgstr "Comment télécharger ?"
@@ -194,6 +257,15 @@ msgstr "Qualité"
 
 msgid "num_pages"
 msgstr "Nbr. de pages"
+
+msgid "series"
+msgstr "Série"
+
+msgid "episode"
+msgstr "Épisode"
+
+msgid "season"
+msgstr "Saison"
 
 msgid "include_results_from"
 msgstr "Inclure des résultats depuis :"
@@ -306,6 +378,9 @@ msgstr "Fichiers relatifs :"
 msgid "user_profile"
 msgstr "Profil d'utilisateur"
 
+msgid "login_required"
+msgstr "Pour accéder à cette page vous devez ouvrir une session."
+
 msgid "your_password"
 msgstr "Choisissez votre mot de passe :"
 
@@ -397,6 +472,9 @@ msgstr "Oui"
 msgid "account_deleted"
 msgstr "Votre compte a été supprimé"
 
+msgid "no"
+msgstr "Non"
+
 msgid "nice_to_hear_that"
 msgstr "C'est bon d'entendre cela !"
 
@@ -462,6 +540,9 @@ msgstr ""
 "Veuillez entrer votre adresse e-mail. Un message pour restaurer votre accès "
 "vous sera envoyé."
 
+msgid "send"
+msgstr "Envoyer"
+
 msgid "email_same_register"
 msgstr ""
 "L'adresse e-mail doit être identique à celle utilisée lors de votre "
@@ -505,6 +586,15 @@ msgstr ""
 msgid "submit_search"
 msgstr "Rechercher"
 
+msgid "submit_registration"
+msgstr "Créer un compte"
+
+msgid "submit_login"
+msgstr "Ouvrir une session"
+
+msgid "submit_edit"
+msgstr "Enregistrer le profil"
+
 msgid "contact_form"
 msgstr "Formulaire de contact"
 
@@ -512,6 +602,9 @@ msgid "link_removal"
 msgstr ""
 "Note : si vous réclamez la suppression d'un lien, vous devez utiliser le "
 "%(report_form)s."
+
+msgid "report_form"
+msgstr "formulaire de signalement de liens"
 
 msgid "complaints_ignored"
 msgstr ""
@@ -528,6 +621,24 @@ msgstr "La valeur du captcha est erronée"
 
 msgid "message_sent"
 msgstr "Message envoyé avec succès !"
+
+msgid "no_valid_hostname"
+msgstr ""
+"%(hostname)s n'est pas un nom d'hôte valide pour l'adresse e-mail %(value)s"
+
+msgid "local_network"
+msgstr ""
+"%(value)s semble être un nom de réseau local, or les noms de réseaux locaux "
+"ne sont pas autorisés"
+
+msgid "no_dns_hostname"
+msgstr ""
+"%(value)s ne correspond pas à la structure attendue d'un nom d'hôte DNS"
+
+msgid "no_tld_known"
+msgstr ""
+"%(value)s semble être un nom d'hôte DNS mais le TLD n'est pas dans la liste "
+"des extensions connues"
 
 msgid "your_name"
 msgstr "Votre nom :"
@@ -555,6 +666,9 @@ msgstr ""
 "Veuillez accepter les conditions d'utilisation et la politique relative à la"
 " vie privée"
 
+msgid "accept_tos"
+msgstr "J'ai lu et j'accepte %(tos)s et %(privacy)s."
+
 msgid "not_foofind_page"
 msgstr "Le lien ne peut être une page Foofind"
 
@@ -571,8 +685,8 @@ msgstr "Suggérer des liens"
 
 msgid "include_link_per_line"
 msgstr ""
-"Veuillez entrer un lien http, ftp, ed2k ou magnet par ligne.<br />Ils seront"
-" indexés automatiquement et rajoutés aux résultats de recherche sous peu."
+"Veuillez entrer un lien http, ftp, ed2k ou magnet par ligne.\r\n"
+"Ils seront indexés automatiquement et rajoutés aux résultats de recherche sous peu."
 
 msgid "link_sent"
 msgstr "Les liens ont été envoyés. Merci pour votre aide !"
@@ -581,17 +695,15 @@ msgid "footer"
 msgstr ""
 "Le site web est sous licence Creative Commons <a rel='license content' "
 "href='http://creativecommons.org/licenses/by-sa/3.0/deed.fr'>BY-SA</a>. Le "
-"<a href='http://code.google.com/p/Foofind/'>code source</a> est sous licence"
+"<a href='http://code.google.com/p/foofind/'>code source</a> est sous licence"
 " <a rel='license source code' "
 "href='http://www.gnu.org/licenses/agpl.html'>Affero GPL</a>."
 
 msgid "about_text"
 msgstr ""
-"Foofind est un moteur de recherche universel. Chez Foofind nous créons des "
-"logiciels qui examinent tous les réseaux et indexent tous les fichiers. "
-"Ainsi, nous avons l'intention d'offrir la plus grande collection de liens "
-"disponible.<br /><br />Foofind est l’œuvre de Pablo Soto, concepteur de "
-"technologies P2P, développé à Madrid, en Espagne, par MP2P Technologies."
+"Foofind est un moteur de recherche universel. Chez Foofind nous créons des logiciels qui examinent tous les réseaux et indexent tous les fichiers. Ainsi, nous avons l'intention d'offrir la plus grande collection de liens disponible.\r\n"
+"\r\n"
+"Foofind est l’œuvre de Pablo Soto, concepteur de technologies P2P, développé à Madrid, en Espagne, par MP2P Technologies."
 
 msgid "under_maintenance"
 msgstr "Foofind est en maintenance. Veuillez vous reconnecter plus tard !"
@@ -601,6 +713,9 @@ msgstr "Ce lien n'existe pas ou a été effacé !"
 
 msgid "translate"
 msgstr "Traduire"
+
+msgid "error_link_removed"
+msgstr "Nous sommes désolés : ce lien a été enlevé par sa source."
 
 msgid "translate_to_your_language"
 msgstr "Aidez-nous à traduire Foofind dans votre langue"
@@ -621,7 +736,7 @@ msgid "translation_sent"
 msgstr "Votre traduction a été envoyée. Merci de votre aide !"
 
 msgid "translate_at_least_one"
-msgstr "S'il vous plaît, traduisez au moins un texte."
+msgstr "S'il vous plaît, traduisez au moins une phrase."
 
 msgid "here"
 msgstr "ici"
@@ -633,3 +748,6 @@ msgstr ""
 
 msgid "other"
 msgstr "Autre"
+
+msgid "opensearch_description"
+msgstr "Rechercher avec Foofind"

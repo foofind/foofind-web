@@ -15,8 +15,8 @@
             {{ form.submit }}
         </fieldset>
     </form>
-    <a href="{{ url_for('user.twitter') }}" class="oauth tw"><span>Login using Twitter</span></a>
-    <a href="{{ url_for('user.facebook') }}" class="oauth fb"><span>Login using Facebook</span></a>
-    <p><a href="{{ url_for('user.forgot') }}">¿Olvidaste</a> tu contraseña?</p>
+    <a href="{{ url_for('user.twitter',next=request.args.get('next')) }}" class="oauth tw"><span>Login using Twitter</span></a>
+    <a href="{{ url_for('user.facebook',next=request.args.get('next')) }}" class="oauth fb"><span>Login using Facebook</span></a>
+    <p><a href="{{ url_for('user.forgot') }}">{{_('forgot')}}</a> {{_('your_password?')}}</p>
 </div>
 {% endblock %}

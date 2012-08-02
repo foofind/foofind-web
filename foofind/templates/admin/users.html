@@ -1,6 +1,14 @@
 {% extends "admin/base.html" %}
 {% block page %}
     <form method="post">
-        {{ search_form.identifier.label }} {{ search_form.identifier }} {{search_form.mode }} {{ search_form.submit }}
+        <h3 class="list">{{_('admin_users')}}</h3>
+        <dl class="list">
+            <dt>{{ search_form.identifier.label }}</dt>
+            <dd>{{ search_form.identifier }}</dd>
+            <dt>{{ search_form.mode.label }}</dt>
+            <dd>{{ search_form.mode }}</dd>
+        </dl>
     </form>
+    {{ search_form.submit(class="list") }}
+    <p>{{_("admin_users_count", users=user_count)}}</p>
 {% endblock %}

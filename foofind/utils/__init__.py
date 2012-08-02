@@ -6,11 +6,16 @@ import bson
 import logging
 import chardet
 import pymongo
+import random
+import urllib2
+from unicodedata import normalize
 from base64 import b64encode, b64decode
 from os.path import isfile, isdir
 from urlparse import urlparse
 from functools import wraps
-from flask import make_response
+from content_types import *
+from foofind.utils.splitter import SEPPER
+
 
 def bin2mid(binary):
     '''
@@ -29,6 +34,12 @@ def bin2hex(binary):
     Recibe una cadena binaria con el id y retorna un hexadecimal
     '''
     return binary.encode("hex")
+
+def hex2bin(hexuri):
+    '''
+    Recibe una cadena binaria con el id y retorna un hexadecimal
+    '''
+    return hexuri.decode("hex")
 
 def hex2mid(hexuri):
     '''
@@ -59,7 +70,7 @@ def fileurl2mid(url):
     '''
     Recibe una url de fichero de foofind y retorna ObjectId
     '''
-    return url2mid(str(urlparse(url).path.split("/")[3]))
+    return url2mid(urllib2.unquote(urlparse(url).path.split("/")[3]))
 
 def lang_path(lang, ext="po"):
     '''
@@ -100,57 +111,92 @@ def touch_path(path, pathsep=os.sep):
         if not isdir(part):
             os.mkdir(part)
 
+def check_capped_collections(db, capped_dict):
+    '''
+    Crea las colecciones capadas pasadas por parámetro en una base de datos de
+    mongodb si no existen ya.
 
-re_sec = re.compile(r'\d+\s?(sec|secs|seconds)')
-re_sec2 = re.compile(r'(seconds|secs|sec)')
-re_min = re.compile(r'\d+\s?(min|mins|minutes)')
-re_min2 = re.compile(r'(min|mins|minutes)')
-re_hour = re.compile(r'\d+\s?(h|hour|hours|hr)')
-re_hour2 = re.compile(r'(h|hour|hours|hr)')
+    @type db: pymongo.database
+    @param db: Base de datos de pymongo
+
+    @type capped_dict: dict
+    @param capped_dict: diccionario con nombres de colecciones capadas como
+                        clave y su tamaño como valor.
+    '''
+    collnames = db.collection_names()
+    for capped, size in capped_dict.iteritems():
+        if not capped in collnames:
+            db.create_collection(capped, capped = True, max = size, size = size)
+
+TIME_UNITS = {
+    "ms":0.001,
+    "millisecs":0.001,
+    "milliseconds":0.001,
+    "":1,
+    "s":1,
+    "sec":1,
+    "secs":1,
+    "seconds":1,
+    "m":60,
+    "min":60,
+    "mins":60,
+    "minutes":60,
+    "h":3600,
+    "hour":3600,
+    "hours":3600,
+    "hr":3600,
+    }
+FLOATCHARS = "0123456789-+."
 def to_seconds(time_string):
     '''
     Convierte la duración de texto a segundos si es necesario
-    por reset
+
+    @type time_string: str
+    @param time_string: cadena representando tiempo
+
+    @rtype float
+    @return tiempo en segundos (cero si no se ha podido parsear)
     '''
     if not isinstance(time_string, basestring): return time_string
-    if not ("sec" in time_string or "ms" in time_string):
-        try:
-            return int(time_string)
-        except BaseException as e:
-            logging.exception(e)
-            return 0
-
+    if ":" in time_string:
+        op = time_string.split(":")
+        if all(i.isdigit() for i in op):
+            lop = len(op)
+            if lop == 2:
+                return int(op[0])*60+float(op[1])
+            elif lop == 3:
+                return int(op[0])*3600+int(op[1])*60+float(op[2])
+        logging.warn("No se puede parsear time_string", extra=time_string)
+        return 0
     secs = 0
-    match_obj = re_sec.search(time_string)
-
-    if match_obj is not None:
-        temp = match_obj.group()
-        temp = re_sec2.sub('', temp)
-        secs += int(temp)
-
-    else:
-        return secs
-
-    match_obj = re_min.search(time_string)
-
-    if match_obj is not None:
-        temp = match_obj.group()
-        temp = re_min2.sub('', temp)
-        secs += (int(temp) * 60)
-
-    match_obj = re_hour.search(time_string)
-
-    if match_obj is not None:
-        temp = match_obj.group()
-        temp = re_hour2.sub('', temp)
-        secs += (int(temp) * 3600)
-
+    t = []
+    op = []
+    for i in time_string:
+        if op: # Si tengo una unidad (parcial o completa)
+            if i in FLOATCHARS:
+                # Empieza otro dígito, asumo que la unidad está completa
+                if t:
+                    # Hay un número en la pila, uso la unidad para pasar el número a segundos
+                    secs += float("".join(t)) * TIME_UNITS.get("".join(op).strip(), 0)
+                # Vacío la pila de la unidad e inicio la de número con el dígito actual
+                del op[:]
+                t[:] = (i,)
+            else:
+                # Añado otro caracter de la unidad
+                op.append(i)
+        elif i in FLOATCHARS: # Si es un dígito
+            t.append(i)
+        else: # Si el carácter es de una unidad
+            op.append(i)
+    if t:
+        # He terminado la cadena, y queda por sumar
+        secs += float("".join(t)) * TIME_UNITS.get("".join(op).strip(), 0)
     return secs
 
 def multipartition(x, s):
     '''
     Recibe string y los divide por una lista de separadores incluyendo
-    los separadores.
+    los separadores en el resultado.
 
     @type x: basestring
     @param x: string a dividir
@@ -195,12 +241,12 @@ def u(txt):
     ''' Parse any basestring (ascii str, encoded str, or unicode) to unicode '''
     if isinstance(txt,unicode):
         return txt
-    else:
+    elif isinstance(txt, basestring):
         try:
             return unicode(txt, chardet.detect(txt)["encoding"])
         except:
-            pass
-        return unicode("")
+            return unicode("")
+    return unicode(txt)
 
 def fixurl(url):
     '''
@@ -208,7 +254,6 @@ def fixurl(url):
 
     @return url válida en unicode
     '''
-    # http://foofind.is/en/download/ZVbSk3bxVF9dgPBk/asdf%20style%20qwerty.MP4.html
     if url.startswith("http"):
         url = "/%s" % "/".join(url.split("/")[3:])
     elif not url.startswith("/"):
@@ -241,6 +286,7 @@ def fixurl(url):
 
 
 def nocache(fn):
+    from flask import make_response
     @wraps(fn)
     def decorated_view(*args, **kwargs):
         resp = make_response(fn(*args, **kwargs))
@@ -249,3 +295,32 @@ def nocache(fn):
         resp.cache_control.must_revalidate = True
         return resp
     return decorated_view
+
+def uchr(x):
+    '''
+    chr para unicode
+    '''
+    if x < 256:
+        return (u"\\x%x" % x).decode("unicode_escape")
+    elif x < 65536:
+        return (u"\\u%04x" % x).decode("unicode_escape")
+    return ""
+
+_punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.:]+')
+def slugify(text, delim=u' ', return_separators=False):
+    '''
+    Genera una cadena solo con caracteres ASCII
+    '''
+    result = []
+    separators = []
+    for word in _punct_re.split(u(text.lower())):
+        word = normalize('NFKD', word).encode('ascii', 'ignore')
+        if word:
+            result.append(word)
+        else:
+            separators.append(word)
+
+    if return_separators:
+        return unicode(delim.join(separators))
+    else:
+        return unicode(delim.join(result))

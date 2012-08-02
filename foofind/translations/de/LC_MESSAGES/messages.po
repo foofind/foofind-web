@@ -47,10 +47,13 @@ msgid "last_indexed_files"
 msgstr "letzte indexierte Dateien"
 
 msgid "i_want_that_file"
-msgstr "ich will. Diese. Datei"
+msgstr "Ich. Will. Diese. Datei"
 
 msgid "all"
 msgstr "Alle"
+
+msgid "index_change"
+msgstr "foofind ändert sich"
 
 msgid "direct_downloads"
 msgstr "direkt Download"

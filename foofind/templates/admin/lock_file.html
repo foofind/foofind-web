@@ -1,7 +1,6 @@
 {% extends "admin/base.html" %}
 {% block page %}
     <form method="post">
-        <input type="hidden" name="fileids" value="{{fileids}}"/>
         {% if complaint_data %}
         <h3 class="list">{{_('admin_locks_complaint_info')}}</h3>
         <dl class="list">
@@ -15,19 +14,57 @@
         {% endif %}
         {% if files_data %}
             <h3 class="list">{{_('admin_locks_complaint_fileinfo')}}</h3>
+            <table class="list ">
             {% for fileid, file_data in files_data.iteritems() %}
-            <dl class="list {% if not loop.index is divisibleby(2) %}alternate{% endif %}">
-                {% for prop in file_data %}
-                <dt>{{prop}}</dt>
-                <dd>{{file_data[prop]}}</dd>
-                {% endfor %}
-            </dl>
+                <tbody class="{% if not loop.index is divisibleby(2) %}alternate{% endif %}">
+                {%- if fileid in bugged -%}
+                    <tr>
+                        <td><strong>INDIR BUG</strong></td>
+                        <td></td>
+                    </tr>
+                {%- endif -%}
+                {%- if file_data -%}
+                    {%- for prop in file_data -%}
+                    <tr>
+                        <td>{{prop}}</td>
+                        <td>{{file_data[prop]}}</td>
+                    </tr>
+                    {%- endfor -%}
+                {%- else -%}
+                    <tr>
+                        <td>_id</td>
+                        <td>{{fileid}}</td>
+                    </tr>
+                    {%- if fileid in filenames -%}
+                    <tr>
+                        <td>name</td>
+                        <td>{{filenames[fileid]}}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><a href="{{url_for('admin.getserver', fileid=fileid , filename=filenames[fileid])}}">{{_('admin_file_search_server')}}</a></td>
+                    </tr>
+                    {%- else -%}
+                    <tr>
+                        <td></td>
+                        <td><a href="{{url_for('admin.getserver', fileid=fileid )}}">{{_('admin_file_search_server')}}</a></td>
+                    </tr>
+                    {%- endif -%}
+                {%- endif -%}
+                </tbody>
             {% endfor %}
+            </table>
         {% else %}
         <h3 class="list">{{_('admin_locks_complaint_nofileinfo')}}</h3>
         {% endif %}
-        {% if blocked or blocked == None %}<input class="list" type="submit" name="unblock" value="{{_('admin_locks_unblock')}}"/>{% endif %}
-        {% if not blocked %}<input class="list" type="submit" name="block" value="{{_('admin_locks_confirm')}}"/>{% endif %}
+        <input type="hidden" name="fileids" value="{{fileids}}"/>
+        {%- if blocked or blocked == None -%}
+            <input class="list" type="submit" name="unblock" value="{{_('admin_locks_unblock')}}"/>
+        {%- endif %}
+        {% if not blocked -%}
+            <input {% if blocked == False %}class="list" {% endif -%}
+                type="submit" name="block" value="{{_('admin_locks_confirm')}}"/>
+        {%- endif %}
         <input type="submit" name="cancel" value="{{_('admin_locks_cancel')}}"/>
     </form>
 {% endblock %}

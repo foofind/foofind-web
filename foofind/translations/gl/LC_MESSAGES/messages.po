@@ -25,8 +25,50 @@ msgstr "Enviar"
 msgid "required_empty"
 msgstr "Este campo non pode estar baleiro"
 
+msgid "go_home"
+msgstr "Voltar ao motor de buscas"
+
+msgid "error_404_message"
+msgstr "Páxina non atopada."
+
+msgid "error_404_description"
+msgstr ""
+"O URL solicitado non foi atopado. Comproba que escribiches correctamente, en"
+" caso afirmativo, notifícallo aos administradores da web."
+
+msgid "error_502_message"
+msgstr "Pasarela incorrecta."
+
+msgid "error_502_description"
+msgstr ""
+"Non é posíbel acceder ao servicio por mor de que a pasarela é incorrecta."
+
+msgid "error_503_message"
+msgstr "Servizo non dispoñíbel"
+
+msgid "error_503_description"
+msgstr "O URL solicitado non está accsíbel. Tenteo de novo de aquí a un pouco"
+
+msgid "error_mail_send"
+msgstr ""
+"Produciuse un erro ao enviar a mensaxe ao enderezo especificado. Escolla "
+"outro ou tenteo máis adiante."
+
+msgid "non_alphabetic_digits"
+msgstr "%(value)s conten caracteres que non son alfabeticos ou números"
+
 msgid "about"
 msgstr "Sobre"
+
+msgid "no_valid_email"
+msgstr ""
+"Isto non é un enderezo de correo-e correcto co formato: usuario@exemplo.com"
+
+msgid "field_length"
+msgstr "Este campo debe ter de %(min)s a %(max)s caracteres"
+
+msgid "no_valid_url"
+msgstr "URL incorrecto"
 
 msgid "contact"
 msgstr "Contacto"
@@ -41,7 +83,7 @@ msgid "privacy"
 msgstr "Política de privacidade"
 
 msgid "complaint"
-msgstr "reportar unha ligazón"
+msgstr "informar dunha ligazón"
 
 msgid "source_code"
 msgstr "Código fonte"
@@ -57,6 +99,18 @@ msgstr "Quero. Ese. Ficheiro."
 
 msgid "all"
 msgstr "Todo"
+
+msgid "index_change"
+msgstr "foofind cambiou"
+
+msgid "index_comunity"
+msgstr "Forma parte da nuosa comunidade"
+
+msgid "index_first"
+msgstr "Se o primeiro en coñecer as novedades e participar."
+
+msgid "index_suggestion"
+msgstr "Algunha suxestión?"
 
 msgid "direct_downloads"
 msgstr "Descargas directas"
@@ -83,7 +137,7 @@ msgid "no_results_for"
 msgstr "Non hai resultados para:"
 
 msgid "write_something"
-msgstr "eih!!! Escribe algo!"
+msgstr "Ei! Escribe algo!"
 
 msgid "previous"
 msgstr "Anterior"
@@ -103,8 +157,16 @@ msgstr "resultados para"
 msgid "not_allow_browse_results"
 msgstr "Foofind non permite examinar resultados máis aló da páxina 100."
 
+msgid "other_categories"
+msgstr "outras categorías"
+
+msgid "no_type_count"
+msgstr ""
+"Non se atoparon resultados para a súa busca en %(search)s,  mais hai arredor"
+" de %(results)d resultados para a súa busca en %(category)s. "
+
 msgid "how_to_download"
-msgstr "¿Cómo descargar?"
+msgstr "Cómo descargar?"
 
 msgid "download_explanation"
 msgstr ""
@@ -115,13 +177,13 @@ msgid "did_you_mean"
 msgstr "Quixo dicir %(text)s?"
 
 msgid "all_sizes"
-msgstr "Todolos tamaños"
+msgstr "Todos os tamaños"
 
 msgid "advanced_search"
-msgstr "busqueda avanzada"
+msgstr "busca avanzada"
 
 msgid "hide_advanced_search"
-msgstr "agochar a busqueda avanzada"
+msgstr "agochar a busca avanzada"
 
 msgid "smaller_than"
 msgstr "Menor que"
@@ -193,7 +255,16 @@ msgid "quality"
 msgstr "Calidade"
 
 msgid "num_pages"
-msgstr "Num. de páxinas"
+msgstr "Núm. de páxinas"
+
+msgid "series"
+msgstr "Series"
+
+msgid "episode"
+msgstr "Episodio"
+
+msgid "season"
+msgstr "Temporada"
 
 msgid "include_results_from"
 msgstr "Incluír resultados de:"
@@ -306,6 +377,9 @@ msgstr "Ficheiros relacionados"
 msgid "user_profile"
 msgstr "Perfil do usuario"
 
+msgid "login_required"
+msgstr "Debes identificarte para acceder a esta páxina."
+
 msgid "your_password"
 msgstr "Escolla o seu contrasinal:"
 
@@ -320,13 +394,13 @@ msgid "nickname"
 msgstr "Alcume:"
 
 msgid "edit_profile"
-msgstr "editar perfil"
+msgstr "editar o perfil"
 
 msgid "edit_your_profile"
 msgstr "Modifique o seu perfil"
 
 msgid "profile_edited_succesfully"
-msgstr "O seu perfil actualizouse con éxito!"
+msgstr "O seu perfil actualizouse satisfactoriamente!"
 
 msgid "hello"
 msgstr "ola,"
@@ -399,6 +473,9 @@ msgstr "Si"
 msgid "account_deleted"
 msgstr "A túa conta foi eliminada."
 
+msgid "no"
+msgstr "Non"
+
 msgid "nice_to_hear_that"
 msgstr "Aledámonos por iso"
 
@@ -461,6 +538,9 @@ msgstr ""
 "Introduce o teu enderezo de correo. Enviarémosche unha mensaxe pra recuperar"
 " o acceso."
 
+msgid "send"
+msgstr "Enviar"
+
 msgid "email_same_register"
 msgstr ""
 "O enderezo de correo debe ser o mesmo que empregaches pra rexistrarte."
@@ -499,7 +579,16 @@ msgstr ""
 "túa conta de %(account)s"
 
 msgid "submit_search"
-msgstr "Procurar"
+msgstr "Buscar"
+
+msgid "submit_registration"
+msgstr "Rexistrate"
+
+msgid "submit_login"
+msgstr "Acceso"
+
+msgid "submit_edit"
+msgstr "Gardar o perfil"
 
 msgid "contact_form"
 msgstr "Formulario de contacto"
@@ -508,6 +597,9 @@ msgid "link_removal"
 msgstr ""
 "Importante: Se desexas reclamar a suspensión dunha ligazón, debes utilizar "
 "exclusivamente o %(report_form)s."
+
+msgid "report_form"
+msgstr "Formulario de informe de ligazón"
 
 msgid "complaints_ignored"
 msgstr "As reclamacións realizadas a través deste formulario serán ignoradas."
@@ -522,7 +614,26 @@ msgid "captcha_wrong"
 msgstr "Os caracteres introducidos non coinciden cos da imaxe"
 
 msgid "message_sent"
-msgstr "A túa mensaxe foi enviada correctamente."
+msgstr "A túa mensaxe enviouse correctamente."
+
+msgid "no_valid_hostname"
+msgstr ""
+"%(hostname)s non é un nome de máquina válido para o enderezo de correo-e "
+"%(value)s"
+
+msgid "local_network"
+msgstr ""
+"%(value)s parece ser un nome de rede local pero non se permiten nomes de "
+"rede local"
+
+msgid "no_dns_hostname"
+msgstr ""
+"%(value)s non coincide coa estrutura esperada para un nome de máquina DNS"
+
+msgid "no_tld_known"
+msgstr ""
+"%(value)s semella ser un servidor de nomes DNS, mais non coincide cun "
+"dominio de nivel superior (TDL) da lista coñecida"
 
 msgid "your_name"
 msgstr "O teu nome:"
@@ -549,6 +660,9 @@ msgid "accept_terms"
 msgstr ""
 "Por favor, debes ler e aceptar os termos de uso e a política de intimidade"
 
+msgid "accept_tos"
+msgstr "Lin e acepto os %(tos)s e a %(privacy)s. "
+
 msgid "not_foofind_page"
 msgstr "A ligazón non pode ser unha páxina de Foofind"
 
@@ -558,19 +672,19 @@ msgstr "O URL debe ser unha páxina de descarga válida para Foofind"
 msgid "submit_links"
 msgstr "Enviar ligazóns"
 
+msgid "include_reported_links"
+msgstr "Inclúe as ligazóns informadas nos campos apropiados do formulario."
+
 msgid "include_link_per_line"
 msgstr ""
-"Por favor, inclúe unha ligazón http, ftp, ed2k ou magnet por liña.<br "
-"/>Estes serán analizados automaticamente e engadidos aos resultados de busca"
-" en breve."
+"Por favor, inclúe unha ligazón http, ftp, ed2k ou magnet por liña.\r\n"
+"Estes serán analizados automaticamente e engadidos aos resultados de busca en breve."
 
 msgid "link_sent"
 msgstr "As ligazóns foron enviadas. Grazas pola axuda!"
 
 msgid "footer"
-msgstr ""
-"Sitio web baixo licenza Creative Commons BY-SA . Código fonte baixo licenza "
-"Affero GPL ."
+msgstr "Sitio web baixo licenza %(cc)s. %(code)s baixo licenza %(gpl)s."
 
 msgid "about_text"
 msgstr ""
@@ -589,20 +703,20 @@ msgstr "Esta ligazón non existe ou foi eliminada!"
 msgid "translate"
 msgstr "Traducir"
 
+msgid "error_link_removed"
+msgstr "Sentimolo: esta ligazón foi eliminada na súa orixe."
+
 msgid "translate_to_your_language"
 msgstr "Axúdanos a traducir Foofind ao teu idioma"
 
 msgid "translate_description"
 msgstr ""
-"Actualmente, Foofind está dispoñíbel en poucos idiomas, mais ti podes "
-"axudarnos a traducilo ao teu. Escolleo da lista de idiomas a seguir e enche "
-"os campos cos textos traducidos. Non é necesario que completes todos os "
-"campos, calquera colabotación que poidas realizar será de gran "
-"axuda.<br/><br/>Se non atopas o teu idioma na lista, ponte en contacto "
-"connosco pra que o engadamos."
+"Actualmente, Foofind está dispoñíbel en poucos idiomas, mais ti podes axudarnos a traducilo ao teu. Escolleo da lista de idiomas a seguir e enche os campos cos textos traducidos. Non é necesario que completes todos os campos, calquera colabotación que poidas realizar será de gran axuda.\r\n"
+"\r\n"
+"Se non atopas o teu idioma na lista, ponte en contacto connosco pra que o engadamos."
 
 msgid "choose_language"
-msgstr "Elexir idioma"
+msgstr "Escoller idioma"
 
 msgid "translation_sent"
 msgstr "A túa tradución foi enviada. Grazas pola axuda!"
@@ -620,3 +734,6 @@ msgstr ""
 
 msgid "other"
 msgstr "Outro"
+
+msgid "opensearch_description"
+msgstr "Buscar empregando Foofind"

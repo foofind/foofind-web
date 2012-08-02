@@ -64,9 +64,9 @@ def old_show(pname):
     '''
     Si la url es antigua se redirecciona con un 301 a la nueva
     '''
-    if callable(pname):
+    try:
         return redirect(url_for("user."+pname),301)
-    else:
+    except:
         return abort(401)
 
 @user.route('/<lang>/user/register', methods=['GET', 'POST'])
@@ -160,7 +160,7 @@ def oauth_redirect():
     '''
     Realiza la redirección a la página que corresponda al hacer un login por oauth
     '''
-    return request.args.get('next') or (request.referrer if request.referrer!=url_for('.login',_external=True) else url_for('index.home'))
+    return request.args.get('next') or (request.referrer if request.referrer not in (url_for('.login',_external=True),url_for('.register',_external=True)) else url_for('index.home'))
 
 @user.route('/<lang>/user/login/twitter')
 def twitter():
@@ -171,7 +171,7 @@ def twitter():
         logout_oauth()        
         return o_twitter.authorize(url_for('.twitter_authorized',next=oauth_redirect()))
     except BaseException as e:
-        logging.exception(e)
+        logging.warn(e)
 
     flash(_("technical_problems", service="twitter"))
     return redirect(url_for('.login'))
@@ -182,7 +182,7 @@ def twitter_authorized(resp):
     '''
     if resp is None:
         flash("token_not_exist")
-        return redirect(url_for('.login',lang=None))
+        return redirect(url_for('.login'))
 
     session['oauth_token']=(resp['oauth_token'],resp['oauth_token_secret'])
     # peticion para obtener los datos extra
@@ -214,7 +214,7 @@ def facebook():
         logout_oauth()
         return o_facebook.authorize(url_for('.facebook_authorized',next=oauth_redirect(),_external=True))
     except BaseException as e:
-        logging.exception(e)
+        logging.warn(e)
 
     flash(_("technical_problems", service="facebook"))
     return redirect(url_for('.login'))

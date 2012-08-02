@@ -1,0 +1,235 @@
+@import "main.css";
+/* search ajax*/
+@mixin button($icon,$size:50)
+{
+    a{padding-top:$size*.75px;height:$size*.3px;margin:0;text-decoration:none;@include states($icon,$size,$status4_color:#FFF)}
+}
+input#q{height:30px;font-size:1.6em;margin-top:5px;/*padding-right:85px para favoritos y compartir*/}
+fieldset.small
+{
+    position:relative;
+    input[type="text"]+span{top:12px}
+    a
+    {
+        position:relative;left:-85px;top:-5px;@include icon(305,0,32);
+        &:nth-of-type(1){@include states(305,32)}
+        &:nth-of-type(2){@include states(306,32)}
+    }
+}
+#search_submit{/*margin-left:-65px; para favoritos y compartir*/width:140px;height:40px}
+#search_info
+{
+    height:1em;color:$darkgray;
+    strong{color:$darkergray}
+    em{color:$magenta;font-style:italic}
+}
+body{min-width:940px;min-height:1000px}
+#type li
+{
+    @for $i from 2 through 6{&:nth-child($i){@include button("00"+$i)}}
+}
+#src li
+{
+    @for $i from 2 through 4{&:nth-child($i){@include button("00"+($i+5))}}
+    &:nth-child(3) a{padding-top:32px;height:18px;}
+}
+#size
+{
+    width:135px;
+    margin-left:8px:
+    div
+    {
+        background:$lightestgray;
+        div{background:$magenta}
+        a
+        {
+            background:$darkerwhite;border-color:$lightesblack;
+            &.ui-state-hover,&.ui-state-focus{background:$darkwhite;border-color:$magenta}
+        }
+    }
+    span
+    {
+        margin-top:5px;color:$lightblack;font-weight:bold;font-size:.9em;
+        &:first-of-type{float:left}
+        &:last-of-type{float:right}
+    }
+}
+header
+{
+    #search_file
+    {
+        display:inline-block;
+        fieldset{width:100%;}
+    }
+}
+section#files
+{
+    section
+    {
+        >aside
+        {
+            float:left;width:160px;
+            dt{font-weight:bold;font-size:1.4em;margin:5px 0}
+            li
+            {
+                display:inline-block;font-size:.7em;text-align:center;text-transform:lowercase;margin:1px;line-height:.8em;
+                a{@include icon("001")}
+                @include button("001");
+            }
+        }
+    }
+    #fondo{opacity:0;display:none;background:#333;height:100%;width:100%;position:absolute;z-index:5;left:-10px;padding-right:10px}
+    #subcontent
+    {
+        max-width:1490px;min-width:940px;position:relative;/*overflow:hidden;*/
+        #flecha
+        {
+            cursor:pointer;position:absolute;right:-150px;z-index:7;display:none;background:$darkerwhite;border:2px solid $magenta;border-width:2px 0;width:25px;height:90px;
+            &.return{@include states(300,$span:1)}
+            span{@include icon(301,-1);margin-top:22px;}
+        }
+    }
+    #results
+    {
+        min-height:500px;width:640px;margin:0;
+        >li
+        {
+            width:630px;margin:0 5px;overflow:hidden;position:relative;cursor:pointer;background:transparent;border-bottom:1px solid $lightestgray;
+            &:hover>div,&.active>div{border-color:$magenta;background:$darkerwhite}
+            &.active{border-bottom-color:transparent;>div{/*margin-right:2px;border-right:none;*/border-radius:5px 0 0 5px}}
+            &.archive{@include states(106,50,2,true,'span:first-of-type',$status3:2,$status4:2)}
+            &.software{@include states(106,50,2,true,'span:first-of-type',$status3:2,$status4:2)}
+            &.audio{@include states(102,50,2,true,'span:first-of-type',$status3:2,$status4:2)}
+            &.document{@include states(105,50,2,true,'span:first-of-type',$status3:2,$status4:2)}
+            &.image{@include states(104,50,2,true,'span:first-of-type',$status3:2,$status4:2)}
+            &.file{@include states(106,50,2,true,'span:first-of-type',$status3:2,$status4:2)}
+            &.video{@include states(103,50,2,true,'span:first-of-type',$status3:2,$status4:2)}
+            /*&:nth-child(odd)>div{background:transparentize($darkgray,.9)}
+            &:nth-child(even)>div{background:transparentize($darkgray,.95)}*/
+            >div
+            {
+                height:70px;border:2px solid transparent;border-radius:5px;padding:10px 5px;margin:5px 0;
+                h3 a{z-index:0;@include ellipsis(395);text-decoration:none;outline:none;strong{color:$magenta}}
+                a{z-index:1}
+                >span:nth-of-type(1){@include icon(101,0,50);float:left;margin-right:10px;padding-top:52px;height:35px;font-weight:bold;text-align:center}
+                >span:nth-of-type(2){float:left;display:block;width:82px;margin-top:5px;font-size:1.1em;text-align:left;color:#000}
+                ul
+                {
+                    ul{float:left;margin-top:15px;}
+                    &.source
+                    {
+                        float:right;width:148px;height:87px;
+                        a{display:block}
+                        @mixin icon_p2p($icon_size:32)
+                        {
+                            font-weight:bold;
+                            span
+                            {
+                                span{@include icon(201,1,$icon_size);@if $icon_size>16{float:left}}
+                                &.ed2k{@include states(201,$icon_size,2,$status1:2)}
+                                &.gnutella{@include states(202,$icon_size,2,$status1:2)}
+                                &.torrent{@include states(203,$icon_size,2,$status1:2)}
+                                &.web{@include states(204,$icon_size,2,$status1:2)}
+                            }
+                            small{font-size:.9em;display:block;color:$darkergray;& img{margin-right:1px;vertical-align:bottom}}
+                        }
+                        .source_1
+                        {
+                            @include icon_p2p;margin-top:20px;
+                            >img{width:40px;margin-top:-5px;&+span{display:block;width:40px;text-align:center;font-weight:bold;color:$darkergray}}
+                            .thumblink
+                            {
+                                float:right;width:100px;height:75px;margin:0;margin-top:-23px;
+                                >span{position:relative;top:-76px;left:27px;width:50px;height:50px;display:block;@include icon(315,-1,$active:false)}
+                            }
+                            .blacklink span{top:14px}
+                        }
+                        .source_2{font-size:.9em;margin-top:7px;@include icon_p2p(24)}
+                        .source_3{@include icon_p2p(16)}
+                    }
+                    &.metadata
+                    {
+                        display:block;height:30px;font-size:.9em;
+                        li{display:inline;&:first-child a:before{content:none}}
+                        a
+                        {
+                            @include ellipsis(300,inline-block);color:$darkergray;
+                            &:before{content:">";padding-right:3px}
+                            &:hover{color:$magenta}
+                        }
+                    }
+                    &.links
+                    {
+                        float:right;height:32px;/*width:320px;margin-left:120px;margin-top:-3px;*/
+                        a{color:$darkergray;/*font-size:.9em;*/display:block;}
+                        /*span{@include icon(309,0,24);float:left}
+                        li
+                        {
+                            display:inline-block;width:100px;
+                            &:nth-child(1){a{@include states(309,24,1)}}
+                            &:nth-child(2){a{@include states(302,24,1)}}
+                            &:nth-child(3){a{@include states(308,24,1)}}
+                            strong{display:block}
+                        }*/
+                        li
+                        {
+                            /*position:relative;*/display:inline-block;vertical-align:middle;
+                            &:nth-child(1){width:175px;span{/*float:left;*/@include icon(309,0,24)}a{@include states(309,24,1,false)}}
+                            &:nth-child(2){width:50px;/*top:-28px;left:80px;*/span{@include icon(309,0,16)}a{@include states(302,16,1,false)}}
+                            &:nth-child(3){width:50px;/*top:-28px;left:116px;*/span{@include icon(309,0,16)}a{@include states(308,16,1,false)}}
+                            strong{display:block}
+                        }
+                    }
+                }
+            }
+        }
+        #no_results
+        {
+            cursor:auto;border:none;
+            ul{list-style:disc inside none}
+            li{display:list-item}
+            em{font-style:italic;font-weight:normal}
+            &:hover{border-color:#FFF;background:#FFF}
+            &.loading{text-align:center;img{margin-top:10px}}
+        }
+    }
+    #download
+    {
+        display:none;background:$darkerwhite;width:540px;height:95%;min-height:500px;position:fixed;z-index:6;right:-800px;border:2px solid $magenta;border-radius:5px;padding:30px;text-align:center;overflow:auto;
+        &.activo{right:-800px}
+        h2{@include ellipsis(430,$white-space:pre-wrap);text-align:left}
+        dl
+        {
+            margin-top:15px;text-align:left;
+            dt{float:left;width:24%;font-weight:bold;padding-right:1%}
+            dd{padding-left:25%}
+        }
+        .top_download
+        {
+            text-align: center;
+            iframe{width:420px;height:315px}
+        }
+        .download_button{top:0;float:none}
+        .download_source
+        {
+            text-align:left;
+            a{width:160px}
+            input{padding-left:5px;width:325px;font-size:1.2em;min-height:20px}
+        }
+        .close_download {
+            position: absolute;
+            right: 30px;
+            width:100px;
+            text-align:center;
+            top: 6px;
+            text-decoration: underline;
+            color: $magenta;
+            cursor:hand;
+        }
+    }
+}
+#more
+{
+    display:none;height:38px;background:url(/static/img/mas_resultados.png) no-repeat 12px 0;margin-left:160px;
+    &:hover{background-position:12px -47px;border:none}
+}
