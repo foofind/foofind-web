@@ -8,6 +8,7 @@ import chardet
 import pymongo
 import random
 import urllib2
+import traceback
 from unicodedata import normalize
 from base64 import b64encode, b64decode
 from os.path import isfile, isdir
@@ -15,7 +16,33 @@ from urlparse import urlparse
 from functools import wraps
 from content_types import *
 from foofind.utils.splitter import SEPPER
+from collections import OrderedDict
 
+class VALUE_UNSET(object):
+    '''
+    Tipo para ser usado como valor por defecto (como por ejemplo en el caso de
+    que None sea un valor válido en un parámetro). No instanciable.
+    '''
+    def __init__(self):
+        raise RuntimeError("%s is an static class, cannot be instanced" % self.__class__.__name__)
+
+class LimitedSizeDict(OrderedDict):
+    def __init__(self, *args, **kwds):
+        self.size_limit = kwds.pop("size_limit", None)
+        OrderedDict.__init__(self, *args, **kwds)
+        self._check_size_limit()
+
+    def __setitem__(self, key, value):
+        OrderedDict.__setitem__(self, key, value)
+        self._check_size_limit()
+
+    def _check_size_limit(self):
+        if self.size_limit is not None and len(self) > self.size_limit:
+            logging.warn(
+                "Superado límite de tamaño: %d" % self.size_limit,
+                extra={"trace":traceback.extract_tb()})
+            while len(self) > self.size_limit:
+                self.popitem(last=False)
 
 def bin2mid(binary):
     '''
@@ -124,9 +151,33 @@ def check_capped_collections(db, capped_dict):
                         clave y su tamaño como valor.
     '''
     collnames = db.collection_names()
-    for capped, size in capped_dict.iteritems():
-        if not capped in collnames:
-            db.create_collection(capped, capped = True, max = size, size = size)
+    extra = {"size":100000}
+    for capped, data in capped_dict.iteritems():
+        kwargs = extra.copy()
+        if isinstance(data, dict): kwargs.update(data)
+        elif isinstance(data, int):
+            kwargs["max"] = data
+            kwargs["size"] = data*512 # 512 bytes por documento
+        if capped in collnames:
+            options = db[capped].options()
+            if not options.get("capped", False):
+                logging.error(u"La colección (%s:%s).%s.%s no está capada."
+                    % (db.connection.host, db.connection.port, db.name, capped)
+                    )
+            elif any(True for key, value in extra.iteritems() if key != "size" and options.get(key, VALUE_UNSET) != value ):
+                # Comprobamos las diferencias en las opciones, obviando size
+                # TODO(felipe): Analizar la viabilidad de rehacer automáticamente las capped collections que estén mal
+                # db[capped].drop()
+                # db.create_collection(capped, capped = True, **kwargs)
+
+                logging.warn(
+                    u"Diferencia encontrada en la configuración de capped collection en (%s:%s).%s.%s"
+                        % (db.connection.host, db.connection.port, db.name, capped),
+                    extra = {"in_app_config": kwargs, "current_config": options}
+                    )
+        else:
+            db.create_collection(capped, capped = True, **kwargs)
+        db.connection.end_request()
 
 TIME_UNITS = {
     "ms":0.001,
@@ -146,7 +197,8 @@ TIME_UNITS = {
     "hours":3600,
     "hr":3600,
     }
-FLOATCHARS = "0123456789-+."
+TIME_FLOATCHARS = "0123456789-+."
+TIME_IGNORECHARS = ","
 def to_seconds(time_string):
     '''
     Convierte la duración de texto a segundos si es necesario
@@ -172,8 +224,10 @@ def to_seconds(time_string):
     t = []
     op = []
     for i in time_string:
-        if op: # Si tengo una unidad (parcial o completa)
-            if i in FLOATCHARS:
+        if i in TIME_IGNORECHARS:
+            pass
+        elif op: # Si tengo una unidad (parcial o completa)
+            if i in TIME_FLOATCHARS:
                 # Empieza otro dígito, asumo que la unidad está completa
                 if t:
                     # Hay un número en la pila, uso la unidad para pasar el número a segundos
@@ -184,7 +238,7 @@ def to_seconds(time_string):
             else:
                 # Añado otro caracter de la unidad
                 op.append(i)
-        elif i in FLOATCHARS: # Si es un dígito
+        elif i in TIME_FLOATCHARS: # Si es un dígito
             t.append(i)
         else: # Si el carácter es de una unidad
             op.append(i)
@@ -228,14 +282,6 @@ def generator_with_callback(iterator, callback):
     for i in iterator:
         yield i
     callback()
-
-def end_request(r, conn=None):
-    if isinstance(r, pymongo.cursor.Cursor):
-        return generator_with_callback(r, r.collection.database.connection.end_request)
-    elif conn:
-        conn.end_request()
-        return r
-    raise AttributeError("Cannot obtain connection from %s" % r)
 
 def u(txt):
     ''' Parse any basestring (ascii str, encoded str, or unicode) to unicode '''
@@ -295,6 +341,28 @@ def nocache(fn):
         resp.cache_control.must_revalidate = True
         return resp
     return decorated_view
+
+def canonical_url(data):
+    '''
+    Genera la parte de la url de descarga canónica.
+
+    @type data: dict
+    @param data: Documento de fichero
+
+    @rtype str
+    @return Cadena lista para usar como url de descarga.
+    '''
+
+    fid = urllib2.quote(mid2url(data["_id"]))
+    try:
+        fname = "/%s.html" % urllib2.quote(
+            ( name["n"] for crc, name in data["fn"].iteritems()
+              if "n" in name and name["n"].strip()
+              ).next().encode("utf8")[:512]
+            )
+    except StopIteration:
+        fname = ""
+    return "/en/download/%s%s" % (fid, fname)
 
 def uchr(x):
     '''

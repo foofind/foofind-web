@@ -18,7 +18,7 @@
                 </span>
             </fieldset>
             <fieldset>
-                {{- form.search_submit -}}
+                {{- form.search_submit(**{"data-no_query":_("write_something")}) -}}
             </fieldset>
         </form>
     </div>

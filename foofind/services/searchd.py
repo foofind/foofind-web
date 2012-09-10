@@ -9,6 +9,7 @@ from time import time
 from collections import defaultdict
 from copy import deepcopy
 from math import sqrt
+from shlex import split
 import json
 import heapq
 import functools
@@ -16,6 +17,7 @@ import itertools
 import logging
 import struct
 import operator
+import re
 
 
 def get_group(sg):
@@ -29,10 +31,11 @@ def get_ct(sg):
 
 def get_src(sg):
     return (int(sg)&0xFFFF000L)>>12
-
+    
 class SearchProxy:
-    def __init__(self, servers, stats, config):
-        self.servers = servers
+    def __init__(self, config, filesdb):
+        self.servers = [(server["_id"], str(server["sp"]), int(server["spp"])) for server in filesdb.get_servers() if "sp" in server]
+        stats = {server[0]:filesdb.get_server_stats(server[0]) for server in self.servers}
         self.stats = deepcopy(stats)
         self.stats["*"] = {}
         
@@ -77,17 +80,21 @@ class SearchProxy:
             self.sources_rating_rv[src] /= srcrc
             self.sources_rating_rd[src] = sqrt(self.sources_rating_rv[src])
 
-        self.nservers = len(servers)
-        self.maxserverid = max(servers)[0]
-        self.tasks = {s[0]:Queue() for s in servers}
-        self.pendings = Queue()
-        self.workers = [SphinxWorker(s,config,self.tasks[s[0]],self) for s in servers for j in xrange(config["SERVICE_SPHINX_WORKERS_PER_SERVER"])]
-        for w in self.workers: w.start()
+        self.sources_weights = {"w":1, "s":1, "t":0.2, "e":0.08, "g":0.08}
+        self.sources_weights = {int(s["_id"]):v for k,v in self.sources_weights.iteritems() for s in filesdb.get_sources(group=k)}
+         
+        if config["NEW_SEARCH_ACTIVE"]:
+            self.nservers = len(self.servers)
+            self.maxserverid = int(max(self.servers)[0])
+            self.tasks = {s[0]:Queue() for s in self.servers}
+            self.pendings = Queue()
+            self.workers = [SphinxWorker(s,config,self.tasks[s[0]],self) for s in self.servers for j in xrange(config["SERVICE_SPHINX_WORKERS_PER_SERVER"])]
+            for w in self.workers: w.start()
 
-        pp = Thread(target=self.process_pendings)
-        pp.daemon = True
-        pp.start()
-        
+            pp = Thread(target=self.process_pendings)
+            pp.daemon = True
+            pp.start()
+            
     def search(self, asearch):
         asearch["_r"] = Queue()
         counter = 0
@@ -129,7 +136,7 @@ class SearchProxy:
             try:
                 asearch = self.pendings.get()
                 asearch["_pc"](asearch)
-            except Exception as e:
+            except BaseException as e:
                 logging.exception(e)
 
     def get_search_state(self, text, filters):
@@ -167,21 +174,20 @@ class SphinxWorker(Thread):
         self.client.SetRankingMode(sphinxapi2.SPH_RANK_EXPR, "sum((4*lcs+2.0/min_hit_pos)*user_weight)")
         self.client.SetFieldWeights({"fn":100, "md":1})
         self.client.SetMaxQueryTime(self.config["SERVICE_SPHINX_MAX_QUERY_TIME"])
-        self.client.SetSortMode( sphinxapi2.SPH_SORT_EXTENDED, "vrw DESC, r2 DESC" )
+        self.client.SetSortMode( sphinxapi2.SPH_SORT_EXTENDED, "rw DESC, r2 DESC" )
         
     def run(self):
         while True:
             try:
                 asearch, query = self.tasks.get()
-            except Exception as e:
+            except BaseException as e:
                 logging.exception(e)
                 continue
 
             try:
                 text = query["t"]
                 filters = query["f"] if "f" in query else {}
-                langmask = 1<<query["l"] if query["l"] else 0
-                self.client.SetSelect("*,@weight*r*((if(va&%d,1.0,0)-if(vb&%d,0.5,0)+vc/42)*vd/127) as vrw,min(if(z>0,z,100)) as zm,max(z) as zx"%(langmask,langmask))
+                self.client.SetSelect("*,@weight*r as rw, min(if(z>0,z,100)) as zm, max(z) as zx")
 
                 # traer resultados de uno o más grupos
                 if "g" in query: 
@@ -207,7 +213,7 @@ class SphinxWorker(Thread):
 
                 results = self.client.RunQueries()
                 self.proxy.put_results(asearch, query, self.server[0], results, (self.client.GetLastWarning(), self.client.GetLastError()))
-            except Exception as e:
+            except BaseException as e:
                 self.proxy.put_results(asearch, query, self.server[0], None, (None, e.message))
                 logging.exception(e)
                 
@@ -220,10 +226,6 @@ class SphinxWorker(Thread):
             self.client.SetFilter('ct', filters["ct"])
         if "src" in filters:
             self.client.SetFilter('s', filters["src"])
-
-def dict2defaultdict(data, descr):
-    return {key:defaultdict(lambda:descr[key],{key2:dict2defaultdict(value2, descr[key].copy()["test"]) for key2, value2 in value.iteritems()})
-                if key in descr and isinstance(descr[key], defaultdict) else value for key, value in data.iteritems()}
 
 def text_subgroup_info():
     return {"c": defaultdict(int), "z":[0,100], "f":{}}
@@ -283,7 +285,7 @@ class Search(object):
         return self
 
     def update_stats(self):
-        self.filters_state["cs"] = sum(self.filters_state["c"].itervalues())
+        self.filters_state["cs"] = sum(self.filters_state["c"].itervalues()) if "c" in self.filters_state else 0
         groups = self.filters_state["g"]
 
         # w=peso del grupo, l=ultimo elemento extraido, lw=ultimo peso
@@ -294,14 +296,9 @@ class Search(object):
                 for sg, osg in og2["sg"].iteritems():
                     ts = osg["cs"] = sum(osg["c"])
                     gts2 += ts
-                    osg["w"] = -osg["h"][0][0] if osg["h"] else 0
                 gts += gts2
                 og2["cs"] = gts2
-                og2["l"] = 0
-                og2["lw"] = og2["w"] = gts2
             og["cs"] = gts
-            og["l"] = 0
-            og["lw"] = og["w"] = 1.0 * gts / self.proxy.stats["c"]["g"][g]
             
     def save_state(self):
         ''' Guarda en cache los datos de la búsqueda.
@@ -313,37 +310,82 @@ class Search(object):
     def get_stats(self):
         return {k:v for k,v in self.filters_state.iteritems() if k in ("cs")}
 
-    def get_results(self):
+    def get_modifiable_info(self):
         groups = self.filters_state["g"]
+
+        info = {}
+        # w=peso del grupo, l=ultimo elemento extraido, lw=ultimo peso
+        for g, og in groups.iteritems():
+            g_weight = 0
+            ig = info[g] = {"cs":og["cs"], "l":0, "g2":{}}
+            
+            for g2, og2 in og["g2"].iteritems():
+                ig2 = ig["g2"][g2] = {"cs":og2["cs"], "l":0, "sg":{}}
+                g2_weight = 0
+                for sg, osg in og2["sg"].iteritems():
+                    weight = -osg["h"][0][0]
+                    isg = ig2["sg"][sg] = {"cs":osg["cs"], "h":osg["h"][:], "lw":weight, "l":0}
+                    if weight>g2_weight: g2_weight = weight
+                ig2["lw"] = ig2["w"] = g2_weight
+                if g2_weight>g_weight: g_weight = g2_weight
+            ig["lw"] = ig["w"] = g_weight
+        return info
+        
+    def get_results(self):
+        
         subgroups = self.text_state["sg"]
 
-        self.update_stats()
-        
+        info = self.get_modifiable_info()
+
         # cuando lo saca de cache no es igual a cuando lo genera de nuevas
         for i in xrange(self.filters_state["cs"]):
-            g = max(groups, key=lambda x: groups[x]["lw"]+groups[x]["l"]*1e-5 if groups[x]["cs"]>groups[x]["l"] else -1)
-            og = groups[g]
-            g2 = max(og["g2"], key=lambda x: og["g2"][x]["lw"]+og["g2"][x]["l"]*1e-5 if og["g2"][x]["cs"]>og["g2"][x]["l"] else -1)
-            og2 = og["g2"][g2]
-            sg = max(og2["sg"], key=lambda x: og2["sg"][x]["w"] if og2["sg"][x]["h"] else -1)
-            osg = og2["sg"][sg]
+            filtered_groups = [(og["lw"], og["l"], g, og) for g, og in info.iteritems() if og["lw"]>-1]
+            if filtered_groups:
+                w, l, g, og = max(filtered_groups)
+            else:
+                break
 
-            og["l"] += 1
-            og["lw"] = og["w"]/(2*og["l"]+1.0)
-            og2["l"] += 1
-            og2["lw"] = og2["w"]/(2*og2["l"]+1.0)
-            osg["w"] = -osg["h"][0][0] if osg["h"] else -1
-            if osg["w"]==-1:
-                if not any(tosg["h"] for tosg in og2["sg"].itervalues()):
-                    og2["lw"] = -1
-                    if not any(tog2["w"]>-1 for tog2 in og["g2"].itervalues()):
-                        og["lw"] = -1
-            
+            filtered_groups2 = [(og2["lw"], og2["l"], g2, og2) for g2, og2 in og["g2"].iteritems() if og2["lw"]>-1]
+            if filtered_groups2:
+                w2, l2, g2, og2 = max(filtered_groups2)
+            else:
+                og["lw"]=-1
+                if len(filtered_groups)==1:
+                    break
+                continue
+
+            filtered_subgroups = [(osg["lw"], osg["l"], sg, osg) for sg, osg in og2["sg"].iteritems() if osg["lw"]>-1]
+            if filtered_subgroups:
+                ws, ls, sg, osg = max(filtered_subgroups)
+            else:
+                og2["lw"]=-1
+                if len(filtered_groups2)==1:
+                    og["lw"] = -1
+                    if len(filtered_groups)==1:
+                        break
+                continue
+
+            og["l"] = l+1
+            og["lw"] = w/(2*l+1.0)
+            og2["l"] = l2+1
+            og2["lw"] = w2/(2*l+1.0)
+            osg["l"] = ls+1
+
+            fr = heapq.heappop(osg["h"])
+            tr = subgroups[sg]["f"][fr[1]]
+                
             if osg["h"]:
-                fr = heapq.heappop(osg["h"])
-                tr = subgroups[sg]["f"][fr[1]]
-                yield (fr[1], tr[1], tr[3])
-            
+                osg["lw"] = -osg["h"][0][0]
+            else:
+                osg["lw"] = -1
+                if len(filtered_subgroups)==1:
+                    og2["lw"] = -1
+                    if len(filtered_groups2)==1:
+                        og["lw"] = -1
+                        if len(filtered_groups)==1:
+                            break
+                            
+            yield (fr[1], tr[1], tr[3])
         '''results = self.state["r"]
         groups = self.state["g"]
         subgroups = self.state["sg"]
@@ -451,7 +493,8 @@ class Search(object):
                     fid = bin2hex(struct.pack('III',r["attrs"]["uri1"],r["attrs"]["uri2"],r["attrs"]["uri3"]))
                     g = get_group(sg)
                     g2 = get_group2(sg)
-                    weight = r["attrs"]["vrw"]
+                    rating = r["attrs"]["r"]
+                    weight = r["weight"]
                     count = r["attrs"]["@count"]
                     if not main: first = query["g"][g]
                     total += count
@@ -459,10 +502,12 @@ class Search(object):
                     # almacena fichero en grupos y subgrupos
                     if not fid in subgroups[sg]["f"]:
                         filtrable_info = {"z":r["attrs"]["z"], "e":r["attrs"]["e"]}
-                        subgroups[sg]["f"][fid] = (weight, server, filtrable_info, r["id"])
+                        normalized_weight = self.proxy.sources_weights[g2]*((rating-self.proxy.sources_rating_ra[g2])/self.proxy.sources_rating_rd[g2] if g2 in self.proxy.sources_rating_rd and self.proxy.sources_rating_rd[g2] else rating)*weight
+                        subgroups[sg]["f"][fid] = (normalized_weight, server, filtrable_info, r["id"])
+                        
                         # si aplica para los filtros
                         if self.satisfies_filters(sg, filtrable_info):
-                            heapq.heappush(groups[g]["g2"][g2]["sg"][sg]["h"], (-weight, fid))
+                            heapq.heappush(groups[g]["g2"][g2]["sg"][sg]["h"], (-normalized_weight, fid))
                     
                     # actualiza totales de grupos y subgrupos
                     if main[0][0]: # almacena en text_state
@@ -506,7 +551,8 @@ class Search(object):
         if "e" in self.filters:
             if not filtrable["e"] in self.filters["e"]: return False
         return True
-        
+
+    '''
     def update_results(self):
         subgroups = self.state["sg"]
         results = self.state["r"]
@@ -516,7 +562,8 @@ class Search(object):
                 subgroup = subgroups[result[0]]
                 result[2] = heapq.heappop(subgroup["h"])
                 subgroup["r"].append(result[2])
-
+    '''
+    
 def abs_threshold(val, t):
     if abs(val)<t: return 0
     return val
@@ -525,8 +572,8 @@ class Searchd:
     def __init__(self):
         pass
 
-    def init_app(self, app, servers, stats):
-        self.proxy = SearchProxy(servers, stats, app.config)
+    def init_app(self, app, filesdb):
+        self.proxy = SearchProxy(app.config, filesdb)
 
     def search(self, text, filters={}, lang=None):
         s = Search(self.proxy, text, filters, lang)
@@ -534,3 +581,31 @@ class Searchd:
 
     def get_search_info(self, text, filters={}):
         return self.proxy.get_search_state(text, filters)
+
+_escaper = re.compile(r"([=\(\)|\-!@~\"&/\\\^\$\=])")
+def escape_string(text):
+    return "\"%s\""%_escaper.sub(r"\\\1", text) if " " in text else _escaper.sub(r"\\\1", text)
+    
+def parse_query(user_query, sources):
+
+    # intenta hacer un split teniendo en cuenta comillas, si falla hace un split normal
+    if(user_query):
+        try:
+            parts = split(user_query.lower())
+        except:
+            parts = user_query.lower().split(" ")
+    else:
+        return [{"q":"","s":[]}]
+        
+    parts = [(part[0],part[1:]) if len(part)>1 and part[0] in "!-" else ("",part) for part in parts]
+    sources_found = {text:op for op, text in parts if text in sources}
+
+    queries = [{"q":" ".join("|" if text in ["|", "or"] else op+escape_string(text) for op, text in parts), "s":list({sources[text] for text, op in sources_found.iteritems() if op and op in "!-"})}]
+
+    positive_filters = {text for text, op in sources_found.iteritems() if op==""}
+
+    if positive_filters:
+        query = " ".join("|" if text in ["|", "or"] else op+escape_string(text) for op, text in parts if not text in positive_filters)
+        if query:
+            queries.append({"q":query, "s":[sources[source] for source in positive_filters]})
+    return queries

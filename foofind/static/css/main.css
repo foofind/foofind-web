@@ -37,6 +37,7 @@ $fuente:Arial,Verdana,Helvetica,sans-serif;
     {
         $parent.active{color:$status3_color;$selector{@include sprite($icon,$status3,$size)}}
         $parent:active{color:$status4_color;$selector{@include sprite($icon,$status4,$size)}}
+        $parent:focus{opacity:.7}
     }
 }
 /* para poner un icono */
@@ -107,15 +108,25 @@ h2{margin-bottom:10px}
 h3{font-size:1.3em}
 .errors{color:#cd0069;padding-left:0px}
 /* cabecera */
-header
+#container>header
 {
     $header:$lightestblack;
     font-size:1.3em;color:#dedede;
     h1{clear:both;float:left;margin:13px 10px 0 15px;width:161px;height:67px;overflow:hidden;position:relative;z-index:10}
+    small{font-variant:small-caps;font-size:.7em;margin-left:.35em;color:$lightgray}
     >section
     {
         background:$header;width:100%;height:30px;
-        >p{float:left;height:15px;padding:5px 1% 10px;font-weight:bold;a{color:$lightestgray;text-decoration:none}}
+        >p
+        {
+            float:left;height:15px;padding:5px 1% 10px;
+            a
+            {
+                color:$lightestgray;font-weight:bold;text-decoration:none;
+                &:hover{color:#FFF}
+                small{color:$lightgray}
+            }
+        }
     }
     #header_navigation
     {        
@@ -143,8 +154,7 @@ header
             &:hover li{display:block;&:first-child span{@include icon(312,2,24)}}
             li
             {
-                display:none;background:$header;
-                small{font-variant:small-caps;font-style:italic;font-size:.8em;margin-left:5px;color:$magenta}
+                display:none;background:$header;                
                 &:first-child
                 {
                     display:block;min-height:35px;margin-left:0;background:$header;cursor:default;
@@ -445,7 +455,7 @@ a.vote_down span{color:$magenta}
 .small.downactive a.vote_down, .small a.vote_down:hover{@include sprite(303,3,24)}
 .top_download{text-align:left;clear:left;padding-bottom:20px;padding-top:30px;width:100%;min-height:120px}
 .download_button{position:relative;text-align:center;display:block;top:-20px;vertical-align:middle;float:left}
-.download_embed{background:black; text-align:center;height:315px;width:420px;margin:0px 48px;padding:2px}
+.download_embed{background:black; text-align:center;height:288px;width:512px;padding:0px}
 .download_file_metadata{width:65%;min-width:490px;display:inline-block;padding-left:40px;vertical-align:middle}
 .download_file_torrent_files{margin-top:10px;width:430px}
 .download_file_torrent_files ul{font-size:.92em;display:block;height:8em;max-height:15em;border:1px solid #cdcdcd;padding:2px;overflow:auto}

@@ -9,8 +9,6 @@ import errno
 import json
 import math
 
-from . import u
-
 class TamingSocket(object):
     control = "\1"
     wtime = 0.001

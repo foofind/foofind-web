@@ -45,15 +45,15 @@ def search():
     # obtener los resultados y sacar la paginación
     s = searchd.search(query, None, all_langs.get(g.lang))
     print "a", time()-a; a=time()
-    stats = s.get_stats()
+    ids = list(s.get_results())
     print "b", time()-a; a=time()
     results["time"] = 1
+    stats = s.get_stats()
     results["total_found"] = int(stats["cs"])
-    ids = list(itertools.islice(s.get_results(), 0, 20))
     print "c", time()-a; a=time()
     files_dict = {mid2hex(file_data["_id"]):fill_data(file_data, False, query) for file_data in get_files(ids)}
     print "d", time()-a; a=time()
-    files=list(files_dict[file_id[0]] for file_id in ids if file_id[0] in files_dict)
+    files=({"file":files_dict[file_id[0]], "search":file_id} for file_id in ids if file_id[0] in files_dict)
     print "e", time()-a; a=time()
 
     return render_template('files/search.html',

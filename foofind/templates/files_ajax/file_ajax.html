@@ -1,50 +1,77 @@
+{%- macro url_search(delete_params=[],catch_kwargs=true) -%}
+    #!/{{ kwargs|search_params(delete_params,args=args)|querystring_params }}
+{%- endmacro -%}
 <li class="{{ file['view']['file_type'] }}">
     <div>
         <ul class="source">
             {% for source,source_data in file['view']['sources'].items() %}
-            <li>
-                <a href="{{ source_data['urls'][0] }}" class="source_{{ file['view']['sources']|length }}">
-                    {% if "s" in source_data['type'] %}
-                    <span class="thumblink{% if 'images_server' not in file['view'] %} blacklink{% endif %}">
+            <li class="source_{{ file['view']['sources']|length }}">
+                {% if "s" in source_data['type'] or 'images_server' in file['view'] %}
+                    <{% if 'embed' not in file['view'] %}a href="{{ source_data['urls'][0] }}"{% else %}span{% endif %} class="thumblink{% if 'images_server' not in file['view'] %} blacklink{% endif %}">
                         {% if 'images_server' in file['view'] %}
-                        <img id="{{ file['file']['id'] }}" alt="{{ file['file']['id'] }}" class="img_{{ file['view']['images_server'] }}" src="http://{{ file['view']['first_image_server'] }}/{{ file['file']['_id'] }}0" />
+                        <img id="{{ file['file']['id'] }}" alt="{{ file['file']['id'] }}" data-servers="{{ file['view']['images_server'] }}" data-id="{{ file['file']['_id'] }}" src="http://{{ file['view']['first_image_server'] }}/{{ file['file']['_id'] }}0" />
                         {% endif %}
+                        {% if "s" in source_data['type'] %}<span></span>{% endif %}
+                    </{% if 'embed' not in file['view'] %}a{% else %}span{% endif %}>
+                    {% if source_data["icons"]["32"] %}
+                    <img src="/static/img/{{ source_data['tip'] }}.png" src="{{ source_data['tip'] }}" title="{{ source }}" />
+                    {% else %}
+                    <span class="{{ source_data['icon'] }}" title="{{ source }}">
                         <span></span>
                     </span>
-                    <img src="{{ source_data['logo'] }}" src="{{source_data['tip']}}" />
                     {% endif %}
-                    {% if "s" in source_data['type'] %}                        
-                        <span>{{ file['view']['md']['length'] }}</span>
+                {% endif %}
+                {% if "s" in source_data['type'] %}
+                <span>{{ file['view']['md']['length'] }}</span>
+                {% elif 'images_server' not in file['view'] %}
+                <span class="{{ source_data['icon'] }}">
+                    <span></span>
+                    {% if source_data['icon']=="web" %}
+                    {{_("direct_download")}}
+                    {% elif source_data['icon']=="torrent" or source_data['icon']=="tmagnet"%}
+                    torrent
                     {% else %}
-                        <span class="{{ source_data['icon'] }}">
-                            <span></span>
-                            {% if source_data['icon']=="web" %}
-                            {{_("direct_download")}}
-                            {% elif source_data['icon']=="torrent" or source_data['icon']=="tmagnet"%}
-                            torrent
-                            {% else %}
-                            {{ source_data['tip'] }}
-                            {% endif %}
-                        </span>
+                    {{ source_data['tip'] }}
                     {% endif %}
-                    {% if source_data['icon']=="web" and "s" not in source_data['type'] %}
-                        <small>
-                            {#<img src="http://{{ source }}/favicon.ico" src="{{source_data['tip']}}" width="16" height="16" />#}
-                            {{ source }}
-                        </small>
-                    {% elif "s" not in source_data['type'] %}
-                        <small>{{ source_data['count'] }} {% if source_data['count']>1 %}{{_('sources')}}{% else %}{{_('source')|lower}}{% endif %}</small>
+                </span>
+                {% endif %}
+                {% if "s" not in source_data['type'] and 'images_server' not in file['view'] %}
+                    {% if source_data['icon']=="web" %}
+                    <small>
+                        {#<img src="http://{{ source }}/favicon.ico" src="{{source_data['tip']}}" width="16" height="16" />#}
+                        <a href="{{ source_data['urls'][0] }}">{{ source }}</a>
+                    </small>
+                    {% else %}
+                    <small>
+                        <a href="{{ source_data['urls'][0] }}">
+                        {% if source_data['icon']=="torrent" or source_data['icon']=="tmagnet" %}
+                            {% if "seeds" in file['view']['md'] %}{{ file['view']['md']["seeds"] }} {{_('seeds')|lower}}{% endif %}
+                        {% else %}
+                            {{ source_data['count'] }} {% if source_data['count']>1 %}{{_('sources')}}{% else %}{{_('source')|lower}}{% endif %}
+                        {% endif %}
+                        </a>
+                    </small>
                     {% endif %}
-                </a>
+                {% endif %}
             </li>
             {% endfor %}
         </ul>
         <span>{%- if file['view']['fnx'] and file['view']['fnx']!="torrent" %}{{ file['view']['fnx']|upper }}{% endif -%}</span>
-        <h3><a href="{{ url_for('files.download',file_id=file['file']['id'],file_name=file['view']['fn']) }}.html" title="{{ file['view']['fn']|safe }}" data-id="{{ file['file']['id'] }}">{{ file['view']['fnhs']|safe }}</a></h3>
+        <h3><a href="{{ url_for('files.download',file_id=file['file']['id'],file_name=file['view']['qfn']) }}.html" title="{{ file['view']['fn']|safe }}" data-id="{{ file['file']['id'] }}">{{ file['view']['fnhs']|safe }}</a></h3>
         <ul class="metadata">
-        {% set metadata=file['view']['md'] %}
-        {% for meta,value in [('genre',metadata['genre']),('album',metadata['album']),('artist',metadata['artist']),('title',metadata['title'])] if value %}
-            <li><a href="#!/q={{ value }}" title="{{_(meta)|capitalize }}: {{ value }}">{{ file['view']['mdh'][meta]|safe }}</a></li>
+        {%
+            set metadata=[
+                ('series',file['view']['md']['series'],True,''),
+                ('season',file['view']['md']['season'],False,_('season')+" "),
+                ('episode',file['view']['md']['episode'],False,_('episode')+" "),
+                ('genre',file['view']['md']['genre'],True,''),
+                ('album',file['view']['md']['album'],True,''),
+                ('artist',file['view']['md']['artist'],True,''),
+                ('title',file['view']['md']['title'],True,''),
+            ]
+        %}
+        {% for meta,value,link,extra in metadata if value %}
+            <li><a{% if link %} href="{{ url_search(q=value|urlencode) }}"{% endif %} title="{{_(meta)|capitalize }}: {{ value }}">{{ extra }}{{ file['view']['mdh'][meta]|safe }}</a></li>
         {% endfor %}
         </ul>
         {#<ul class="file_info">

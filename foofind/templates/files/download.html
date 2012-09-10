@@ -13,6 +13,9 @@
         </a>
     </div>
 {% endmacro -%}
+{% block head %}
+<link rel="canonical" href="{{ canonical_url }}" />
+{% endblock%}
 {% block content %}
 <hr />
 <div class="wrap_download">
@@ -153,6 +156,9 @@
                 </form>
             </div>
             {% endif %}
+            {#
+            {% include "api/include_embed.html" %}
+            #}
         </div>
     </div>
 </div>

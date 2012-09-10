@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import pymongo
-from foofind.utils import hex2mid, end_request
+from foofind.utils import hex2mid
 from hashlib import sha256
 from datetime import datetime
 
@@ -52,7 +52,9 @@ class PagesStore(object):
         complaints = self.pages_conn.foofind.complaint.find(None if processed is None else {"processed":processed}).sort("created",-1)
         if not skip is None: complaints.skip(skip)
         if not limit is None: complaints.limit(limit)
-        return end_request(complaints)
+        for doc in complaints:
+            yield doc
+        self.pages_conn.end_request()
 
     def get_complaint(self, hexid):
         '''
@@ -64,7 +66,9 @@ class PagesStore(object):
         @rtype: MongoDB document or None
         @return: resultado
         '''
-        return end_request(self.pages_conn.foofind.complaint.find_one({"_id":hex2mid(hexid)}), self.pages_conn)
+        data = self.pages_conn.foofind.complaint.find_one({"_id":hex2mid(hexid)})
+        self.pages_conn.end_request()
+        return data
 
     def update_complaint(self, data, remove=None):
         '''
@@ -93,10 +97,12 @@ class PagesStore(object):
         @rtype integer
         @return Número de enlaces reportados
         '''
-        return end_request(self.pages_conn.foofind.complaint.find(
+        count = self.pages_conn.foofind.complaint.find(
             None if processed is None else {"processed":processed},
             limit=limit
-            ).count(True), self.pages_conn)
+            ).count(True)
+        self.pages_conn.end_request()
+        return count
 
     def create_translation(self, data):
         '''
@@ -119,10 +125,12 @@ class PagesStore(object):
         @rtype integer
         @return Número de traducciones
         '''
-        return end_request(self.pages_conn.foofind.translation.find(
+        count = self.pages_conn.foofind.translation.find(
             None if processed is None else {"processed":processed},
             limit=limit
-            ).count(True), self.pages_conn)
+            ).count(True)
+        self.pages_conn.end_request()
+        return count
 
     def get_translations(self, skip=None, limit=None, processed=False):
         '''
@@ -143,7 +151,9 @@ class PagesStore(object):
         translations = self.pages_conn.foofind.translation.find(None if processed is None else {"processed":processed}).sort("created",-1)
         if not skip is None: translations.skip(skip)
         if not limit is None: translations.limit(limit)
-        return end_request(translations)
+        for document in translations:
+            yield document
+        self.pages_conn.end_request()
 
     def get_translation(self, hexid):
         '''
@@ -155,9 +165,9 @@ class PagesStore(object):
         @rtype: MongoDB document or None
         @return: resultado
         '''
-        return end_request(
-            self.pages_conn.foofind.translation.find_one({"_id":hex2mid(hexid)}),
-            self.pages_conn)
+        data = self.pages_conn.foofind.translation.find_one({"_id":hex2mid(hexid)})
+        self.pages_conn.end_request()
+        return data
 
     def update_translation(self, data, remove=None):
         '''
@@ -177,9 +187,3 @@ class PagesStore(object):
         self.pages_conn.foofind.translation.update({"_id":hex2mid(data["_id"])}, update)
         self.pages_conn.end_request()
 
-    def get_alternative_config(self, altid):
-        '''
-
-
-        '''
-        return None

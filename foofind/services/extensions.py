@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from flask import render_template, flash, current_app
-from flaskext.babel import gettext as _
-from flaskext.babel import Babel
-from flaskext.login import LoginManager
-from flaskext.mail import Mail, Message
+from flask.ext.babel import gettext as _
+from flask.ext.babel import Babel
+from flask.ext.login import LoginManager
+from flask.ext.mail import Mail, Message
 from smtplib import SMTPRecipientsRefused
 from raven.contrib.flask import Sentry
 import logging

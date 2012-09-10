@@ -4,7 +4,7 @@
 """
 from wtforms.validators import *
 from wtforms.validators import ValidationError
-from flaskext.babel import lazy_gettext as _
+from flask.ext.babel import lazy_gettext as _
 from functools import partial
 import re
 

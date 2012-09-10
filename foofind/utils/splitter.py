@@ -11,7 +11,7 @@ split = re.compile(r"(?:[^\w\']|\_)|(?:[^\_\W]|\')+", re.UNICODE)
 propercaseparser = re.compile('((?=[A-Z0-9][a-z])|(?<=[a-z])(?=[A-Z0-9]))', re.UNICODE)
 
 wsepsws = {" ":0.9, "_":0.6, ".":0.2, "-":0.1, "&":0.01, "(":-0.1, "[":-0.1, "{":-0.1, "}":-0.1, "]":-0.1, ")":-0.1}
-mds = {'audio:artist':1,'audio:composer':1,'archive:folders':1, 'archive:files':1,'video:keywords':1,'audio:album':1, 'audio:title':1, 'document:title':1, 'torrent:name':1, 'image:title':1, 'video:title':1 }
+mds = frozenset({'audio:artist','audio:composer','archive:folders', 'archive:files','video:keywords','audio:album', 'audio:title', 'document:title', 'torrent:name', 'image:title', 'video:title', 'torrent:filepaths', "video:series", "video:season", "video:episode", "video:lang", "video:subs", "video:director", "video:genre", "video:year", "video:cast", "video:quality", "book:title" })
 
 sepre = re.compile(r"[^\w\']", re.UNICODE)
 SEPPER = frozenset(unichr(i) for i in xrange(0x10000) if sepre.match(unichr(i)) or unichr(i)=='_')

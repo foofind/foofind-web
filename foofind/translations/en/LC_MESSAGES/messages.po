@@ -174,6 +174,9 @@ msgstr "Next"
 msgid "sources"
 msgstr "sources"
 
+msgid "seeds"
+msgstr "Seeds"
+
 msgid "of_about"
 msgstr "of about"
 
@@ -205,10 +208,16 @@ msgid "ajax_search"
 msgstr "new search"
 
 msgid "change_classic_search"
-msgstr "If you want to return to"
+msgstr "Return to"
 
 msgid "change_ajax_search"
-msgstr "If you want can switch to the"
+msgstr "You can try the"
+
+msgid "what"
+msgstr "What?"
+
+msgid "where"
+msgstr "Where?"
 
 # advanced search
 msgid "all_sizes"
@@ -738,7 +747,7 @@ msgstr "Foofind is a universal search engine. In Foofind we work creating softwa
 
 # technology
 msgid "technology_text"
-msgstr "<p>The Foofind team develops most of the project's source code, but we also relay a lot on the work of the free software community. </p><p>Without all these incredible projects, Foofind would'nt be possible. Thanks a bunch! ;-)</p><ul><li><a href="http://twistedmatrix.com/">Twisted</a>: Twisted is an event-driven networking engine written in Python and licensed under the open source MIT license.</a><li><a href="http://scrapy.org/">Scrapy</a>: Scrapy is a fast high-level screen scraping and web crawling framework, used to crawl websites and extract structured data from their pages. It can be used for a wide range of purposes, from data mining to monitoring and automated testing.</li><li><a href="http://flask.pocoo.org/">Flask</a>: Flask is a microframework for Python based on Werkzeug, Jinja 2 and it's BSD licensed.</li><li><a href="http://www.mongodb.org/">MongoDB</a>: MongoDB (from "hu<strong>mongo</strong>us") is a scalable, high-performance, open source NoSQL database.</li><li><a href="http://github.com/dcramer/sentry">Sentry</a>: Sentry is a realtime event logging and aggregation platform. It specializes in monitoring errors and extracting all the information needed to do a proper post-mortem without any of the hassle of the standard user feedback loop.</li><li><a href="http://sphinxsearch.com/">Sphinx</a>: Sphinx is an open source full text search server, designed from the ground up with performance, relevance (aka search quality), and integration simplicity in mind. It's written in C++ and works on Linux (RedHat, Ubuntu, etc), Windows, MacOS, Solaris, FreeBSD, and a few other systems.<li><a href="http://www.komodomedia.com/blog/2009/06/social-network-icon-pack/">Social Network Icon Pack</a>: Social Network Icon Pack by Komodo Media, Rogie King is licensed under a Creative Commons Attribution-Share Alike 3.0 Unported License.</li></ul>"
+msgstr "<p>The Foofind team develops most of the project's source code, but we also relay a lot on the work of the free software community. </p><p>Without all these incredible projects, Foofind would'nt be possible. Thanks a bunch! ;-)</p><ul><li><a href=\"http://twistedmatrix.com/\">Twisted</a>: Twisted is an event-driven networking engine written in Python and licensed under the open source MIT license.</a><li><a href=\"http://scrapy.org/\">Scrapy</a>: Scrapy is a fast high-level screen scraping and web crawling framework, used to crawl websites and extract structured data from their pages. It can be used for a wide range of purposes, from data mining to monitoring and automated testing.</li><li><a href=\"http://flask.pocoo.org/\">Flask</a>: Flask is a microframework for Python based on Werkzeug, Jinja 2 and it's BSD licensed.</li><li><a href=\"http://www.mongodb.org/\">MongoDB</a>: MongoDB (from \"hu<strong>mongo</strong>us\") is a scalable, high-performance, open source NoSQL database.</li><li><a href=\"http://github.com/dcramer/sentry\">Sentry</a>: Sentry is a realtime event logging and aggregation platform. It specializes in monitoring errors and extracting all the information needed to do a proper post-mortem without any of the hassle of the standard user feedback loop.</li><li><a href=\"http://sphinxsearch.com/\">Sphinx</a>: Sphinx is an open source full text search server, designed from the ground up with performance, relevance (aka search quality), and integration simplicity in mind. It's written in C++ and works on Linux (RedHat, Ubuntu, etc), Windows, MacOS, Solaris, FreeBSD, and a few other systems.<li><a href=\"http://www.komodomedia.com/blog/2009/06/social-network-icon-pack/\">Social Network Icon Pack</a>: Social Network Icon Pack by Komodo Media, Rogie King is licensed under a Creative Commons Attribution-Share Alike 3.0 Unported License.</li></ul>"
 
 # tos
 msgid "safe_tos"
@@ -823,6 +832,15 @@ msgstr "This language translation is in testing phase. If you find a missing or 
 
 msgid "other"
 msgstr "Other"
+
+msgid "embed_foofind_button"
+msgstr "See in foofind"
+
+msgid "embed_download_button"
+msgstr "Download"
+
+msgid "copy_to_clipboard_shortcut"
+msgstr "Use CTRL+C to copy to your clipboard"
 
 # Felipe <felipe@mp2p.net>, 2011.
 msgid "admin_prefix"
@@ -1005,8 +1023,32 @@ msgstr "Select all"
 msgid "admin_multiselection_select_none"
 msgstr "Select none"
 
+msgid "admin_actions"
+msgstr "Administration tasks"
+
+msgid "admin_actions_none"
+msgstr "There is no registrered remote tasks yet."
+
+msgid "admin_actions_target"
+msgstr "Target"
+
+msgid "admin_actions_forced_run_once"
+msgstr "Will only run once between all instances."
+
+msgid "admin_actions_run"
+msgstr "Run task"
+
+msgid "admin_actions_interval"
+msgstr "Please be patient: the application look for tasks to run every %(seconds)g seconds."
+
+msgid "admin_actions_updated"
+msgstr "Task has been requested."
+
 msgid "admin_deploy"
 msgstr "App deployment"
+
+msgid "admin_deploy_confirm"
+msgstr "Promote beta version to production"
 
 msgid "admin_deploy_confirmation"
 msgstr "Are you sure you want to perform \"%(action)s\" on \"%(target)s\"?"
@@ -1028,6 +1070,9 @@ msgstr "Distribute"
 
 msgid "admin_deploy_phase_commit"
 msgstr "Run"
+
+msgid "admin_deploy_phase_confirm"
+msgstr "Promote deploy"
 
 msgid "admin_deploy_phase_script"
 msgstr "Remote script"
@@ -1064,6 +1109,9 @@ msgstr "Restarting"
 
 msgid "admin_deploy_restart"
 msgstr "Restart services"
+
+msgid "admin_deploy_restart_beta"
+msgstr "Restart beta services"
 
 msgid "admin_deploy_phase_clean"
 msgstr "Cleaning"
@@ -1112,6 +1160,9 @@ msgstr "Setup version"
 
 msgid "admin_deploy_commit"
 msgstr "Commit changes"
+
+msgid "admin_deploy_commit"
+msgstr "Confirm deploy"
 
 msgid "admin_deploy_backups"
 msgstr "Backups"

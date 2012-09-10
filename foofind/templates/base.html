@@ -7,7 +7,7 @@
         <meta name="description" content="{{_('i_want_that_file')}}"/>
         <link rel="shortcut icon" href="{{ url_for('index.favicon') }}" />
         <link rel="search" type="application/opensearchdescription+xml" href="{{ url_for('index.opensearch') }}" title="Foofind" />
-        {%- for id,name,beta in g.languages %}
+        {%- for id,name,beta in g.languages if g.lang!=id%}
         <link rel="alternate" hreflang="{{ id }}" href="{{ u(request.url)|url_lang(id) }}" />
         {%- endfor %}
         {%- block assets_css -%}
@@ -15,6 +15,7 @@
                 <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet" />
             {%- endassets -%}
         {%- endblock -%}
+        <script>var autocomplete_disabled = {{ g.autocomplete_disabled }};</script>
         {%- block assets_js -%}
             {%- assets "js_all" -%}
                 <script type="text/javascript" src="{{ ASSET_URL }}"></script>
@@ -31,7 +32,7 @@
         <!--[if IE ]>
         <script type="text/javascript" src="/static/js/PIE.js"></script>
         <![endif]-->
-        <script type="text/javascript">var _gaq=_gaq||[];_gaq.push(['_setAccount', 'UA-808946-19']);_gaq.push(['_trackPageview']);(function(){var ga=document.createElement('script');ga.type='text/javascript';ga.async=true;ga.src=('https:'==document.location.protocol?'https://ssl':'http://www')+'.google-analytics.com/ga.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(ga,s);})();</script>
+        <script type="text/javascript">var _gaq=_gaq||[];_gaq.push(['_setAccount','UA-808946-19']);_gaq.push(['_trackPageview',location.pathname+location.search+location.hash]);(function(){var ga=document.createElement('script');ga.type='text/javascript';ga.async=true;ga.src=('https:'==document.location.protocol?'https://ssl':'http://www')+'.google-analytics.com/ga.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(ga,s)})();</script>
     </head>
     <body{% if body_class %} class="{{body_class}}"{% endif %}>
         <div id="container">
@@ -49,7 +50,7 @@
                             <li><a><span></span>{{ name|lower }}</a></li>
                             {%- endfor %}
                             {%- for id,name,beta in g.languages if g.lang!=id %}
-                            <li><a href="{{ url_for('index.setlang',lang=id) }}">{{ name|lower }} {%- if beta -%}<small>BETA</small>{%- endif -%}</a></li>
+                            <li><a href="{{ url_for('index.setlang',lang=id) }}" data-lang="{{ id }}">{{ name|lower }} {%- if beta -%}<small>BETA</small>{%- endif -%}</a></li>
                             {%- endfor %}
                             <li><a href="{{ url_for('page.translate') }}">{{_('other')|lower}}...</a></li>
                         </ul>
@@ -81,7 +82,7 @@
                     {%- if g.lang == "es" -%}
                     <li><a href="{{ url_for('page.show',pname='jobs') }}">Trabaja con nosotros</a></li>
                     {%- endif -%}
-                    <li><a href="{{ url_for('page.show',pname='lastfiles') }}">{{ g.count_files|numberformat }} {{_("files_indexed")}}</a></li>
+                    <li><a href="{{ url_for('page.show',pname='lastfiles') }}">{{_("last_indexed_files")}}</a></li>
                 </ul>
                 <p>
                     {{_("footer",

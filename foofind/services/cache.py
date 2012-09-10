@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from flaskext.cache import Cache as CacheBase
+from flask.ext.cache import Cache as CacheBase
 from flask import g, request
 from functools import wraps
 from hashlib import md5
@@ -32,6 +32,10 @@ class Cache(CacheBase):
     def cacheme(self, v):
         g.cache_cacheme = bool(v)
 
+    def clear(self):
+        '''Borrar todas las claves de caché.'''
+        self.cache.clear()
+
     def cached(self, timeout=None, key_prefix='view%s', unless=None):
         '''
         Decorador para cachear vistas
@@ -61,7 +65,7 @@ class Cache(CacheBase):
 
                 cache_key = decorated_function.make_cache_key(*args, **kwargs)
 
-                rv = self.cache.get(cache_key)
+                rv = self.get(cache_key)
                 if rv is None:
                     rv = f(*args, **kwargs)
                     '''# Optimización: Si la respuesta es html, minificamos
@@ -71,7 +75,7 @@ class Cache(CacheBase):
                         rv = html_slimmer(rv)
                     '''
                     if self.cacheme:
-                        self.cache.set(cache_key, rv, timeout=decorated_function.cache_timeout)
+                        self.set(cache_key, rv, timeout=decorated_function.cache_timeout)
 
                 return rv
 
@@ -87,6 +91,8 @@ class Cache(CacheBase):
                 return cache_key.encode('utf-8')
 
             def uncache():
+                if hasattr(f, "uncache") and callable(f.uncache):
+                    f.uncache()
                 self.delete(decorated_function.make_cache_key(*args, **kwargs))
 
             decorated_function.uncache = uncache
@@ -183,11 +189,11 @@ class Cache(CacheBase):
             @wraps(f)
             def decorated_function(*args, **kwargs):
                 cache_key = decorated_function.make_cache_key(*args, **kwargs)
-                rv = self.cache.get(cache_key)
+                rv = self.get(cache_key)
                 if rv is None:
                     rv = f(*args, **kwargs)
                     if self.cacheme:
-                        self.cache.set(cache_key, rv,
+                        self.set(cache_key, rv,
                                        timeout=decorated_function.cache_timeout)
                         self._memoized.append((funcname, cache_key))
                 return rv
@@ -201,6 +207,8 @@ class Cache(CacheBase):
                     )
 
             def uncache():
+                if hasattr(f, "uncache") and callable(f.uncache):
+                    f.uncache()
                 self.delete(decorated_function.make_cache_key(*args, **kwargs))
 
             decorated_function.uncache = uncache

@@ -16,7 +16,7 @@
             <h3 class="list">{{_('admin_locks_complaint_fileinfo')}}</h3>
             <table class="list ">
             {% for fileid, file_data in files_data.iteritems() %}
-                <tbody class="{% if not loop.index is divisibleby(2) %}alternate{% endif %}">
+                <tbody class="{% if loop.index is divisibleby(2) %}alternate{% endif %}">
                 {%- if fileid in bugged -%}
                     <tr>
                         <td><strong>INDIR BUG</strong></td>

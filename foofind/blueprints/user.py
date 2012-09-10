@@ -3,9 +3,9 @@
     Controladores de páginas de usuario.
 """
 from flask import Blueprint, request, render_template, redirect, flash, url_for, session, abort, current_app, g
-from flaskext.babel import gettext as _
-from flaskext.login import login_required, login_user, logout_user, current_user
-from flaskext.oauth import OAuth
+from flask.ext.babel import gettext as _
+from flask.ext.login import login_required, login_user, logout_user, current_user
+from flask.ext.oauth import OAuth
 
 from foofind.forms.user import RegistrationForm, LoginForm, ForgotForm, EditForm
 from foofind.services import *

@@ -45,7 +45,7 @@ class LangRepoManager(object):
     únicos descargados y actualizados), si se pide un fichero de lenguaje
     desconocido se lo intentará bajar del servidor y lo añadirá a la lista.
     '''
-
+    initialized = False
     git_author = None
     git_email = None
     branch = None
@@ -64,29 +64,34 @@ class LangRepoManager(object):
     def get_current_langs(self):
         # Retornamos la lista de lenguajes conocidos (cuyo directorio
             # seguimos) con los lenguajes que ya tengamos
+        if not self.initialized:
+            self.init_lang_repository()
         return tuple(i for i in os.listdir(self.local_dir)
             if os.path.isdir(os.path.join(self.local_dir, i)))
 
     def is_current_lang(self, x):
+        if not self.initialized:
+            self.init_lang_repository()
         return os.path.isdir(os.path.join(self.local_dir, x))
 
-    def init_lang_repository(self, app=None):
+    def init_app(self, app):
+        #self.remote = app.config["ADMIN_LANG_REMOTE"]
+        self.git_author = app.config["ADMIN_GIT_AUTHOR"]
+        self.git_email = app.config["ADMIN_GIT_EMAIL"]
+        self.repo_url = app.config["ADMIN_LANG_REMOTE_REPO"]
+
+        self.branch = app.config["ADMIN_LANG_REMOTE_BRANCH"]
+
+        # Directorio remoto de traducciones
+        self.lang_folder = app.config["ADMIN_LANG_FOLDER"]
+
+        # Directorio del repositorio local
+        self.base = app.config["ADMIN_LANG_LOCAL_REPO"]
+
+    def init_lang_repository(self):
         '''Inicializa la clase y los repositorios aprovechando la
         configuración de aplicación.
         '''
-        if app:
-            #self.remote = app.config["ADMIN_LANG_REMOTE"]
-            self.git_author = app.config["ADMIN_GIT_AUTHOR"]
-            self.git_email = app.config["ADMIN_GIT_EMAIL"]
-            self.repo_url = app.config["ADMIN_LANG_REMOTE_REPO"]
-
-            self.branch = app.config["ADMIN_LANG_REMOTE_BRANCH"]
-
-            # Directorio remoto de traducciones
-            self.lang_folder = app.config["ADMIN_LANG_FOLDER"]
-
-            # Directorio del repositorio local
-            self.base = app.config["ADMIN_LANG_LOCAL_REPO"]
 
         if os.path.exists(self.base):
             shutil.rmtree(self.base, True)
@@ -117,9 +122,12 @@ class LangRepoManager(object):
         info = os.path.join(self.base, ".git", "info")
         touch_path(info) # info puede no existir
         self.sparsepath = os.path.join(info, "sparse-checkout")
+        self.initialized = True
 
     def _refresh_tree(self, new_langs=()):
         '''Actualiza las rutas seguidas'''
+        if not self.initialized:
+            self.init_lang_repository()
         # logging.debug("\n".join(self.sparsepath+" << "+"%s/%s" % (self.lang_folder, c) for c in set(self.get_current_langs() + new_langs)))
         f = open(self.sparsepath, "w")
         f.writelines("%s/%s/LC_MESSAGES/\n" % (self.lang_folder, c) for c in set(self.get_current_langs() + new_langs))
@@ -139,6 +147,8 @@ class LangRepoManager(object):
 
     def _refresh_langs(self):
         '''Pull de los ficheros conocidos'''
+        if not self.initialized:
+            self.init_lang_repository()
         for attemp in xrange(self._attemps_on_fail):
             try:
                 self.repo.remote().pull("master")
@@ -154,6 +164,8 @@ class LangRepoManager(object):
 
     def get_pofile(self, code, refresh=None):
         '''Retorna un pofile para en lenguaje dado.'''
+        if not self.initialized:
+            self.init_lang_repository()
         if not self.is_current_lang(code):
             self._refresh_tree((code,))
             self._refresh_langs()
@@ -182,6 +194,8 @@ class LangRepoManager(object):
         @type codes: iterable de str de dos bytes
         @param codes: lista de códigos de lenguajes
         '''
+        if not self.initialized:
+            self.init_lang_repository()
         for code in codes:
             if not self.is_current_lang(code):
                 break
@@ -205,6 +219,8 @@ class LangRepoManager(object):
         @rype commit: bool
         @param commit: True por defecto, si se hace push
         '''
+        if not self.initialized:
+            self.init_lang_repository()
         en = self.get_pofile(self.default, refresh) # Fichero base
         new = self.get_pofile(code, False)
 
@@ -226,6 +242,8 @@ class LangRepoManager(object):
         if commit: self.commit()
 
     def get_lang(self, code, base=None):
+        if not self.initialized:
+            self.init_lang_repository()
         if base is None:
             return collections.OrderedDict((i.msgid, i.msgstr) for i in self.get_pofile(code))
         tr = collections.OrderedDict((i.msgid, i.msgstr) for i in self.get_pofile(base))
@@ -237,6 +255,8 @@ class LangRepoManager(object):
 
         @raises CommitException: si falla add, commit o push (ver su atributo status, diccionario)
         '''
+        if not self.initialized:
+            self.init_lang_repository()
         tr = collections.OrderedDict(add="No branch.", commit="Not reached.", push="Not reached.")
         error = False
         if error is False:

@@ -1,0 +1,3 @@
+{%- if results["total_found"]>0 %}
+    {#{{_('smaller_than')}}#} {{ results["total_found"]|numberformat }} {{_('results_for')}} <strong>{{ search }}</strong> ({{ results["time"]|float|numberformat }} {{_('seconds')}})
+{%- endif %}

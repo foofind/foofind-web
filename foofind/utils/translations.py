@@ -4,7 +4,7 @@
 '''
 import re, random
 from foofind.translations.samples_values import samples
-from flaskext.babel import gettext as _
+from flask.ext.babel import gettext as _
 from foofind.utils import multipartition
 
 _strarg = re.compile('(%\(([^\)]+)\)([s|d]))')

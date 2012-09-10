@@ -2,13 +2,14 @@
 """
     Módulo principal de la aplicación Web
 """
+import foofind.globals
 
-import foofind.utils.async  # debe hacerse antes que nada
+#import foofind.utils.async  # debe hacerse antes que nada
 
 from flask import Flask, g, request, session, render_template, redirect, abort, url_for, make_response
 from flask.ext.assets import Environment, Bundle
-from flaskext.babel import get_translations, gettext as _
-from flaskext.login import current_user
+from flask.ext.babel import get_translations, gettext as _
+from flask.ext.login import current_user
 from foofind.user import User
 from foofind.blueprints.index import index
 from foofind.blueprints.page import page
@@ -26,6 +27,15 @@ from raven.contrib.flask import Sentry
 from webassets.filter import register_filter
 from hashlib import md5
 import os, os.path, logging, defaults
+
+try:
+    from uwsgidecorators import postfork
+    @postfork
+    def start_eventmanager():
+        # Inicio del eventManager
+        eventmanager.start()
+except ImportError:
+    pass
 
 def create_app(config=None, debug=False):
     '''
@@ -52,9 +62,9 @@ def create_app(config=None, debug=False):
         app.config.from_object(config)
 
     # Gestión centralizada de errores
-    logging.getLogger().setLevel(logging.DEBUG if debug else logging.INFO)
     if app.config["SENTRY_DSN"]:
         sentry.init_app(app)
+    logging.getLogger().setLevel(logging.DEBUG if debug else logging.INFO)
 
     # Configuración dependiente de la versión del código
     revision_filename_path = os.path.join(os.path.dirname(app.root_path), "revision")
@@ -110,12 +120,13 @@ def create_app(config=None, debug=False):
     assets.register('css_all', 'css/jquery-ui.css', Bundle('css/main.css', filters='pyscss', output='gen/main.css', debug=False), filters='css_slimmer', output='gen/foofind.css')
     assets.register('css_ie', 'css/ie.css', filters='css_slimmer', output='gen/ie.css')
     assets.register('css_ie7', 'css/ie7.css', filters='css_slimmer', output='gen/ie7.css')
-    assets.register('css_search', 'css/jquery-ui.css', Bundle('css/search.css', filters='pyscss', output='gen/s.css', debug=False), filters='css_slimmer', output='gen/search.css')
+    assets.register('css_search', Bundle('css/search.css', filters=['pyscss','css_slimmer'], output='gen/search.css', debug=False))
     assets.register('css_labs', 'css/jquery-ui.css', Bundle('css/labs.css', filters='pyscss', output='gen/l.css', debug=False), filters='css_slimmer', output='gen/labs.css')
     assets.register('css_admin', Bundle('css/admin.css', filters='css_slimmer', output='gen/admin.css'))
 
     assets.register('js_all', Bundle('js/jquery.js', 'js/jquery-ui.js', 'js/jquery.ui.selectmenu.js', 'js/files.js', filters='rjsmin', output='gen/foofind.js'), )
-    assets.register('js_ie', Bundle('js/html5shiv.js', 'js/jquery-extra-selectors.js', 'js/selectivizr.js', filters='rjsmin', output='gen/ie.js'))
+    assets.register('js_ie', Bundle('js/html5shiv.js', 'js/jquery-extra-selectors.js', 'js/jquery.ba-hashchange.js', 'js/selectivizr.js', filters='rjsmin', output='gen/ie.js'))
+    assets.register('js_search', Bundle('js/jquery.hoverIntent.js', 'js/search.js', filters='rjsmin', output='gen/search.js'))
     assets.register('js_labs', Bundle('js/jquery.js', 'js/jquery-ui.js', 'js/labs.js', filters='rjsmin', output='gen/labs.js'))
     assets.register('js_admin', Bundle('js/jquery.js', 'js/admin.js', filters='rjsmin', output='gen/admin.js'))
 
@@ -179,6 +190,7 @@ def create_app(config=None, debug=False):
 
     # Cache
     cache.init_app(app)
+    configdb.register_action("flush_cache", cache.clear, _unique=True)
 
     # Autenticación
     auth.setup_app(app)
@@ -207,26 +219,22 @@ def create_app(config=None, debug=False):
 
     # Servicio de búsqueda
     @app.before_first_request
-    def init_search():
-        searchd_servers = [(server["_id"], str(server["sp"]), int(server["spp"])) for server in filesdb.get_servers() if "sp" in server]
-        stats = {server[0]:filesdb.get_server_stats(server[0]) for server in searchd_servers}
-        searchd.init_app(app, searchd_servers, stats)
+    def init_process():
+        if not eventmanager.is_alive():
+            # Fallback inicio del eventManager
+            eventmanager.start()
+        searchd.init_app(app, filesdb)
         init_search_stats()
-    
+
     # Taming
     taming.init_app(app)
 
-    # Refresco del contador de ficheros
-    lastcount = [filesdb.count_files()]
-    def countupdater():
-        lastcount[0] = long(filesdb.count_files())
-    eventmanager.interval(app.config["COUNT_UPDATE_INTERVAL"], countupdater)
-
     # Refresco de conexiones
+    eventmanager.once(filesdb.load_servers_conn)
     eventmanager.interval(app.config["FOOCONN_UPDATE_INTERVAL"], filesdb.load_servers_conn)
 
     # Refresco de configuración
-    configdb.pull()
+    eventmanager.once(configdb.pull)
     eventmanager.interval(app.config["CONFIG_UPDATE_INTERVAL"], configdb.pull)
 
     # Profiler
@@ -243,10 +251,7 @@ def create_app(config=None, debug=False):
 
     if app.config["UNITTEST_INTERVAL"]:
         eventmanager.timeout(20, unit.run_tests)
-        eventmanager.interval(app.config["UNITTEST_INTERVAL"], unit.run_tests)
-
-    # Inicio del eventManager
-    eventmanager.start()
+        #eventmanager.interval(app.config["UNITTEST_INTERVAL"], unit.run_tests)
 
     @app.before_request
     def before_request():
@@ -271,12 +276,16 @@ def create_app(config=None, debug=False):
             get_translations().add_fallback(fallback_lang)
 
         # dominio de la web
-        g.domain = request.url_root[8:-1] if request.url_root.startswith("https") else request.url_root[7:-1]
+        g.domain = "foofind.is"
 
         # título de la página por defecto
         g.title = g.domain
-        # contador de archivos totales
-        g.count_files = lastcount[0]
+        g.autocomplete_disabled = "false" if app.config["SERVICE_TAMING_ACTIVE"] else "true"
+
+    @app.after_request
+    def after_request(response):
+        if request.user_agent.browser == "msie": response.headers["X-UA-Compatible"] = "IE-edge"
+        return response
 
     # Páginas de error
     @app.errorhandler(400)
@@ -311,9 +320,8 @@ def create_app(config=None, debug=False):
             message_msgstr = _("error_500_description")
         try:
             g.title = "%s %s" % (error, message_msgstr)
-            g.count_files = lastcount[0]
             return render_template('error.html', zone="errorhandler", error=error, description=description_msgstr), int(error)
-        except Exception as ex: #si el error ha llegado sin contexto se encarga el servidor de él
+        except BaseException as ex: #si el error ha llegado sin contexto se encarga el servidor de él
             logging.warn(ex)
             return make_response("",error)
 

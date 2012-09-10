@@ -8,6 +8,7 @@ import datetime
 import types
 import bson
 import os
+import inspect
 
 import urllib2
 import multiprocessing
@@ -19,8 +20,8 @@ import deploy.fabfile as fabfile
 
 from flask import Blueprint, jsonify, render_template, request, redirect, url_for, flash, current_app, abort, send_file, g
 from werkzeug.datastructures import MultiDict
-from flaskext.babel import gettext as _
-from flaskext.login import current_user
+from flask.ext.babel import gettext as _
+from flask.ext.login import current_user
 from wtforms import BooleanField, TextField, TextAreaField, HiddenField
 from functools import wraps
 from collections import OrderedDict, defaultdict
@@ -110,7 +111,7 @@ class DeployTask(object):
                     lockfile=self.lockfile,
                     config=self.config)
             except BaseException as e:
-                logging.exception("Error dentro del DeployThread.")
+                logging.exception("Error dentro del DeployThread.", extra={"DeployTask":self})
             self.stderr.flush()
             self.stdout.flush()
             self.callback()
@@ -140,6 +141,7 @@ class DeployTask(object):
     def __init__(self, memcache_prefix):
         self._syncmanager = multiprocessing.Manager()
         self._lock = self._syncmanager.Lock()
+        self._lastmode = "%slastmode" % memcache_prefix
         self._memid = "%sbusy" % memcache_prefix
         self._stdout = self.MemcachedBuffer("%sstdout" % memcache_prefix, self._syncmanager)
         self._stderr = self.MemcachedBuffer("%sstderr" % memcache_prefix, self._syncmanager)
@@ -147,6 +149,18 @@ class DeployTask(object):
             fabfile.env.abskitchen,
             memcache_prefix.replace("/","_")
             )
+
+    _ownlastmode = None
+    def get_last_mode(self):
+        '''
+        Obtiene el último modo con el que ha sido llamado
+
+        @rtype str
+        @return cadena del último modo
+        '''
+        if self.busy:
+            return self._ownlastmode
+        return cache.cache.get(self._lastmode)
 
     def get_stdout_data(self):
         '''
@@ -204,6 +218,11 @@ class DeployTask(object):
                 "Ya hay un thread funcionando, revisa el atributo 'busy' antes.")
 
         cache.cache.set(self._memid, True)
+
+        if mode:
+            self._ownlastmode = mode
+            cache.cache.set(self._lastmode, mode)
+
         self.DeployThread(
             action,
             mode,
@@ -319,8 +338,11 @@ def simple_pyon(x):
     '''
     x = x.strip()
     if x.lower() in ("","None","null","none"): return None
-    if x.replace("+","",x.startswith("+")).replace("-","",x.startswith("-")).replace(".","",x.count(".")==1).isdigit():
-        if "." in x: float(x)
+    if (x.replace("+", "", x.startswith("+"))
+         .replace("-","", x.startswith("-"))
+         .replace(".", "",x.count(".")==1)
+         .isdigit()):
+        if "." in x: return float(x)
         return int(x)
     if x.endswith("j"):
         return complex(x)
@@ -332,17 +354,188 @@ def simple_pyon(x):
         if x[0] == "{" and x[-1] == "}": return dict((simple_pyon(i.split(":")[0]), simple_pyon(i.split(":")[1])) for i in x[1:-1].split(","))
     return x
 
-@admin.route('/<lang>/admin')
+logOrder = {"overview":-1,"staging.1":256,"staging.2":257,"admin.1":258,"admin.2":259}
+logTask = DeployTask("admin/deploy/log/")
+logRefresh = "admin/log/refresh"
+
+scriptTask = DeployTask("admin/deploy/script/")
+scriptRefresh = "admin/deploy/script/refresh"
+
+task_maxtimeout = 600
+def task_output(**kwargs):
+    '''
+    Devuelve la salida de una tarea.
+
+    '''
+    # Modos de ejecución
+    run_args = ()
+    run_kwargs = {}
+    mode = None
+    if "script" in kwargs:
+        mode = "script"
+        script = kwargs["script"]
+        hosts = kwargs.get("hosts", None)
+        # Validación
+        if script is None:
+            # Si script es None, no hay nada que procesar
+            return {"cached":True}
+
+        if hosts:
+            # Pasamos los hosts a tupla ordenada para el hash del cacheid
+            hosts.sort()
+            hosts = tuple(hosts)
+
+        task = scriptTask
+        run_args = ("script", None)
+        run_kwargs["config"] = {"hosts": hosts, "script": script}
+        cacheid = "admin/deploy/script/output/%s_%s" % (hash(script), hash(hosts))
+        refreshid = scriptRefresh
+    elif "log" in kwargs:
+        mode = "log"
+        logid = kwargs["log"]
+        lognum = kwargs.get("n", -10)
+        task = logTask
+        run_args = ("log", None)
+        run_kwargs["config"] = {"id": logid, "n": lognum}
+        cacheid = "admin/log/output/%s_%d" % (hash(logid), lognum)
+        refreshid = logRefresh
+    else:
+        raise ValueError
+
+    now = time.time()
+    cached_data = cache.get(cacheid)
+    task_running = task.busy
+
+    if cached_data:
+        # Si se ha forzado un refresco de caché posterior a la información
+        # cacheada que he encontrado, la ignoro.
+        if cached_data.get("time", 0) < (cache.get(refreshid) or 0):
+            cached_data = None
+        # Si hay caché y la información de caché es definitiva.
+        elif cached_data.get("cached", False):
+            return cached_data
+
+    # Si la tarea está funcionando o ha terminado y tengo caché no definitivo
+    if task_running or cached_data:
+        # Extracción de salida por host
+        raw_data = task.get_stdout_data()
+        md5 = hash(raw_data) # hash de los datos de stdout
+        error = task.get_stderr_data()
+
+        if cached_data and cached_data.get("hash", None) == md5:
+            # Si no hay cambios en el hash, no vuelvo a procesar
+            data = cached_data
+        else:
+            data = defaultdict(list)
+            data["hash"] = md5
+            # Separo la salida en líneas
+            for line in raw_data.split(os.linesep):
+
+                # Línea es salida de fabric
+                if line.startswith("[") and 0 < line.find("] out: ") == line.find("]"):
+                    host = line[1:line.find("]")]
+                    if "@" in host: host = host[host.find("@")+1:] # Elimino el usuario
+                    if ":" in host: host = host[:host.find(":")] # Elimino el puerto
+                    data[host].append(
+                        line[line.find("] out: ") + 7:].strip()
+                        )
+        data["time"] = now # Actualizo el timestamp
+        if error:
+            data["error"] = error
+        if task_running: # Si la tarea está funcionado
+            cache.set(cacheid, data, task_maxtimeout)
+            data["fresh"] = True
+        elif cached_data: # Si la tarea ha terminado hago el caché definitivo
+            data["cached"] = True
+            cache.set(cacheid, data, task_maxtimeout)
+        return data
+
+    # Caso específico para script: hay que deducir los hosts
+    if mode == "script" and not hosts:
+        hosts = deploy_list_scripts().get(script, None)
+        if not hosts:
+            # No se hace nada si no hay hosts para el script
+            data = {"time":now,"cached":True}
+            cache.set(cacheid, data, task_maxtimeout)
+            return data
+        run_kwargs["config"]["hosts"] = hosts
+
+    # La tarea no está funcionando, lo iniciamos
+    task.run(*run_args, **run_kwargs)
+    data = {"time":now}
+    cache.set(cacheid, data, task_maxtimeout)
+    data["started"] = True
+    return data
+
+@admin.route('/<lang>/admin/task/output')
+@admin_required
+def task_output_endpoint():
+    '''
+    Devuelve el estado de una tarea.
+
+    Devuelve JSON con hosts como claves (contiene punto, acceder con corchetes)
+    y líneas de salida como array.
+    Incluye atributo time con el timestamp de cuando ha sido generado.
+    Si se ha leído desde caché incluye un atributo "cached" a True.
+    '''
+    tr = {}
+    if "script" in request.args:
+        tr.update(task_output(
+            script = request.args["script"],
+            hosts = request.args.get("hosts", None)
+            ))
+    elif "log" in request.args:
+        tr.update(task_output(
+            log = request.args["log"],
+            n = int(request.args.get("n", -10))
+            ))
+    return jsonify(tr)
+
+
+@admin.route('/<lang>/admin', methods=("GET","POST"))
 @admin_required
 def index():
     '''
     Administración, vista general
     '''
+    mode = request.args.get("show","overview")
+    modes = [(_('admin_overview'),"overview")]
+    modes.extend( (v.capitalize(), k ) for k, v in fabfile.list_logs() )
+    modes.sort(key=lambda x: logOrder.get(x[1], None) or ord(x[1][0]))
+    form = None
+
+    stdsep = "\n\n---\n\n"
+    log_data = ""
+    if mode != "overview":
+        if request.method == "POST":
+            cache.set(logRefresh, time.time())
+        form = LogForm(request.form)
+        number = form.number.data
+        if form.mode.data == "tail":
+            number *= -1
+        data = task_output(log = mode, n = number)
+        cached = data.get("cached", False)
+        stdout = "\n".join(i
+            for k, v in data.iteritems() if isinstance(v, list)
+            for i in v
+            ).strip()
+        log_data = []
+        if "error" in data: log_data.append(data["error"])
+        if stdout: log_data.append(stdout)
+        if not cached:
+            log_data.append(_("admin_status_processing"))
+            form.processing.data = True
+
     return render_template('admin/overview.html',
         page_title=_('admin_overview'),
         title=admin_title('admin_overview'),
         new_locks=pagesdb.count_complaints(False, limit=1),
         new_translations=pagesdb.count_translations(False, limit=1),
+        form=form,
+        log_data=stdsep.join(log_data),
+        stdsep=stdsep.encode("hex"),
+        show_modes=modes,
+        show_mode=mode,
         role=None)
 
 @admin.route('/<lang>/admin/locks', methods=("GET","POST"))
@@ -388,9 +581,10 @@ def lock_file(complaint_id=None):
             searchform = BlockFileSearchForm(request.form)
             identifiers = searchform.identifier.data.split()
             if searchform.mode.data == "hexid":
+                print identifiers
                 fileids = [ mid2hex(hex2mid(i))
                     for i in identifiers
-                    if all(x in "0123456789abcdef" for x in i)
+                    if all(x in "0123456789abcdef" for x in i.lower())
                     ]
             elif searchform.mode.data == "b64id":
                 fileids = [
@@ -420,10 +614,11 @@ def lock_file(complaint_id=None):
                 sphinx_block = []
                 sphinx_unblock = []
                 for fileid, server in fileids.iteritems():
-                    (sphinx_block if block and not unblock else sphinx_unblock).append(fileid)
+                    (sphinx_block if block and not unblock else sphinx_unblock).append((fileid,filenames[fileid]))
                     req = {"_id":fileid, "bl": int(block and not unblock)}
                     if server: req["s"] = int(server) # si recibo el servidor, lo uso por eficiencia
                     try:
+                        # TODO(felipe) cuando se arregle el bug de indir: borrar
                         # TODO(felipe): comprobar en qué casos se puede llegar aquí sin "s"
                         filesdb.update_file(req, direct_connection=True, update_sphinx=False)
                     except:
@@ -456,11 +651,16 @@ def lock_file(complaint_id=None):
     unblocked = 0
     for fileid in files_data.iterkeys():
         data = filesdb.get_file(fileid, bl=None)
+        # Arreglo para bug de indir: buscar los servidores en sphinx
+        # y obtener los datos del servidor encontrado.
+        # TODO(felipe) cuando se arregle el bug de indir: borrar
         if data is None and fileid in filenames:
             bugged.append(fileid)
             sid = get_id_server_from_search(fileid, filenames[fileid])
             if sid:
                 data = filesdb.get_file(fileid, sid = sid, bl = None)
+                if data is None:
+                    data = {"s":sid}
         files_data[fileid] = data or {}
         if not "bl" in files_data[fileid] or files_data[fileid]["bl"] == 0: unblocked += 1
         else: blocked += 1
@@ -479,6 +679,7 @@ def lock_file(complaint_id=None):
         page=page,
         title=admin_title('admin_losfdcks_fileinfo'))
 
+# TODO(felipe) cuando se arregle el bug de indir: borrar
 @admin.route('/<lang>/admin/getserver/<fileid>', methods=("GET","POST"))
 @admin.route('/<lang>/admin/getserver/<fileid>/<filename>', methods=("GET","POST"))
 def getserver(fileid, filename=None):
@@ -507,11 +708,9 @@ def getserver(fileid, filename=None):
 
     return render_template('admin/getserver.html',
         fileid = fileid,
-        searchform = form,
+        search_form = form,
         file_data = data
         )
-
-
 
 @admin.route('/<lang>/admin/users', methods=("GET","POST"))
 @admin.route('/<lang>/admin/users/<userid>', methods=("GET","POST"))
@@ -652,99 +851,6 @@ def review_translation(translation_id):
         field_keys=",".join(translation.iterkeys()),
         fields=translation)
 
-scriptTaskMaxTimeout = 600
-scriptTaskPrefix = "admin/deploy/script/"
-scriptTask = DeployTask(scriptTaskPrefix)
-scriptTaskRefresh = "%s/refresh" % scriptTaskPrefix
-@admin.route('/<lang>/admin/deploy/scripts_view')
-@admin_required
-def deploy_script_view():
-    '''
-    Devuelve el estado del view de un script.
-    Si no está en caché, se ejecuta en todos los servidores y se cachea la
-    salida.
-
-    Devuelve JSON con hosts como claves (contiene punto, acceder con corchetes)
-    y líneas de salida como array.
-    Incluye atributo time con el timestamp de cuando ha sido generado.
-    Si se ha leído desde caché incluye un atributo "cached" a True.
-    '''
-
-    script = request.args.get("script", None)
-    hosts = request.args.get("hosts", None)
-
-    # Validación
-    if script is None:
-        # Si script es None, no hay nada que procesar
-        return jsonify({"cached":True})
-
-    if hosts:
-        # Pasamos los hosts a tupla ordenada para el hash del cacheid
-        hosts.sort()
-        hosts = tuple(hosts)
-
-    cacheid = "%s/output/%s_%s" % (scriptTaskPrefix, hash(script), hash(hosts))
-
-    now = time.time()
-    cached_data = cache.get(cacheid)
-    task_running = scriptTask.busy
-
-    # Si se ha forzado un refresco de caché posterior a la información
-    # cacheada que he encontrado, la ignoro.
-    if (
-      cached_data and
-      cached_data.get("time", 0) < (cache.get(scriptTaskRefresh) or 0)
-      ):
-        cached_data = None
-
-    # Si hay caché y la información de caché es definitiva.
-    if cached_data and cached_data.get("cached", False):
-        return jsonify(cached_data)
-
-    # Si el script está funcionando o ha terminado y el caché no es definitivo
-    if task_running or cached_data:
-        # Extracción de salida por host
-        raw_data = scriptTask.get_stdout_data()
-        md5 = hash(raw_data) # hash de los datos de stdout
-
-        if cached_data and cached_data.get("hash", None) == md5:
-            # Si no hay cambios en el hash, no vuelvo a procesar
-            data = cached_data
-        else:
-            data = defaultdict(list)
-            data["md5"] = md5
-            for line in raw_data.split(os.linesep):
-                if line.startswith("[") and "] out:" in line:
-                    start = line.find("@") + 1
-                    end = min(line.find(":", start), line.find("]", start))
-                    data[line[start:end]].append(
-                        line[line.find("out: ")+5:].strip()
-                        )
-        data["time"] = now # Actualizo el timestamp
-        if task_running: # Si el script está funcionado
-            cache.set(cacheid, data, scriptTaskMaxTimeout)
-            data["fresh"] = True
-        elif cached_data: # Si la tarea ha terminado hago el caché definitivo
-            data["cached"] = True
-            cache.set(cacheid, data, scriptTaskMaxTimeout)
-        return jsonify(data)
-
-    # Si no se han proporcionado hosts para el script
-    if hosts is None:
-        hosts = deploy_list_scripts().get(script, None)
-        if not hosts:
-            # No se hace nada si no hay hosts para el script
-            data = {"time":now,"cached":True}
-            cache.set(cacheid, data, scriptTaskMaxTimeout)
-            return jsonify(data)
-
-    # El script no está funcionando, lo iniciamos
-    scriptTask.run("script", None, {"hosts":hosts,"script":script})
-    data = {"time":now}
-    cache.set(cacheid, data, scriptTaskMaxTimeout)
-    data["started"] = True
-    return jsonify(data)
-
 deployTask = DeployTask("admin/deploy/task/")
 @admin.route('/<lang>/admin/deploy/status')
 @admin_required
@@ -778,6 +884,9 @@ def deploy():
     if mode == "deploy":
         form.mode.choices = [(i,i) for i in fabfile.get_modes()]
         form.mode.choices.sort()
+        lastmode = deployTask.get_last_mode()
+        if request.method == "GET" and lastmode:
+            form.mode.data = lastmode
     elif mode == "publish":
         form.publish_mode.choices = deploy_backups_datetimes()
     elif mode == "script":
@@ -796,7 +905,7 @@ def deploy():
     if request.method == "POST":
         if form.script_clean_cache.data:
             # Botón de borrar caché de scripts
-            cache.set(scriptTaskRefresh, time.time())
+            cache.set(scriptRefresh, time.time())
             cache.delete(deploy_list_scripts.make_cache_key())
         elif form.remove_lock.data:
             for i in (scriptTask, deployTask):
@@ -817,10 +926,12 @@ def deploy():
                 "clean-local" if form.clean_local.data else
                 "clean-remote" if form.clean_remote.data else
                 "restart" if form.restart.data else
+                "restart_beta" if form.restart_beta.data else
                 "package" if form.package.data else
                 "package-rollback" if form.rollback.data else
                 "prepare-deploy" if form.prepare.data else
                 "commit-deploy" if form.commit.data else
+                "confirm-deploy" if form.confirm.data else
                 "publish" if form.publish.data else
                 "script" if form.script.data else None
                 )
@@ -866,6 +977,7 @@ def deploy():
                     config)
             elif task is None:
                 abort(502)
+        return redirect(url_for("admin.deploy", page=page, show=mode))
 
     return render_template('admin/deploy.html',
         page_title=_('admin_deploy'),
@@ -1004,6 +1116,7 @@ db_parsers = {
         "g": db_types["str_list"],
         "crbl": db_types[int],
         "ig": db_types["json"],
+        "url_lastparts_indexed": db_types[int],
         },
     "user":{
         "_id": db_types[bson.ObjectId],
@@ -1084,10 +1197,10 @@ def db_edit(collection, document_id=None):
         form_readonly_fields += ("created","password")
         data = usersdb.find_userid(document_id) if document_id else {}
     elif collection == "origin":
-        deleteable = current_app.debug
+        deleteable = deleteable and current_app.debug
         page_title = 'admin_origins_info'
         form_title = 'admin_origins_info'
-        form_force_fields += ("tb", "crbl", "d", "g", "ig")
+        form_force_fields += ("tb", "crbl", "d", "g", "ig", "url_lastparts_indexed")
         #form_readonly_fields += ()
         data = filesdb.get_source_by_id(float(document_id)) if document_id else {}
     elif collection == "alternatives":
@@ -1323,7 +1436,47 @@ def db_remove(collection, document_id):
         db_values = data
         )
 
+@admin.route("/<lang>/admin/actions", methods=("POST","GET"))
+def actions(actionid = None):
+
+    form = ActionForm(request.form)
+    form.target.choices = [(i,i) for i in configdb.get_current_profiles()]
+
+    actions = tuple(configdb.list_actions())
+
+    form.submitlist.choices = [
+        (actionid, _('admin_actions_run'))
+        for actionid, fnc, unique, args, kwargs in actions
+        ]
+
+    if request.method == "POST":
+        flash(_("admin_actions_updated"))
+        configdb.run_action(actionid)
+        return redirect(url_for(".actions"))
+
+    return render_template("admin/action.html",
+        title = admin_title("admin_actions"),
+        page_title = _("admin_actions"),
+        form = form,
+        interval = current_app.config.get("CONFIG_UPDATE_INTERVAL", -1),
+        actions = [(
+            submit,
+            actionid,
+            "%s(%s)" % (
+                "%s.%s" % (
+                    fnc.im_class().__class__.__name__ if hasattr(fnc.im_class(), "__class__") else fnc.im_class().__name__,
+                    fnc.__name__
+                    ) if hasattr(fnc, "im_class") else fnc.__name__,
+                ", ".join(itertools.chain(
+                    (repr(i) for i in args),
+                    ("%s=%s" % (k, repr(v)) for k, v in kwargs.iteritems()))),
+                ),
+            inspect.getdoc(fnc).decode("utf-8"),
+            unique
+            ) for (actionid, fnc, unique, args, kwargs), submit in itertools.izip(actions, iter(form.submitlist))]
+        )
+
 
 def add_admin(app):
-    pomanager.init_lang_repository(app)
+    pomanager.init_app(app)
     app.register_blueprint(admin)

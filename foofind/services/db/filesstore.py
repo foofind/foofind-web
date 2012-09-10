@@ -1,47 +1,89 @@
 # -*- coding: utf-8 -*-
-import pymongo, logging, time, trace
+import pymongo, logging, time, traceback
 from collections import defaultdict, OrderedDict
-from foofind.utils import hex2mid, end_request, u
+from foofind.utils import hex2mid, u
 from foofind.utils.async import MultiAsync
 from foofind.services.extensions import cache
 from threading import Lock, Event
 from itertools import permutations
 from datetime import datetime
 
-class MongoDocument(dict):
-    conn_dict = None
-    uri = None
-    @property
-    def conn(self):
-        return self.conn_dict(self.uri)
+import foofind.services
+profiler = None
 
 class BogusMongoException(Exception):
+    '''
+    Fallo de conexión de mongo
+    '''
     pass
 
 class BongoContext(object):
+    '''
+    Contexto seguro para peticiones a mongo de ficheros.
+    Maneja excepciones de pymongo.connection.AutoReconect y
+    pymongo.connection.ConnectionFailure e invalida el servidor para su
+    posterior reconexión.
+    '''
+
+    _cache_uri = None
+    _cache_conn = None
+
+    @property
+    def uri(self):
+        if self._cache_uri is None:
+            self._cache_uri, self._cache_conn = self.bongo.urimaster if self._usemaster else self.bongo.uriconn
+        return self._cache_uri
+
+    @property
+    def conn(self):
+        if self._cache_conn is None:
+            self._cache_uri, self._cache_conn = self.bongo.urimaster if self._usemaster else self.bongo.uriconn
+        return self._cache_conn
+
+    @property
+    def is_master(self):
+        return self._usemaster or self.uri == self.bongo.urimaster[0]
+
     def __init__(self, bongo, usemaster=False):
+        self._usemaster = usemaster
         self.bongo = bongo
-        self.uri, self.conn = bongo.urimaster if usemaster else bongo.uriconn
 
     def __enter__(self):
         return self
 
-    def __exit__(self, t, value, traceback):
+    def __exit__(self, t, value, ex_traceback):
+        if not self._cache_conn is None:
+            # Si se ha utilizado la conexión, intentamos cerrarla
+            try:
+                self.conn.end_request()
+            except BaseException as e:
+                # TODO(felipe): Si no es útil, rebajar prioridad a warning
+                logging.error("Error al cerrar la conexión.", extra={"error":e})
         if t:
-            if isinstance(t, pymongo.connection.AutoReconnect):
-                logging.warn("Autorreconnection throwed by MongoDB server data: %s." % self.uri)
+            extra = locals()
+            extra["traceback"] = traceback.format_tb(ex_traceback)
+            try:
+                cache.cacheme = False
+            except BaseException as e:
+                logging.exception("cache.cacheme no accesible")
+
+            if t is pymongo.connection.AutoReconnect:
+                logging.warn("Autoreconnection throwed by MongoDB server data: %s." % self.uri, extra=extra)
+                self.bongo.autoreconnection(self.uri)
+            elif t is pymongo.connection.ConnectionFailure:
+                logging.error("Error accessing to MongoDB server data: %s." % self.uri, extra=extra)
                 self.bongo.invalidate(self.uri)
-                return True
-            elif isinstance(t, pymongo.connection.ConnectionFailure):
-                logging.exception("Error accessing to MongoDB server data: %s." % self.uri)
-                self.bongo.invalidate(self.uri, True)
-                return True
+            else:
+                logging.error("Error: %s" % value, extra=extra)
+
+            return True
+
 
 class Bongo(object):
     '''
     Clase para gestionar conexiones a Mongos que funcionan rematadamente mal.
     '''
-    def __init__(self, server, pool_size, network_timeout):
+    def __init__(self, server, pool_size, network_timeout, max_autoreconnects):
         self.info = server
         self.connections = OrderedDict((
             ("mongodb://%(rip)s:%(rp)d" % server, None),
@@ -50,24 +92,44 @@ class Bongo(object):
         self.connections_access = {uri:Event() for uri in self.connections.iterkeys()}
         self._pool_size = pool_size
         self._network_timeout = network_timeout
-        self._will_reconnect = set()
-        self._will_reconnect_lock = Lock()
-        self.reconnect()
+        self._numfails = {}
+        self._lock = Lock()
+        self._max_autoreconections = max_autoreconnects
+        self.reconnect(False)
 
-    def invalidate(self, uri, cancelConnection=False):
-        cache.cacheme = False
-        self.connections_access[uri].clear()
+    def invalidate(self, uri):
+        '''
+        Deja de usar el mongo y lo marca para su reconexión.
 
-        if cancelConnection:
-            self.connections[uri].disconnect()
-            self.connections[uri] = None
-        else:
-            self._will_reconnect_lock.acquire()
-            self._will_reconnect.add(uri)
-            self._will_reconnect_lock.release()
+        @type uri: str
+        @param uri: dirección del mongo
+        '''
+        if self.connections_access[uri].is_set():
+            self.connections_access[uri].clear()
+            logging.warn("Invalidated connection: %s." % uri, extra={"conn":self.connections[uri]})
+            with self._lock:
+                if self.connections[uri]:
+                    self.connections[uri].disconnect()
+                    self.connections[uri] = None
 
-    def reconnect(self):
+    def autoreconnection(self, uri):
+        '''
+        Avisa del autoreconect, y si se superan las reconexiones, desconecta
+
+        @type uri: str
+        @param uri: dirección del mongo
+        '''
+        if self._numfails[uri] > self._max_autoreconections:
+            self.invalidate(uri)
+        self._numfails[uri] += 1
+
+    def reconnect(self, again=True):
+        '''
+        Vuelve a crear conexiones con los mongos que hayan fallado.
+        Debería ser llamado cada cierto tiempo.
+        '''
         for uri, conn in self.connections.iteritems():
+            self._numfails[uri] = 0
             if not self.connections_access[uri].is_set():
                 try:
                     self.connections[uri] = pymongo.Connection(
@@ -76,28 +138,9 @@ class Bongo(object):
                         network_timeout = self._network_timeout
                         )
                     self.connections_access[uri].set()
-                    logging.info("Connection has been reestablished with %s" % uri)
-                except:
-                    logging.warn("Unable to reconnect with %s" % uri)
-
-        to_reconnect = tuple(self._will_reconnect)
-
-        reconnected = []
-        for uri in to_reconnect:
-            try:
-                self.connections[uri].server_info()
-                logging.info("Connection check: OK %s" % uri)
-                reconnected.append(uri)
-                self.connections_access[uri].set()
-            except pymongo.connection.AutoReconnect as e:
-                logging.warn("Connection check: Autorreconnect %s" % uri)
-            except pymongo.connection.ConnectionFailure as e:
-                logging.warn("Connection check: ConnectionFailure %s" % uri)
-                self.connections[uri] = None
-
-        self._will_reconnect_lock.acquire()
-        self._will_reconnect.difference_update(reconnected)
-        self._will_reconnect_lock.release()
+                    logging.warn("Connection has been %sstablished with %s" % ("re" if again else "e", uri))
+                except BaseException as e:
+                    logging.warn("Unable to %sconnect with %s" % ("re" if again else "", uri), extra={"error":e})
 
     @property
     def uriconn(self):
@@ -113,18 +156,30 @@ class Bongo(object):
 
     @property
     def conn(self):
+        '''
+        Devuelve la conexión al mongo
+        '''
         return self.uriconn[1]
 
     @property
     def master(self):
+        '''
+        Devuelve conexión con el master
+        '''
         return self.connections.values()[-1]
 
     @property
     def context(self):
+        '''
+        Devuelve contexto
+        '''
         return BongoContext(self)
 
     @property
     def contextmaster(self):
+        '''
+        Devuelve contexto únicamente con el master
+        '''
         return BongoContext(self, True)
 
     def __str__(self):
@@ -133,8 +188,8 @@ class Bongo(object):
     def __repr__(self):
         return self.__str__()
 
+from time import sleep
 class FilesStore(object):
-
     '''
     Clase para acceder a los datos de los ficheros.
     '''
@@ -157,25 +212,61 @@ class FilesStore(object):
         '''
         self.max_pool_size = app.config["DATA_SOURCE_MAX_POOL_SIZE"]
         self.get_files_timeout = app.config["GET_FILES_TIMEOUT"]
+        self.max_autoreconnects = app.config["MAX_AUTORECONNECTIONS"]
 
         self.server_conn = pymongo.Connection(app.config["DATA_SOURCE_SERVER"], slave_okay=True, max_pool_size=self.max_pool_size)
-        self.load_servers_conn()
+
+        global profiler
+        profiler = foofind.services.profiler
 
     def load_servers_conn(self):
         '''
         Configura las conexiones a las bases de datos indicadas en la tabla server de la bd principal.
         Puede ser llamada para actualizar las conexiones si se actualiza la tabla server.
         '''
+        logging.warn("Connections check", extra={
+            "access": {k: v.is_set() for bongo in self.servers_conn.itervalues() for k,v in bongo.connections_access.iteritems()},
+            "connections": {k: v for bongo in self.servers_conn.itervalues() for k,v in bongo.connections.iteritems()}
+            })
         for bongo in self.servers_conn.itervalues():
             bongo.reconnect()
         for server in self.server_conn.foofind.server.find().sort([("lt",-1)]):
             sid = server["_id"]
-
             if not sid in self.servers_conn:
-                self.servers_conn[sid] = Bongo(server, self.max_pool_size, self.get_files_timeout)
+                self.servers_conn[sid] = Bongo(server, self.max_pool_size, self.get_files_timeout, self.max_autoreconnects)
+        self.server_conn.end_request()
         self.current_server = max(
             self.servers_conn.itervalues(),
             key=lambda x: x.info["lt"] if "lt" in x.info else datetime.min)
+
+
+    def _get_server_files(self, async, sid, ids, bl):
+        '''
+        Usado por el MultiAsync en get_files
+
+        Recupera los datos de los ficheros con los ids dados del
+        servidor mongo indicado por sid y los devuelve a través
+        del objeto async.
+
+        @param async: objeto async
+        @type sid: str
+        @param sid: id de servidor de archivos
+        @type ids: list
+        @param ids: lista de ids a obener
+        '''
+        with self.servers_conn[sid].context as context:
+            profiler_key = "mongo%d%s"%(sid, "m" if context.is_master else "s")
+            profiler.checkpoint(opening=[profiler_key])
+            data = tuple(
+                context.conn.foofind.foo.find(
+                    {"_id": {"$in": ids}}
+                    if bl is None else
+                    {"_id": {"$in": ids},"bl":bl}))
+            context.conn.end_request()
+            for doc in data:
+                doc["s"] = sid
+            profiler.checkpoint(closing=[profiler_key])
+            async.return_value(data)
 
     def get_files(self, ids, servers_known = False, bl = 0):
         '''
@@ -206,36 +297,23 @@ class FilesStore(object):
             # averigua en qué servidor está cada fichero
             nindir = self.server_conn.foofind.indir.find({"_id": {"$in": [hex2mid(fid) for fid in ids]}})
             for ind in nindir:
-                if "t" in ind: # si apunta a otro id, lo busca en vez del id dado
-                    sids[ind["s"]].append(ind["t"])
-                else:
-                    sids[ind["s"]].append(ind["_id"])
+                if "s" in ind and ind["s"] in self.servers_conn:
+                    if "t" in ind: # si apunta a otro id, lo busca en vez del id dado
+                        sids[ind["s"]].append(ind["t"])
+                    else:
+                        sids[ind["s"]].append(ind["_id"])
             self.server_conn.end_request()
 
-        if len(sids) == 0: # Si no hay servidores, no hay ficheros
-            return tuple()
-        elif len(sids) == 1: # Si todos los ficheros pertenecen al mismo servidor, evita MultiAsync
-            sid = sids.keys()[0]
-            with self.servers_conn[sid].context as context:
-                return end_request(context.conn.foofind.foo.find(
-                        {"_id":{"$in": sids[sid]}} if bl is None else
-                        {"_id":{"$in": sids[sid]},"bl":bl}))
-
-        # función que recupera ficheros
-        def get_server_files(async, sid, ids):
-            '''
-                Recupera los datos de los ficheros con los ids dados del
-                servidor mongo indicado por sid y los devuelve a través
-                del objeto async.
-            '''
-            with self.servers_conn[sid].context as context:
-                async.return_value(end_request(context.conn.foofind.foo.find(
-                    {"_id": {"$in": ids}}
-                    if bl is None else
-                    {"_id": {"$in": ids},"bl":bl})))
+        if len(sids) == 0:
+            # Si no hay servidores, no hay ficheros
+            return ()
 
         # obtiene la información de los ficheros de cada servidor
-        return MultiAsync(get_server_files, sids.items(), files_count).get_values(self.get_files_timeout)
+        return MultiAsync(
+            self._get_server_files,
+            [(k, v, bl) for k, v in sids.iteritems()],
+            files_count
+            ).get_values(self.get_files_timeout)
 
     def get_file(self, fid, sid=None, bl=0):
         '''
@@ -257,15 +335,23 @@ class FilesStore(object):
         if sid is None:
             # averigua en qué servidor está el fichero
             ind = self.server_conn.foofind.indir.find_one({"_id":mfid})
-            if ind is None: return None
+            if ind is None or not ("s" in ind and ind["s"] in self.servers_conn):
+                # Verificación para evitar basura de indir
+                return None
             if "t" in ind: mfid = ind["t"]
             sid = ind["s"]
             self.server_conn.end_request()
 
         with self.servers_conn[sid].context as context:
-            return end_request(context.conn.foofind.foo.find_one(
+            profiler_key = "mongo%d%s"%(sid, "m" if context.is_master else "s")
+            profiler.checkpoint(opening=[profiler_key])
+            data = context.conn.foofind.foo.find_one(
                 {"_id":mfid} if bl is None else
-                {"_id":mfid,"bl":bl}), context.conn)
+                {"_id":mfid,"bl":bl})
+            context.conn.end_request()
+            if data: data["s"] = sid
+            profiler.checkpoint(closing=[profiler_key])
+            return data
 
     def get_newid(self, oldid):
         '''
@@ -319,7 +405,11 @@ class FilesStore(object):
                 raise
 
         if update_sphinx and "bl" in data:
-            block_files(mongo_ids=(i["_id"],), block=data["bl"])
+            try:
+                file_name = i["fn"].itervalues().next()["n"]
+            except:
+                file_name = None
+            block_files(mongo_ids=((i["_id"],file_name),), block=data["bl"])
 
         for i in ("_id", "s"):
             if i in update["$set"]:
@@ -339,7 +429,9 @@ class FilesStore(object):
         Cuenta los ficheros totales indexados
         '''
         count = self.server_conn.foofind.server.group(None, None, {"c":0}, "function(o,p) { p.c += o.c; }")
-        return end_request(count[0]['c'] if count else 0, self.server_conn)
+        result = count[0]['c'] if count else 0
+        self.server_conn.end_request()
+        return result
 
     @cache.memoize(timeout=2)
     @cache.fallback(BogusMongoException)
@@ -348,9 +440,11 @@ class FilesStore(object):
         Obtiene los últimos 25 ficheros indexados
         '''
         with self.current_server.context as context:
-            return end_request(
-                tuple(context.conn.foofind.foo.find({"bl":0}).sort([("$natural",-1)]).limit(n)),
-                context.conn)
+            data = tuple( context.conn.foofind.foo.find({"bl":0})
+                .sort([("$natural",-1)])
+                .limit(n) )
+            context.conn.end_request()
+            return data
 
     def remove_source_by_id(self, sid):
         '''
@@ -360,6 +454,7 @@ class FilesStore(object):
         @param sid: identificador del origen
         '''
         self.request_conn.foofind.source.remove({"_id":sid})
+        self.request_conn.end_request()
 
     @cache.memoize()
     def get_source_by_id(self, source):
@@ -373,9 +468,9 @@ class FilesStore(object):
         @return origen o None
 
         '''
-        return end_request(
-            self.server_conn.foofind.source.find_one({"_id":source}),
-            self.server_conn)
+        data = self.server_conn.foofind.source.find_one({"_id":source})
+        self.server_conn.end_request()
+        return data
 
     _sourceParse = { # Parseo de datos para base de datos
         "_id":lambda x:int(float(x)),
@@ -463,7 +558,9 @@ class FilesStore(object):
         sources = self.server_conn.foofind.source.find(query).sort("d")
         if not skip is None: sources.skip(skip)
         if not limit is None: sources.limit(limit)
-        return list(end_request(sources))
+        data = tuple(sources)
+        self.server_conn.end_request()
+        return data
 
     def count_sources(self, blocked=False, group=None, must_contain_all=False, limit=None):
         '''
@@ -488,8 +585,9 @@ class FilesStore(object):
             if isinstance(group, basestring): query["g"] = group
             elif must_contain_all: query["g"] = {"$all": group}
             else: query["g"] = {"$in": group}
-
-        return end_request(self.server_conn.foofind.source.find(query).count(True), self.server_conn)
+        count = self.server_conn.foofind.source.find(query).count(True)
+        self.server_conn.end_request()
+        return count
 
     @cache.memoize()
     def get_sources_groups(self):
@@ -498,29 +596,45 @@ class FilesStore(object):
 
         @return set de grupos de orígenes
         '''
-        return set(j for i in end_request(self.server_conn.foofind.source.find()) if "g" in i for j in i["g"])
+        data = set( j
+            for i in self.server_conn.foofind.source.find() if "g" in i
+            for j in i["g"] )
+        self.server_conn.end_request()
+        return data
+
+
+    @cache.memoize()
+    def get_image_servers(self):
+        '''
+        Obtiene el servidor que contiene una imagen
+        '''
+        data = {s["_id"]:s for s in self.server_conn.foofind.serverImage.find()}
+        self.server_conn.end_request()
+        return data
 
     @cache.memoize()
     def get_image_server(self,server):
         '''
         Obtiene el servidor que contiene una imagen
         '''
-        return end_request(
-            self.server_conn.foofind.serverImage.find_one({"_id":server}),
-            self.server_conn)
+        data = self.server_conn.foofind.serverImage.find_one({"_id":server})
+        self.server_conn.end_request()
+        return data
 
     @cache.memoize()
     def get_server_stats(self, server):
         '''
         Obtiene las estadisticas del servidor
         '''
-        return end_request(
-            self.server_conn.foofind.search_stats.find_one({"_id":server}),
-            self.server_conn)
+        data = self.server_conn.foofind.search_stats.find_one({"_id":server})
+        self.server_conn.end_request()
+        return data
 
     @cache.memoize()
     def get_servers(self):
         '''
         Obtiene informacion de los servidores de datos
         '''
-        return list(end_request(self.server_conn.foofind.server.find(), self.server_conn))
+        data = tuple(self.server_conn.foofind.server.find())
+        self.server_conn.end_request()
+        return data

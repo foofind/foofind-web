@@ -1,0 +1,20 @@
+{% extends "admin/base.html" %}
+{% block page %}
+    <form method="post">
+        <h3 class="list">{{_('admin_users')}}</h3>
+        <dl class="list">
+            <dt>{{ search_form.filename.label }}</dt>
+            <dd>{{ search_form.filename }}</dd>
+        </dl>
+    {{- search_form.submit(class="list") -}}
+    </form>
+    {%- if file_data -%}
+    <h3 class="list">{{_("admin_locks_complaint_fileinfo")}}</h3>
+    {%- for k,v in file_data.iteritems() -%}
+    <dl class="list">
+        <dt>{{ k }}</dt>
+        <dd>{{ v }}</dd>
+    </dl>
+    {%- endfor -%}
+    {%- endif -%}
+{% endblock %}

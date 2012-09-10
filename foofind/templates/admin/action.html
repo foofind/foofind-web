@@ -1,0 +1,30 @@
+{% extends "admin/base.html" %}
+{% block page %}
+    {% if actions %}
+    <form method="POST">
+    <h3 class="list">{{ page_title }}</h3>
+    <table class="list">
+        <thead class="thead_section">
+        <tr>
+            <th>{{ form.target.label }}</th>
+            <th colspan="2">{{ form.target }}</th>
+        </tr>
+        </thead>
+        <tbody class="soft">
+        {% for submit, actionid, fnc, doc, unique in actions %}
+        <tr>
+            <td>{{actionid}}</td>
+            <td>{{fnc}}<br/>{{doc}}{% if unique %}<br/><strong>{{ _('admin_actions_forced_run_once') }}</strong>{% endif %}</td>
+            <td>{{submit}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </form>
+    <br/>
+    {{_("admin_actions_interval", seconds=interval)}}
+    {% else %}
+    {{ _('admin_actions_none') }}
+    {% endif %}
+
+{%- endblock %}

@@ -4,12 +4,12 @@
 """
 
 from flask import Blueprint, request, render_template, g, current_app, jsonify, flash, redirect, url_for, abort, Markup
-from flaskext.login import login_required, current_user
-from flaskext.babel import gettext as _
+from flask.ext.login import login_required, current_user
+from flask.ext.babel import gettext as _
 from foofind.services import *
 from foofind.services.search import search_files, search_related, get_ids, block_files, get_id_server_from_search
 from foofind.forms.files import SearchForm, CommentForm
-from foofind.utils import mid2url, url2mid, hex2mid, mid2hex, mid2bin, bin2hex, to_seconds, multipartition, u, uchr, slugify
+from foofind.utils import mid2url, url2mid, hex2mid, mid2hex, mid2bin, bin2hex, to_seconds, multipartition, u, uchr, slugify, canonical_url
 from foofind.utils.splitter import split_file, SEPPER
 from foofind.utils.pagination import Pagination
 from foofind.utils.async import async_generator
@@ -21,7 +21,7 @@ from traceback import format_stack
 from hashlib import md5
 from urlparse import urlparse
 from datetime import datetime
-import urllib, logging, json, re, logging, unicodedata, random, sys
+import urllib, logging, json, re, unicodedata, random, sys, shlex
 
 files = Fooprint('files', __name__)
 
@@ -76,13 +76,12 @@ def choose_filename(f,text=False):
     fns = f['file']['fn']
     chosen = None
     max_count = -1
-    has_text = 0
+    current_weight = -1
     try:
         for hexuri,src in srcs.items():
             if 'bl' in src and src['bl']!=0:
                 continue
 
-            this_has_text=0
             for crc,srcfn in src['fn'].items():
                 #si no tiene nombre no se tiene en cuenta
                 m = srcfn['m'] if len(fns[crc]['n'])>0 else 0
@@ -91,24 +90,35 @@ def choose_filename(f,text=False):
                 else:
                     fns[crc]['c']=m
 
+                text_weight = 0
                 if text:
-                    slugified_fn = slugify(fns[crc]['n']).strip()
-                    if len(slugified_fn)>0:
-                        #TODO hace lo mismo que para poner el nombre en negrita y sacar el mejor texto aunque no tenga tildes o no venga unido por espacios
-                        if slugified_fn.upper().find(text.upper())!=-1:
-                            this_has_text = 2000
-                        else:
-                            matches = 0
-                            for word in [re.escape(w) for w in text.split(" ")]:
-                                matches += len(re.findall(r"/((?:\b|_)%s(?:\b|_))/i"%word, slugified_fn))
+                    fn_parts = slugify(fns[crc]['n']).strip().split(" ")
 
-                            if matches>0:
-                                this_has_text = 1000 + matches
+                    if len(fn_parts)>0:
+                        text_parts = text.split(" ")
 
-                f['file']['fn'][crc]['tht'] = this_has_text
+                        # valora numero y orden coincidencias
+                        last_pos = -1
+                        max_length = length = 0
+                        occurrences = [0]*len(text_parts)
+                        for part in fn_parts:
+                            pos = text_parts.index(part) if part in text_parts else -1
+                            if pos != -1 and (last_pos==-1 or pos==last_pos+1):
+                                length += 1
+                            else:
+                                if length > max_length: max_length = length
+                                length = 0
+                            if pos != -1:
+                                occurrences[pos]=1
+                            last_pos = pos
+                        if length > max_length: max_length = length
+                        text_weight = sum(occurrences)*100 + max_length
+
+                f['file']['fn'][crc]['tht'] = text_weight
                 better = fns[crc]['c']>max_count
-                if this_has_text > has_text or (better and this_has_text==has_text):
-                    has_text = this_has_text
+
+                if text_weight > current_weight or (better and text_weight==current_weight):
+                    current_weight = text_weight
                     chosen = crc
                     max_count = fns[crc]['c']
 
@@ -116,8 +126,9 @@ def choose_filename(f,text=False):
         logging.exception(e)
 
     f['view']['url'] = mid2url(hex2mid(f['file']['_id']))
+    f['view']['fnid'] = chosen
     if chosen:
-        filename = fns[chosen]['n']
+        filename = fns[chosen]['n'] if "torrent:name" not in f["file"]["md"] else f["file"]["md"]["torrent:name"]
         ext = fns[chosen]['x']
     else: #uses filename from src
         srcurl = ""
@@ -131,6 +142,7 @@ def choose_filename(f,text=False):
         srcurl = srcurl[srcurl.rfind("/")+1:]
         ext = srcurl[srcurl.rfind(".")+1:]
         filename = srcurl[0:srcurl.rfind(".")]
+        #TODO si no viene nombre de archivo buscar en los metadatos para formar uno (por ejemplo serie - titulo capitulo)
 
     filename = Markup(filename).striptags()[:512]
     if not ext in EXTENSIONS:
@@ -160,11 +172,11 @@ def choose_filename(f,text=False):
 
     #nombre del archivo con las palabras que coinciden con la busqueda resaltadas
     if not text:# or not has_text:
-        f['view']['fnh'] = f['view']['fnhs'] = filename
+        f['view']['fnh'] = filename #esto es solo para download que nunca tiene text
     else:
         f['view']['fnh'], f['view']['fnhs'] = highlight(text,filename,True)
 
-    return has_text>0
+    return current_weight>0 # indica si ha encontrado el texto buscado
 
 def highlight(text,match,length=False):
     '''
@@ -210,10 +222,11 @@ def build_source_links(f, prevsrc=False, unify_torrents=False):
         join=False
         count=0
         part=url=""
-        source_data=filesdb.get_source_by_id(src["t"])
+        source_data=g.sources[src["t"]]
 
         if source_data is None: #si no exite el origen del archivo
             logging.error("El fichero contiene un origen inexistente en la tabla \"sources\": %s" % src["t"], extra={"file":f})
+            feedbackdb.notify_source_error(f["_id"], f["s"])
             continue
         elif "crbl" in source_data and source_data["crbl"]==1: #si el origen esta bloqueado
             continue
@@ -284,7 +297,8 @@ def build_source_links(f, prevsrc=False, unify_torrents=False):
 
         f['view']['sources'][source]['tip']=tip
         f['view']['sources'][source]['icon']=icon
-        f['view']['sources'][source]['logo']="http://%s/favicon.ico"%tip
+        f['view']['sources'][source]['icons']=source_data.get("icons",False)
+        f['view']['sources'][source]['logo']=tip
         f['view']['sources'][source]['join']=join
         f['view']['sources'][source]['type']=source_data["g"]
         #para no machacar el numero si hay varios archivos del mismo source
@@ -330,7 +344,11 @@ def choose_file_type(f, file_type=None):
         if file_type is None and "fnx" in f["view"] and f['view']['fnx'] in EXTENSIONS:
             file_type = EXTENSIONS[f['view']['fnx']]
         if file_type is not None:
-            file_type = CONTENTS[file_type]
+            if file_type in CONTENTS:
+                file_type = CONTENTS[file_type]
+            else:
+                logging.error("El tipo de archivo no es correcto",extra={"file":f})
+                file_type = None
 
     if file_type is not None:
         f['view']['file_type'] = file_type.lower();
@@ -342,7 +360,7 @@ def get_images(f):
     if "i" in f["file"] and isinstance(f["file"]["i"],list):
         f["view"]["images_server"]=[]
         for image in f["file"]["i"]:
-            server=filesdb.get_image_server(image)
+            server=g.image_servers[image]
             f["view"]["images_server"].append("%02d"%int(server["_id"]))
             if not "first_image_server" in f["view"]:
                 f["view"]["first_image_server"]=server["ip"]
@@ -424,8 +442,8 @@ def format_metadata(f,details,text):
         # Metadatos que no cambian
         try:
             view_md.update((meta, file_md[meta]) for meta in (
-                ("folders","description","fileversion","os","files","pages","format")
-                if details else ("files","pages","format")) if meta in file_md)
+                ("folders","description","fileversion","os","files","pages","format","seeds")
+                if details else ("files","pages","format","seeds")) if meta in file_md)
         except BaseException as e:
             logging.warn(e)
 
@@ -510,24 +528,31 @@ def format_metadata(f,details,text):
             logging.warn("%s\n\t%s\n\t%s" % (e, f, view_md))
 
         #if len(view_md)>0:
-        f['view']['mdh']={}
+        view_mdh=f['view']['mdh']={}
         for metadata,value in view_md.items():
-            if isinstance(value, basestring):
-                final_value = Markup(value).striptags()
-                final_value = searchable(highlight(text,final_value) if text else final_value, details)
+            if isinstance(value, basestring): #añadir enlaces al contenido que coincide con la busqueda
+                view_md[metadata]=value
+                striptags = Markup(value).striptags()
+                view_mdh[metadata]=searchable(highlight(text,striptags) if text else striptags, details)
+            elif isinstance(value, float): #no hay ningun metadato tipo float
+                view_md[metadata]=view_mdh[metadata]=str(int(value))
             else:
-                final_value = value
-            f['view']['mdh'][metadata] = final_value
-    # TO-DO: mostrar metadatos con palabras buscadas si no aparecen en lo mostrado
+                view_md[metadata]=view_mdh[metadata]=value
+
+    # TODO: mostrar metadatos con palabras buscadas si no aparecen en lo mostrado
 
 def fill_data(file_data,details=False,text=False):
     '''
     Añade los datos necesarios para mostrar los archivos
     '''
+    if not hasattr(g,"sources"):
+        g.sources = {s["_id"]:s for s in filesdb.get_sources(blocked=None)}
+        g.image_servers = filesdb.get_image_servers()
+
     f=init_data(file_data)
 
     # al elegir nombre de fichero, averigua si aparece el texto buscado
-    search_text = text if choose_filename(f,slugify(text) if text else None) else False
+    search_text = text if choose_filename(f,text) else False
     build_source_links(f)
     choose_file_type(f)
     get_images(f)
@@ -556,9 +581,7 @@ def taming_generate_tags(res, query, mean):
     tag = res[2][querylen+1:]
     return (tag[querylen+1:] if tag.startswith(query+" ") else tag, 100*max(min(1.25, res[0]/mean), 0.75))
 
-@async_generator(1000)
 def taming_tags(query, tamingWeight):
-    profiler.checkpoint(opening=["taming_tags"])
     try:
         tags = taming.tameText(
             text=query+" ",
@@ -574,16 +597,12 @@ def taming_tags(query, tamingWeight):
             tags.sort()
         else:
             tags = ()
-    except Exception as e:
+    except BaseException as e:
         logging.exception("Error getting search related tags.")
         tags = ()
-    finally:
-        profiler.checkpoint(closing=["taming_tags"])
-    yield tags
+    return tags
 
-@async_generator(1000)
 def taming_dym(query, tamingWeight):
-    profiler.checkpoint(opening=["taming_dym"])
     try:
         suggest = taming.tameText(
             text=query,
@@ -597,12 +616,11 @@ def taming_dym(query, tamingWeight):
         didyoumean = None
         if suggest and suggest[0][2]!=query:
             didyoumean = suggest[0][2]
-    except Exception as e:
+    except BaseException as e:
         logging.exception("Error getting did you mean suggestion.")
-    finally:
-        profiler.checkpoint(closing=["taming_dym"])
-    yield didyoumean
+    return didyoumean
 
+@async_generator(500)
 def taming_search(query, ct):
     '''
     Obtiene los resultados que se muestran en el taming
@@ -612,7 +630,8 @@ def taming_search(query, ct):
         for cti in CONTENTS_CATEGORY[ct]:
             tamingWeight[TAMING_TYPES[cti]] = 200
 
-    return (taming_tags(query, tamingWeight), taming_dym(query, tamingWeight))
+    yield taming_tags(query, tamingWeight)
+    yield taming_dym(query, tamingWeight)
 
 @unit.observe
 @files.route('/<lang>/search')
@@ -620,11 +639,13 @@ def search():
     '''
     Realiza una búsqueda de archivo
     '''
+    #comprobar si la URL tiene que ser una "captura de pantalla" de una ajax y si es un bot el que la esta visitando
+    snapshot=request.args["_escaped_fragment_"] if "_escaped_fragment_" in request.args and request.user_agent.browser is not None and request.user_agent.browser not in ROBOT_USER_AGENTS else None
 
     # TODO: seguridad en param
     #si no se ha buscado nada se manda al inicio
     query = request.args.get("q", None)
-    if not query:
+    if not query and not snapshot:
         flash("write_something")
         return redirect(url_for("index.home"))
 
@@ -638,29 +659,35 @@ def search():
     g.title = "%s - %s" % (query, g.title)
     results = {"total_found":0,"total":0,"time":0}
 
-    didyoumean = None
-    tags = None
+    didyoumean = tags = None
+    active_taming = current_app.config["SERVICE_TAMING_ACTIVE"]
+
     if 0 < page < 101:
         #obtener los tags y el quiso decir
-        tags, dym = taming_search(query, request.args.get("type", None))
+        if active_taming:
+            profiler.checkpoint(opening=["taming"])
+            async_call = taming_search(query, request.args.get("type", None))
 
         #obtener los resultados y sacar la paginación
         profiler.checkpoint(opening=["sphinx"])
-        results = search_files(query,request.args,page) or results
+        results, query_info = search_files(query,request.args,page) or (results, {"q":query, "s":[]})
         ids = get_ids(results)
         profiler.checkpoint(opening=["mongo"], closing=["sphinx"])
-        files_dict = {mid2hex(file_data["_id"]):fill_data(file_data, False, query) for file_data in get_files(ids)}
+        files_dict = {mid2hex(file_data["_id"]):fill_data(file_data, False, query_info["q"]) for file_data in get_files(ids)}
         profiler.checkpoint(opening=["visited"], closing=["mongo"])
         save_visited(files_dict.values())
         profiler.checkpoint(closing=["visited"])
         files=({"file":files_dict[bin2hex(file_id[0])], "search":file_id} for file_id in ids if bin2hex(file_id[0]) in files_dict)
 
-        # recupera los resultados del taming
-        try:
-            tags = tags.next()
-            didyoumean = dym.next()
-        except:
-            pass
+
+        if active_taming:
+            # recupera los resultados del taming
+            try:
+                tags = async_call.next()
+                didyoumean = async_call.next()
+            except:
+                pass
+            profiler.checkpoint(closing=["taming"])
     else:
         files = ()
 
@@ -680,9 +707,39 @@ def test():
         if unicodedata.category(unichr(char))[0] in ('LMNPSZ'))
     for t in ("","audio","video","image","document","software","archive"):
         for p in xrange(0, 10):
-            q = random.sample(s, 100)
+            q = "".join(random.sample(s, random.randint(10,50)))
             r = unit.client.get('/es/search', query_string={"type":t,"q":q})
             assert r.status_code == 200, u"Return code %d while searching %s in %s" % (r.status_code, repr(s), t)
+
+def choose_filename_related(file_data):
+    '''
+    Devuelve el nombre de fichero elegido
+    '''
+    f=init_data(file_data)
+    choose_filename(f)
+    return f
+
+def comment_votes(file_id,comment):
+    '''
+    Obtiene los votos de comentarios
+    '''
+    comment_votes={}
+    if "vs" in comment:
+        for i,comment_vote in enumerate(usersdb.get_file_comment_votes(file_id)):
+            if not comment_vote["_id"] in comment_votes:
+                comment_votes[comment_vote["_id"][0:40]]=[0,0,0]
+
+            if comment_vote["k"]>0:
+                comment_votes[comment_vote["_id"][0:40]][0]+=1
+            else:
+                comment_votes[comment_vote["_id"][0:40]][1]+=1
+
+            #si el usuario esta logueado y ha votado se guarda para mostrarlo activo
+            if current_user.is_authenticated() and comment_vote["u"]==current_user.id:
+                comment_votes[comment_vote["_id"][0:40]][2]=comment_vote["k"]
+
+    return comment_votes
+
 
 @files.route('/<lang>/download/<file_id>',methods=['GET','POST'])
 @files.route('/<lang>/download/<file_id>/<path:file_name>.html',methods=['GET','POST'])
@@ -691,35 +748,6 @@ def download(file_id,file_name=None):
     '''
     Muestra el archivo a descargar, votos, comentarios y archivos relacionados
     '''
-    def choose_filename_related(file_data):
-        '''
-        Devuelve el nombre de fichero elegido
-        '''
-        f=init_data(file_data)
-        choose_filename(f)
-        return f
-
-    def comment_votes(file_id,comment):
-        '''
-        Obtiene los votos de comentarios
-        '''
-        comment_votes={}
-        if "vs" in comment:
-            for i,comment_vote in enumerate(usersdb.get_file_comment_votes(file_id)):
-                if not comment_vote["_id"] in comment_votes:
-                    comment_votes[comment_vote["_id"][0:40]]=[0,0,0]
-
-                if comment_vote["k"]>0:
-                    comment_votes[comment_vote["_id"][0:40]][0]+=1
-                else:
-                    comment_votes[comment_vote["_id"][0:40]][1]+=1
-
-                #si el usuario esta logueado y ha votado se guarda para mostrarlo activo
-                if current_user.is_authenticated() and comment_vote["u"]==current_user.id:
-                    comment_votes[comment_vote["_id"][0:40]][2]=comment_vote["k"]
-
-        return comment_votes
-
     #guardar los parametros desde donde se hizo la busqueda si procede
     args={}
     if request.referrer:
@@ -740,9 +768,7 @@ def download(file_id,file_name=None):
                 logging.warn("%s - %s" % (e, file_id))
                 flash("link_not_exist", "error")
                 abort(404)
-            return redirect(
-                url_for(".download", file_id=mid2url(possible_file_id), file_name=file_name),
-                code=301)
+            return redirect(url_for(".download", file_id=mid2url(possible_file_id), file_name=file_name), code=301)
         except filesdb.BogusMongoException as e:
             logging.exception(e)
             abort(503)
@@ -765,11 +791,10 @@ def download(file_id,file_name=None):
                 abort(503)
 
     if data:
-        if not data["bl"] in (0, None):
+        if "bl" in data and not data["bl"] in (0, None):
             if data["bl"] == 1: flash("link_not_exist", "error")
             elif data["bl"] == 3: flash("error_link_removed", "error")
-            goback = True
-            #block_files( mongo_ids=(data["_id"],) )
+            block_files( mongo_ids=((data["_id"],file_name), ))
             abort(404)
     else:
         flash("link_not_exist", "error")
@@ -780,6 +805,8 @@ def download(file_id,file_name=None):
     if file_data["view"]["sources"]=={}: #si tiene todos los origenes bloqueados
         flash("error_link_removed", "error")
         abort(404)
+
+    canurl = canonical_url(data)
 
     save_visited([file_data])
     # Título
@@ -819,7 +846,7 @@ def download(file_id,file_name=None):
     if "cs" in file_data["file"]:
         comments=[(i,usersdb.find_userid(comment["_id"][0:24]),comment,comment_votes(file_id,comment)) for i,comment in enumerate(usersdb.get_file_comments(file_id,g.lang),1)]
 
-    return render_template('files/download.html',file=file_data,args=args,vote=vote,files_related=files_related,comments=comments,form=form)
+    return render_template('files/download.html',file=file_data,args=args,vote=vote,files_related=files_related,comments=comments,form=form, canonical_url=canurl)
 
 @files.route('/<lang>/vote/<t>/<int:server>/<file_id>/<int:vote>/<int:login>')
 @files.route('/<lang>/vote/<t>/<int:server>/<file_id>/<comment_id>/<int:vote>/<int:login>')
@@ -852,7 +879,7 @@ def last_files():
     Muestra los ultimos archivos indexados
     '''
     files=[]
-    for f in filesdb.get_last_files(200):
+    for f in (filesdb.get_last_files(200) or []):
         f=init_data(f)
         choose_filename(f)
         files.append(f)
@@ -870,7 +897,6 @@ def autocomplete():
     '''
     Devuelve la lista para el autocompletado de la búsqueda
     '''
-
     query = u(request.args.get("term", "")).lower()
 
     if not query: return "[]"

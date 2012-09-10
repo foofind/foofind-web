@@ -1,4 +1,4 @@
-from flaskext.babel import lazy_gettext as _
+from flask.ext.babel import lazy_gettext as _
 samples={
     "field_length":{"min":2,"max":10},
     "no_type_count":{"search":"Mozart","category":_("other_categories")},

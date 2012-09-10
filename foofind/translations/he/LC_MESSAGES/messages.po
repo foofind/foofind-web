@@ -1,0 +1,48 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: 1\n"
+"Report-Msgid-Bugs-To: ismael@mp2p.net\n"
+"POT-Creation-Date: 2011-12-09 11:49+0100\n"
+"PO-Revision-Date: 2011-12-09 11:49+0100\n"
+"Last-Translator: Foofind <hola@foofind.com>\n"
+"Language-Team: he <hola@foofind.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Foofind's pogit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgid "your_email"
+msgstr "הדוא\"ל שלך"
+
+msgid "password"
+msgstr "סיסמא"
+
+msgid "submit"
+msgstr "שלח"
+
+msgid "help_us"
+msgstr "עזור לנו!"
+
+msgid "legal_info"
+msgstr "מידע חוקי"
+
+msgid "go_home"
+msgstr "חזור לחיפוש"
+
+msgid "error_500_message"
+msgstr "אירעה שגיאה"
+
+msgid "error_500_description"
+msgstr "קרה משהו מוזר, המומחים שלנו בודקים את התקלה הזו."
+
+msgid "error_404_message"
+msgstr "הדף לא נמצא."
+
+msgid "error_404_description"
+msgstr ""
+"הכתובת שביקשת לא נמצאה. בדוק אם כתבת אותה נכון, אם כן, דווח למנהלי האתר."
+
+msgid "error_503_message"
+msgstr "השירות לא זמין"

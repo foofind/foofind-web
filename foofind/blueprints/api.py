@@ -3,33 +3,37 @@
     API pública
 """
 
-from flask import Blueprint, abort, request, render_template, current_app, jsonify, url_for
-
+from flask import Blueprint, abort, request, render_template, current_app, jsonify, url_for, g
+from foofind.utils import mid2url, url2mid
 from foofind.services.search import search_files, get_ids
 from foofind.services import *
+from foofind.utils import u
+from base64 import b64encode, b64decode
 
 # Blueprints
 from files import fill_data
 
-import logging
+import logging, zlib
 
 api = Blueprint('api', __name__)
 
+
+def file_embed_link(data):
+    '''
+    Obtiene el enlace del iframe de embed para el archivo dado
+    '''
+    return url_for( "api.api_embed", _external=True, fileid=mid2url(data["file"]["_id"]), nameid=data["view"]["fnid"])
+
 @api.route("/api")
 @api.route("/api/")
-@api.route("/api/<int:version>")
-def api_gateway(version = 1):
-    if version == 1: return api_v1()
-    elif version == 2: return api_v2()
-    return abort(502)
-
+@api.route("/api/1")
 def api_v1():
     method = request.args.get("method", None)
     results = ()
     success = False
     try:
         if method == "getSearch":
-            files = search_files(request.args["q"], request.args)
+            files, query = search_files(request.args["q"], request.args)
             results = enumerate(fill_data(file_data) for file_data in filesdb.get_files(get_ids(files),True))
             success = True
     except BaseException as e:
@@ -44,18 +48,14 @@ def api_v1():
 _api_v2_md_parser = {
     "created": str,
     }
+@api.route("/api/2")
 def api_v2():
     method = request.args.get("method", None)
     success = True
     result = None
-
-    '''
-    {'file': {u'md': {u'video:category': u'comedy', u'video:duration': 6287L, u'video:description': u'asdf'}, u'c': -1, u'fs': datetime.datetime(2011, 4, 7, 7, 19, 49), 'name': u'http://www.veoh.com/veohplayer.swf?permalinkId=v19638583pbHaJywJ', u'src': {u'6d25345e0114c0424a06af6c': {u'url': u'http://www.veoh.com/watch/v19638583pbHaJywJ', u'm': 1, u't': 17, u'fn': {u'1361703869': {u'm': 1, u'l': 1}}, u'l': 1}, u'fe6d3bedce035eebe2a1e051': {u'url': u'http://www.veoh.com/veohplayer.swf?permalinkId=v19638583pbHaJywJ', u'm': 1, u't': 17, u'fn': {u'1361703869': {u'm': 1, u'l': 1}}, u'l': 1}}, u'bl': 0, u'tt': 1, u'm': 1, u's': 3, u'ls': datetime.datetime(2011, 4, 7, 7, 19, 49), u'_id': ObjectId('fe6d3bedce035eebe2a1e051'), 'id': '-m077c4DXuvioeBR', u'fn': {u'1361703869': {u'x': u'', 'c': 2, 'tht': 0, u'n': u'asdf'}}, u'ct': 2}, 'view': {'md': {}, 'file_type': 'video', 'source': u'veoh.com', 'url': '-m077c4DXuvioeBR', 'nfn': u'asdf', 'fnx': '', 'sources': {u'veoh.com': {'count': 2, 'join': False, 'tip': u'veoh.com', 'parts': [], 'urls': [u'http://www.veoh.com/watch/v19638583pbHaJywJ', u'http://www.veoh.com/veohplayer.swf?permalinkId=v19638583pbHaJywJ', u'magnet:?dn=asdf&'], 'icon': 'web'}}, 'efn': u'asdf', 'action': 'Download', 'fn': u'asdf', 'fnh': u'<strong>asdf</strong>'}}
-    '''
-
     if method == "search":
         result = []
-        files = search_files(request.args["q"], request.args)
+        files, query = search_files(request.args["q"], request.args)
         result = [{
             "size": f["file"]["z"] if "z" in f["file"] else 0,
             "type": f["view"]["file_type"],
@@ -64,8 +64,36 @@ def api_v2():
                 for k, v in f["view"]["md"].iteritems()},
             } for f in (fill_data(file_data) for file_data in filesdb.get_files(get_ids(files), True))]
         success = True
-
     return jsonify(
         method = method,
         success = success,
-        result = result)
+        result = result
+        )
+
+@api.route("/api/embed/<fileid>/<nameid>")
+@cache.cached(
+    unless=lambda:True,
+    key_prefix=lambda: "api/embed_%s_%%s" % g.lang
+    )
+def api_embed(fileid, nameid):
+
+    data = filesdb.get_file(url2mid(fileid))
+
+    if "torrent:name" in data["md"]:
+        filename = data["md"]["torrent:name"]
+    elif nameid in data["fn"]:
+        filename = data["fn"][nameid]['n']
+    elif data["fn"]:
+        filename = data["fn"].values()[0]['n']
+    else:
+        filename = ""
+
+    if data.get("z", 0):
+        size = data['z']
+
+    return render_template("api/embed.html",
+        blocked = data.get("bl", True),
+        filename = filename,
+        size = size,
+        download_url = url_for("files.download", file_id=mid2url(data["_id"]), file_name="%s.html" % filename)
+        )

@@ -2,7 +2,7 @@
 /* search ajax*/
 @mixin button($icon,$size:50)
 {
-    a{padding-top:$size*.75px;height:$size*.3px;margin:0;text-decoration:none;@include states($icon,$size,$status4_color:#FFF)}
+    a {float:left; padding-top:$size*.75px;height:$size*.3px;margin:0;text-decoration:none;@include states($icon,$size,$status4_color:#FFF)}
 }
 input#q{height:30px;font-size:1.6em;margin-top:5px;/*padding-right:85px para favoritos y compartir*/}
 fieldset.small
@@ -23,39 +23,10 @@ fieldset.small
     strong{color:$darkergray}
     em{color:$magenta;font-style:italic}
 }
-body{min-width:940px;min-height:1000px}
-#type li
+body{min-width:940px}
+#container header
 {
-    @for $i from 2 through 6{&:nth-child($i){@include button("00"+$i)}}
-}
-#src li
-{
-    @for $i from 2 through 4{&:nth-child($i){@include button("00"+($i+5))}}
-    &:nth-child(3) a{padding-top:32px;height:18px;}
-}
-#size
-{
-    width:135px;
-    margin-left:8px:
-    div
-    {
-        background:$lightestgray;
-        div{background:$magenta}
-        a
-        {
-            background:$darkerwhite;border-color:$lightesblack;
-            &.ui-state-hover,&.ui-state-focus{background:$darkwhite;border-color:$magenta}
-        }
-    }
-    span
-    {
-        margin-top:5px;color:$lightblack;font-weight:bold;font-size:.9em;
-        &:first-of-type{float:left}
-        &:last-of-type{float:right}
-    }
-}
-header
-{
+    h1{margin-top:4px}
     #search_file
     {
         display:inline-block;
@@ -70,11 +41,41 @@ section#files
         {
             float:left;width:160px;
             dt{font-weight:bold;font-size:1.4em;margin:5px 0}
+            a{outline:none}
             li
             {
                 display:inline-block;font-size:.7em;text-align:center;text-transform:lowercase;margin:1px;line-height:.8em;
                 a{@include icon("001")}
                 @include button("001");
+            }
+            #type li
+            {
+                @for $i from 2 through 6{&:nth-child($i){@include button("00"+$i)}}
+            }
+            #src li
+            {
+                @for $i from 2 through 4{&:nth-child($i){@include button("00"+($i+5))}}
+                &:nth-child(3) a{padding-top:32.5px;height:20px;}
+            }
+            #size
+            {
+                width:135px;margin-left:8px;
+                div
+                {
+                    background:$lightestgray;
+                    div{background:$magenta}
+                    a
+                    {
+                        background:$darkerwhite;border-color:$lightesblack;
+                        &.ui-state-hover,&.ui-state-focus{background:$darkwhite;border-color:$magenta}
+                    }
+                }
+                span
+                {
+                    margin-top:5px;color:$lightblack;font-weight:bold;font-size:.9em;
+                    &:first-of-type{float:left}
+                    &:last-of-type{float:right}
+                }
             }
         }
     }
@@ -131,21 +132,27 @@ section#files
                                 &.torrent{@include states(203,$icon_size,2,$status1:2)}
                                 &.web{@include states(204,$icon_size,2,$status1:2)}
                             }
-                            small{font-size:.9em;display:block;color:$darkergray;& img{margin-right:1px;vertical-align:bottom}}
+                            small
+                            {
+                                font-size:.9em;display:block;color:$darkergray;
+                                & img{margin-right:1px;vertical-align:bottom}
+                                a{color:$darkergray;text-decoration:none;&:hover{text-decoration:underline}}
+                            }
                         }
                         .source_1
                         {
                             @include icon_p2p;margin-top:20px;
-                            >img{width:40px;margin-top:-5px;&+span{display:block;width:40px;text-align:center;font-weight:bold;color:$darkergray}}
+                            >img{margin-top:-5px;margin-left:3.5px;&+span{display:block;width:40px;text-align:center;font-weight:bold;color:$darkergray}}
                             .thumblink
                             {
-                                float:right;width:100px;height:75px;margin:0;margin-top:-23px;
-                                >span{position:relative;top:-76px;left:27px;width:50px;height:50px;display:block;@include icon(315,-1,$active:false)}
+                                position:relative;float:right;width:100px;height:75px;margin:0;margin-top:-23px;
+                                >img{max-width:102px;}
+                                >span{position:absolute;top:14px;left:26px;width:50px;height:50px;display:block;@include icon(315,-1,$active:false)}
                             }
                             .blacklink span{top:14px}
                         }
                         .source_2{font-size:.9em;margin-top:7px;@include icon_p2p(24)}
-                        .source_3{@include icon_p2p(16)}
+                        .source_3{@include icon_p2p(16);small{display:inline-block;font-size:.85em;margin:5px 0}}
                     }
                     &.metadata
                     {
@@ -195,38 +202,34 @@ section#files
     }
     #download
     {
-        display:none;background:$darkerwhite;width:540px;height:95%;min-height:500px;position:fixed;z-index:6;right:-800px;border:2px solid $magenta;border-radius:5px;padding:30px;text-align:center;overflow:auto;
-        &.activo{right:-800px}
-        h2{@include ellipsis(430,$white-space:pre-wrap);text-align:left}
+        overflow:hidden;display:none;background:$darkerwhite;width:570px;height:100%;position:fixed;z-index:6;right:-800px;border:2px solid $magenta;border-radius:5px;padding:30px 0px 0px 30px;text-align:center;
+        &.top{border-top-width:0;border-top-left-radius:0;border-top-right-radius:0}
+        &.bottom{border-bottom-width:0;border-bottom-left-radius:0;border-bottom-right-radius:0;padding-bottom:3px}
+        >a{float:right;color:$magenta;text-decoration:underline;cursor:pointer;margin:-25px 20px 5px 0}
+        article{height:100%;position:relative}
+        h2{@include ellipsis(430,$white-space:pre-wrap);text-align:left;height:70px}
+        section{padding-right:30px}
         dl
         {
-            margin-top:15px;text-align:left;
+            margin:15px 0;text-align:left;
             dt{float:left;width:24%;font-weight:bold;padding-right:1%}
             dd{padding-left:25%}
         }
-        .top_download
+        .download_button
         {
-            text-align: center;
-            iframe{width:420px;height:315px}
+            padding:0 20px;top:0;float:none;text-align:center;
+            iframe{width:512px;height:288px}
+            >span{margin-top:20px}
         }
-        .download_button{top:0;float:none}
         .download_source
         {
             text-align:left;
             a{width:160px}
             input{padding-left:5px;width:325px;font-size:1.2em;min-height:20px}
         }
-        .close_download {
-            position: absolute;
-            right: 30px;
-            width:100px;
-            text-align:center;
-            top: 6px;
-            text-decoration: underline;
-            color: $magenta;
-            cursor:hand;
-        }
+        .sharelinks{padding:10px 0}
     }
+    &+footer{position:fixed;z-index:100}
 }
 #more
 {

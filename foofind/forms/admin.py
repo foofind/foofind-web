@@ -5,34 +5,34 @@
 
 from wtforms import *
 from wtforms.widgets import *
-from flaskext.babel import lazy_gettext as _
-from flaskext.babel import gettext
+from flask.ext.babel import lazy_gettext as _
+from flask.ext.babel import gettext
 
 import logging
 
 from .fields import HTMLString, fix_param_name, html_params
 
+class LoneLabel(object):
+    '''
+    Label sin atributo 'for', el estándar html especifica que el id en
+    'for' debe apuntar a un campo de formulario
+    '''
+    def __init__(self, field_id, text):
+        self.field_id = field_id
+        self.text = text
+
+    def __str__(self): return self()
+    def __unicode__(self): return self()
+    def __html__(self): return self()
+
+    def __call__(self, text=None, **kwargs):
+        attributes = widgets.html_params(**kwargs)
+        return widgets.HTMLString(u'<label %s>%s</label>' % (attributes, text or self.text))
+
+    def __repr__(self):
+        return 'LoneLabel(%r, %r)' % (self.field_id, self.text)
+
 class MultiHostField(SelectMultipleField):
-    class LoneLabel(object):
-        '''
-        Label sin atributo 'for', el estándar html especifica que el id en
-        'for' debe apuntar a un campo de formulario
-        '''
-        def __init__(self, field_id, text):
-            self.field_id = field_id
-            self.text = text
-
-        def __str__(self): return self()
-        def __unicode__(self): return self()
-        def __html__(self): return self()
-
-        def __call__(self, text=None, **kwargs):
-            attributes = widgets.html_params(**kwargs)
-            return widgets.HTMLString(u'<label %s>%s</label>' % (attributes, text or self.text))
-
-        def __repr__(self):
-            return 'LoneLabel(%r, %r)' % (self.field_id, self.text)
-
     class StatusWidget(object):
         '''
         SelectMultipleField en un ul con checkboxes.
@@ -60,11 +60,39 @@ class MultiHostField(SelectMultipleField):
 
     def __init__(self, *args, **kwargs):
         SelectMultipleField.__init__(self, *args, **kwargs)
-        self.label = self.LoneLabel(self.id, self.label.text)
+        self.label = LoneLabel(self.id, self.label.text)
         self.status = kwargs.get("status", {})
 
     widget = StatusWidget()
     option_widget = CheckboxInput()
+
+class MultiSubmit(SelectMultipleField):
+    class MultiWidget(object):
+        '''
+        SelectMultipleField en un ul con checkboxes.
+        '''
+        def __init__(self, html_tag='ul'):
+            self.html_tag = html_tag
+            self.inner_kwarg_prefix = "submit_"
+
+        def __call__(self, field, **kwargs):
+            kwargs.setdefault('id', field.id)
+            likp = len(self.inner_kwarg_prefix)
+            inner_kwargs = {fix_param_name(k[likp:]):v for k,v in kwargs.iteritems() if k.startswith(self.inner_kwarg_prefix)}
+            outer_kwargs = {fix_param_name(k):v for k,v in kwargs.iteritems() if not k.startswith(self.inner_kwarg_prefix)}
+            return HTMLString(u'<%s %s>%s</%s>' % (
+                self.html_tag,
+                html_params(**outer_kwargs),
+                u''.join(u'<li>%s</li>' % i for i in self),
+                self.html_tag))
+
+    def __init__(self, *args, **kwargs):
+        SelectMultipleField.__init__(self, *args, **kwargs)
+        self.label = LoneLabel(self.id, self.label.text)
+        self.status = kwargs.get("status", {})
+
+    widget = MultiWidget()
+    option_widget = SubmitInput()
 
 class ValidateTranslationForm(Form):
     submit = SubmitField(_('admin_translation_confirm'), default="confirm")
@@ -103,12 +131,13 @@ class OriginForm(Form):
     submit = SubmitField(_('admin_origins_save'), default="submit")
 
 class DeployForm(Form):
-    mode = SelectField(_("admin_deploy_mode"), default="production")
+    mode = SelectField(_("admin_deploy_mode"), default="staging")
     deploy = SubmitField(_("admin_deploy_deploy"), default="deploy")
     deploy_rollback = SubmitField(_("admin_deploy_deploy_rollback"), default="deploy-rollback")
     clean_local = SubmitField(_("admin_deploy_clean_local"), default="clean_local")
     clean_remote = SubmitField(_("admin_deploy_clean_remote"), default="clean_remote")
     restart = SubmitField(_("admin_deploy_restart"), default="restart")
+    restart_beta = SubmitField(_("admin_deploy_restart_beta"), default="restart_beta")
     package = SubmitField(_("admin_deploy_package"), default="package")
 
     script_available_hosts = HiddenField()
@@ -124,6 +153,7 @@ class DeployForm(Form):
     rollback = SubmitField(_("admin_deploy_rollback"), default="rollback")
     prepare = SubmitField(_("admin_deploy_prepare"), default="prepare")
     commit = SubmitField(_("admin_deploy_commit"), default="commit")
+    confirm = SubmitField(_("admin_deploy_confirm"), default="confirm")
 
     clean_log = SubmitField(_("admin_deploy_clean_log"), default="clean_log")
     remove_lock = SubmitField(_("admin_deploy_remove_lock"), default="remove_lock")
@@ -141,3 +171,16 @@ class RemoveForm(Form):
 class GetServerForm(Form):
     filename = TextField(_("admin_filename"))
     submit = SubmitField(_("admin_locks_search"), default="submit")
+
+class ActionForm(Form):
+    target = SelectField(_("admin_actions_target"))
+    submitlist = MultiSubmit()
+
+class LogForm(Form):
+    processing = HiddenField(default=False, filters=(lambda x: str(x).strip().lower() == "true" ,))
+    number = IntegerField("number", default=25)
+    mode = SelectField("mode", choices=(
+        ("head","head"),
+        ("tail","tail"),
+        ), default="tail")
+    retrieve = SubmitField(_("admin_confirm"), default="submit")

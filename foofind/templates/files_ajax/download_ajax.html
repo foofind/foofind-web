@@ -18,59 +18,59 @@
     </div>
 {% endmacro -%}
 {% block content %}
-<div data-id="{{ file['file']['id'] }}">    
-    <div>
-        <span class="close_download">{{_('close')}}</span>
+<a>{{_('close')}}</a>
+<article data-id="{{ file['file']['id'] }}">
+    <header>
         <div class="file_download_vote{% if vote['k']>0 %} upactive{% elif vote['k']<0 %} downactive{% endif %}">
-            <a class="vote_up {% if current_user.is_authenticated() %} vote_login{% endif %}" href="{{ url_for('files.vote',t='file',server=file['file']['s'],file_id=file['file']['id'],vote=1,login=current_user.is_authenticated()|int) }}">
+            <a class="vote_up {% if current_user.is_authenticated() %} vote_login{% endif %}" href="{{ url_for('files.vote',t='file',server=file['file']['s'],file_id=file['file']['id'],vote=1,login=0) }}">
                 <span>{{_('i_like_it')}}<br/>(<strong>{% if 'vs' in file['file'] and g.lang in file['file']['vs'] %}{{ file['file']['vs'][g.lang]['c'][0]|int }}{% else %}0{% endif %}</strong>)</span>
             </a>
-            <a class="vote_down {% if current_user.is_authenticated() %} vote_login{% endif %}" href="{{ url_for('files.vote',t='file',server=file['file']['s'],file_id=file['file']['id'],vote=2,login=current_user.is_authenticated()|int) }}">
+            <a class="vote_down {% if current_user.is_authenticated() %} vote_login{% endif %}" href="{{ url_for('files.vote',t='file',server=file['file']['s'],file_id=file['file']['id'],vote=2,login=0) }}">
                 <span>{{_('booo')}}<br/>(<strong>{% if 'vs' in file['file'] and g.lang in file['file']['vs'] %}{{ file['file']['vs'][g.lang]['c'][1]|int }}{% else %}0{% endif %}</strong>)</span>
             </a>
         </div>
-        <h2>{{ file['view']['fn'] }}</h2>
-        <div class="top_download">
-            <div class="download_button">
-                {% if "embed" in file["view"] %}
-                    <div class="download_embed">{{ file['view']['embed']|safe }}</div>
+        <h2 title="{{ file['view']['fn'] }}">{{ file['view']['fn'] }}</h2>
+    </header>
+    <section>
+        <div class="download_button">
+            {% if "embed" in file["view"] %}
+                <div class="download_embed">{{ file['view']['embed']|safe }}</div>
+            {% else %}
+                {% if 'images_server' in file['view'] %}
+                <a class="thumblink" href="{{ file['view']['sources'][file['view']['source']]['urls'][0] }}">
+                    <img id="{{ file['file']['id'] }}" class="img_{{ file['view']['images_server'] }}" src="http://{{ file['view']['first_image_server'] }}/{{ file['file']['_id'] }}0" />
+                </a>
                 {% else %}
-                    {% if 'images_server' in file['view'] %}
-                    <a class="thumblink" href="{{ file['view']['sources'][file['view']['source']]['urls'][0] }}">
-                        <img id="{{ file['file']['id'] }}" class="img_{{ file['view']['images_server'] }}" src="http://{{ file['view']['first_image_server'] }}/{{ file['file']['_id'] }}0" />
-                    </a>
-                    {% else %}
-                    <span class="icon50 {{ file['view']['file_type'] }}"></span><br />
-                    {% endif %}
-                    {% if "source" in file["view"] %}
-                    <a href="{{ file['view']['sources'][file['view']['source']]['urls'][0] }}" class="superlarge magenta awesome" title="{{_('download')}}">
-                        {{_(file['view']['action'])}}
-                        {% if 'z' in file['file'] and file['file']['z'] %}
-                            ({{ file['file']['z']|numbersizeformat }})
-                        {% endif %}
-                    </a>
-                    {% endif %}
+                <span class="icon50 {{ file['view']['file_type'] }}"></span><br />
                 {% endif %}
-            </div>
-            <dl>
-                <dt>{{_("name")}}:</dt>
-                <dd>{{ file['view']['nfn'] }}</dd>
-                {% for metadata,value in file['view']['md'].items() %}
-                <dt>{{_(metadata)}}:</dt>
-                <dd>{{ value[:1000] | safe }}</dd>
-                {% endfor %}
-            </dl>
+                {% if "source" in file["view"] %}
+                <a href="{{ file['view']['sources'][file['view']['source']]['urls'][0] }}" class="superlarge magenta awesome" title="{{_('download')}}">
+                    {{_(file['view']['action'])}}
+                    {% if 'z' in file['file'] and file['file']['z'] %}
+                        ({{ file['file']['z']|numbersizeformat }})
+                    {% endif %}
+                </a>
+                {% endif %}
+            {% endif %}
         </div>
-        <div class="download_file_sources">
-            {% for source,source_data in file['view']['sources'].items() %}
-                {% if source_data['count']>1 and source_data['icon']=="web" %}
-                    {% for url in source_data["urls"] %}
-                        {{print_source(source_data,url)}}
-                    {% endfor %}
-                {% else %}
-                    {{print_source(source_data)}}
-                {% endif %}
+        <dl>
+            <dt>{{_("name")}}:</dt>
+            <dd>{{ file['view']['nfn'] }}</dd>
+            {% for metadata,value in file['view']['md'].items() %}
+            <dt>{{_(metadata)}}:</dt>
+            <dd>{{ (value|string)[:1000] | safe }}</dd>
             {% endfor %}
+        </dl>
+        <div class="download_file_sources">
+        {% for source,source_data in file['view']['sources'].items() %}
+            {% if source_data['count']>1 and source_data['icon']=="web" %}
+                {% for url in source_data["urls"] %}
+                    {{print_source(source_data,url)}}
+                {% endfor %}
+            {% else %}
+                {{print_source(source_data)}}
+            {% endif %}
+        {% endfor %}
         </div>
         <div class="sharelinks">
             {{_('share_this')}}
@@ -108,6 +108,6 @@
             </div>
             {% endif %}
         </div>#}
-    </div>
-</div>
+    </section>
+</article>
 {% endblock %}

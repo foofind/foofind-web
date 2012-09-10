@@ -10,6 +10,9 @@ try: import ctypes
 except ImportError: ctypes = None
 
 class EventManager(threading.Thread):
+    '''
+    Hilo gestor de eventos para ejecutar tareas programadas asíncronamente.
+    '''
     _timers = None
     _run = False
     _abort = False
@@ -52,6 +55,9 @@ class EventManager(threading.Thread):
                 self._thread_id = tid
                 return tid
         raise threading.ThreadError()
+
+    def once(self, handler, hargs=None, hkwargs=None):
+        return self._put_timer(time.time(), handler, hargs, hkwargs, 0)
 
     def interval(self, seconds, handler, hargs=None, hkwargs=None):
         return self._put_timer(time.time()+seconds, handler, hargs, hkwargs, seconds)
@@ -110,6 +116,7 @@ class EventManager(threading.Thread):
         while self._run:
             tids, wait = self._poll()
             if tids:
+                # Si hay timers, los recorro para ejecutar
                 for tid in tids:
                     with self._lock:
                         if not tid in self._callbacks:
@@ -119,6 +126,16 @@ class EventManager(threading.Thread):
                         cb(*cbargs, **cbkwargs)
                     except BaseException as e:
                         logging.exception(e)
+                    except:
+                        et, ev, etb = sys.exc_info()
+                        logging.error(
+                            "Excepción no capturada",
+                            extra={
+                                "type":et,
+                                "value":ev,
+                                "traceback":etb
+                                })
+
                     if interval:
                         self._put_timer_id(time.time()+interval, tid)
             if wait > 0.:

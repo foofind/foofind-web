@@ -40,6 +40,8 @@
     <dd>{{ form.mode }}</dd>
     <dt>{{ _("admin_deploy_phase_deploy") }}</dt>
     <dd>{{ form.deploy if deploy_available else form.deploy(disabled="disabled") }}{{ form.deploy_rollback if deploy_available else form.deploy_rollback(disabled="disabled") }}</dd>
+    <dt>{{ _("admin_deploy_phase_confirm") }}</dt>
+    <dd>{{ form.confirm if deploy_available else form.confirm(disabled="disabled") }}</dd>
     <dt class="deploy_advanced">{{ _("admin_deploy_phase_configuration") }}</dt>
     <dd class="deploy_advanced">{{ form.package if deploy_available else form.package(disabled="disabled") }}{{ form.rollback if deploy_available else form.rollback(disabled="disabled") }}</dd>
     <dt class="deploy_advanced">{{ _("admin_deploy_phase_preparation") }}</dt>
@@ -47,7 +49,7 @@
     <dt class="deploy_advanced">{{ _("admin_deploy_phase_commit") }}</dt>
     <dd class="deploy_advanced">{{ form.commit if deploy_available else form.commit(disabled="disabled") }}</dd>
     <dt>{{ _("admin_deploy_phase_restart") }}</dt>
-    <dd>{{ form.restart if deploy_available else form.restart(disabled="disabled") }}</dd>
+    <dd>{{ form.restart if deploy_available else form.restart(disabled="disabled") }}{{ form.restart_beta if deploy_available else form.restart_beta(disabled="disabled") }}</dd>
     <dt class="deploy_advanced">{{ _("admin_deploy_phase_clean") }}</dt>
     <dd class="deploy_advanced">{{ form.clean_local if deploy_available else form.clean_local(disabled="disabled") }}{{ form.clean_remote if deploy_available else form.clean_remote(disabled="disabled") }}</dd>
 </dl>

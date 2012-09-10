@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from flask import request, session
-from flaskext.babel import lazy_gettext as _
+from flask.ext.babel import lazy_gettext as _
 from wtforms.fields import Field
 from foofind.forms.validators import *
 from foofind.services import cache

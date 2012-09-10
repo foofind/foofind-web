@@ -5,6 +5,8 @@
 
 SECRET_KEY = "supersecret"
 
+APPLICATION_ID = "default"
+
 JOBS_EMAIL = ""
 CONTACT_EMAIL = ""
 DEFAULT_MAIL_SENDER = "noreply@foofind.com"
@@ -21,19 +23,22 @@ DATA_SOURCE_USER = "mongodb://mongo.foofind.com:27017"
 DATA_SOURCE_FEEDBACK = "mongodb://mongo.foofind.com:27017"
 DATA_SOURCE_MAX_POOL_SIZE = 50
 DATA_SOURCE_FOO_THREADS = 30
-GET_FILES_TIMEOUT = 2
+GET_FILES_TIMEOUT = 1
 AUTORECONNECT_FOO_INTERVAL = 300
 
 SERVICE_SPHINX = "sphinx.foofind.com"
 SERVICE_SPHINX_PORT = 33000
-SERVICE_SPHINX_CONNECT_TIMEOUT = 1000.0
-SERVICE_SPHINX_MAX_QUERY_TIME = 1000
+SERVICE_SPHINX_CONNECT_TIMEOUT = 4.0
+SERVICE_SPHINX_MAX_QUERY_TIME = 500
 SERVICE_SPHINX_WORKERS_PER_SERVER = 3
 
 SENTRY_DSN = None
 
 SERVICE_TAMING_SERVERS = (("taming.foofind.com",24642))
 SERVICE_TAMING_TIMEOUT = 1.0
+SERVICE_TAMING_ACTIVE = True
+
+NEW_SEARCH_ACTIVE = False
 
 CACHE_SEARCHES = True
 CACHE_FILES = True
@@ -45,7 +50,7 @@ CACHE_TYPE = "memcached"
 
 REMOTE_MEMCACHED_SERVERS = ()
 
-PROFILER_KEYS = ["taming_dym","taming_tags","mongo","sphinx"]
+PROFILER_KEYS = {1:["taming","mongo","sphinx","visited"], 2:["mongo%dm"%s for s in xrange(1,20)], 3:["mongo%ds"%s for s in xrange(1,20)]}
 
 OAUTH_TWITTER_CALLBACK_URL = "http://foofind.com/es/user/oauth/tw/callback"
 OAUTH_TWITTER_SITE_URL = "https://api.twitter.com/oauth"
@@ -69,9 +74,11 @@ BETA_LANGS = [lang for lang in ALL_LANGS if lang not in LANGS]
 PRIVATE_MSGID_PREFIXES = ("safe_", "admin_", "newhome_")
 
 COUNT_UPDATE_INTERVAL = 300
-FOOCONN_UPDATE_INTERVAL = 300
+MAX_AUTORECONNECTIONS = 20
+FOOCONN_UPDATE_INTERVAL = 120
 CONFIG_UPDATE_INTERVAL = 60
 UNITTEST_INTERVAL = 0
+
 
 ADMIN_HOSTS = ()
 ADMIN_LANG_LOCAL_REPO = "repo/lang"

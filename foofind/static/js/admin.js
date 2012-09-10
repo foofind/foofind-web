@@ -1,6 +1,27 @@
 $(document).ready(function(){
-    // Mejora de checkboxes (cool_checkbox)
+    // Helpers
+    var param=function(name){
+        // Extrae un parametro GET de la URL
+        var r=(new RegExp(name + '=' + '(.+?)(&|$)')).exec(location.search);
+        if(r&&(r.length>1)) return decodeURI(r[1]);
+        return null;
+        },
+        hexDecode=function(hex){
+        // Decodifica bytes en hexadecimal
+        var r=[], i=0;
+        while(i<hex.length) r.push("0x" + hex.substring(i, i += 2));
+        return String.fromCharCode.apply(window, r);
+        },
+        isFloat=function(cad){
+            if(isNaN(parseFloat(cad))||(cad.indexOf("-")>0)||(cad.indexOf("+")>0))
+                return false;
+            for(var i=0,j=cad.length;i<j;i++)
+                if("0123456789.".indexOf(cad.charAt(i)) < 0)
+                    return false;
+            return true;
+        };
 
+    // Mejora de checkboxes (cool_checkbox)
     var checkboxes=$("input[type=checkbox]"), cctested=false, ccwork=false;
     checkboxes.each(function(){
         var id=this.id, on="on",off="off",me=$(this);
@@ -25,36 +46,136 @@ $(document).ready(function(){
                 if(!me.disabled) me.attr("checked",!me.attr("checked"));
                 });
         });
-    // Control generico de seleccionar todo
-    var ph=$('.select_all_placeholder');
-    ph.each(function(){
-        var str_select_all="Select all", str_select_none="Select none", str_select_or=",",
-            me=$(this), chks=me.closest("form").find("input[type=checkbox]"),
-            showOrHide=function(){
-                var sa=(chks.filter(":checked:not(:disabled)").length<chks.filter(":not(:disabled)").length)?"show":"hide",
-                    sn=(chks.filter(":checked:not(:disabled)").length>0)?"show":"hide",
-                    ss=(sa=="hide"||sn=="hide")?"hide":"show";
-                me.children("a:first-child")[sa]();
-                me.children("a:last-child")[sn]().css("text-transform",(ss=="show")?"lowercase":"none");
-                me.children("span")[ss]();
-                };
-        if(this.dataset){
-            if(this.dataset["select_all"]) str_select_all = this.dataset["select_all"];
-            if(this.dataset["select_none"]) str_select_none = this.dataset["select_none"];
-            if(this.dataset["select_or"]) str_select_or = this.dataset["select_or"];
-            }
-        me.append('<a>'+str_select_all+'</a><span> '+str_select_or+' </span><a>'+str_select_none+'</a>');
-        me.children("a:first-child").click(function(e){
-            chks.filter(":not(:disabled)").attr("checked","checked");
+    // Control genérico de seleccionar todo
+    $(".select_all_placeholder")
+        .each(function(){
+            var str_select_all="Select all", str_select_none="Select none", str_select_or=",",
+                me=$(this), chks=me.closest("form").find("input[type=checkbox]"),
+                showOrHide=function(){
+                    var sa=(chks.filter(":checked:not(:disabled)").length<chks.filter(":not(:disabled)").length)?"show":"hide",
+                        sn=(chks.filter(":checked:not(:disabled)").length>0)?"show":"hide",
+                        ss=(sa=="hide"||sn=="hide")?"hide":"show";
+                    me.children("a:first-child")[sa]();
+                    me.children("a:last-child")[sn]().css("text-transform",(ss=="show")?"lowercase":"none");
+                    me.children("span")[ss]();
+                    };
+            if(this.dataset){
+                if(this.dataset["select_all"]) str_select_all = this.dataset["select_all"];
+                if(this.dataset["select_none"]) str_select_none = this.dataset["select_none"];
+                if(this.dataset["select_or"]) str_select_or = this.dataset["select_or"];
+                }
+            me.append('<a>'+str_select_all+'</a><span> '+str_select_or+' </span><a>'+str_select_none+'</a>');
+            me.children("a:first-child").click(function(e){
+                chks.filter(":not(:disabled)").attr("checked","checked");
+                showOrHide();
+                });
+            me.children("a:last-child").click(function(e){
+                chks.filter(":not(:disabled)").removeAttr("checked");
+                showOrHide();
+                });
+            chks.change(showOrHide);
             showOrHide();
             });
-        me.children("a:last-child").click(function(e){
-            chks.filter(":not(:disabled)").removeAttr("checked");
-            showOrHide();
+    // Spinbutton
+    $("input.integer")
+        .each(function(){
+            var me=$(this),
+                step=(parseFloat(me.data("step"))||1),
+                timeout=null;
+                minval=(parseFloat(me.data("minval"))||-Infinity),
+                maxval=(parseFloat(me.data("maxval"))||Infinity),
+                increment=function(){
+                    var value=parseFloat(me.attr("value"));
+                    value = (value+step<=maxval)?(value+step):maxval;
+                    me.attr("value", value)
+                    me.data("last_value", value);
+                    },
+                decrement=function(){
+                    var value=parseFloat(me.attr("value"));
+                    value = (value-step>=minval)?(value-step):minval;
+                    me.attr("value", value)
+                    me.data("last_value", value);
+                    },
+                inverse=function(){
+                    var value=parseFloat(me.attr("value"));
+                    value = (minval<=-value)?-value:minval;
+                    // Comprobación de rango
+                    if((value>=minval)&&(value<=maxval)){
+                        me.attr("value", value)
+                        me.data("last_value", value);
+                        }
+                    },
+                verify=function(){
+                    var value=parseFloat(me.attr("value")), newval=null;
+                    if(!isFloat(value)) newval=parseFloat(me.data("last_value"));
+                    else if(value<minval) newval=minval;
+                    else if(maxval<value) newval=maxval;
+                    if(newval!==null){
+                        me.attr("value", newval);
+                        me.data("last_value", newval);
+                        return false;
+                        }
+                    return true;
+                    },
+                wrap=$("<span></span>").append(
+                    $("<input type=\"button\" value=\"+\"/>").click(increment),
+                    $("<input type=\"button\" value=\"-\"/>").click(decrement)
+                    );
+            me.parents("form").submit(function(){
+                // Validación
+                if(!verify()) e.preventDefault();
+                });
+            me.data("last_value", me.attr("value")||0);
+            me.focusout(function(){
+                // Validación
+                if(timeout) clearTimeout(timeout);
+                timeout=null;
+                verify();
+                });
+            me.keydown(function(e){
+                // Control de entrada
+                var code=e.keyCode,
+                    character=String.fromCharCode(e.keyCode),
+                    current=me.attr("value");
+                if(e.ctrlKey||e.metaKey) return;
+                else if(code<47){
+                    // Caracteres no imprimibles
+                    if(code==38){
+                        // Arriba
+                        increment();
+                        e.preventDefault()
+                        }
+                    else if(code==40){
+                        // Abajo
+                        decrement();
+                        e.preventDefault()
+                        }
+                    }
+                else if(character=="-"){
+                    // Convertir a negativo
+                    if((minval<0)&&(parseFloat(current)>0)) inverse();
+                    e.preventDefault()
+                    }
+                else if(character=="+"){
+                    // Convertir a positivo
+                    if((maxval>0)&&(parseFloat(current)<0)) inverse();
+                    e.preventDefault();
+                    }
+                else if(!isFloat(current+character)){
+                    // El valor resultante no es numérico
+                    e.preventDefault();
+                    }
+                else{
+                    if(current=="0") me.attr("value","");
+                    if(timeout) clearTimeout(timeout);
+                    timeout = setTimeout(function(){
+                        timeout=null;
+                        verify();
+                        },1000);
+                    }
+                });
+            me.wrap("<span class=\"spinbutton\"></span>").parent().append(wrap);
             });
-        chks.change(showOrHide);
-        showOrHide();
-        });
 
     var c=function(x){
         var p=(x[0]=="/")?x.slice(1):x, s=p.search("/"), q=p.search("\\?");
@@ -63,8 +184,33 @@ $(document).ready(function(){
         return p;
         }, path=c(window.location.pathname), field_prefix="field_";
 
+    // Log
+    if(path=="admin"){
+        var refresh_interval=null;
+        if(($("#processing").attr("value")||"").toLowerCase()=="true"){
+            var stdsep = hexDecode($("#log_data").data("stdsep")),
+                n = parseInt($("#number").attr("value"))*($("#mode").attr("value")=="tail"?-1:1);
+                log_refresh = function(){
+                $.ajax({
+                    url:"/en/admin/task/output",
+                    data:{"log":param("show"),"n":n},
+                    success:function(data){
+                        var output = [];
+                        if(data.cached) clearInterval(refresh_interval);
+                        if(data.error) output.push(data.error);
+                        for(var i in data)
+                            if(data[i].join)
+                                output.push(data[i].join("\n"));
+                        $("#log_data").text(output.join(stdsep));
+                        }
+                    });
+                };
+            log_refresh();
+            refresh_interval = setInterval(log_refresh, 500);
+            }
+        }
     // Deploy
-    if(path=="admin/deploy"){
+    else if(path=="admin/deploy"){
         if($("input[type=submit]").attr("disabled")=="disabled"){ // AJAX polling de estado de deploy
             var inter=setInterval(function(){
                 $.getJSON("/en/admin/deploy/status", function(data, textStatus){
@@ -160,7 +306,7 @@ $(document).ready(function(){
                 if(w){
                     var script_refresh = function(){
                         $.ajax({
-                            url:"/en/admin/deploy/scripts_view",
+                            url:"/en/admin/task/output",
                             data:{"script":w},
                             success:function(data){
                                 var status=status_processing;

@@ -204,6 +204,12 @@ msgstr "Si lo prefieres puedes volver a la"
 msgid "change_ajax_search"
 msgstr "Si quieres puedes activar la"
 
+msgid "what"
+msgstr "¿Qué?"
+
+msgid "where"
+msgstr "¿Dónde?"
+
 # files.download
 msgid "how_to_download"
 msgstr "¿Cómo descargar?"
@@ -278,6 +284,9 @@ msgstr "Minutos"
 
 msgid "source"
 msgstr "Fuente"
+
+msgid "seeds"
+msgstr "Semillas"
 
 msgid "height"
 msgstr "Alto"
@@ -721,7 +730,7 @@ msgstr "Foofind es un motor de búsqueda universal. En Foofind trabajamos creand
 
 # technology
 msgid "technology_text"
-msgstr "<p>El equipo de Foofind desarrolla la mayor parte del código del proyecto, pero también dependemos del trabajo de la comunidad del software libre.</p><p>Foofind no sería posible sin estos increíbles proyectos. ¡Un porrón de gracias! ;-)</p><ul><li><a href="http://twistedmatrix.com/">Twisted</a>: Twisted is an event-driven networking engine written in Python and licensed under the open source MIT license.</a><li><a href="http://scrapy.org/">Scrapy</a>: Scrapy is a fast high-level screen scraping and web crawling framework, used to crawl websites and extract structured data from their pages. It can be used for a wide range of purposes, from data mining to monitoring and automated testing.</li><li><a href="http://flask.pocoo.org/">Flask</a>: Flask is a microframework for Python based on Werkzeug, Jinja 2 and it's BSD licensed.</li><li><a href="http://www.mongodb.org/">MongoDB</a>: MongoDB (from "hu<strong>mongo</strong>us") is a scalable, high-performance, open source NoSQL database.</li><li><a href="http://github.com/dcramer/sentry">Sentry</a>: Sentry is a realtime event logging and aggregation platform. It specializes in monitoring errors and extracting all the information needed to do a proper post-mortem without any of the hassle of the standard user feedback loop.</li><li><a href="http://sphinxsearch.com/">Sphinx</a>: Sphinx is an open source full text search server, designed from the ground up with performance, relevance (aka search quality), and integration simplicity in mind. It's written in C++ and works on Linux (RedHat, Ubuntu, etc), Windows, MacOS, Solaris, FreeBSD, and a few other systems.<li><a href="http://www.komodomedia.com/blog/2009/06/social-network-icon-pack/">Social Network Icon Pack</a>: Social Network Icon Pack by Komodo Media, Rogie King is licensed under a Creative Commons Attribution-Share Alike 3.0 Unported License.</li></ul>"
+msgstr "<p>El equipo de Foofind desarrolla la mayor parte del código del proyecto, pero también dependemos del trabajo de la comunidad del software libre.</p><p>Foofind no sería posible sin estos increíbles proyectos. ¡Un porrón de gracias! ;-)</p><ul><li><a href=\"http://twistedmatrix.com/\">Twisted</a>: Twisted is an event-driven networking engine written in Python and licensed under the open source MIT license.</a><li><a href=\"http://scrapy.org/\">Scrapy</a>: Scrapy is a fast high-level screen scraping and web crawling framework, used to crawl websites and extract structured data from their pages. It can be used for a wide range of purposes, from data mining to monitoring and automated testing.</li><li><a href=\"http://flask.pocoo.org/\">Flask</a>: Flask is a microframework for Python based on Werkzeug, Jinja 2 and it's BSD licensed.</li><li><a href=\"http://www.mongodb.org/\">MongoDB</a>: MongoDB (from \"hu<strong>mongo</strong>us\") is a scalable, high-performance, open source NoSQL database.</li><li><a href=\"http://github.com/dcramer/sentry\">Sentry</a>: Sentry is a realtime event logging and aggregation platform. It specializes in monitoring errors and extracting all the information needed to do a proper post-mortem without any of the hassle of the standard user feedback loop.</li><li><a href=\"http://sphinxsearch.com/\">Sphinx</a>: Sphinx is an open source full text search server, designed from the ground up with performance, relevance (aka search quality), and integration simplicity in mind. It's written in C++ and works on Linux (RedHat, Ubuntu, etc), Windows, MacOS, Solaris, FreeBSD, and a few other systems.<li><a href=\"http://www.komodomedia.com/blog/2009/06/social-network-icon-pack/\">Social Network Icon Pack</a>: Social Network Icon Pack by Komodo Media, Rogie King is licensed under a Creative Commons Attribution-Share Alike 3.0 Unported License.</li></ul>"
 
 # tos
 msgid "safe_tos"
@@ -768,7 +777,16 @@ msgstr "Esta traduccion está en fase de pruebas. Si encuentras algún fallo o t
 msgid "other"
 msgstr "Otro"
 
-# Felipe <felipe@mp2p.net>, 2011.
+msgid "embed_foofind_button"
+msgstr "Ver en foofind"
+
+msgid "embed_download_button"
+msgstr "Descargar"
+
+msgid "copy_to_clipboard_shortcut"
+msgstr "Usa CTRL+C para copiar al portapapeles"
+
+# Felipe <felipe@mp2p.net>, 2012.
 msgid "admin_prefix"
 msgstr "Administración"
 
@@ -949,8 +967,32 @@ msgstr "Seleccionar todo"
 msgid "admin_multiselection_select_none"
 msgstr "Quitar selección"
 
+msgid "admin_actions"
+msgstr "Tareas de administración"
+
+msgid "admin_actions_none"
+msgstr "No hay tareas remotas registradas aún."
+
+msgid "admin_actions_target"
+msgstr "Destino"
+
+msgid "admin_actions_forced_run_once"
+msgstr "Sólo se ejecutará una vez de entre todas las instancias."
+
+msgid "admin_actions_run"
+msgstr "Ejecutar tarea"
+
+msgid "admin_actions_interval"
+msgstr "Por favor, ten paciencia: la aplicación comprueba las tareas a realizar cada %(seconds)g segundos."
+
+msgid "admin_actions_updated"
+msgstr "La tarea ha sido solicitada."
+
 msgid "admin_deploy"
 msgstr "Despliegue de aplicación"
+
+msgid "admin_deploy_confirm"
+msgstr "Promocionar versión en pruebas a producción"
 
 msgid "admin_deploy_confirmation"
 msgstr "¿Estás seguro de querer realizar la acción \"%(action)s\" en \"%(target)s\"?"
@@ -979,6 +1021,9 @@ msgstr "Reinicio"
 msgid "admin_deploy_restart"
 msgstr "Reiniciar servicios"
 
+msgid "admin_deploy_restart_beta"
+msgstr "Reiniciar servicios de beta"
+
 msgid "admin_deploy_phase_clean"
 msgstr "Limpieza"
 
@@ -1002,6 +1047,9 @@ msgstr "Distribuír"
 
 msgid "admin_deploy_phase_commit"
 msgstr "Activar"
+
+msgid "admin_deploy_phase_confirm"
+msgstr "Promoción a producción"
 
 msgid "admin_deploy_phase_script"
 msgstr "Script remoto"
@@ -1056,6 +1104,9 @@ msgstr "Preparar cambio de versión"
 
 msgid "admin_deploy_commit"
 msgstr "Ejecutar cambio"
+
+msgid "admin_deploy_commit"
+msgstr "Confirmar cambio"
 
 msgid "admin_deploy_backups"
 msgstr "Copias de seguridad"

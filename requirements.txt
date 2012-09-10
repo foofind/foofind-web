@@ -52,3 +52,6 @@ lxml
 pyScss
 
 greenlet
+uwsgi
+
+chardet

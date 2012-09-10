@@ -25,11 +25,25 @@ msgstr "Envoyer"
 msgid "required_empty"
 msgstr "Ce champ est requis et ne peut être laissé vide"
 
+msgid "help_us"
+msgstr "collabore avec foofind!"
+
+msgid "legal_info"
+msgstr "mentions légales"
+
 msgid "go_home"
 msgstr "Retourner au moteur de recherche"
 
+msgid "error_500_message"
+msgstr "Un erreur s'est produit"
+
+msgid "error_500_description"
+msgstr ""
+"Il y a quelque chose qui cloche, nos enquêteurs du paranormal sont en train "
+"de travailler sûr ça."
+
 msgid "error_404_message"
-msgstr "Pas introuvable."
+msgstr "Page introuvable."
 
 msgid "error_404_description"
 msgstr ""
@@ -77,11 +91,14 @@ msgstr "Contact"
 msgid "legal"
 msgstr "Mentions légales"
 
+msgid "technology"
+msgstr "Technologies"
+
 msgid "tos"
-msgstr "Termes"
+msgstr "Conditions d'utilisation"
 
 msgid "privacy"
-msgstr "Vie privée"
+msgstr "Politique de confidentialité"
 
 msgid "complaint"
 msgstr "Signaler un lien"
@@ -114,7 +131,10 @@ msgid "index_suggestion"
 msgstr "Quelque suggestion?"
 
 msgid "direct_downloads"
-msgstr "Téléchargement direct"
+msgstr "Téléchargements directs"
+
+msgid "direct_download"
+msgstr "téléchargement direct"
 
 msgid "audio"
 msgstr "Audio"
@@ -123,16 +143,16 @@ msgid "video"
 msgstr "Vidéo"
 
 msgid "image"
-msgstr "Images"
+msgstr "Image"
 
 msgid "document"
-msgstr "Documents"
+msgstr "Document"
 
 msgid "software"
-msgstr "Programmes"
+msgstr "Programme"
 
 msgid "archive"
-msgstr "Archives"
+msgstr "Archive"
 
 msgid "no_results_for"
 msgstr "Aucun résultat pour :"
@@ -179,6 +199,24 @@ msgstr "Essayez avec cette orthographe : %(text)s"
 
 msgid "all_sizes"
 msgstr "Toutes les tailles"
+
+msgid "classic_search"
+msgstr "recherche classique"
+
+msgid "ajax_search"
+msgstr "nouvelle recherche"
+
+msgid "change_classic_search"
+msgstr "Si tu préfères tu peux retourner à la"
+
+msgid "change_ajax_search"
+msgstr "Si tu veuz tu peux activer la"
+
+msgid "what"
+msgstr "Quoi?"
+
+msgid "where"
+msgstr "Où?"
 
 msgid "advanced_search"
 msgstr "recherche avancée"

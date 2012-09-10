@@ -3,7 +3,7 @@
     Controladores de páginas estáticas.
 """
 from flask import Blueprint, g, render_template, request, flash, current_app, redirect, url_for, abort
-from flaskext.babel import gettext as _
+from flask.ext.babel import gettext as _
 from wtforms import Form,FieldList,TextField,TextAreaField,SubmitField
 from babel import localedata
 from foofind.forms.pages import ContactForm, SubmitLinkForm, ReportLinkForm, SelectLanguageForm, TranslateForm, JobsForm

@@ -1,5 +1,9 @@
-if (window != top)
+if(window != top)
     top.location.href = location.href;
+
+//si llega una busqueda ajax y no esta activado redirecciona solo desde el index
+if(window.location.pathname.substr(4,11)=="" && window.location.hash.charAt(1)=="!")
+    window.location.href=window.location.pathname.substr(1,3)+"/"+"search/?alt=ajax&"+window.location.hash.substring(3)
 
 var filtros={"q":""};
 var imgs=0;
@@ -45,13 +49,15 @@ $(function()
             select:function(event,ui)
             {
                 if(ui.item)
-                    $('#q').val(ui.item.value);
+                    $(this).val(ui.item.value);
 
-                $("#search form").submit();
+                $(this).parents("form").submit();
             },
+            open: function(){$(this).autocomplete('widget').css('z-index',11)},
             appendTo:($('#search').length)?'#search':'body',
             delay:0,
-            minLength: 2
+            minLength: 2,
+            disabled: autocomplete_disabled
         })
         .data("autocomplete")
         ._renderItem=function(ul,item){return $("<li></li>").data("item.autocomplete",item ).append("<a>"+highlight(item.label,this.term)+"</a>").appendTo(ul)}
@@ -68,13 +74,19 @@ $(function()
         });
     }
     //campos en blanco
-    $('#home form,.searchbox').submit(function()
+    $('#home form,.searchbox').submit(function(e)
     {
-        $.each($(":input",this), function()
+        if(!$("#q").val()) //si no hay nada para buscar
         {
-            if(filtros["q"]=="" && (!$(this).val() || $(this).attr("type")=="submit"))
-                $(this).attr("disabled","disabled")
-        })
+            $("#q").attr("placeholder",$("#search_submit").data("no_query"));
+            e.preventDefault();
+        }
+        else
+            $.each($(":input",this),function()
+            {
+                if(filtros["q"]=="" && (!$(this).val() || $(this).attr("type")=="submit"))
+                    $(this).attr("disabled","disabled")
+            })
     })
     //mostrar y ocultar aviso idioma
     if(!document.cookie.match("langtest=0"))
@@ -87,7 +99,7 @@ $(function()
         e.preventDefault();
     });
     //thumbnails
-    $('.thumblink img').mouseenter(function()
+    $('.thumblink span img').mouseenter(function()
     {
         if (thumbani!=0)
             clearInterval(thumbani);
@@ -97,12 +109,12 @@ $(function()
         jimagecount=imgs.length;
         thumbani = setInterval(animateImage, 500);
     });
-    $('.thumblink img').mouseleave(function()
+    $('.thumblink span img').mouseleave(function()
     {
         if (thumbani!=0)
             clearInterval(thumbani);
     });
-    $('.thumblink img').each(function()
+    $('.thumblink span img').each(function()
     {
         icount = imgs.length;
         src = $(this).attr('src').slice(0,-1);

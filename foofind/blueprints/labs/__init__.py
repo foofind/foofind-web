@@ -6,8 +6,9 @@ from foofind.services import eventmanager, cache
 def add_labs(app):
     # Registro de blueprints
     app.register_blueprint(files_ajax.files_ajax)
-    #app.register_blueprint(files_test.files_test)
+
+    if app.config["NEW_SEARCH_ACTIVE"]:
+        app.register_blueprint(files_test.files_test)
     
 def init_labs(app):
     pass
-    #files_test.init_searchd(app)

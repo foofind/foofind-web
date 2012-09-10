@@ -8,7 +8,7 @@
             <dt>{{ search_form.mode.label }}</dt>
             <dd>{{ search_form.mode }}</dd>
         </dl>
-    </form>
     {{ search_form.submit(class="list") }}
+    </form>
     <p>{{_("admin_users_count", users=user_count)}}</p>
 {% endblock %}

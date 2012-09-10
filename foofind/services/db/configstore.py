@@ -4,37 +4,160 @@ import pymongo
 import time
 import memcache
 import logging
+import socket
 
-from foofind.utils.fooprint import ManagedSelect, ParamSelector, DecoratedView, DEFAULT_CONFIG
-from foofind.services.extensions import cache
-from foofind.utils import end_request
+from foofind.utils.fooprint import ManagedSelect, ParamSelector, DecoratedView
+from foofind.utils import check_capped_collections
 
 class ConfigStore(object):
     '''
     Gestor de configuraciones en base de datos
     '''
+    _capped = {
+        "actions":1000,
+        }
     def __init__(self):
-        self._alternatives_lt = 0
+        self._action_handlers = {}
+        self._actions_lt = time.time() # No se ejecutan las acciones previas al despliegue
+        self._alternatives_lt = 0 # La configuración se carga en el despliegue
         self._alternatives_skip = set()
 
     def init_app(self, app):
-        #remote_memcached_servers = app.config["REMOTE_MEMCACHED_SERVERS"]
-        #self._remote_memcache = memcache.Client(remote_memcached_servers) if remote_memcached_servers else None
-        self._local_memcache = cache.cache
         self._views = {
             endpoint: view_fnc
             for endpoint, view_fnc in app.view_functions.iteritems()
             if isinstance(view_fnc, DecoratedView) and isinstance(view_fnc.select, ManagedSelect)
             }
+        self._appid = app.config["APPLICATION_ID"]
         self.max_pool_size = app.config["DATA_SOURCE_MAX_POOL_SIZE"]
         self.config_conn = pymongo.Connection(app.config["DATA_SOURCE_CONFIG"], slave_okay=True, max_pool_size=self.max_pool_size)
+
+        check_capped_collections(self.config_conn.foofind, self._capped)
+
+        # Guardamos el timestamp de la última tarea enviada para ignorar
+        for i in self.config_conn.foofind.actions.find().sort("lt", -1).limit(1):
+            self._actions_lt = i["lt"]
+        # Registramos este perfil de aplicación
+        self.config_conn.foofind.profiles.save({"_id": self._appid, "lt": time.time()})
+        self.config_conn.end_request()
+
+    def get_current_profiles(self):
+        '''
+        Obtiene los application_ids de las instancias registradas
+        '''
+        tr = [doc["_id"] for doc in self.config_conn.foofind.profiles.find()]
+        self.config_conn.end_request()
+        return tr
 
     def pull(self):
         '''
         Descarga la configuración de la base de datos y
         actualiza la configuración local.
         '''
+        self.pull_actions()
         self.pull_alternatives()
+
+    def register_action(self, actionid, fnc, *args, **kwargs):
+        '''
+        Registra una función con un id de acción y parámetros.
+
+        @type actionid: basestring
+        @param actionid: Identificación de tarea.
+
+        @type fnc: callable
+        @param fnc: Función a realizar
+
+        @type _unique: bool
+        @param _unique: Parámetro que exigue que la tarea se ejecute una sóla
+                        vez de entre todas las instancias.
+                        False por defecto.
+
+        @args, kwargs
+        '''
+        assert isinstance(actionid, basestring)
+        self._action_handlers[actionid] = (fnc, kwargs.pop("_unique", False), args, kwargs)
+
+    def run_action(self, actionid, target="*"):
+        '''
+        Marca en el servidor la acción a realizar. Admite determinar el
+        tipo de servidor (según su APPLICATION_ID) que va a realizar la
+        operación.
+
+        @type actionid: str
+        @param actionid: Identificador de acción tal cual ha sido registrada.
+
+        @type target: str
+        @param target: Identificador correspondiente al APPLICATION_ID de la
+                       configuración de la aplicación que deberá procesar la
+                       operación. Por defecto es "*" (todas).
+
+        @type once: bool
+        @param once: Si la acción sólo debe ser realizada una vez en total,
+                     útile para operaciones de memcache o base de datos.
+                     Por defecto es False.
+        '''
+        now = time.time()
+        self.config_conn.foofind.actions.save({"actionid":actionid, "target":target, "lt":now})
+        self.config_conn.end_request()
+
+    def action(self, actionid, *args, **kwargs):
+        '''
+        Decorador que registra una función con un id de acción y parámetros,
+        tiene el mismo efecto que `register_action`.
+
+        @type actionid: str
+        @param actionid: identificador de acción
+
+        @return Función sin modificar
+        '''
+        def decorator(f):
+            self.register_action(actionid, f, *args, **kwargs)
+            return f
+        return f
+
+    def pull_actions(self):
+        '''
+        Descarga la configuración de acciones y las ejecuta.
+        '''
+        query = {
+            "lt": { "$gt": self._actions_lt },
+            "target": {"$in": (self._appid, "*")},
+            "actionid": {"$in": [ action[0] for action in self.list_actions() if action[2] ]},
+            }
+        last = self._actions_lt
+        # Tareas que sólo deben realizarse una vez
+        while True:
+            # Operación atómica: obtiene y cambia timestamp para que no se repita
+            action = self.config_conn.foofind.actions.find_and_modify(query, update={"$set":{"lt":0}})
+            if action is None: break
+            if action["lt"] > last:
+                last = action["lt"]
+            actionid = action["actionid"]
+            if actionid in self._action_handlers:
+                fnc, unique, args, kwargs = self._action_handlers[actionid]
+                fnc(*args, **kwargs)
+        # Tareas a realizar en todas las instancias
+        query["once"] = False
+        del query["actionid"]
+        for action in self.config_conn.foofind.actions.find(query):
+            if action["lt"] > last:
+                last = action["lt"]
+            actionid = action["actionid"]
+            if actionid in self._action_handlers:
+                fnc, unique, args, kwargs = self._action_handlers[actionid]
+                fnc(*args, **kwargs)
+        self._actions_lt = last
+        self.config_conn.end_request()
+
+    def list_actions(self):
+        '''
+        Lista las acciones registradas
+
+        @yields tupla con el identificador de acción, la función, el iterable
+                de argumentos y el diccionario de argumentos con nombre.
+        '''
+        for k, (f, unique, args, kwargs) in self._action_handlers.iteritems():
+            yield k, f, unique, args, kwargs
 
     def pull_alternatives(self):
         '''
@@ -56,8 +179,8 @@ class ConfigStore(object):
                 self._views[endpoint].select.config(alternative["config"])
             if alternative.get("lt", 0) > last:
                 last = alternative["lt"]
-
         self._alternatives_lt = max(self._alternatives_lt, last)
+        self.config_conn.end_request()
 
     def remove_alternative(self, altid):
         '''
@@ -67,6 +190,7 @@ class ConfigStore(object):
         @param altid: identificador de alternativa
         '''
         self.config_conn.foofind.alternatives.remove({"_id":altid})
+        self.config_conn.end_request()
 
     def list_alternatives(self, skip=None, limit=None):
         '''
@@ -132,11 +256,9 @@ class ConfigStore(object):
         @param new_config: nueva configuración de alternativa
         '''
         now = time.time()
-        create = False
         config = self._get_alternative_config(endpoint)
         if not config:
             config = self._get_current_config(endpoint) or {}
-            create = True
         config.update(new_config)
         self._normalize_config(config)
         if endpoint in self._views:
@@ -146,16 +268,10 @@ class ConfigStore(object):
         if "probability" in config:
             # Probability se guarda como lista por limitaciones de mongodb
             config["probability"] = config["probability"].items()
-        if create:
-            self.config_conn.foofind.alternatives.insert(
-              { "_id": endpoint,
-                "config": config,
-                "lt": now })
-        else:
-            self.config_conn.foofind.alternatives.update(
-              { "_id": endpoint },
-              { "config": config,
-                "lt": now })
+        self.config_conn.foofind.alternatives.save(
+          { "_id": endpoint,
+            "config": config,
+            "lt": now })
         self.config_conn.end_request()
 
     def _get_alternative_config(self, endpoint):

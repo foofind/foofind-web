@@ -1,0 +1,22 @@
+{# Incrustable de fichero para ser usado con include en otras plantillas (no usable como plantilla de página) #}
+<form class="embed-form" action="javascript:handle_embed_form()">
+<script type="text/javascript">
+function handle_embed_form(){
+    var form=$("form.embed-form"),
+        text=$("input[type=submit]", form).data("shortcut"),
+        code=$("textarea", form).val().replace("\n","");
+    if (window.clipboardData && clipboardData.setData)
+        clipboardData.setData('text', code);
+    else
+        window.prompt(text, code);
+}
+</script>
+<textarea name="code" readonly="readonly">
+&lt;iframe src="{{file|file_embed_link}}" allowtransparency="true"
+style="width:200px;height:90px;border:0;background:none transparent"&gt;&lt;/iframe&gt;
+</textarea><iframe src="{{file|file_embed_link}}" allowtransparency="true"
+style="width:200px;height:90px;border:0;background:none transparent"></iframe><br/>
+<input type="submit" value="{{_('copy_to_clipboard')}}" data-shortcut="{{_('copy_to_clipboard_shortcut')}}"/>
+<noscript>_("copy_to_clipboard_shortcut")</noscript>
+</form>
+

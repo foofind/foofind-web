@@ -14,7 +14,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 msgid "your_email"
-msgstr "O teu correo:"
+msgstr "O teu email"
 
 msgid "password"
 msgstr "Contrasinal:"
@@ -25,56 +25,74 @@ msgstr "Enviar"
 msgid "required_empty"
 msgstr "Este campo non pode estar baleiro"
 
+msgid "help_us"
+msgstr "colabora con foofind!"
+
+msgid "legal_info"
+msgstr "datos legais"
+
 msgid "go_home"
-msgstr "Voltar ao motor de buscas"
+msgstr "Voltar ao buscador"
+
+msgid "error_500_message"
+msgstr "Aconteceu un erro"
+
+msgid "error_500_description"
+msgstr ""
+"Algo raro ocurriu, os nosos investigadores do paranormal están traballando "
+"niso."
 
 msgid "error_404_message"
 msgstr "Páxina non atopada."
 
 msgid "error_404_description"
 msgstr ""
-"O URL solicitado non foi atopado. Comproba que escribiches correctamente, en"
-" caso afirmativo, notifícallo aos administradores da web."
+"A url solicitada non foi atopada. A dirección é correcta? Sendo así, "
+"agradeceríamosche que nos avisaras."
 
 msgid "error_502_message"
 msgstr "Pasarela incorrecta."
 
 msgid "error_502_description"
-msgstr ""
-"Non é posíbel acceder ao servicio por mor de que a pasarela é incorrecta."
+msgstr "Tentouse acceder ao servizo web cunha ubicación incorrecta."
 
 msgid "error_503_message"
-msgstr "Servizo non dispoñíbel"
+msgstr "Servizo non dispoñible"
 
 msgid "error_503_description"
-msgstr "O URL solicitado non está accsíbel. Tenteo de novo de aquí a un pouco"
+msgstr ""
+"A URL requerida non se atopa dispoñible temporalmente. Por favor, proba máis"
+" tarde."
 
 msgid "error_mail_send"
 msgstr ""
-"Produciuse un erro ao enviar a mensaxe ao enderezo especificado. Escolla "
-"outro ou tenteo máis adiante."
+"Ocurriu un erro ao enviar a mensaxe ao enderezo electrónico indicado. Por "
+"favor escolla outro ou ténteo de novo máis tarde."
 
 msgid "non_alphabetic_digits"
-msgstr "%(value)s conten caracteres que non son alfabeticos ou números"
+msgstr "%(value)s contén caracteres que non son letras nin números."
 
 msgid "about"
-msgstr "Sobre"
+msgstr "Acerca de"
 
 msgid "no_valid_email"
 msgstr ""
-"Isto non é un enderezo de correo-e correcto co formato: usuario@exemplo.com"
+"Este non é un enderezo de correo válido co formato: usuario@exemplo.com"
 
 msgid "field_length"
 msgstr "Este campo debe ter de %(min)s a %(max)s caracteres"
 
 msgid "no_valid_url"
-msgstr "URL incorrecto"
+msgstr "URL no válida"
 
 msgid "contact"
 msgstr "Contacto"
 
 msgid "legal"
 msgstr "Aviso legal"
+
+msgid "technology"
+msgstr "Tecnoloxías"
 
 msgid "tos"
 msgstr "Termos de uso"
@@ -83,43 +101,46 @@ msgid "privacy"
 msgstr "Política de privacidade"
 
 msgid "complaint"
-msgstr "informar dunha ligazón"
+msgstr "Reclamar enlace"
 
 msgid "source_code"
 msgstr "Código fonte"
 
 msgid "files_indexed"
-msgstr "Ficheiros indexados"
+msgstr "arquivos indexados"
 
 msgid "last_indexed_files"
-msgstr "Últimos ficheiros indexados"
+msgstr "Últimos arquivos indexados"
 
 msgid "i_want_that_file"
-msgstr "Quero. Ese. Ficheiro."
+msgstr "Quero. Ese. Arquivo."
 
 msgid "all"
-msgstr "Todo"
+msgstr "Todos"
 
 msgid "index_change"
-msgstr "foofind cambiou"
+msgstr "foofind está cambiando"
 
 msgid "index_comunity"
-msgstr "Forma parte da nuosa comunidade"
+msgstr "Forma parte da nosa comunidade"
 
 msgid "index_first"
-msgstr "Se o primeiro en coñecer as novedades e participar."
+msgstr "Sé o primeiro en coñecer tódalas novidades e participa."
 
 msgid "index_suggestion"
-msgstr "Algunha suxestión?"
+msgstr "Algunha suxerencia?"
 
 msgid "direct_downloads"
 msgstr "Descargas directas"
 
+msgid "direct_download"
+msgstr "descarga directa"
+
 msgid "audio"
-msgstr "Son"
+msgstr "Audio"
 
 msgid "video"
-msgstr "Vídeo"
+msgstr "Video"
 
 msgid "image"
 msgstr "Imaxe"
@@ -137,7 +158,7 @@ msgid "no_results_for"
 msgstr "Non hai resultados para:"
 
 msgid "write_something"
-msgstr "Ei! Escribe algo!"
+msgstr "Escribe algo!"
 
 msgid "previous"
 msgstr "Anterior"
@@ -146,50 +167,68 @@ msgid "next"
 msgstr "Seguinte"
 
 msgid "sources"
-msgstr "Orixes"
+msgstr "fontes"
 
 msgid "of_about"
-msgstr "sobre"
+msgstr "de aprox."
 
 msgid "results_for"
 msgstr "resultados para"
 
 msgid "not_allow_browse_results"
-msgstr "Foofind non permite examinar resultados máis aló da páxina 100."
+msgstr "Foofind non permite navegar resultados posteriores á páxina 100."
 
 msgid "other_categories"
 msgstr "outras categorías"
 
 msgid "no_type_count"
 msgstr ""
-"Non se atoparon resultados para a súa busca en %(search)s,  mais hai arredor"
-" de %(results)d resultados para a súa busca en %(category)s. "
+"Non se atoparon resultados de %(search)s, mais existen aproximadamente "
+"%(results)d resultados para a súa busca en %(category)s."
 
 msgid "how_to_download"
-msgstr "Cómo descargar?"
+msgstr "Como descargar?"
 
 msgid "download_explanation"
 msgstr ""
-"Para descargar o ficheiro ligado nesta páxina pode precisar dun software "
-"externo. aquí ten algúns programas compatibles:"
+"Para descargar o arquivo enlazado nesta páxina pódese  precisar un software "
+"externo. Aquí tes algúns programas compatibles:"
 
 msgid "did_you_mean"
-msgstr "Quixo dicir %(text)s?"
+msgstr "Quixeches dicir %(text)s?"
 
 msgid "all_sizes"
-msgstr "Todos os tamaños"
+msgstr "Tódolos tamaños"
+
+msgid "classic_search"
+msgstr "busca clásica"
+
+msgid "ajax_search"
+msgstr "nova busca"
+
+msgid "change_classic_search"
+msgstr "Se o prefires poder volver á"
+
+msgid "change_ajax_search"
+msgstr "Se queres podes activar a"
+
+msgid "what"
+msgstr "Que?"
+
+msgid "where"
+msgstr "Onde?"
 
 msgid "advanced_search"
 msgstr "busca avanzada"
 
 msgid "hide_advanced_search"
-msgstr "agochar a busca avanzada"
+msgstr "ocultar busca avanzada"
 
 msgid "smaller_than"
-msgstr "Menor que"
+msgstr "Menor de"
 
 msgid "larger_than"
-msgstr "Maior que"
+msgstr "Maior de"
 
 msgid "all_qualities"
 msgstr "Calquera calidade"
@@ -198,16 +237,16 @@ msgid "or_better"
 msgstr "ou superior"
 
 msgid "all_years"
-msgstr "Todos os anos"
+msgstr "Tódolos anos"
 
 msgid "before"
-msgstr "Anterior a"
+msgstr "Previo a"
 
 msgid "last_year"
 msgstr "Último ano"
 
 msgid "artist"
-msgstr "Interprete"
+msgstr "Artista"
 
 msgid "title"
 msgstr "Título"
@@ -234,19 +273,19 @@ msgid "genre"
 msgstr "Xénero"
 
 msgid "seconds"
-msgstr "segundos"
+msgstr "Segundos"
 
 msgid "minutes"
-msgstr "minutos"
+msgstr "Minutos"
 
 msgid "source"
-msgstr "Orixe"
+msgstr "Fonte"
 
 msgid "height"
 msgstr "Alto"
 
 msgid "width"
-msgstr "Largo"
+msgstr "Ancho"
 
 msgid "track"
 msgstr "Pista"
@@ -255,16 +294,16 @@ msgid "quality"
 msgstr "Calidade"
 
 msgid "num_pages"
-msgstr "Núm. de páxinas"
+msgstr "Nº de páxinas"
 
 msgid "series"
-msgstr "Series"
+msgstr "Serie"
 
 msgid "episode"
 msgstr "Episodio"
 
 msgid "season"
-msgstr "Temporada"
+msgstr "Tempada"
 
 msgid "include_results_from"
 msgstr "Incluír resultados de:"
@@ -288,7 +327,7 @@ msgid "description"
 msgstr "Descrición"
 
 msgid "files"
-msgstr "Ficheiros"
+msgstr "Arquivos"
 
 msgid "soundtype"
 msgstr "Tipo de son"
@@ -330,7 +369,7 @@ msgid "close"
 msgstr "Pechar"
 
 msgid "share_this"
-msgstr "Comparta esa ligazón:"
+msgstr "Comparta este enlace:"
 
 msgid "share_facebook"
 msgstr "compartir en facebook"
@@ -339,7 +378,7 @@ msgid "share_twitter"
 msgstr "compartir en twitter"
 
 msgid "send_by_email"
-msgstr "enviar por correo-e"
+msgstr "enviar por correo"
 
 msgid "download"
 msgstr "Descargar"
@@ -351,7 +390,7 @@ msgid "your_comments"
 msgstr "Os seus comentarios"
 
 msgid "since"
-msgstr "hai since s"
+msgstr "fai %(since)s"
 
 msgid "post_comment"
 msgstr "Enviar comentario"
@@ -369,41 +408,41 @@ msgid "booo"
 msgstr "Buuu!"
 
 msgid "comment_published_succesfully"
-msgstr "Comentario publicado satisfactoriamente"
+msgstr "Comentario publicado con éxito"
 
 msgid "related_files"
-msgstr "Ficheiros relacionados"
+msgstr "Arquivos relacionados"
 
 msgid "user_profile"
-msgstr "Perfil do usuario"
+msgstr "Perfil de usuario"
 
 msgid "login_required"
-msgstr "Debes identificarte para acceder a esta páxina."
+msgstr "Debes iniciar sesión para ver esta páxina."
 
 msgid "your_password"
-msgstr "Escolla o seu contrasinal:"
+msgstr "Elixe o teu contrasinal:"
 
 msgid "insert_your_password"
-msgstr "Introduza o seu contrasinal (si, outra vez):"
+msgstr "Introduce o teu contrasinal (si, outra vez):"
 
 msgid "fill_sing_up_form"
 msgstr ""
-"Por favor, cubra este formulario para ser un usuario rexistrado de Foofind:"
+"Por favor, enche este formulario para ser un usuario rexistrado de Foofind:"
 
 msgid "nickname"
 msgstr "Alcume:"
 
 msgid "edit_profile"
-msgstr "editar o perfil"
+msgstr "editar perfil"
 
 msgid "edit_your_profile"
-msgstr "Modifique o seu perfil"
+msgstr "Edita o teu perfil"
 
 msgid "profile_edited_succesfully"
-msgstr "O seu perfil actualizouse satisfactoriamente!"
+msgstr "O teu perfil actualizouse con éxito"
 
 msgid "hello"
-msgstr "ola,"
+msgstr "ola"
 
 msgid "logout"
 msgstr "saír"
@@ -427,7 +466,7 @@ msgid "register_here"
 msgstr "rexístrate aquí"
 
 msgid "choose_nickname"
-msgstr "Escolle un alcume:"
+msgstr "Elixe un alcume:"
 
 msgid "user_login"
 msgstr "Acceder"
@@ -436,27 +475,29 @@ msgid "remember_me"
 msgstr "Lembrarme"
 
 msgid "your_location"
-msgstr "A túa localización:"
+msgstr "A túa ubicación:"
 
 msgid "new_password"
 msgstr ""
-"Introduce un novo contrasinal (se non desexas cambialo, deixa este campo "
-"baleiro)"
+"Introduce un novo contrasinal (se non desexas cambialo, deixa este campo en "
+"branco)"
 
 msgid "save_profile"
 msgstr "Gardar cambios"
 
 msgid "not_allowed_view_page"
-msgstr "Non tes permisos pra acceder a esta páxina"
+msgstr "Non tes permisos para acceder a esta páxina"
 
 msgid "username_taken"
-msgstr "Ese nome de usuario xa existe. Escolle outro diferente."
+msgstr "Ese nome de usuario xa existe. Por favor, elixe outro diferente."
 
 msgid "email_taken"
-msgstr "Ese correo xa existe na nosa base de datos. Usa outro diferente."
+msgstr ""
+"Ese correo electrónico xa existe na nosa base de datos. Por favor, usa outro"
+" diferente."
 
 msgid "forgot"
-msgstr "Esqueciches"
+msgstr "¿Esqueciches"
 
 msgid "your_password?"
 msgstr "o teu contrasinal?"
@@ -465,7 +506,7 @@ msgid "passwords_not_match"
 msgstr "Os contrasinais introducidos non coinciden."
 
 msgid "sure_delete_account"
-msgstr "Estás seguro de querer eliminar a túa conta de Foofind?"
+msgstr "Estás seguro de querer borrar a túa conta de Foofind?"
 
 msgid "yes"
 msgstr "Si"
@@ -477,7 +518,7 @@ msgid "no"
 msgstr "Non"
 
 msgid "nice_to_hear_that"
-msgstr "Aledámonos por iso"
+msgstr "Alegrámonos diso"
 
 msgid "profile"
 msgstr "perfil"
@@ -492,7 +533,7 @@ msgid "last_comments"
 msgstr "Últimos %(comments)d comentarios:"
 
 msgid "location"
-msgstr "Localización:"
+msgstr "Ubicación:"
 
 msgid "delete_account"
 msgstr "Eliminar a túa conta de Foofind"
@@ -501,19 +542,20 @@ msgid "forgot_password"
 msgstr "Esqueciches o teu contrasinal?"
 
 msgid "wrong_email_password"
-msgstr "Enderezo de correo ou contrasinal incorrecto. Téntao de novo."
+msgstr "Enderezo de correo ou contrasinal erróneo. Téntao de novo."
 
 msgid "welcome"
 msgstr "Benvido"
 
 msgid "finish_register"
-msgstr "Preme nesta ligazón pra completar o teu proceso de rexistro:"
+msgstr ""
+"Por favor, clica neste enlace para completar o teu proceso de rexistro:"
 
 msgid "token_not_exist"
-msgstr "Sentímolo, ese URL de autenticación non existe ou xa foi usado"
+msgstr "Sentímolo, esa url de autenticación non existe ou xa foi usada"
 
 msgid "confirm_email"
-msgstr ", confirma o teu correo"
+msgstr ", confirma o teu correo electrónico"
 
 msgid "check_inbox_email_finish"
 msgstr "Comproba o teu correo pra completar o proceso de rexistro"
@@ -535,23 +577,25 @@ msgstr "accede aquí"
 
 msgid "enter_email"
 msgstr ""
-"Introduce o teu enderezo de correo. Enviarémosche unha mensaxe pra recuperar"
-" o acceso."
+"Introduce o teu enderezo de correo electrónico. Enviarémosche unha mensaxe "
+"pra recuperar o acceso."
 
 msgid "send"
 msgstr "Enviar"
 
 msgid "email_same_register"
 msgstr ""
-"O enderezo de correo debe ser o mesmo que empregaches pra rexistrarte."
+"O enderezo de correo electrónico debe ser o mesmo que utilizache para "
+"rexistrarte."
 
 msgid "email_not_database"
 msgstr ""
-"O enderezo de correo introducido non está na nosa base de datos. Por favor, "
-"téntao de novo."
+"O enderezo de correo electrónico introducido non está na nosa base de datos."
+" Por favor, téntao de novo."
 
 msgid "check_inbox_email_restore"
-msgstr "Comproba o teu correo pra recuperar o teu acceso a Foofind"
+msgstr ""
+"Comproba o teu correo electrónico para recuperar o teu acceso a Foofind"
 
 msgid "restore_access"
 msgstr ", restaura o teu acceso a Foofind"
@@ -559,7 +603,7 @@ msgstr ", restaura o teu acceso a Foofind"
 msgid "restore_account"
 msgstr ""
 "Alguén, probablemente ti, solicitou restaurar o acceso a túa conta de "
-"Foofind. Preme neste URL pra recuperar a túa conta:"
+"Foofind. Clica nesta url para recuperar a túa conta:"
 
 msgid "ignore_message"
 msgstr "En caso contrario, ignora esta mensaxe."

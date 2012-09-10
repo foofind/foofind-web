@@ -5,8 +5,8 @@
 import os
 from werkzeug import url_unquote
 from flask import Blueprint, render_template, redirect, url_for, g, make_response, current_app, request, send_from_directory, abort, get_flashed_messages, session
-from flaskext.babel import get_translations, gettext as _
-from flaskext.login import current_user
+from flask.ext.babel import get_translations, gettext as _
+from flask.ext.login import current_user
 from foofind.forms.files import SearchForm
 from foofind.services import *
 from foofind.forms.captcha import generate_image
@@ -17,7 +17,6 @@ import logging
 
 import datetime
 import httplib
-import urlparse
 import time
 import threading
 
@@ -66,7 +65,7 @@ def robots():
     timeout=86400, # Un día
     unless=lambda:True
     )
-@index.route('/sitemap.xml')
+#@index.route('/sitemap.xml')
 def sitemap():
     urlformat = current_app.config["FILES_SITEMAP_URL"]
     servers = filesdb.get_servers()
@@ -88,20 +87,15 @@ def sitemap():
 
 @index.route('/<lang>/opensearch.xml')
 def opensearch():
-    response = make_response(
-        render_template('opensearch.xml',
-            shortname = "Foofind",
-            description = _("opensearch_description")
-                ))
+    response = make_response(render_template('opensearch.xml',shortname = "Foofind",description = _("opensearch_description")))
     response.headers['content-type']='application/opensearchdescription+xml'
     return response
-
 
 @index.route('/')
 @index.route('/<lang>')
 @cache.cached(
     timeout=50,
-    key_prefix=lambda: "view/index_%s_%s" % (g.lang, request.args.get("type","all")),
+    key_prefix=lambda: "view/index_%s" % g.lang,
     unless=lambda: current_user.is_authenticated() or bool(get_flashed_messages())
     )
 def home():
@@ -126,7 +120,9 @@ def setlang():
         parts = url_unquote(request.referrer).split("/")
         if parts[0] in ("http:","https:"):
             parts = parts[3:]
-        return redirect("/%s/%s" % (g.lang, "/".join(parts[1:])))
+
+        query_string=urlparse(request.url).query
+        return redirect("/%s/%s%s" % (g.lang, "/".join(parts[1:]), "?"+query_string if query_string!="" else ""))
     else:
         return redirect(url_for("index.home"))
 

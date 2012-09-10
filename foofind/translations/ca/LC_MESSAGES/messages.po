@@ -14,7 +14,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 msgid "your_email"
-msgstr "El teu correu:"
+msgstr "El vostre correu:"
 
 msgid "password"
 msgstr "Contrasenya:"
@@ -24,6 +24,9 @@ msgstr "Envia"
 
 msgid "required_empty"
 msgstr "Aquest camp no pot estar buit"
+
+msgid "help_us"
+msgstr "Ajuda'ns!"
 
 msgid "legal_info"
 msgstr "informació legal"
@@ -88,6 +91,9 @@ msgstr "Contacte"
 msgid "legal"
 msgstr "Avís legal"
 
+msgid "technology"
+msgstr "Tecnologia"
+
 msgid "tos"
 msgstr "Termes d'ús"
 
@@ -95,7 +101,7 @@ msgid "privacy"
 msgstr "Política de privacitat"
 
 msgid "complaint"
-msgstr "Reclama l'enllaç"
+msgstr "Reclameu l'enllaç"
 
 msgid "source_code"
 msgstr "Codi font"
@@ -116,7 +122,7 @@ msgid "index_change"
 msgstr "foofind està canviant"
 
 msgid "index_comunity"
-msgstr "Forma part de la nostra comunitat."
+msgstr "Formeu part de la nostra comunitat."
 
 msgid "index_first"
 msgstr "Sigueu el primer en rebre totes les notícies i en participar-hi."
@@ -194,6 +200,24 @@ msgstr "Volies dir %(text)s?"
 
 msgid "all_sizes"
 msgstr "Totes les mides"
+
+msgid "classic_search"
+msgstr "cerca clàssica"
+
+msgid "ajax_search"
+msgstr "nova cerca"
+
+msgid "change_classic_search"
+msgstr "tornar a"
+
+msgid "change_ajax_search"
+msgstr "Pots provar de"
+
+msgid "what"
+msgstr "Què?"
+
+msgid "where"
+msgstr "On!"
 
 msgid "advanced_search"
 msgstr "Cerca avançada"
@@ -446,7 +470,7 @@ msgid "choose_nickname"
 msgstr "Trieu un àlies:"
 
 msgid "user_login"
-msgstr "Accedeix"
+msgstr "Accediu"
 
 msgid "remember_me"
 msgstr "Recorda'm"
@@ -675,7 +699,7 @@ msgid "link_reviewed"
 msgstr "Si us plau, introduïu l'enllaç que cal revisar:"
 
 msgid "url_content"
-msgstr "Si us plau, introdueix la url on apareix el contingut:"
+msgstr "Si us plau, introduïu l'URL on apareix el contingut:"
 
 msgid "reason_complaint"
 msgstr "Motiu de la reclamació:"
@@ -698,7 +722,7 @@ msgstr ""
 "Si us plau, incloeu els enllaços en els camps corresponents del formulari."
 
 msgid "submit_links"
-msgstr "Envia els enllaços"
+msgstr "Envieu enllaços"
 
 msgid "include_link_per_line"
 msgstr ""
@@ -733,7 +757,7 @@ msgid "link_not_exist"
 msgstr "Aquest enllaç no existeix o ha sigut eliminat!"
 
 msgid "translate"
-msgstr "Tradueix"
+msgstr "Traduïu"
 
 msgid "error_link_removed"
 msgstr "Ho sentim, aquest enllaç ha estat eliminat del seu origen."

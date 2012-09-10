@@ -7,7 +7,12 @@
     {%- endif -%}
 {% endmacro -%}
 {% extends "base.html" %}
-{#{% block global_message %}{{_('change_ajax_search')}} <a href="{{url_search(alt='ajax')}}">{{_('ajax_search')}}</a>{% endblock %}#}
+{% block global_message %}
+    {% if request.user_agent.browser=="msie" and request.user_agent.version!="9.0" %}
+    {% else %}
+    {{_('change_ajax_search')}} <a href="{{url_search(alt='ajax')}}">{{_('ajax_search')}}<small>BETA</small></a>
+    {% endif %}
+{% endblock %}
 {% block header %}
         <h1>
             <a href="{{ url_for('index.home',lang=none) }}">

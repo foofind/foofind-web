@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from flask import session
-from flaskext.login import UserMixin
+from flask.ext.login import UserMixin
 from datetime import datetime
 
 class User(UserMixin):
