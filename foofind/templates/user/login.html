@@ -4,12 +4,13 @@
 <div id="inner_contents">
     <h2>{{_("user_login")}}</h2>
     {{ flash() }}
-    <p>({{_("if_new_user")}} <a href="{{ url_for('user.register') }}" title="user register">{{_("register_here")}}</a>)</p>    
+    <p>({{_("if_new_user")}} <a href="{{ url_for('user.register') }}" title="{{_('register')}}">{{_("register_here")}}</a>)</p>
     <form method="post">
         <fieldset>
-            {{ render_field(form.email) }}            
+            {{ render_field() }}
+            {{ render_field(form.email) }}
             {{ render_field(form.password) }}
-            {{ render_field(form.rememberme) }}            
+            {{ render_field(form.rememberme) }}
         </fieldset>
         <fieldset>
             {{ form.submit }}

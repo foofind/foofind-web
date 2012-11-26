@@ -14,10 +14,10 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 msgid "your_email"
-msgstr "E-mail adresiniz:"
+msgstr "E-posta adresiniz:"
 
 msgid "password"
-msgstr "Şifre:"
+msgstr "Parola:"
 
 msgid "submit"
 msgstr "Gönder"
@@ -25,8 +25,21 @@ msgstr "Gönder"
 msgid "required_empty"
 msgstr "Bu alan gereklidir ve boş bırakılamaz."
 
+msgid "help_us"
+msgstr "bize yardım edin!"
+
+msgid "legal_info"
+msgstr "hukukî bilgi"
+
 msgid "go_home"
 msgstr "Arama motoruna dön"
+
+msgid "error_500_message"
+msgstr "Bir hata meydana geldi"
+
+msgid "error_500_description"
+msgstr ""
+"Garip bir şey oldu, uzmanlarımız bu doğa üstü faaliyeti araştırmaktadırlar."
 
 msgid "error_404_message"
 msgstr "Sayfa bulunamadı"
@@ -35,6 +48,12 @@ msgid "error_404_description"
 msgstr ""
 "İstenen URL bulunamadı. Bağlantıyı doğru yazıp yazmadığınızı kontrol ediniz,"
 " doğruysa bunu site yöneticilerine bildiriniz."
+
+msgid "error_410_message"
+msgstr "Sayfaya erişilemez"
+
+msgid "error_410_description"
+msgstr "İstenen URL artık mevcut değildir ve bu gelecekte de değişmeyecektir"
 
 msgid "error_502_message"
 msgstr "Bozuk ağ geçidi."
@@ -76,6 +95,9 @@ msgstr "İletişim"
 msgid "legal"
 msgstr "Hukukî"
 
+msgid "technology"
+msgstr "Teknoloji"
+
 msgid "tos"
 msgstr "Koşullar"
 
@@ -100,11 +122,38 @@ msgstr "Bu. Dosyayı. İstiyorum."
 msgid "all"
 msgstr "Tümü"
 
+msgid "index_change"
+msgstr "foofind değişiyor"
+
+msgid "index_comunity"
+msgstr "Topluluğumuza katılın."
+
+msgid "index_first"
+msgstr "Katılın ve haberleri ilk siz alın."
+
+msgid "index_suggestion"
+msgstr "Öneriniz var mı?"
+
 msgid "direct_downloads"
 msgstr "Doğrudan indirim"
 
+msgid "direct_download"
+msgstr "doğrudan indirim"
+
 msgid "audio"
 msgstr "Ses"
+
+msgid "other_streamings"
+msgstr "Diğer veri akışları"
+
+msgid "other_direct_downloads"
+msgstr "Diğer doğrudan indirmeler"
+
+msgid "others"
+msgstr "Diğerleri"
+
+msgid "unknown"
+msgstr "Bilinmeyen"
 
 msgid "video"
 msgstr "Video"
@@ -139,8 +188,11 @@ msgstr "Kaynak"
 msgid "of_about"
 msgstr "toplam"
 
+msgid "approximately"
+msgstr "Yaklaşık"
+
 msgid "results_for"
-msgstr "sonuç için, arama:"
+msgstr "sonuç, şu arama için:"
 
 msgid "not_allow_browse_results"
 msgstr "Foofind 100. sayfadan sonra sonuç göstermez, üzgünüz."
@@ -162,10 +214,31 @@ msgstr ""
 "olabilir. İşte birkaç uyumlu uygulamalar:"
 
 msgid "did_you_mean"
-msgstr "Bunu mu demek istediniz %(text)s?"
+msgstr "Bunu mu demek istediniz: %(text)s?"
 
 msgid "all_sizes"
 msgstr "Tüm boyutlar"
+
+msgid "go_to_file"
+msgstr "Dosyaya git"
+
+msgid "play"
+msgstr "Oynat"
+
+msgid "what"
+msgstr "Ne?"
+
+msgid "where"
+msgstr "Nerede?"
+
+msgid "update"
+msgstr "güncelleme"
+
+msgid "minimun"
+msgstr "asgari"
+
+msgid "maximun"
+msgstr "azami"
 
 msgid "advanced_search"
 msgstr "Gelişmiş Arama"
@@ -233,6 +306,12 @@ msgstr "Kaynak"
 msgid "height"
 msgstr "Yükseklik"
 
+msgid "seeds"
+msgstr "Paylaşan"
+
+msgid "leechs"
+msgstr "İndirenler"
+
 msgid "width"
 msgstr "Genişlik"
 
@@ -271,6 +350,9 @@ msgstr "Sürüm"
 
 msgid "name"
 msgstr "İsim"
+
+msgid "channels"
+msgstr "kanal"
 
 msgid "description"
 msgstr "Açıklama"
@@ -314,6 +396,48 @@ msgstr "saniye"
 msgid "loading"
 msgstr "Yükleniyor"
 
+msgid "tags"
+msgstr "Etiketler"
+
+msgid "license"
+msgstr "Lisans"
+
+msgid "private_file"
+msgstr "Özel dosya"
+
+msgid "composer"
+msgstr "Besteci"
+
+msgid "publisher"
+msgstr "Yayınlayan"
+
+msgid "comments"
+msgstr "Yorumlar"
+
+msgid "created_by"
+msgstr "Oluşturan"
+
+msgid "language"
+msgstr "Lisan"
+
+msgid "date"
+msgstr "Tarih"
+
+msgid "trackers"
+msgstr "Tracker"
+
+msgid "hash"
+msgstr "Hash değeri"
+
+msgid "visualizations"
+msgstr "Görüntülemeler"
+
+msgid "codec"
+msgstr "Kodek"
+
+msgid "encoding"
+msgstr "Kodlama"
+
 msgid "close"
 msgstr "Kapat"
 
@@ -327,7 +451,7 @@ msgid "share_twitter"
 msgstr "twitter ile paylaş"
 
 msgid "send_by_email"
-msgstr "e-mail ile yolla"
+msgstr "e-posta ile yolla"
 
 msgid "download"
 msgstr "İndir"
@@ -339,7 +463,7 @@ msgid "your_comments"
 msgstr "Yorumlarınız"
 
 msgid "since"
-msgstr " since s nce"
+msgstr "şu vakitten beri:"
 
 msgid "post_comment"
 msgstr "Yorum yazın"
@@ -365,14 +489,41 @@ msgstr "Benzer dosyalar"
 msgid "user_profile"
 msgstr "Kullanıcı profili"
 
+msgid "more_info"
+msgstr "daha fazla bilgi"
+
+msgid "less_info"
+msgstr "daha az bilgi"
+
+msgid "more_comments"
+msgstr "daha fazla yorum"
+
+msgid "less_comments"
+msgstr "daha az yorum"
+
+msgid "file"
+msgstr "dosya"
+
+msgid "add_favorite"
+msgstr "%(type)s unsurunu favorilere ekle"
+
+msgid "delete_favorite"
+msgstr "%(type)s unsurunu favorilerden sil"
+
+msgid "favorite"
+msgstr "%(type)s favorilere eklendi"
+
+msgid "download_links"
+msgstr "İndirme bağlantılarını göster"
+
 msgid "login_required"
 msgstr "Bu sayfaya erişmek için oturum açmalısınız."
 
 msgid "your_password"
-msgstr "Şifrenizi seçiniz:"
+msgstr "Parolanızı seçiniz:"
 
 msgid "insert_your_password"
-msgstr "Şifrenizi giriniz (evet, yeniden):"
+msgstr "Parolanızı giriniz (evet, yeniden):"
 
 msgid "fill_sing_up_form"
 msgstr "Foofind'a kayıt olmak için lütfen bu formu doldurunuz:"
@@ -427,7 +578,7 @@ msgstr "Konumunuz:"
 
 msgid "new_password"
 msgstr ""
-"Şifrenizi burada değiştiriniz: (istemiyorsanız bu alanı boş bırakınız)"
+"Parolanızı burada değiştiriniz: (istemiyorsanız bu alanı boş bırakınız)"
 
 msgid "save_profile"
 msgstr "Profili kaydet"
@@ -446,10 +597,10 @@ msgid "forgot"
 msgstr "Unuttunuz mu"
 
 msgid "your_password?"
-msgstr "şifrenizi?"
+msgstr "parolanızı?"
 
 msgid "passwords_not_match"
-msgstr "Girilen şifreler eşleşmiyor, değişik."
+msgstr "Girilen parolalar eşleşmiyor, değişik."
 
 msgid "sure_delete_account"
 msgstr "Hesabınızı silmek istediğinizden emin misiniz?"
@@ -459,6 +610,9 @@ msgstr "Evet"
 
 msgid "account_deleted"
 msgstr "Hesabınız silinmiştir."
+
+msgid "no"
+msgstr "Hayır"
 
 msgid "nice_to_hear_that"
 msgstr "Bunu duyduğumuza memnunuz"
@@ -482,10 +636,10 @@ msgid "delete_account"
 msgstr "Foofind hesabını sil"
 
 msgid "forgot_password"
-msgstr "Şifrenizi mi unuttunuz?"
+msgstr "Parolanızı mı unuttunuz?"
 
 msgid "wrong_email_password"
-msgstr "Hatalı e-mail ya da şifre, tekrar deneyiniz"
+msgstr "Hatalı e-posta ya da parola, tekrar deneyiniz"
 
 msgid "welcome"
 msgstr "Hoş geldiniz"
@@ -497,12 +651,12 @@ msgid "token_not_exist"
 msgstr "Üzgünüz, bu jeton yoktur ya da zaten kullanılmıştır. "
 
 msgid "confirm_email"
-msgstr ", e-mail adresinizi teyit ediniz"
+msgstr ", e-posta adresinizi teyit ediniz"
 
 msgid "check_inbox_email_finish"
 msgstr ""
-"Kayıt işlemlerini tamamlamak için e-mail adresinize gelen mesajları kontrol "
-"ediniz."
+"Kayıt işlemlerini tamamlamak için e-posta adresinize gelen mesajları kontrol"
+" ediniz."
 
 msgid "foofind_team"
 msgstr "Foofind ekibi."
@@ -521,21 +675,39 @@ msgstr "buradan giriş yapın"
 
 msgid "enter_email"
 msgstr ""
-"E-mail adresinizi giriniz. Hesabınıza erişimi yeniden kazanmanız için bir "
-"e-mail size gönderilecektir."
+"E-posta adresinizi giriniz. Hesabınıza erişimi yeniden kazanmanız için bir "
+"e-posta size gönderilecektir."
 
 msgid "send"
 msgstr "Gönder"
 
+msgid "user_favorites"
+msgstr "Yıldızlanan dosyalar"
+
+msgid "user_searches"
+msgstr "Yıldızlanan aramalar"
+
+msgid "user_fav_lists"
+msgstr "Dosya listeleri"
+
+msgid "user_fav_file_list_empty"
+msgstr "Listede dosya yok"
+
+msgid "user_fav_search_list_empty"
+msgstr "Listede arama yok"
+
+msgid "user_fav_no_lists"
+msgstr "Özel liste bulunamadı"
+
 msgid "email_same_register"
-msgstr "Bu e-mail kayıtta kullanılan e-mail'in aynısı olmalıdır."
+msgstr "Bu e-posta kayıtta kullanılan e-postanın aynısı olmalıdır."
 
 msgid "email_not_database"
-msgstr "Bu e-mail veritabanımızda bulunmamaktadır. Yeniden deneyiniz."
+msgstr "Bu e-posta veritabanımızda bulunmamaktadır. Yeniden deneyiniz."
 
 msgid "check_inbox_email_restore"
 msgstr ""
-"Hesabınıza erişimi yeniden kazanmak için e-mail adresinize gelen mesajları "
+"Hesabınıza erişimi yeniden kazanmak için e-posta adresinize gelen mesajları "
 "kontrol ediniz."
 
 msgid "restore_access"
@@ -670,7 +842,7 @@ msgid "footer"
 msgstr ""
 "Web sitesi Creative Commons <a rel='license content' "
 "href='http://creativecommons.org/licenses/by-sa/3.0/deed.tr'>BY-SA</a> "
-"lisansı altındadır. <a href='http://code.google.com/p/Foofind/'>Kaynak "
+"lisansı altındadır. <a href='https://github.com/foofind/foofind-web'>Kaynak "
 "kodu</a> <a rel='license source code' "
 "href='http://www.gnu.org/licenses/agpl.html'>Affero GPL</a> lisansı "
 "altındadır."
@@ -683,6 +855,25 @@ msgstr ""
 
 msgid "under_maintenance"
 msgstr "Foofind bakımdadır. Daha sonra tekrar ziyaret ediniz."
+
+msgid "technology_text"
+msgstr ""
+"Foofind ekibi projenin kaynak kodunun çoğunu geliştirir ama özgür yazılım topluluğunun çalışmalarına da pek çok dayanıyoruz.\r\n"
+"\r\n"
+"Bu inanılmaz projeler olmasaydı Foofind mümkün olamazdı. Çok teşekkür ederiz! ;-)\r\n"
+"\r\n"
+"Twisted: Python ile yazılmış ve açık kaynak MIT lisansı kapsamında olay kaynaklı ağ motorudur.\r\n"
+"\r\n"
+"Scrapy: Scrapy, web tarama ve sayfalardan yapılandırılmış veri ayıklamak için kullanılan hızlı ve yüksek seviyeli ağ tarama altyapısıdır. Veri araştırmadan izlemeye ve otomatik testlere dek değişik amaçlar için kullanılabilir.\r\n"
+"\r\n"
+"Flask: Werkzeug ve Jinja 2'ye dayalı Python için mikro-altyapıdır ve BSD lisansı kapsamında yayınlanmıştır.\r\n"
+"\r\n"
+"MongoDB: MongoDB (koskoca anlamında \"humongous\" kelimesinden) ölçeklenebilir, yüksek performanslı, açık kaynak NoSQL veritabanıdır.\r\n"
+"Sentry: Sentry gerçek zamanlı olay günlüğü ve agregasyonu platformudur. Standart kullanıcı geri bildirimi döngüsünün sorunları olmaksızın hataları izlemeye ve post-mortem yapmak için gerekli tüm verileri çıkarmaya yarar.\r\n"
+"\r\n"
+"Sphinx: Sphinx alaka (yani arama kalitesi) ve entegrasyon basitliği amacıyla baştan sona yeniden tasarlanmış açık kaynak bir metin arama sunucusudur.  C++ ile yazılmıştır ve GNU/Linux (RedHat, Ubuntu, vs.), Windows, MacOS, Solaris, FreeBSD, ve diğer sistemler üzerinde çalışır.\r\n"
+"\r\n"
+"Social Network Icon Pack: Rogie King, Komodo Media tarafından yayınlanmış Social Ağ İkon Paketi Creative Commons Atıf-Benzer Paylaşım 3.0 Uyarlanmamış lisansı kapsamında yayınlanmıştır."
 
 msgid "link_not_exist"
 msgstr "Bu bağlantı yoktur ya da silinmiş olabilir!"
@@ -724,3 +915,12 @@ msgstr "Diğer"
 
 msgid "opensearch_description"
 msgstr "Foofind ile Ara"
+
+msgid "embed_foofind_button"
+msgstr "Foofind'da gör"
+
+msgid "embed_download_button"
+msgstr "İndir"
+
+msgid "copy_to_clipboard_shortcut"
+msgstr "Panonuza kopyalamak için CTRL+C birleşimini kullanın"

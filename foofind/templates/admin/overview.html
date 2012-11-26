@@ -26,6 +26,7 @@
     {% endif %}
 {%- else -%}
     <form method="POST" class="block-right">
+    {{ render_field() }}
     {{form.processing}}{{form.number(class="integer", autocomplete="off", **{"data-step":10,"data-minval":10})}} {{form.mode}} {{form.retrieve}}
     </form>
     <pre id="log_data" data-stdsep="{{stdsep}}">{{log_data}}</pre>

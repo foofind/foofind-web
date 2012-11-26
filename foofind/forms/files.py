@@ -2,7 +2,7 @@
 """
     Formularios para manejo de datos de ficheros.
 """
-from wtforms import Form, TextField, RadioField, TextAreaField, SubmitField, HiddenField, BooleanField, SelectField
+from flask.ext.wtf import Form, TextField, RadioField, TextAreaField, SubmitField, HiddenField, BooleanField, SelectField
 
 from flask.ext.babel import lazy_gettext as _
 from foofind.forms.validators import *

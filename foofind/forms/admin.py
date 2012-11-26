@@ -3,8 +3,7 @@
     Formularios para admin
 """
 
-from wtforms import *
-from wtforms.widgets import *
+from flask.ext.wtf import SubmitField,SelectMultipleField,CheckboxInput,SubmitInput,Form,HiddenField,TextAreaField,SelectField,TextField,BooleanField,IntegerField,html_params as whtml_params,HTMLString
 from flask.ext.babel import lazy_gettext as _
 from flask.ext.babel import gettext
 
@@ -26,8 +25,8 @@ class LoneLabel(object):
     def __html__(self): return self()
 
     def __call__(self, text=None, **kwargs):
-        attributes = widgets.html_params(**kwargs)
-        return widgets.HTMLString(u'<label %s>%s</label>' % (attributes, text or self.text))
+        attributes = whtml_params(**kwargs)
+        return HTMLString(u'<label %s>%s</label>' % (attributes, text or self.text))
 
     def __repr__(self):
         return 'LoneLabel(%r, %r)' % (self.field_id, self.text)
@@ -78,7 +77,7 @@ class MultiSubmit(SelectMultipleField):
         def __call__(self, field, **kwargs):
             kwargs.setdefault('id', field.id)
             likp = len(self.inner_kwarg_prefix)
-            inner_kwargs = {fix_param_name(k[likp:]):v for k,v in kwargs.iteritems() if k.startswith(self.inner_kwarg_prefix)}
+            #inner_kwargs = {fix_param_name(k[likp:]):v for k,v in kwargs.iteritems() if k.startswith(self.inner_kwarg_prefix)}
             outer_kwargs = {fix_param_name(k):v for k,v in kwargs.iteritems() if not k.startswith(self.inner_kwarg_prefix)}
             return HTMLString(u'<%s %s>%s</%s>' % (
                 self.html_tag,

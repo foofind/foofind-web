@@ -21,6 +21,7 @@ MAIL_PASSWORD = ""
 DATA_SOURCE_SERVER = "mongodb://mongo.foofind.com:27017"
 DATA_SOURCE_USER = "mongodb://mongo.foofind.com:27017"
 DATA_SOURCE_FEEDBACK = "mongodb://mongo.foofind.com:27017"
+DATA_SOURCE_ENTITIES = "mongodb://mongo.foofind.com:27017"
 DATA_SOURCE_MAX_POOL_SIZE = 50
 DATA_SOURCE_FOO_THREADS = 30
 GET_FILES_TIMEOUT = 1
@@ -28,17 +29,23 @@ AUTORECONNECT_FOO_INTERVAL = 300
 
 SERVICE_SPHINX = "sphinx.foofind.com"
 SERVICE_SPHINX_PORT = 33000
-SERVICE_SPHINX_CONNECT_TIMEOUT = 4.0
-SERVICE_SPHINX_MAX_QUERY_TIME = 500
-SERVICE_SPHINX_WORKERS_PER_SERVER = 3
+SERVICE_SPHINX_SOCKET_TIMEOUT = 30.0
+SERVICE_SPHINX_MAX_QUERY_TIME = 800
+SERVICE_SPHINX_CLIENT_MIN = 5
+SERVICE_SPHINX_CLIENT_MAX = 40
+SERVICE_SPHINX_CLIENT_STEP = 5
 
+SERVICE_SPHINX_SEARCH_MAX_RETRIES = 10
+SERVICE_SPHINX_WORKERS_PER_SERVER = 3
+SERVICE_SPHINX_CLIENT_RECYCLE = 1000
+SERVICE_SPHINX_CLIENT_MAINTENANCE_INTERVAL = 1
 SENTRY_DSN = None
 
 SERVICE_TAMING_SERVERS = (("taming.foofind.com",24642))
 SERVICE_TAMING_TIMEOUT = 1.0
 SERVICE_TAMING_ACTIVE = True
 
-NEW_SEARCH_ACTIVE = False
+SERVERS_REFRESH_INTERVAL = 60*60 # actualiza servidores cada hora
 
 CACHE_SEARCHES = True
 CACHE_FILES = True
@@ -47,6 +54,8 @@ CACHE_TAMING = True
 CACHE_KEY_PREFIX = "foofind/"
 CACHE_MEMCACHED_SERVERS = ()
 CACHE_TYPE = "memcached"
+
+STATIC_PREFIX = None
 
 REMOTE_MEMCACHED_SERVERS = ()
 
@@ -67,8 +76,8 @@ OAUTH_FACEBOOK_CONSUMER_SECRET = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
 TRANSLATE_LANGS=['aa','ab','ae','af','ak','am','an','ar','as','av','ay','az','ba','be','bg','bh','bi','bm','bn','bo','br','bs','ca','ce','ch','co','cr','cs','cu','cv','cy','da','de','dv','dz','ee','el','en','eo','es','et','eu','fa','ff','fi','fj','fo','fr','fy','ga','gd','gl','gn','gu','gv','ha','he','hi','ho','hr','ht','hu','hy','hz','ia','id','ie','ig','ii','ik','io','is','it','iu','ja','jv','ka','kg','ki','kj','kk','kl','km','kn','ko','kr','ks','ku','kv','kw','ky','la','lb','lg','li','ln','lo','lt','lu','lv','mg','mh','mi','mk','ml','mn','mr','ms','mt','my','na','nb','nd','ne','ng','nl','nn','no','nr','nv','ny','oc','oj','om','or','os','pa','pi','pl','ps','pt','qu','rm','rn','ro','ru','rw','sa','sc','sd','se','sg','si','sk','sl','sm','sn','so','sq','sr','ss','st','su','sv','sw','ta','te','tg','th','ti','tk','tl','tn','to','tr','ts','tt','tw','ty','ug','uk','ur','uz','ve','vi','vo','wa','wo','xh','yi','yo','za','zh','zu']
 
-ALL_LANGS = ('en', 'es', 'fr', 'it', 'pt', 'tr', 'zh', 'ca', 'gl', 'eu', 'eo') # Orden usado en foof.in
-ALL_LANGS_COMPLETE = {'en':'en_GB', 'es':'es_ES', 'fr':'fr_FR', 'it':'it_IT', 'pt':'pt_PT', 'tr':'tr_TR', 'zh':'zh_CN', 'ca':'ca_ES', 'gl':'gl_ES', 'eu':'eu_ES', 'eo':'eo_EO'}
+ALL_LANGS = ('en', 'es', 'fr', 'it', 'pt', 'de', 'tr', 'zh', 'ja', 'ko', 'ca', 'gl', 'eu', 'eo') # Orden usado en foof.in
+ALL_LANGS_COMPLETE = {'en':'en_GB', 'es':'es_ES', 'fr':'fr_FR', 'it':'it_IT', 'pt':'pt_PT', 'de':'de_DE', 'tr':'tr_TR', 'zh':'zh_CN', 'ja':'ja_JP', 'ko':'ko_KR', 'ca':'ca_ES', 'gl':'gl_ES', 'eu':'eu_ES', 'eo':'eo_EO'}
 LANGS = ('en', 'es')
 BETA_LANGS = [lang for lang in ALL_LANGS if lang not in LANGS]
 PRIVATE_MSGID_PREFIXES = ("safe_", "admin_", "newhome_")
@@ -79,6 +88,7 @@ FOOCONN_UPDATE_INTERVAL = 120
 CONFIG_UPDATE_INTERVAL = 60
 UNITTEST_INTERVAL = 0
 
+CSRF_ENABLED=False #deshabilita CSRF de Flask-WTF
 
 ADMIN_HOSTS = ()
 ADMIN_LANG_LOCAL_REPO = "repo/lang"

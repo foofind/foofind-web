@@ -5,11 +5,12 @@
 import foofind.globals
 
 #import foofind.utils.async  # debe hacerse antes que nada
-
+from collections import OrderedDict
 from flask import Flask, g, request, session, render_template, redirect, abort, url_for, make_response
 from flask.ext.assets import Environment, Bundle
 from flask.ext.babel import get_translations, gettext as _
 from flask.ext.login import current_user
+from flask.ext.seasurf import SeaSurf
 from foofind.user import User
 from foofind.blueprints.index import index
 from foofind.blueprints.page import page
@@ -18,7 +19,6 @@ from foofind.blueprints.files import files
 from foofind.blueprints.api import api
 from foofind.blueprints.labs import add_labs, init_labs
 from foofind.services import *
-from foofind.services.search import init_search_stats
 from foofind.templates import register_filters
 from foofind.utils.webassets_filters import JsSlimmer, CssSlimmer
 from foofind.utils import u
@@ -32,6 +32,7 @@ try:
     from uwsgidecorators import postfork
     @postfork
     def start_eventmanager():
+
         # Inicio del eventManager
         eventmanager.start()
 except ImportError:
@@ -112,7 +113,6 @@ def create_app(config=None, debug=False):
     if not os.path.isdir(app.static_folder+"/gen"): os.mkdir(app.static_folder+"/gen")
     assets = Environment(app)
     assets.debug = app.debug
-    assets.url=app.static_url_path
 
     register_filter(JsSlimmer)
     register_filter(CssSlimmer)
@@ -120,15 +120,17 @@ def create_app(config=None, debug=False):
     assets.register('css_all', 'css/jquery-ui.css', Bundle('css/main.css', filters='pyscss', output='gen/main.css', debug=False), filters='css_slimmer', output='gen/foofind.css')
     assets.register('css_ie', 'css/ie.css', filters='css_slimmer', output='gen/ie.css')
     assets.register('css_ie7', 'css/ie7.css', filters='css_slimmer', output='gen/ie7.css')
-    assets.register('css_search', Bundle('css/search.css', filters=['pyscss','css_slimmer'], output='gen/search.css', debug=False))
     assets.register('css_labs', 'css/jquery-ui.css', Bundle('css/labs.css', filters='pyscss', output='gen/l.css', debug=False), filters='css_slimmer', output='gen/labs.css')
-    assets.register('css_admin', Bundle('css/admin.css', filters='css_slimmer', output='gen/admin.css'))
+    assets.register('css_admin', Bundle('css/admin.css', 'css/jquery-ui.css', filters='css_slimmer', output='gen/admin.css'))
 
     assets.register('js_all', Bundle('js/jquery.js', 'js/jquery-ui.js', 'js/jquery.ui.selectmenu.js', 'js/files.js', filters='rjsmin', output='gen/foofind.js'), )
     assets.register('js_ie', Bundle('js/html5shiv.js', 'js/jquery-extra-selectors.js', 'js/jquery.ba-hashchange.js', 'js/selectivizr.js', filters='rjsmin', output='gen/ie.js'))
     assets.register('js_search', Bundle('js/jquery.hoverIntent.js', 'js/search.js', filters='rjsmin', output='gen/search.js'))
     assets.register('js_labs', Bundle('js/jquery.js', 'js/jquery-ui.js', 'js/labs.js', filters='rjsmin', output='gen/labs.js'))
-    assets.register('js_admin', Bundle('js/jquery.js', 'js/admin.js', filters='rjsmin', output='gen/admin.js'))
+    assets.register('js_admin', Bundle('js/jquery.js',  'js/jquery-ui-admin.js', 'js/admin.js', filters='rjsmin', output='gen/admin.js'))
+
+    # proteccion CSRF
+    csrf = SeaSurf(app)
 
     # Detección de idioma
     @app.url_defaults
@@ -138,12 +140,12 @@ def create_app(config=None, debug=False):
         '''
         if 'lang' in values or not g.lang:
             return
+        #if endpoint in app.view_functions and hasattr(app.view_functions[endpoint], "_fooprint"):
+        #    return
         if app.url_map.is_endpoint_expecting(endpoint, 'lang'):
             values['lang'] = g.lang
 
-    pull_lang_code_languages = tuple(
-        (code,localedata.load(code)["languages"][code].capitalize(), code in app.config["BETA_LANGS"])
-        for code in app.config["ALL_LANGS"])
+    pull_lang_code_languages = OrderedDict((code, (localedata.load(code)["languages"], code in app.config["BETA_LANGS"])) for code in app.config["ALL_LANGS"])
     @app.url_value_preprocessor
     def pull_lang_code(endpoint, values):
         '''
@@ -196,16 +198,8 @@ def create_app(config=None, debug=False):
     auth.setup_app(app)
     auth.login_view="user.login"
     auth.login_message="login_required"
-
-    @auth.user_loader
-    def load_user(userid):
-        user = User(userid)
-        if not user.has_data:
-            data = usersdb.find_userid(userid)
-            if data is None:
-                return None
-            user.set_data(data)
-        return user
+    auth.user_loader(User.current_user)
+    auth.anonymous_user = User.current_user
 
     # Mail
     mail.init_app(app)
@@ -220,14 +214,15 @@ def create_app(config=None, debug=False):
     # Servicio de búsqueda
     @app.before_first_request
     def init_process():
+
         if not eventmanager.is_alive():
             # Fallback inicio del eventManager
             eventmanager.start()
-        searchd.init_app(app, filesdb)
-        init_search_stats()
 
     # Taming
     taming.init_app(app)
+
+    eventmanager.once(searchd.init_app, hargs=(app, filesdb))
 
     # Refresco de conexiones
     eventmanager.once(filesdb.load_servers_conn)
@@ -255,9 +250,20 @@ def create_app(config=None, debug=False):
 
     @app.before_request
     def before_request():
+
         # No preprocesamos la peticiones a static
         if request.path.startswith("/static"):
             return
+
+        # peticiones en modo preproduccion
+        g.beta_request = request.url_root[request.url_root.index("//")+2:].startswith("beta.")
+
+        # prefijo para los contenidos estáticos
+        if g.beta_request:
+            app_static_prefix = app.static_url_path
+        else:
+            app_static_prefix = app.config["STATIC_PREFIX"] or app.static_url_path
+        g.static_prefix = assets.url = app_static_prefix
 
         # si el idioma de la URL es inválido, devuelve página no encontrada
         if g.url_lang and not g.url_lang in app.config["ALL_LANGS"]:
@@ -267,13 +273,28 @@ def create_app(config=None, debug=False):
         if request.blueprint is None:
             if request.path.endswith("/"):
                 if "?" in request.url:
-                    return redirect(request.url_root[:-1] + request.path + request.url[request.url.find("?"):], 301)
-                return redirect(request.url[:-1], 301)
+                    root = request.url_root[:-1]
+                    path = request.path.rstrip("/")
+                    query = request.url.decode("utf-8")
+                    query = query[query.find(u"?"):]
+                    return redirect(root+path+query, 301)
+                return redirect(request.url.rstrip("/"), 301)
             return
 
         # si no es el idioma alternativo, lo añade por si no se encuentra el mensaje
         if g.lang!="en":
             get_translations().add_fallback(fallback_lang)
+
+        # si hay que cambiar el idioma
+        if request.args.get("setlang",None):
+            session["lang"]=g.lang
+            # si el idioma esta entre los permitidos y el usuario esta logueado se actualiza en la base de datos
+            if g.lang in app.config["ALL_LANGS"] and current_user.is_authenticated():
+                current_user.set_lang(g.lang)
+                usersdb.update_user({"_id":current_user.id,"lang":g.lang})
+
+            return redirect(request.base_url)
+
 
         # dominio de la web
         g.domain = "foofind.is"
@@ -281,6 +302,10 @@ def create_app(config=None, debug=False):
         # título de la página por defecto
         g.title = g.domain
         g.autocomplete_disabled = "false" if app.config["SERVICE_TAMING_ACTIVE"] else "true"
+
+        g.keywords = [_(keyword) for keyword in ['download', 'watch', 'files', 'submit_search', 'audio', 'video', 'image', 'document', 'software', 'P2P', 'direct_downloads']]
+        descr = _("about_text")
+        g.page_description = descr[:descr.find("<br")]
 
     @app.after_request
     def after_request(response):
@@ -317,9 +342,11 @@ def create_app(config=None, debug=False):
         description_msgid = "error_%s_description" % error
         description_msgstr = _(description_msgid)
         if description_msgstr == description_msgid and hasattr(e,"description"):
-            message_msgstr = _("error_500_description")
+            description_msgstr = _("error_500_description")
         try:
             g.title = "%s %s" % (error, message_msgstr)
+            g.keywords = []
+            g.page_description = g.title
             return render_template('error.html', zone="errorhandler", error=error, description=description_msgstr), int(error)
         except BaseException as ex: #si el error ha llegado sin contexto se encarga el servidor de él
             logging.warn(ex)

@@ -2,6 +2,7 @@
 {% block page %}
     {%- if origin_form %}
     <form method="post">
+        {{ render_field() }}
         {{origin_form.props}}
         <h3 class="list">{{_('admin_origins_info')}}</h3>
         <dl class="list">

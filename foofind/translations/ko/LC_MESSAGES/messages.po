@@ -1,0 +1,770 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: 1\n"
+"Report-Msgid-Bugs-To: ismael@mp2p.net\n"
+"POT-Creation-Date: 2011-12-09 11:49+0100\n"
+"PO-Revision-Date: 2011-12-09 11:49+0100\n"
+"Last-Translator: Foofind <hola@foofind.com>\n"
+"Language-Team: ko <hola@foofind.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Foofind's pogit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgid "your_email"
+msgstr "메일주소"
+
+msgid "password"
+msgstr "비밀번호"
+
+msgid "submit"
+msgstr "보내기"
+
+msgid "help_us"
+msgstr "도와주세요!"
+
+msgid "legal_info"
+msgstr "정책안내"
+
+msgid "go_home"
+msgstr "검색화면으로 돌아가기"
+
+msgid "error_500_message"
+msgstr "오류 발생"
+
+msgid "error_500_description"
+msgstr "알 수 없는 오류가 있습니다. 빠른 시일내에 점검하도록 하겠습니다."
+
+msgid "error_404_message"
+msgstr "페이지를 찾을 수 없습니다."
+
+msgid "error_404_description"
+msgstr ""
+"요청하신 URL 을 찾을 수 없습니다. 입력하신 URL 이 정확한지 다시 확인해주세요. 정확한 URL 이라면 관리자에게 알려주시기 "
+"바랍니다."
+
+msgid "error_410_message"
+msgstr "페이지가 올바르지 않습니다."
+
+msgid "error_410_description"
+msgstr "요청하신 URL 은 더이상 제공되지 않습니다. "
+
+msgid "error_502_message"
+msgstr "잘못된 접근입니다."
+
+msgid "error_502_description"
+msgstr "잘못된 접근으로 서비스할 수 없습니다."
+
+msgid "error_503_message"
+msgstr "서비스가 불가합니다."
+
+msgid "error_503_description"
+msgstr "요청하신 URL 은 임시적으로 제공되지 않습니다. 다음에 다시 시도해보세요."
+
+msgid "error_mail_send"
+msgstr "메세지를 보내는 동안 에러가 발생하였습니다. 다른 것을 선택하거나 다시 시도하세요."
+
+msgid "non_alphabetic_digits"
+msgstr "%(value)s 영문자나 숫자가 아닌 문자를 포함하고 있습니다"
+
+msgid "required_empty"
+msgstr "값 입력이 필요합니다"
+
+msgid "no_valid_email"
+msgstr "user@example.com 과 같은 형식으로 메일 주소를 입력해주세요"
+
+msgid "field_length"
+msgstr "%(min)s ~ %(max)s 사이의 문자를 입력해야 합니다"
+
+msgid "no_valid_url"
+msgstr "올바르지 않은 URL"
+
+msgid "about"
+msgstr "foofind 에 대해서"
+
+msgid "contact"
+msgstr "문의하기"
+
+msgid "technology"
+msgstr "기술"
+
+msgid "legal"
+msgstr "정책"
+
+msgid "tos"
+msgstr "사용조건"
+
+msgid "privacy"
+msgstr "개인정보정책"
+
+msgid "source_code"
+msgstr "소스코드"
+
+msgid "index_change"
+msgstr "foofind 는 변하고 있습니다"
+
+msgid "index_comunity"
+msgstr "함께해요"
+
+msgid "index_suggestion"
+msgstr "제안사항이 있습니까?"
+
+msgid "all"
+msgstr "전체"
+
+msgid "direct_download"
+msgstr "직접 내려받기"
+
+msgid "direct_downloads"
+msgstr "직접 내려받기"
+
+msgid "other_direct_downloads"
+msgstr "그밖의 직접 내려받기"
+
+msgid "others"
+msgstr "기타"
+
+msgid "audio"
+msgstr "오디오"
+
+msgid "video"
+msgstr "비디오"
+
+msgid "image"
+msgstr "이미지"
+
+msgid "document"
+msgstr "문서"
+
+msgid "software"
+msgstr "응용프로그램"
+
+msgid "no_results_for"
+msgstr "결과 없음:"
+
+msgid "previous"
+msgstr "이전"
+
+msgid "next"
+msgstr "다음"
+
+msgid "sources"
+msgstr "소스"
+
+msgid "results_for"
+msgstr "결과"
+
+msgid "other_categories"
+msgstr "다른 분류"
+
+msgid "no_type_count"
+msgstr "%(search)s 로 검색한 결과가 없습니다. %(category)s 에 %(results)d 개의 결과가 있습니다."
+
+msgid "not_allow_browse_results"
+msgstr "Foofind 는 100 페이지 이상의 결과를 보여주지 않습니다."
+
+msgid "how_to_download"
+msgstr "다운로드 방법"
+
+msgid "download_explanation"
+msgstr "링크된 파일을 내려받기 위해서는 다음과 같은 별도의 프로그램이 필요합니다. "
+
+msgid "did_you_mean"
+msgstr "%(text)s 를 찾으시나요?"
+
+msgid "play"
+msgstr "재생"
+
+msgid "what"
+msgstr "무엇을?"
+
+msgid "where"
+msgstr "어디서?"
+
+msgid "update"
+msgstr "갱신"
+
+msgid "minimun"
+msgstr "최저"
+
+msgid "maximun"
+msgstr "최대"
+
+msgid "all_sizes"
+msgstr "전체 크기"
+
+msgid "advanced_search"
+msgstr "고급 검색"
+
+msgid "hide_advanced_search"
+msgstr "고급 검색 숨기기"
+
+msgid "smaller_than"
+msgstr "작은"
+
+msgid "larger_than"
+msgstr "큰"
+
+msgid "all_qualities"
+msgstr "모든 등급"
+
+msgid "or_better"
+msgstr "더 나은"
+
+msgid "all_years"
+msgstr "모든 년도"
+
+msgid "before"
+msgstr "전에"
+
+msgid "last_year"
+msgstr "작년"
+
+msgid "artist"
+msgstr "아티스트"
+
+msgid "title"
+msgstr "제목"
+
+msgid "author"
+msgstr "작가"
+
+msgid "format"
+msgstr "형식"
+
+msgid "pages"
+msgstr "페이지"
+
+msgid "album"
+msgstr "앨범"
+
+msgid "length"
+msgstr "길이"
+
+msgid "bitrate"
+msgstr "Bitrate"
+
+msgid "genre"
+msgstr "장르"
+
+msgid "seconds"
+msgstr "초"
+
+msgid "minutes"
+msgstr "분"
+
+msgid "source"
+msgstr "소스"
+
+msgid "seeds"
+msgstr "시드"
+
+msgid "height"
+msgstr "높이"
+
+msgid "width"
+msgstr "넓이"
+
+msgid "track"
+msgstr "트랙"
+
+msgid "quality"
+msgstr "등급"
+
+msgid "series"
+msgstr "시리즈"
+
+msgid "episode"
+msgstr "에피소드"
+
+msgid "season"
+msgstr "시즌"
+
+msgid "num_pages"
+msgstr "페이지 수"
+
+msgid "include_results_from"
+msgstr "포함 결과:"
+
+msgid "size"
+msgstr "크기"
+
+msgid "unpacked_size"
+msgstr "압축 해제 후 크기"
+
+msgid "colors"
+msgstr "색깔"
+
+msgid "version"
+msgstr "버전"
+
+msgid "name"
+msgstr "이름"
+
+msgid "description"
+msgstr "설명"
+
+msgid "files"
+msgstr "파일"
+
+msgid "soundtype"
+msgstr "형식"
+
+msgid "year"
+msgstr "년"
+
+msgid "years"
+msgstr "년"
+
+msgid "month"
+msgstr "월"
+
+msgid "months"
+msgstr "월"
+
+msgid "day"
+msgstr "일"
+
+msgid "days"
+msgstr "일"
+
+msgid "hour"
+msgstr "시"
+
+msgid "hours"
+msgstr "시"
+
+msgid "minute"
+msgstr "분"
+
+msgid "second"
+msgstr "초"
+
+msgid "tags"
+msgstr "태그"
+
+msgid "license"
+msgstr "저작권"
+
+msgid "private_file"
+msgstr "개인 파일"
+
+msgid "composer"
+msgstr "작자"
+
+msgid "publisher"
+msgstr "발행"
+
+msgid "comments"
+msgstr "덧글"
+
+msgid "language"
+msgstr "언어"
+
+msgid "date"
+msgstr "날짜"
+
+msgid "trackers"
+msgstr "트래커"
+
+msgid "hash"
+msgstr "해쉬"
+
+msgid "visualizations"
+msgstr "시각화"
+
+msgid "codec"
+msgstr "코덱"
+
+msgid "encoding"
+msgstr "인코딩"
+
+msgid "loading"
+msgstr "로딩"
+
+msgid "close"
+msgstr "닫기"
+
+msgid "share_this"
+msgstr "공유하기"
+
+msgid "share_facebook"
+msgstr "facebook 에 공유하기"
+
+msgid "share_twitter"
+msgstr "Twitter 에 공유하기"
+
+msgid "send_by_email"
+msgstr "메일로 보내기"
+
+msgid "download"
+msgstr "내려받기"
+
+msgid "watch"
+msgstr "보기"
+
+msgid "your_comments"
+msgstr "내 덧글"
+
+msgid "since"
+msgstr "%(since)s 일 경과"
+
+msgid "post_comment"
+msgstr "덧글 전송"
+
+msgid "add_comment"
+msgstr "덧글 추가"
+
+msgid "from"
+msgstr "부터"
+
+msgid "i_like_it"
+msgstr "좋아요!"
+
+msgid "booo"
+msgstr "부!"
+
+msgid "comment_published_succesfully"
+msgstr "덧글이 성공적으로 작성되었습니다"
+
+msgid "related_files"
+msgstr "관련 파일"
+
+msgid "file"
+msgstr "파일"
+
+msgid "add_favorite"
+msgstr "%(type)s 을 즐겨찾기에 추가"
+
+msgid "delete_favorite"
+msgstr "%(type)s 을 즐겨찾기에서 삭제"
+
+msgid "favorite"
+msgstr "%(type)s 가 즐겨찾기에 추가되었습니다"
+
+msgid "download_links"
+msgstr "내려받기 주소 보기"
+
+msgid "login_required"
+msgstr "로그인 해야 합니다"
+
+msgid "user_profile"
+msgstr "사용자 프로필"
+
+msgid "your_password"
+msgstr "패스워드"
+
+msgid "insert_your_password"
+msgstr "패스워드 확인"
+
+msgid "fill_sing_up_form"
+msgstr "Foofind 회원이 되시려면 작성해주세요"
+
+msgid "nickname"
+msgstr "별명"
+
+msgid "edit_profile"
+msgstr "프로필 수정"
+
+msgid "edit_your_profile"
+msgstr "당신의 프로필을 수정하세요"
+
+msgid "profile_edited_succesfully"
+msgstr "프로필이 성공적으로 수정되었습니다"
+
+msgid "hello"
+msgstr "안녕하세요,"
+
+msgid "logout"
+msgstr "로그아웃"
+
+msgid "login"
+msgstr "로그인"
+
+msgid "new_user"
+msgstr "신규 회원"
+
+msgid "or"
+msgstr "또는"
+
+msgid "register"
+msgstr "등록"
+
+msgid "if_new_user"
+msgstr "신규 회원이라면,"
+
+msgid "register_here"
+msgstr "여기서 등록하세요"
+
+msgid "choose_nickname"
+msgstr "별명"
+
+msgid "user_login"
+msgstr "로그인"
+
+msgid "remember_me"
+msgstr "기억하기"
+
+msgid "your_location"
+msgstr "위치"
+
+msgid "new_password"
+msgstr "비밀번호를 변경하려면 입력하세요"
+
+msgid "save_profile"
+msgstr "프로필 저장"
+
+msgid "not_allowed_view_page"
+msgstr "이 페이지를 보도록 허용되지 않았습니다"
+
+msgid "username_taken"
+msgstr "이미 사용중인 사용자 명 입니다"
+
+msgid "email_taken"
+msgstr "이미 사용중인 메일주소 입니다"
+
+msgid "forgot"
+msgstr "잊어버렸습니다"
+
+msgid "your_password?"
+msgstr "패스워드 인가요?"
+
+msgid "passwords_not_match"
+msgstr "비밀번호가 올바르지 않습니다"
+
+msgid "sure_delete_account"
+msgstr "정말로 계정 삭제를 원하시나요?"
+
+msgid "yes"
+msgstr "네"
+
+msgid "no"
+msgstr "아니오"
+
+msgid "account_deleted"
+msgstr "계정이 삭제되었습니다"
+
+msgid "profile"
+msgstr "프로필"
+
+msgid "username"
+msgstr "별명"
+
+msgid "member_since"
+msgstr "가입일"
+
+msgid "last_comments"
+msgstr "최근 %(comments)d 덧글"
+
+msgid "location"
+msgstr "위치"
+
+msgid "delete_account"
+msgstr "계정을 삭제하세요"
+
+msgid "forgot_password"
+msgstr "비밀번호을 잊으셨습니까?"
+
+msgid "wrong_email_password"
+msgstr "잘못된 에밀주소 또는 비밀번호 입니다. 다시 시도하세요"
+
+msgid "welcome"
+msgstr "환영합니다"
+
+msgid "finish_register"
+msgstr "가입 절차를 완료하기 위해서는 이 주소를 클릭해 주세요"
+
+msgid "token_not_exist"
+msgstr "이 토큰은 존재하지 않거나 이미 사용중입니다"
+
+msgid "confirm_email"
+msgstr ", 메일주소 확인"
+
+msgid "check_inbox_email_finish"
+msgstr "가입 절차를 완료하기 위해서 메일을 확인해주세요"
+
+msgid "foofind_team"
+msgstr "Foofind 팀."
+
+msgid "user_not_exist"
+msgstr "존재하지 않는 사용자 입니다"
+
+msgid "logged_in"
+msgstr "로그인 하지 않았습니다"
+
+msgid "registered_user"
+msgstr "이미 가입한 사용자라면,"
+
+msgid "login_here"
+msgstr "여기서 로그인하세요"
+
+msgid "send"
+msgstr "보내기"
+
+msgid "user_favorites"
+msgstr "별 표시된 파일"
+
+msgid "user_searches"
+msgstr "별 표시된 검색"
+
+msgid "user_fav_lists"
+msgstr "파일 목록"
+
+msgid "user_fav_file_list_empty"
+msgstr "파일이 없습니다"
+
+msgid "user_fav_search_list_empty"
+msgstr "검색 결과가 없습니다"
+
+msgid "user_fav_no_lists"
+msgstr "사용자 정의 리스트를 찾을 수 없습니다"
+
+msgid "enter_email"
+msgstr "메일 주소를 입력해 주세요. 복구를 위한 메일이 발송될 것입니다."
+
+msgid "email_same_register"
+msgstr "가입 시 작성한 메일 주소와 동일한 메일 주소여야 합니다."
+
+msgid "email_not_database"
+msgstr "데이터베이스에 없는 메일입니다. 다시 시도해주세요."
+
+msgid "check_inbox_email_restore"
+msgstr "복구를 위한 메일을 확인하세요."
+
+msgid "restore_access"
+msgstr ", Foofind 접속 복구"
+
+msgid "restore_account"
+msgstr "계정 복구를 위해서 이 주소를 클릭해 주세요."
+
+msgid "ignore_message"
+msgstr "그렇지 않으면, 이 메세지를 무시하세요."
+
+msgid "login_vote"
+msgstr "투표해주세요"
+
+msgid "login_comment"
+msgstr "덧글을 달아주세요"
+
+msgid "technical_problems"
+msgstr "%(service)s 서비스를 제공하는데 문제가 발생하였습니다."
+
+msgid "allow_access_account"
+msgstr "이 기능을 사용하기 위해서 %(account)s 에서 Foofind 를 허용해 주세요."
+
+msgid "submit_registration"
+msgstr "가입"
+
+msgid "submit_login"
+msgstr "로그인"
+
+msgid "submit_edit"
+msgstr "프로필 저장"
+
+msgid "submit_search"
+msgstr "검색"
+
+msgid "contact_form"
+msgstr "문의양식"
+
+msgid "report_form"
+msgstr "보고양식"
+
+msgid "link_removal"
+msgstr "링크 삭제를 원하시면 %(report_form)s 을 사용해야 합니다."
+
+msgid "your_message"
+msgstr "메세지"
+
+msgid "insert_characters"
+msgstr "보여지는 5 문자를 입력해주세요"
+
+msgid "captcha_wrong"
+msgstr "Captcha 값이 올바르지 않습니다"
+
+msgid "no_valid_hostname"
+msgstr "%(hostname)s 은 올바른 메일 호스트명 형식 (%(value)s) 이 아닙니다."
+
+msgid "local_network"
+msgstr "%(value)s 는 내부 네트워크 명 같습니다. 내부 네트워크는 허용되지 않습니다."
+
+msgid "no_dns_hostname"
+msgstr "%(value)s 는 DNS 호스트명의 구조와 일치하지 않습니다."
+
+msgid "no_tld_known"
+msgstr "%(value)s 는 DNS 은 올바른 호스트명이지만 알려진 TLD 차단 목록과 일치하지 않습니다"
+
+msgid "message_sent"
+msgstr "메세지 전송이 성공하였습니다!"
+
+msgid "your_name"
+msgstr "이름"
+
+msgid "your_surname"
+msgstr "성"
+
+msgid "your_company"
+msgstr "회사"
+
+msgid "your_phone"
+msgstr "전화번호"
+
+msgid "link_reviewed"
+msgstr "검토를 위한 주소를 입력해주세요"
+
+msgid "url_content"
+msgstr "이 내용이 있는 주소를 입력해주세요:"
+
+msgid "reason_complaint"
+msgstr "불만 접수 이유:"
+
+msgid "accept_tos"
+msgstr "%(tos)s 와 %(privacy)s 를 확인했습니다."
+
+msgid "accept_terms"
+msgstr "사용방침과 개인정보보호 정책에 동의해주세요"
+
+msgid "not_foofind_page"
+msgstr "Foofind 의 페이지가 될 수 없습니다"
+
+msgid "not_foofind_link"
+msgstr "URL 은 내려받기 페이지에 적합해야 합니다."
+
+msgid "include_reported_links"
+msgstr "검토 주소를 적절한 필드에 기재해 주세요"
+
+msgid "submit_links"
+msgstr "전송 주소"
+
+msgid "include_link_per_line"
+msgstr ""
+"한줄에 하나의 http, ftp, ed2k, 마그넷 주소를 작성해주세요.\r\n"
+"자동으로 검색 결과에 추가될 것입니다."
+
+msgid "link_sent"
+msgstr "링크가 보내졌습니다. 감사합니다!"
+
+msgid "footer"
+msgstr "웹사이트는 %(cc)s 저작권을 갖습니다. %(code)s 는 %(gpl)s 저작권을 갖습니다."
+
+msgid "about_text"
+msgstr ""
+"Foofind 는 전방위 검색엔진 입니다. 우리는 모든 네트워크를 탐색하고 모든 파일을 분류합니다. 이 방법은 유효한 링크의 방대한 모음을 제공하기 위함입니다.\r\n"
+"\r\n"
+"Foofind 는 스페인 마드리드의 개발자이자 P2P 기술 디자이너인 Foofind 연구소의 Pablo Soto 가 MP2P 기술의 실현을 위해 만들었습니다. "
+
+msgid "technology_text"
+msgstr ""
+"Foofind 팀은 프로젝트 대부분의 소스코드를 개발했지만, 무료 소프트웨어 커뮤니티의 많은 도움을 받았습니다.\r\n"
+"\r\n"
+"이러한 도움들이 없었더라면, Foofind 는 만들어지지 않았을 것 입니다. 감사합니다! ;-)\r\n"
+"\r\n"
+"Twisted: Twisted 는 MIT 라이센스를 갖는 오픈 소스 프로젝트로 Python 기반으로 만들어진 event-driven 네트워킹 엔진 입니다.\r\n"
+"Scrapy: Scrapy 는 빠르고 고수준의 화면 스크래핑과 웹 탐색을 하는 프레임웍으로 웹 페이지에서 데이터 구조를 파악하고 데이터마이닝 에서부터 모니터링, 테스트 자동화에 이르기까지 광범위하게 사용됩니다.\r\n"
+"Flask: Flask 는 Python 을 위한 WerkZeug 기반의 마이크로프레임워크 로써, Jinja 2 와 Jinja 2 의 BSD 라이센스를 갖습니다.\r\n"
+"MongoDB: MongoDB (\"humongous\" 로 부터 파생된) 는 확장가능한 고성능의 오픈 소스 NoSQL 데이터베이스 입니다.\r\n"
+"Sentry: Sentry 는 실시간 이벤트의 기록을 위한 플랫폼으로 오류 모니터링과 사용자 피드백의 혼란없이 적절히 필요한 모든 정보를 추출하는데 적합합니다.\r\n"
+"Sphinx: Sphinx 는 간결하고 정확하며 성능향상에 초점을 두고 디자인된 오픈 소스 검색 서버입니다. C++ 로 작성되어졌으며 Linux (RedHat, Ubuntu, 기타), Windows, MacOS, Solaris, FreeBSD, 그 외의 다른 시스템들에서 동작합니다.\r\n"
+"Social Network Icon Pack: Komodo Media, Rogie King 의 Social Network Icon Pack 은  Creative Commons Attribution-Share Alike 3.0 Unported 라이센스를 갖습니다."

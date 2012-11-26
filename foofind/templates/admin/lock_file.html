@@ -1,4 +1,7 @@
 {% extends "admin/base.html" %}
+{% block header -%}
+{% if permalink %}<ul class="tabs"><li><a href="{{permalink}}">{{_("permalink")}}</a></li></ul>{% endif %}
+{% endblock %}
 {% block page %}
     <form method="post">
         {% if complaint_data %}
@@ -23,18 +26,28 @@
                         <td></td>
                     </tr>
                 {%- endif -%}
+                <tr>
+                    <td>_id</td>
+                    <td><a href="{{url_for('files.download', lang='en', file_id=mid2url(fileid))}}">{{fileid}}</a></td>
+                </tr>
                 {%- if file_data -%}
                     {%- for prop in file_data -%}
-                    <tr>
-                        <td>{{prop}}</td>
-                        <td>{{file_data[prop]}}</td>
-                    </tr>
+                        {%- if prop != "_id" -%}
+                        <tr>
+                            <td>{{prop}}</td>
+                            {%- if prop in ("md","src","fn","cs") -%}
+                            <td class="pre">{{file_data[prop]|pprint(4, 700)}}</td>
+                            {%- else -%}
+                            <td>{{file_data[prop]}}</td>
+                            {%- endif -%}
+                        </tr>
+                        {%- endif -%}
                     {%- endfor -%}
-                {%- else -%}
-                    <tr>
-                        <td>_id</td>
-                        <td>{{fileid}}</td>
+                    <tr class="raw_file_data">
+                        <td>raw</td>
+                        <td id="raw_{{fileid}}"><span>{{file_data}}</span></td>
                     </tr>
+                {%- else -%}
                     {%- if fileid in filenames -%}
                     <tr>
                         <td>name</td>

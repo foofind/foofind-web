@@ -2,7 +2,7 @@
 """
     Controladores de páginas de usuario.
 """
-from flask import Blueprint, request, render_template, redirect, flash, url_for, session, abort, current_app, g
+from flask import Blueprint, request, render_template, redirect, flash, url_for, session, abort, current_app, g, jsonify
 from flask.ext.babel import gettext as _
 from flask.ext.login import login_required, login_user, logout_user, current_user
 from flask.ext.oauth import OAuth
@@ -10,7 +10,9 @@ from flask.ext.oauth import OAuth
 from foofind.forms.user import RegistrationForm, LoginForm, ForgotForm, EditForm
 from foofind.services import *
 from foofind.user import User
-from foofind.blueprints.index import setlang
+from foofind.blueprints.files import get_file_metadata, fill_data, get_files
+from foofind.utils import hex2mid,url2mid
+from foofind.utils.fooprint import Fooprint
 
 from hashlib import md5
 from urllib import unquote
@@ -19,7 +21,7 @@ import uuid
 import re
 import logging
 
-user = Blueprint('user', __name__)
+user = Fooprint('user', __name__, template_folder="template", dup_on_startswith="/<lang>")
 o_twitter = None
 o_facebook = None
 
@@ -123,6 +125,20 @@ def login():
     g.title+=_("user_login")
     return render_template('user/login.html',form=form)
 
+@user.route('/<lang>/ajax/login')
+def ajax_login():
+    '''
+    Login cargado por ajax,
+    '''
+    signin_form = RegistrationForm()
+    signin_form.action = url_for(".register")
+    loging_form = LoginForm()
+    loging_form.action = url_for(".login")
+
+    return jsonify(
+        html = render_template("user/ajax_login.html", signin=signin_form, login=loging_form)
+        )
+
 def clean_username(username):
     '''
     Adaptador para los nombres de usuario que se usan en los registros por oauth
@@ -168,7 +184,7 @@ def twitter():
     Acceso a traves de twitter
     '''
     try:
-        logout_oauth()        
+        logout_oauth()
         return o_twitter.authorize(url_for('.twitter_authorized',next=oauth_redirect()))
     except BaseException as e:
         logging.warn(e)
@@ -275,6 +291,16 @@ def logout():
 
     return redirect(url_for('index.home',lang=None))
 
+def get_files_metadata(files, block_on_sphinx=True):
+    names = {hex2mid(i["id"]):i["name"] for i in files}
+    for f in get_files(
+      [(i["id"], i["server"]) for i in files],
+      block_on_sphinx = block_on_sphinx):
+        yield fill_data(f, names[f["_id"]])
+
+def list_type_parser(txt):
+    return txt if txt in ("fav","user","search") else "fav"
+
 @user.route("/<lang>/user")
 @login_required
 def profile():
@@ -282,7 +308,106 @@ def profile():
     Página de perfil de usuario
     '''
     g.title+=_("user_profile")
-    return render_template('user/profile.html')
+
+    list_type = request.args.get("list", "fav", list_type_parser)
+    list_name = request.args.get("name", None)
+
+    favlist = ()
+
+    user_fav_lists = usersdb.list_fav_lists(current_user)
+
+    if list_type == "fav":
+        filelist = usersdb.get_fav_files(current_user)
+        if filelist: favlist = get_files_metadata(filelist, False)
+    elif list_type == "user":
+        filelist = usersdb.get_fav_user_list(current_user, name)
+        if filelist: favlist = get_files_metadata(filelist, False)
+    elif list_type == "search":
+        favlist = usersdb.get_fav_searches(current_user)
+
+    return render_template(
+        'user/profile.html',
+        user_fav_lists = user_fav_lists,
+        list_type = list_type,
+        list_name = list_name,
+        favlist = favlist,
+        )
+
+@user.route("/<lang>/favorite/<favorite_type>/<action>/<server>/<file_id>/<file_name>/<redirection>")
+@user.route("/<lang>/favorite/<favorite_type>/<action>/<favorite_name>/<server>/<file_id>/<file_name>/<redirection>")
+@user.route("/<lang>/favorite",methods=['POST'])
+@login_required
+def favorite(favorite_type=None,action=None,server=0,file_id=None,file_name=None,favorite_name=None,redirection=0):
+    try:
+        favorite_type=request.form.get("type",favorite_type)
+        action=request.form.get("action",action)
+        server=int(request.form.get("where",server)) #where
+        file_id=url2mid(request.form.get("file",file_id))
+        file_name=request.form.get("name",file_name)
+        favorite_name=request.form.get("favorite_name",favorite_name)
+        redirection=int(request.form.get("login",redirection)) #login
+        if not favorite_type or not action or server<=0 or not file_id or not file_name or redirection<=0:
+            raise Exception
+    except:
+        return _("error_500_message"),404
+
+    if action=="add":
+        if favorite_type == "file":
+            usersdb.add_fav_file(current_user, file_id, server, file_name)
+        elif favorite_type == "user" and favorite_name:
+            usersdb.add_fav_user_file(current_user, file_id, server, file_name, favorite_name)
+        elif favorite_type == "search":
+            pass # TODO (felipe): implementar
+        else:
+            return _("error_500_message"),404
+    elif action=="delete":
+        if favorite_type == "file":
+            usersdb.remove_fav_file(current_user, file_id)
+        elif favorite_type == "user":
+            usersdb.remove_fav_user_file(current_user, file_id, favorite_name)
+        elif favorite_type == "search":
+            pass # TODO (felipe): implementar
+        else:
+            return _("error_500_message"),404
+
+    if redirection==0:
+        return redirect(url_for("files.download",file_id=file_id,file_name=file_name))
+    elif redirection==1:
+        return jsonify(OK = True)
+    elif redirection==2:
+        return redirect(url_for(".profile"))
+
+@user.route('/<lang>/vote',methods=['POST'])
+def vote():
+    '''
+    Gestiona las votaciones de archivos y comentarios
+    '''
+    try:
+        vote_type=request.form.get("type",None)
+        server=int(request.form.get("where",None))
+        file_id=url2mid(request.form.get("file",None))
+        file_name=request.form.get("name",None)
+        comment_id=request.form.get("comment",None)
+        vote=int(request.form.get("vote",0))
+        if not vote_type or server<=0 or not file_id or not file_name or vote not in (0,1):
+            raise Exception
+    except:
+        return _("error_500_message"),404
+
+    json={}
+    if current_user.type in (None, 0): #comprobación de usuario normal o anónimo
+        if vote_type=="file": #voto para archivos: se guarda y actualiza el archivo
+            results=usersdb.set_file_vote(file_id, current_user, g.lang,vote)
+            filesdb.update_file({"_id":file_id, "vs":results, "s":server}, direct_connection=True)
+            json=results.get(g.lang, None)
+            if json is None and None in results:
+                json = results[None]
+
+        elif vote_type=="comment": #voto para comentarios solo usuarios normales
+            json=usersdb.set_file_comment_vote( comment_id, current_user, file_id, vote )["1"]
+
+    json["vote"]=1 if vote==1 else 0
+    return jsonify(json)
 
 @user.route("/<lang>/user/edit", methods=['GET', 'POST'])
 @login_required

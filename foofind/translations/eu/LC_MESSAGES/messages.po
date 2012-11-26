@@ -25,8 +25,42 @@ msgstr "Bidali"
 msgid "required_empty"
 msgstr "Eremu hau ezin da hutsik utzi"
 
+msgid "help_us"
+msgstr "Kolaboratu foofind-ekin!"
+
+msgid "legal_info"
+msgstr "Datu legalak"
+
 msgid "go_home"
 msgstr "Bilatzailera itzuli"
+
+msgid "error_500_message"
+msgstr "Errore bat gertatu da"
+
+msgid "error_500_description"
+msgstr ""
+"Zerbait arraroa gertatu da, gure inbestigatzaile paranormalak lanean ari "
+"dira"
+
+msgid "error_404_message"
+msgstr "Ez da orria aurkitu"
+
+msgid "error_404_description"
+msgstr ""
+"URL-a ez da aurkitu. Helbidea zuzena da? Horrela bada, eskertuko genizuke "
+"abisatuko bazenigu"
+
+msgid "error_410_message"
+msgstr "Orria ez dago eskuragarri"
+
+msgid "error_410_description"
+msgstr "Orria ez dago eskuragarri eta ez da etorkizunean egongo"
+
+msgid "error_502_message"
+msgstr "Pasarela okerra"
+
+msgid "error_502_description"
+msgstr "Kokapen okerreko web zerbitzu batera sartzen ahalegindu zara"
 
 msgid "error_503_message"
 msgstr "Zerbitzu ez erabilgarria"
@@ -34,8 +68,21 @@ msgstr "Zerbitzu ez erabilgarria"
 msgid "error_503_description"
 msgstr "URLa ez dago momentuan erabilgarri. Mesedez, geroago saiatu."
 
+msgid "error_mail_send"
+msgstr ""
+"Errore bat gertatu da esandako helbide elektronikora mezua bidaltzean. "
+"Mesedez aukeratu beste bat edo saiatu berriz beranduago."
+
 msgid "about"
 msgstr "Honi buruz"
+
+msgid "no_valid_email"
+msgstr ""
+"Hau erabilgarria den helbide elektroniko formatua da: "
+"erabiltzailea@adibidea.com"
+
+msgid "field_length"
+msgstr "Eremu honek %(min)s etik %(max)sra karaktere eduki ditzake"
 
 msgid "no_valid_url"
 msgstr "URLak ez du balio"
@@ -45,6 +92,9 @@ msgstr "Harremana"
 
 msgid "legal"
 msgstr "Legezko oharra"
+
+msgid "technology"
+msgstr "Teknologiak"
 
 msgid "tos"
 msgstr "Erabilpen Baldintzak"
@@ -73,11 +123,32 @@ msgstr "Guztiak"
 msgid "index_change"
 msgstr "foofind aldatzen ari da"
 
+msgid "index_comunity"
+msgstr "Hau parte gure komunitatean"
+
+msgid "index_first"
+msgstr "Izan lehena nobedade guztiak ezagutzen eta parte hartu"
+
+msgid "index_suggestion"
+msgstr "Iradokizunik?"
+
 msgid "direct_downloads"
 msgstr "Deskarga zuzenak"
 
+msgid "direct_download"
+msgstr "deskarga zuzena"
+
 msgid "audio"
 msgstr "Audioa"
+
+msgid "other_streamings"
+msgstr "Beste streaming-ak"
+
+msgid "other_direct_downloads"
+msgstr "Beste deskarga zuzenak"
+
+msgid "others"
+msgstr "Besteak"
 
 msgid "video"
 msgstr "Bideoa"
@@ -112,11 +183,22 @@ msgstr "Iturriak"
 msgid "of_about"
 msgstr "ingurutik"
 
+msgid "approximately"
+msgstr "Guzti gorabehera"
+
 msgid "not_allow_browse_results"
 msgstr "Foofinde-ek ez du onartzen 100 emaitzatik haratago nabigatzea"
 
+msgid "results_for"
+msgstr "emaitzak"
+
 msgid "other_categories"
 msgstr "beste kategoriak"
+
+msgid "no_type_count"
+msgstr ""
+"Ez dira emaitzik aurkitu %(search)sdrako baina %(results)d emaitza dagoz "
+"gutxi gorabehera %(category)s emaitzarako"
 
 msgid "how_to_download"
 msgstr "Zelan jeitsi?"
@@ -132,6 +214,27 @@ msgstr "%(text)s esan nahi zenuen?"
 msgid "all_sizes"
 msgstr "Tamaina guztiak"
 
+msgid "go_to_file"
+msgstr "Artxibora joan"
+
+msgid "play"
+msgstr "Erreproduzitu"
+
+msgid "what"
+msgstr "Zer?"
+
+msgid "where"
+msgstr "Non?"
+
+msgid "update"
+msgstr "Eguneratu"
+
+msgid "minimun"
+msgstr "min"
+
+msgid "maximun"
+msgstr "max"
+
 msgid "advanced_search"
 msgstr "bilaketa aurreratua"
 
@@ -141,6 +244,12 @@ msgstr "izkutatu bilaketa aurreratua"
 msgid "all_qualities"
 msgstr "Edozein kalitatekoa"
 
+msgid "smaller_than"
+msgstr "Baino txikiagoa"
+
+msgid "larger_than"
+msgstr "Baino handiagoa"
+
 msgid "or_better"
 msgstr "edo handiagoa"
 
@@ -149,6 +258,9 @@ msgstr "Urtero"
 
 msgid "last_year"
 msgstr "Azken urtea"
+
+msgid "before"
+msgstr "Lehenagoa"
 
 msgid "artist"
 msgstr "Artista"
@@ -189,6 +301,9 @@ msgstr "Iturria"
 msgid "height"
 msgstr "Garaiera"
 
+msgid "seeds"
+msgstr "Haziak"
+
 msgid "width"
 msgstr "Zabalera"
 
@@ -200,6 +315,15 @@ msgstr "Kalitatea"
 
 msgid "num_pages"
 msgstr "Orrialde kopurua"
+
+msgid "series"
+msgstr "Seriea"
+
+msgid "episode"
+msgstr "Atala"
+
+msgid "season"
+msgstr "Denboraldia"
 
 msgid "include_results_from"
 msgstr "Hauen emaitzak kontutan hartu:"
@@ -218,6 +342,9 @@ msgstr "Bertsioa"
 
 msgid "name"
 msgstr "Izena"
+
+msgid "channels"
+msgstr "kanalak"
 
 msgid "description"
 msgstr "Deskribapena"
@@ -261,6 +388,36 @@ msgstr "segundua"
 msgid "loading"
 msgstr "Kargatzen"
 
+msgid "tags"
+msgstr "Hitz gakoa"
+
+msgid "license"
+msgstr "Lizentzia"
+
+msgid "private_file"
+msgstr "Artxibu pribatua"
+
+msgid "publisher"
+msgstr "Editorea"
+
+msgid "comments"
+msgstr "Iritzia"
+
+msgid "created_by"
+msgstr "Sortua"
+
+msgid "language"
+msgstr "Hizkuntza"
+
+msgid "date"
+msgstr "Data"
+
+msgid "trackers"
+msgstr "Trackers"
+
+msgid "encoding"
+msgstr "kodifikazioa"
+
 msgid "close"
 msgstr "Itxi"
 
@@ -300,6 +457,18 @@ msgstr "Gustoko dut!"
 msgid "booo"
 msgstr "Buuu!"
 
+msgid "more_info"
+msgstr "Informazio gehiago"
+
+msgid "less_info"
+msgstr "Informazio gutxiago"
+
+msgid "more_comments"
+msgstr "Iritzi gehiago"
+
+msgid "less_comments"
+msgstr "Iritzi gutxiago"
+
 msgid "comment_published_succesfully"
 msgstr "Iruzkina ondo argitaratu da."
 
@@ -308,6 +477,15 @@ msgstr "Erlazionatutako fitxategiak"
 
 msgid "user_profile"
 msgstr "Erabiltzailearen profila"
+
+msgid "file"
+msgstr "artxiboa"
+
+msgid "download_links"
+msgstr "Deskarga zuzeneko lotura ikusi"
+
+msgid "login_required"
+msgstr "Orria hau ikusteko sesioa hasieratu behar dozu"
 
 msgid "your_password"
 msgstr "Zure pasahitza aukeratu"
@@ -403,6 +581,9 @@ msgstr "Bai"
 msgid "account_deleted"
 msgstr "Zure kontua ezabatua izan da."
 
+msgid "member_since"
+msgstr "Kide orain dela:"
+
 msgid "no"
 msgstr "Ez"
 
@@ -469,6 +650,24 @@ msgstr ""
 msgid "send"
 msgstr "Bidali"
 
+msgid "user_favorites"
+msgstr "Fitxategi gustokoena"
+
+msgid "user_searches"
+msgstr "Bilaketa gustokoena"
+
+msgid "user_fav_lists"
+msgstr "Fitxategi zerrenda"
+
+msgid "user_fav_file_list_empty"
+msgstr "Ez dago fitxategirik zerrendan"
+
+msgid "user_fav_search_list_empty"
+msgstr "Ez dago bilaketatik zerrendan"
+
+msgid "user_fav_no_lists"
+msgstr "Ez dago zerrenda pertsonalizaturik"
+
 msgid "email_same_register"
 msgstr "Eposta helbidea izena emateko erabili zenuen bera izan behar da."
 
@@ -482,6 +681,10 @@ msgstr "Zure posta begiratu Foofind-erako sarrera berreskuratzeko"
 
 msgid "restore_access"
 msgstr ", Foofind-erako sarrera berriztatu"
+
+msgid "technical_problems"
+msgstr ""
+"Barkatu, arazo teknikoak edukitzen ari gara %(service)s zerbitzuarekin."
 
 msgid "restore_account"
 msgstr ""
@@ -602,6 +805,9 @@ msgstr "Esteka hau ezin da aurkitu edo ezabatua izan da."
 msgid "translate"
 msgstr "Itzuli"
 
+msgid "error_link_removed"
+msgstr "Barkatu, lotura hau ezabatua izan da eratorritik."
+
 msgid "translate_to_your_language"
 msgstr "Lagun iezaguzu Foofind zure hizkuntzara itzultzen"
 
@@ -630,3 +836,12 @@ msgstr "Beste bat"
 
 msgid "opensearch_description"
 msgstr "Foodfind-ekin bilatu"
+
+msgid "embed_foofind_button"
+msgstr "Foofind-en ikusi"
+
+msgid "embed_download_button"
+msgstr "Deskargatu"
+
+msgid "copy_to_clipboard_shortcut"
+msgstr "Erabili CTRL+C paper-zorrora kopiatzeko"

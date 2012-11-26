@@ -44,7 +44,7 @@ msgid "files_indexed"
 msgstr "indexierte Dateien"
 
 msgid "last_indexed_files"
-msgstr "letzte indexierte Dateien"
+msgstr "Letzte indexierte Dateien"
 
 msgid "i_want_that_file"
 msgstr "Ich. Will. Diese. Datei"

@@ -43,6 +43,7 @@
         <p>{{_('admin_translation_none')}}</p>
     {% endif %}
     <form method="POST">
+    {{ render_field() }}
     {{ rform.submit }}
     </form>
 {% endblock %}

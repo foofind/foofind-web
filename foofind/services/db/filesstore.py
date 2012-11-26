@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import pymongo, logging, time, traceback
 from collections import defaultdict, OrderedDict
-from foofind.utils import hex2mid, u
+from foofind.utils import hex2mid, u, Parallel
 from foofind.utils.async import MultiAsync
 from foofind.services.extensions import cache
 from threading import Lock, Event
@@ -12,6 +12,12 @@ import foofind.services
 profiler = None
 
 class BogusMongoException(Exception):
+    '''
+    Fallo de conexión de mongo
+    '''
+    pass
+
+class MongoTimeout(Exception):
     '''
     Fallo de conexión de mongo
     '''
@@ -62,9 +68,11 @@ class BongoContext(object):
         if t:
             extra = locals()
             extra["traceback"] = traceback.format_tb(ex_traceback)
+            extra["uri"] = self.uri
+            extra["bongo"] = repr(self.bongo)
             try:
                 cache.cacheme = False
-            except BaseException as e:
+            except (RuntimeError, BaseException) as e:
                 logging.exception("cache.cacheme no accesible")
 
             if t is pymongo.connection.AutoReconnect:
@@ -188,7 +196,6 @@ class Bongo(object):
     def __repr__(self):
         return self.__str__()
 
-from time import sleep
 class FilesStore(object):
     '''
     Clase para acceder a los datos de los ficheros.
@@ -224,10 +231,6 @@ class FilesStore(object):
         Configura las conexiones a las bases de datos indicadas en la tabla server de la bd principal.
         Puede ser llamada para actualizar las conexiones si se actualiza la tabla server.
         '''
-        logging.warn("Connections check", extra={
-            "access": {k: v.is_set() for bongo in self.servers_conn.itervalues() for k,v in bongo.connections_access.iteritems()},
-            "connections": {k: v for bongo in self.servers_conn.itervalues() for k,v in bongo.connections.iteritems()}
-            })
         for bongo in self.servers_conn.itervalues():
             bongo.reconnect()
         for server in self.server_conn.foofind.server.find().sort([("lt",-1)]):
@@ -283,6 +286,7 @@ class FilesStore(object):
         @rtype generator
         @return Generador con los documentos de ficheros
         '''
+
         files_count = len(ids)
         if files_count == 0: return ()
 
@@ -292,16 +296,17 @@ class FilesStore(object):
         # y evitamos buscar los servidores
         if servers_known:
             for x in ids:
-                sids[x[1]].append(hex2mid(x[0]))
+                sids[int(x[1])].append(hex2mid(x[0]))
         else:
             # averigua en qué servidor está cada fichero
-            nindir = self.server_conn.foofind.indir.find({"_id": {"$in": [hex2mid(fid) for fid in ids]}})
+            nindir = self.server_conn.foofind.indir.find({"_id": {"$in": [hex2mid(fid) for fid in ids]}, "s": {"$exists": 1}})
             for ind in nindir:
-                if "s" in ind and ind["s"] in self.servers_conn:
+                indserver = int(ind["s"]) # Bug en indir: 's' como float
+                if indserver in self.servers_conn:
                     if "t" in ind: # si apunta a otro id, lo busca en vez del id dado
-                        sids[ind["s"]].append(ind["t"])
+                        sids[indserver].append(ind["t"])
                     else:
-                        sids[ind["s"]].append(ind["_id"])
+                        sids[indserver].append(ind["_id"])
             self.server_conn.end_request()
 
         if len(sids) == 0:
@@ -335,11 +340,14 @@ class FilesStore(object):
         if sid is None:
             # averigua en qué servidor está el fichero
             ind = self.server_conn.foofind.indir.find_one({"_id":mfid})
-            if ind is None or not ("s" in ind and ind["s"] in self.servers_conn):
-                # Verificación para evitar basura de indir
+            # Verificación para evitar basura de indir
+            if ind is None or not "s" in ind:
                 return None
-            if "t" in ind: mfid = ind["t"]
-            sid = ind["s"]
+            sid = int(ind["s"])
+            if not sid in self.servers_conn:
+                return None
+            if "t" in ind:
+                mfid = ind["t"]
             self.server_conn.end_request()
 
         with self.servers_conn[sid].context as context:
@@ -388,10 +396,11 @@ class FilesStore(object):
         '''
         update = {"$set":data.copy()}
         if remove is not None:
-            update["$unset"]=dict()
+            update["$unset"] = {}
             for rem in remove:
-                del update["$set"][rem]
-                update["$unset"][rem]=1
+                if rem in update["$set"]:
+                    del update["$set"][rem]
+                update["$unset"][rem] = 1
 
         fid = hex2mid(data["_id"])
 
@@ -433,18 +442,87 @@ class FilesStore(object):
         self.server_conn.end_request()
         return result
 
-    @cache.memoize(timeout=2)
-    @cache.fallback(BogusMongoException)
-    def get_last_files(self, n=25):
+    def _get_last_files_from_foo(self, n, offset=0):
         '''
-        Obtiene los últimos 25 ficheros indexados
+        Obtiene los últimos ficheros del último mongo
         '''
         with self.current_server.context as context:
             data = tuple( context.conn.foofind.foo.find({"bl":0})
                 .sort([("$natural",-1)])
+                .skip(offset)
                 .limit(n) )
             context.conn.end_request()
             return data
+        return ()
+
+    def _get_last_files_indir_offset(self):
+        '''
+        Obtiene el timestamp de la última sincronización de indir
+        '''
+        data = self.server_conn.local.sources.find_one({"source":"main"}) # Workaround de bug de pymongo
+        self.server_conn.end_request()
+        if data and "syncedTo" in data:
+            return data["syncedTo"].time
+        return 0
+
+    def _get_last_files_foo_offset(self):
+        '''
+        Obtiene el timestamp de la última sincronización del último mongo
+        '''
+        with self.current_server.context as context:
+            data = context.conn.local.sources.find_one({"source":"main"}) # Workaround de bug de pymongo
+            context.conn.end_request()
+            if data and "syncedTo" in data:
+                return data["syncedTo"].time
+        return 0
+
+    # Desfase de 8 ficheros por cada segundo, hasta un max de 200
+    _last_files_per_second = 8
+    _last_files_max_offset = 250
+    _last_files_initial_skip = 500
+    @cache.memoize(timeout=2)
+    @cache.fallback(MongoTimeout)
+    def get_last_files(self, n=25):
+        '''
+        Obtiene los últimos n ficheros indexados.
+        '''
+        p = Parallel((
+            (self._get_last_files_indir_offset, (), {}),
+            (self._get_last_files_foo_offset, (), {}),
+            (self._get_last_files_from_foo, (n+self._last_files_max_offset, self._last_files_initial_skip), {}),
+            ))
+        p.join(1)
+        # Parallel.join_and_terminate(1) evitaría los end_request: hay que
+        # dejar que los hilos de parallel terminen
+        if p.is_alive():
+            raise MongoTimeout, "Timeout in get_last_files"
+        elif p.failed():
+            logging.error(
+                "Some error found in Parallel tasks on get_last_files",
+                extra={
+                    "output": p.output,
+                    "exceptions": p.exceptions
+                    })
+            cache.throw_fallback()
+
+        inoff, fooff, lf = p.output
+        fooff -= self._last_files_initial_skip/self._last_files_per_second
+        if inoff < fooff: # Si indir está más desactualizado que el foo
+            offset = (fooff-inoff)*self._last_files_per_second
+            if offset > self._last_files_max_offset:
+                logging.error(
+                    "Indir and last foo's replicas are too desynchronized, get_last_files will fallback",
+                    extra={
+                        "file_offset":offset,
+                        "file_offset_maximum":self._last_files_max_offset,
+                        "replication_time_indir":inoff,
+                        "replication_time_foo":fooff,
+                        "replication_time_offset":fooff-inoff,
+                        "replication_time_maximum_offset (calculated)": self._last_files_max_offset/float(self._last_files_per_second)
+                        })
+                cache.throw_fallback()
+            return lf[offset:offset+n]
+        return lf[:n]
 
     def remove_source_by_id(self, sid):
         '''
@@ -472,12 +550,6 @@ class FilesStore(object):
         self.server_conn.end_request()
         return data
 
-    _sourceParse = { # Parseo de datos para base de datos
-        "_id":lambda x:int(float(x)),
-        "crbl":lambda x:int(float(x)),
-        "g":lambda x: [i.strip() for i in x.split(",") if i.strip()] if isinstance(x, basestring) else x,
-        "*":u
-        }
     def update_source(self, data, remove=None):
         '''
         Actualiza los datos del origen dado.
@@ -490,20 +562,14 @@ class FilesStore(object):
 
         update = {"$set":data.copy()}
         if remove is not None:
-            update["$unset"]=dict()
+            update["$unset"] = {}
             for rem in remove:
-                del update["$set"][rem]
-                update["$unset"][rem]=1
+                if rem in update["$set"]:
+                    del update["$set"][rem]
+                update["$unset"][rem] = 1
 
         oid = int(float(data["_id"])) #hex2mid(data["_id"])
         del update["$set"]["_id"]
-
-        parser = self._sourceParse
-
-        update["$set"].update(
-            (key, parser[key](value) if key in parser else parser["*"](value))
-            for key, value in update["$set"].iteritems())
-
 
         self.server_conn.foofind.source.update({"_id":oid}, update)
         self.server_conn.end_request()
@@ -515,18 +581,11 @@ class FilesStore(object):
         @type data: dict
         @param data: Diccionario con los datos del fichero a guardar. Se debe incluir '_id'.
         '''
-        parser = self._sourceParse
-
-        doc = {
-            key: (parser[key](value) if key in parser else parser["*"](value))
-            for key, value in data.iteritems()
-            }
-
-        self.server_conn.foofind.source.insert(doc)
+        self.server_conn.foofind.source.insert(data)
         self.server_conn.end_request()
 
     @cache.memoize()
-    def get_sources(self, skip=None, limit=None, blocked=False, group=None, must_contain_all=False):
+    def get_sources(self, skip=None, limit=None, blocked=False, group=None, must_contain_all=False, embed_active=None):
         '''
         Obtiene los orígenes como generador
 
@@ -555,6 +614,8 @@ class FilesStore(object):
             if isinstance(group, basestring): query["g"] = group
             elif must_contain_all: query["g"] = {"$all": group}
             else: query["g"] = {"$in": group}
+        if not embed_active is None:
+            query["embed_active"] = int(embed_active)
         sources = self.server_conn.foofind.source.find(query).sort("d")
         if not skip is None: sources.skip(skip)
         if not limit is None: sources.limit(limit)
@@ -562,7 +623,7 @@ class FilesStore(object):
         self.server_conn.end_request()
         return data
 
-    def count_sources(self, blocked=False, group=None, must_contain_all=False, limit=None):
+    def count_sources(self, blocked=False, group=None, must_contain_all=False, limit=None, embed_active=None):
         '''
         Obtiene el número de orígenes
 
@@ -585,6 +646,8 @@ class FilesStore(object):
             if isinstance(group, basestring): query["g"] = group
             elif must_contain_all: query["g"] = {"$all": group}
             else: query["g"] = {"$in": group}
+        if not embed_active is None:
+            query["embed_active"] = int(embed_active)
         count = self.server_conn.foofind.source.find(query).count(True)
         self.server_conn.end_request()
         return count
@@ -613,7 +676,7 @@ class FilesStore(object):
         return data
 
     @cache.memoize()
-    def get_image_server(self,server):
+    def get_image_server(self, server):
         '''
         Obtiene el servidor que contiene una imagen
         '''
@@ -638,3 +701,32 @@ class FilesStore(object):
         data = tuple(self.server_conn.foofind.server.find())
         self.server_conn.end_request()
         return data
+
+    def get_server(self, sid):
+        data = self.server_conn.foofind.server.find_one({"_id":{"$in":[int(sid), float(sid)]}})
+        self.server_conn.end_request()
+        return data
+
+    def update_server(self, data, remove=None):
+        '''
+        Actualiza la información de un servidor
+
+        @type data: dict
+        @param data:
+
+        @type remove: dict
+        @param remove:
+        '''
+        update = {"$set": data.copy()}
+        if remove is not None:
+            update["$unset"] = {}
+            for rem in remove:
+                if rem in update["$set"]:
+                    del update["$set"][rem]
+                update["$unset"][rem] = 1
+
+        oid = float(data["_id"])
+        del update["$set"]["_id"]
+
+        self.server_conn.foofind.server.update({"_id":{"$in":[oid, int(oid)]}}, update)
+        self.server_conn.end_request()

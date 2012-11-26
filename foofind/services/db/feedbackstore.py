@@ -13,6 +13,7 @@ class FeedbackStore(object):
         "visited_links":100000,
         "notify_indir":100000,
         "notify_source":100000,
+        "profiler":100000,
         }
     def __init__(self):
         '''

@@ -10,4 +10,40 @@
     </div>
     <h3><a href="{{ url_for('user.edit')}}">{{_("edit_profile")}}</a></h3>
 </div>
+<article>
+    {#<section><header><a href="{{url_for('user.profile', list='fav')}}">{{_("user_favorites")}}</a></header></section>
+    <section><header><a href="{{url_for('user.profile', list='search')}}">{{_("user_searches")}}</a></header></section>
+    <section><header>{{_("user_fav_lists")}}</header>
+        {%- if user_fav_lists -%}
+        <ul>
+            {%- for item in user_fav_lists -%}
+            <li><a href="{{url_for('user.profile', list='user', name='item')}}">{{item}}</a></li>
+            {%- endfor -%}
+        </ul>
+        {%- else -%}
+        {{ _('user_fav_no_lists') }}
+        {%- endif -%}
+    </section>#}
+</article>
+<br /><br /><br />
+{%- if favlist -%}
+    {%- if list_type == "search" -%}
+    {#<ul>
+        {% for search in favlist %}
+        <li>{{url_for("files.search", q=search)}}</li> # TODO (felipe): implementar #
+        {% endfor %}
+    </ul>#}
+    {%- else -%}
+    <h4>{{_('user_favorites')}}</h4>
+    <ul>
+        {% for file in favlist %}
+        <li><a href="{{ url_for('files.download',file_id=file['file']['id'], file_name=file['view']['qfn']) }}.html">{{ file['view']['fnh']|safe }}</a> - <a href="{{url_for('user.favorite',favorite_type='file',action='delete',server=file['file']['s'],file_id=file['file']['id'],file_name=file['view']['qfn'],redirection=2)}}">Borrar</a>
+        {% endfor %}
+    </ul>
+    {%- endif -%}
+{% elif list_type == "search" %}
+{{ _('user_fav_search_list_empty') }}
+{% else %}
+{{ _('user_fav_file_list_empty') }}
+{%- endif -%}
 {% endblock %}

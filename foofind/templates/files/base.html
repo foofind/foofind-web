@@ -1,47 +1,22 @@
-{%- macro url_search(delete_params=[],catch_kwargs=true) -%}
-    {{url_for('.search',**kwargs|search_params(['page','alt']+delete_params,args=args))}}
-{%- endmacro -%}
-{%- macro searched(param,value="",empty=false) %}
-    {%- if (value=="" and param not in args) or args[param]==value or ((args[param]=="" or not param in args) and empty==true) -%}
-        class="actual{% if args["type"]!="" %} {{ args["type"] }}{% endif %}"
-    {%- endif -%}
-{% endmacro -%}
 {% extends "base.html" %}
-{% block global_message %}
-    {% if request.user_agent.browser=="msie" and request.user_agent.version!="9.0" %}
-    {% else %}
-    {{_('change_ajax_search')}} <a href="{{url_search(alt='ajax')}}">{{_('ajax_search')}}<small>BETA</small></a>
-    {% endif %}
-{% endblock %}
+{% from "files/macros.html" import url_search with context %}
 {% block header %}
-        <h1>
+        <h1 id="search_logo">
             <a href="{{ url_for('index.home',lang=none) }}">
-                <img src="/static/foofind3.png" alt="File search engine - Foofind" title="Foofind"/>
+                <img src="{{ g.static_prefix }}/img/logo_small.png" alt="File search engine - Foofind" title="Foofind"/>
             </a>
         </h1>
-        {%- if args["q"] -%}
         <div id="search_file">
-            <ul>
-                <li><a href="{{url_search(delete_params=['type'])}}" {{searched('type')}}>{{_('all')}}</a></li>
-                <li><a href="{{url_search(type='audio')}}" {{searched('type','audio')}}>{{_('audio')}}</a></li>
-                <li><a href="{{url_search(type='video')}}" {{searched('type','video')}}>{{_('video')}}</a></li>
-                <li><a href="{{url_search(type='image')}}" {{searched('type','image')}}>{{_('image')}}</a></li>
-                <li><a href="{{url_search(type='document')}}" {{searched('type','document')}}>{{_('document')}}</a></li>
-                <li><a href="{{url_search(type='software')}}" {{searched('type','software')}}>{{_('software')}}</a></li>
-                <li><a href="{{url_search(type='archive')}}" {{searched('type','archive')}}>{{_('archive')}}</a></li>
-            </ul>
-        {%- else -%}
-        <div id="search_file" style="padding-top:35px">
-        {%- endif -%}
-            <form method="get" action="{{ url_search() }}" class="searchbox">
-                <fieldset>
-                    {{ search_form.q(autocomplete="off",value=args["q"]) }}<span></span>
-                    <input type="hidden" id="type" name="type" value="{{args['type']}}" />
-                    <input type="hidden" id="src" name="src" value="{{args['src']}}" />
-                    {{ search_form.search_submit(class="large magenta awesome") }}
+            <form method="get" action="{{ url_for('.search') }}" class="searchbox">
+                <fieldset class="small">
+                    {{ search_form.q(autocomplete="off",value=query) }}
+                    <span></span>
+                    {#<a href="#favorite" title="Guardar como favorito"></a>
+                    <a href="#share" title="Compartir"></a>#}
+                    {{ search_form.search_submit(**{"data-no_query":_("write_something")}) }}
+                    <div id="search_info">{{ search_info|safe }}</div>
                 </fieldset>
             </form>
         </div>
 {% endblock %}
-{% block content %}
-{% endblock %}
+{% block content %}{% endblock %}

@@ -1,0 +1,21 @@
+<li id="no_results">
+    <h3>{{_("no_results_for")}}</h3>
+    <ul>
+        {% if 'q' in args %}<li><em>{{ args['q'] }}</em></li>{% endif %}
+        {% if 'type' in args %}{% for type in args['type'] if type in filters['type'] %}<li>{{ _(type) }}</li>{% endfor %}{% endif %}
+        {% if 'src' in args %}{% for source in args['src'] %}<li>{{ _(filters["src"][source]) }}</li>{% endfor %}{% endif %}
+        {% if 'size' in args and args['size'] %}
+            <li>{{_('size')}}
+            {% set minval=args['size'][0]|int %}
+            {% set maxval=args['size'][1]|int %}
+            {% if minval>0 and maxval==50 %}
+                {{_(filters['size'][2])|lower}} <em>{{(2**minval)|numbersizeformat}}</em>
+            {% elif minval==0 and maxval<50 %}
+                {{_(filters['size'][1])|lower}} <em>{{(2**maxval)|numbersizeformat}}</em>
+            {% else %}
+                {{_(filters['size'][2])|lower}} <em>{{(2**minval)|numbersizeformat}}</em> / {{_(filters['size'][1])|lower}} <em>{{(2**maxval)|numbersizeformat}}</em>
+            {% endif %}
+            </li>
+        {% endif %}
+    </ul>
+</li>

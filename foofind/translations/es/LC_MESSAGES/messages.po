@@ -48,7 +48,13 @@ msgid "error_404_message"
 msgstr "Página no encontrada."
 
 msgid "error_404_description"
-msgstr "La url no ha sido encontrada. ¿La dirección es correcta? Si es así, agradeceríamos que nos avisaras."
+msgstr "La URL no ha sido encontrada. ¿La dirección es correcta? Si es así, agradeceríamos que nos avisaras."
+
+msgid "error_410_message"
+msgstr "Página no disponible."
+
+msgid "error_410_description"
+msgstr "La URL ya no esta disponible ni lo estará en el futuro."
 
 msgid "error_502_message"
 msgstr "Pasarela incorrecta."
@@ -141,6 +147,18 @@ msgstr "descarga directa"
 msgid "direct_downloads"
 msgstr "Descargas directas"
 
+msgid "other_streamings"
+msgstr "Otros streamings"
+
+msgid "other_direct_downloads"
+msgstr "Otras descargas directas"
+
+msgid "others"
+msgstr "Otros"
+
+msgid "unknown"
+msgstr "Desconocido"
+
 msgid "audio"
 msgstr "Audio"
 
@@ -174,6 +192,9 @@ msgstr "Siguiente"
 msgid "sources"
 msgstr "fuentes"
 
+msgid "approximately"
+msgstr "Aproximadamente"
+
 msgid "of_about"
 msgstr "de aprox."
 
@@ -192,17 +213,11 @@ msgstr "Foofind no permite navegar resultados posteriores a la página 100."
 msgid "did_you_mean"
 msgstr "¿Has querido decir %(text)s?"
 
-msgid "classic_search"
-msgstr "búsqueda clásica"
+msgid "go_to_file"
+msgstr "Ir al archivo"
 
-msgid "ajax_search"
-msgstr "nueva búsqueda"
-
-msgid "change_classic_search"
-msgstr "Si lo prefieres puedes volver a la"
-
-msgid "change_ajax_search"
-msgstr "Si quieres puedes activar la"
+msgid "play"
+msgstr "Reproducir"
 
 msgid "what"
 msgstr "¿Qué?"
@@ -210,22 +225,18 @@ msgstr "¿Qué?"
 msgid "where"
 msgstr "¿Dónde?"
 
-# files.download
-msgid "how_to_download"
-msgstr "¿Cómo descargar?"
+msgid "update"
+msgstr "actualizar"
 
-msgid "download_explanation"
-msgstr "Para descargar el archivo enlazado en esta página se puede precisar un software externo. Aquí tienes algunos programas compatibles:"
+msgid "minimun"
+msgstr "mín"
+
+msgid "maximun"
+msgstr "máx"
 
 # advanced search
 msgid "all_sizes"
 msgstr "Todos los tamaños"
-
-msgid "advanced_search"
-msgstr "búsqueda avanzada"
-
-msgid "hide_advanced_search"
-msgstr "ocultar búsqueda avanzada"
 
 msgid "smaller_than"
 msgstr "Menor de"
@@ -288,6 +299,9 @@ msgstr "Fuente"
 msgid "seeds"
 msgstr "Semillas"
 
+msgid "leechs"
+msgstr "Sanguijuelas"
+
 msgid "height"
 msgstr "Alto"
 
@@ -319,7 +333,7 @@ msgid "size"
 msgstr "Tamaño"
 
 msgid "unpacked_size"
-msgstr "Tamaño&nbsp;sin&nbsp;comprimir"
+msgstr "Tamaño sin comprimir"
 
 msgid "colors"
 msgstr "Colores"
@@ -338,6 +352,9 @@ msgstr "Archivos"
 
 msgid "soundtype"
 msgstr "Tipo de sonido"
+
+msgid "channels"
+msgstr "canales"
 
 msgid "year"
 msgstr "año"
@@ -369,6 +386,48 @@ msgstr "minuto"
 msgid "second"
 msgstr "segundo"
 
+msgid "tags"
+msgstr "Palabras clave"
+
+msgid "license"
+msgstr "Licencia"
+
+msgid "private_file"
+msgstr "Archivo privado"
+
+msgid "composer"
+msgstr "Compositor"
+
+msgid "publisher"
+msgstr "Editor"
+
+msgid "comments"
+msgstr "Comentarios"
+
+msgid "created_by"
+msgstr "Creado por"
+
+msgid "language"
+msgstr "Idioma"
+
+msgid "date"
+msgstr "Fecha"
+
+msgid "trackers"
+msgstr "Trackers"
+
+msgid "hash"
+msgstr "Hash"
+
+msgid "visualizations"
+msgstr "Visualizaciones"
+
+msgid "codec"
+msgstr "Códec"
+
+msgid "encoding"
+msgstr "Codificación"
+
 # download
 msgid "loading"
 msgstr "Cargando"
@@ -394,9 +453,6 @@ msgstr "Descargar"
 msgid "watch"
 msgstr "Ver"
 
-msgid "your_comments"
-msgstr "Tus comentarios"
-
 msgid "since"
 msgstr "hace %(since)s"
 
@@ -420,6 +476,33 @@ msgstr "Comentario publicado con éxito"
 
 msgid "related_files"
 msgstr "Archivos relacionados"
+
+msgid "file"
+msgstr "archivo"
+
+msgid "add_favorite"
+msgstr "Añadir %(type)s a favoritos"
+
+msgid "delete_favorite"
+msgstr "Eliminar %(type)s de favoritos"
+
+msgid "favorite"
+msgstr "%(type)s añadido a favoritos"
+
+msgid "download_links"
+msgstr "Ver enlaces de descarga"
+
+msgid "more_info"
+msgstr "más información"
+
+msgid "less_info"
+msgstr "menos información"
+
+msgid "more_comments"
+msgstr "más comentarios"
+
+msgid "less_comments"
+msgstr "menos comentarios"
 
 # user profile
 msgid "login_required"
@@ -580,6 +663,25 @@ msgstr "accede aquí"
 
 msgid "send"
 msgstr "Enviar"
+
+# user favs
+msgid "user_favorites"
+msgstr "Ficheros favoritos"
+
+msgid "user_searches"
+msgstr "Búsquedas favoritas"
+
+msgid "user_fav_lists"
+msgstr "Listas de ficheros"
+
+msgid "user_fav_file_list_empty"
+msgstr "No hay ficheros en la lista"
+
+msgid "user_fav_search_list_empty"
+msgstr "No hay búsquedas en la lista"
+
+msgid "user_fav_no_lists"
+msgstr "No hay listas personalizadas"
 
 # user.forgot
 msgid "enter_email"
@@ -1177,11 +1279,26 @@ msgstr "Modo de búsqueda"
 msgid "admin_edit_new"
 msgstr "Añadir nuevo registro"
 
+msgid "admin_server"
+msgstr "Servidor"
+
+msgid "admin_servers"
+msgstr "Gestión de servidores"
+
 msgid "admin_edit_submit"
 msgstr "Guardar cambios"
 
 msgid "admin_filename"
 msgstr "Nombre de fichero"
+
+msgid "admin_embed_enabled"
+msgstr "embebido"
+
+msgid "admin_embed_disabled"
+msgstr "sin embeber"
+
+msgid "admin_embed_all"
+msgstr "todos"
 
 msgid "admin_file_search_server"
 msgstr "Buscar servidor de archivos"

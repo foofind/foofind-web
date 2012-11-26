@@ -1,5 +1,7 @@
-{% macro render_field(field) %}
-    {%- if field.type=="BooleanField" %}
+{% macro render_field(field=none) %}
+    {%- if not field %}
+        <input type="hidden" name="_csrf_token" id="_csrf_token" value="{{ csrf_token() }}" />
+    {%- elif field.type=="BooleanField" %}
         <label>{{ field }}
         {%- if field.name=="accept_tos" -%}
             {{ _('accept_tos', tos='<a  href="%s">%s</a>'|safe % (url_for('page.show',pname='tos'),_("tos")), privacy='<a href="%s">%s</a>'|safe % (url_for('page.show',pname='privacy'),_("privacy"))) }}
@@ -45,4 +47,23 @@
             {%- endfor %}
         {%- endif %}
     {%- endwith %}
+{%- endmacro %}
+{%- macro advice(id,text) %}
+    <div id="{{ id }}" class="advice">
+        <span></span>
+        <button>x</button>
+        <p>{{ text|safe }}</p>
+    </div>
+{%- endmacro %}
+{%- macro login_required(next) %}
+    {{ advice("login_required",'%s, <a href="%s" title="%s">%s</a>.<br /> %s <a href="%s" title="%s">%s</a>.' % (
+        _('login_required')[:-1],
+        url_for('user.login',next=next),
+        _('login'),
+        _('login_here'),
+        _("if_new_user"),
+        url_for('user.register',next=next),
+        _("register"),
+        _("register_here")
+    )) }}
 {%- endmacro %}

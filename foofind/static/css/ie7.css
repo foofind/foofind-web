@@ -1,10 +1,23 @@
 input[type="submit"]{border:0;top:-10px;}
-label+input[type="text"]+span,label+input[type="password"]+span,label+textarea+span{display:none}
-label+input[type="text"]:focus+span,label+input[type="password"]:focus+span,label+textarea:focus+span{display:none}
-label+input[type="text"]:hover+span,label+input[type="password"]:hover+span,label+textarea:hover+span{display:none}
+input[type="text"]+span,label+input[type="password"]+span,label+textarea+span,fieldset.small input[type="text"]+span{display:none}
+label+input[type="text"]:focus+span,label+input[type="password"]:focus+span,label+textarea:focus+span,fieldset.small input[type="text"]+span{display:none}
+label+input[type="text"]:hover+span,label+input[type="password"]:hover+span,label+textarea:hover+span,fieldset.small input[type="text"]+span{display:none}
+
 section#home #search #tamingresults{margin-left:0}
+section#files #fondo{left:5000px}
+section#files aside #type li{display:inline}
+section#files aside dt a{margin-top:-20px;margin-right:10px}
 section#files #results .thumblink span{height:120px;top:0;line-height:120px}
-section#files #tabnav li{display:inline;padding:0 5px}
+section#files #results .metadata a{padding:0 5px}
+section#files #results > li > div h3 a{width:320px}
+section#files #results > li > div .size span{height:1px;margin-bottom:3px}
+section#files #results > li > div ul.source{margin-left:0}
+section#files #results > li > div ul.metadata{width:300px}
+section#files #download > a{left:-20px;max-width:480px}
+section#files #flecha{height:1px}
+.download_source input{line-height:35px;vertical-align:middle}
+.file_comment_vote{margin-top:-33px}
+section#files section > aside li {display:inline}
 section#page > article header h2{position:relative;left:-100px}
 section#page #translate span{margin-top:0}
 section#page>ul{margin-top:10px}
@@ -19,3 +32,4 @@ section#home #extra #live > div.social .twitter-follow-button{left:440px;top:-17
 /*footer*/
 section#home+#footer ul{float:none}
 #footer ul{float:left;}
+input[type="text"],input[type="password"],select{padding-left:0}

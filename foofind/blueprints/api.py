@@ -4,25 +4,19 @@
 """
 
 from flask import Blueprint, abort, request, render_template, current_app, jsonify, url_for, g
-from foofind.utils import mid2url, url2mid
-from foofind.services.search import search_files, get_ids
+from foofind.utils import mid2url, url2mid, u
 from foofind.services import *
-from foofind.utils import u
-from base64 import b64encode, b64decode
-
-# Blueprints
-from files import fill_data
+from foofind.blueprints.files import secure_fill_data, get_file_metadata, DatabaseError, FileNotExist, FileRemoved, FileUnknownBlock
 
 import logging, zlib
 
 api = Blueprint('api', __name__)
 
-
-def file_embed_link(data):
+def file_embed_link(data, size="m"):
     '''
     Obtiene el enlace del iframe de embed para el archivo dado
     '''
-    return url_for( "api.api_embed", _external=True, fileid=mid2url(data["file"]["_id"]), nameid=data["view"]["fnid"])
+    return url_for( "api.api_embed", _external=True, embed_size=size, fileid=mid2url(data["file"]["_id"]), nameid=data["view"]["fnid"])
 
 @api.route("/api")
 @api.route("/api/")
@@ -33,8 +27,11 @@ def api_v1():
     success = False
     try:
         if method == "getSearch":
-            files, query = search_files(request.args["q"], request.args)
-            results = enumerate(fill_data(file_data) for file_data in filesdb.get_files(get_ids(files),True))
+            query = request.args["q"]
+            s = searchd.search({"type":"text", "text":query}, request.args, 1000)
+            ids = list(s.get_results([], 100, 100))
+            stats = s.get_stats()
+            results = enumerate(filter(None, [secure_fill_data(f,text=query) for f in filesdb.get_files(ids,True)]))
             success = True
     except BaseException as e:
         logging.debug(e)
@@ -54,15 +51,17 @@ def api_v2():
     success = True
     result = None
     if method == "search":
-        result = []
-        files, query = search_files(request.args["q"], request.args)
+        query = request.args["q"]
+        s = searchd.search({"type":"text", "text":query}, request.args, 1000)
+        ids = list(s.get_results([], 100, 100))
+        stats = s.get_stats()
         result = [{
             "size": f["file"]["z"] if "z" in f["file"] else 0,
             "type": f["view"]["file_type"],
-            "link": url_for("files.download", file_id=f["view"]["url"], _external=True),
+            "link": url_for("files.download", file_id=f["view"]["url"], file_name=f["view"]["qfn"]+".htm", _external=True),
             "metadata": {k: (_api_v2_md_parser[k](v) if k in _api_v2_md_parser else v)
                 for k, v in f["view"]["md"].iteritems()},
-            } for f in (fill_data(file_data) for file_data in filesdb.get_files(get_ids(files), True))]
+            } for f in filter(None, [secure_fill_data(f,text=query) for f in filesdb.get_files(ids,True)])]
         success = True
     return jsonify(
         method = method,
@@ -70,30 +69,58 @@ def api_v2():
         result = result
         )
 
-@api.route("/api/embed/<fileid>/<nameid>")
+@api.route("/api/embed/<embed_size>/<fileid>/<nameid>")
 @cache.cached(
     unless=lambda:True,
     key_prefix=lambda: "api/embed_%s_%%s" % g.lang
     )
-def api_embed(fileid, nameid):
+def api_embed(embed_size, fileid, nameid):
+    if not embed_size in ("s","m","b"):
+        embed_size = "m"
 
-    data = filesdb.get_file(url2mid(fileid))
+    file_id = url2mid(fileid)
+    filename = ""
 
-    if "torrent:name" in data["md"]:
-        filename = data["md"]["torrent:name"]
-    elif nameid in data["fn"]:
-        filename = data["fn"][nameid]['n']
-    elif data["fn"]:
-        filename = data["fn"].values()[0]['n']
+    download_url = None
+    size = 0
+
+    if embed_size == "b":
+        try:
+            data = get_file_metadata(file_id, nameid)
+            download_url = data["view"]["url"]
+        except DatabaseError:
+            abort(503)
+        except FileNotExist:
+            flash("link_not_exist", "error")
+            abort(404)
+        except FileRemoved:
+            flash("error_link_removed", "error")
+            abort(404)
+        except FileUnknownBlock:
+            abort(404)
+
     else:
-        filename = ""
+        data = filesdb.get_file(file_id)
 
-    if data.get("z", 0):
-        size = data['z']
+        size = None
+        if "z" in data:
+            size = data['z']
+
+        if "torrent:name" in data["md"]:
+            filename = data["md"]["torrent:name"]
+        elif nameid in data["fn"]:
+            filename = data["fn"][nameid]['n']
+        elif data["fn"]:
+            filename = data["fn"].values()[0]['n']
+        else:
+            filename = ""
+
+        download_url = url_for("files.download", file_id=mid2url(data["_id"]), file_name="%s.html" % filename)
 
     return render_template("api/embed.html",
-        blocked = data.get("bl", True),
         filename = filename,
         size = size,
-        download_url = url_for("files.download", file_id=mid2url(data["_id"]), file_name="%s.html" % filename)
+        file = data,
+        embed_size = embed_size,
+        download_url = download_url
         )

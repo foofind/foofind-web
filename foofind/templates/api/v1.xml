@@ -11,7 +11,7 @@ Compatibilidad con API antigua:
         <key_{{number}}>
             <size>{% if "z" in file["file"] %}{{ file["file"]["z"] }}{% else %}0{% endif %}</size>
             <type>{{ file["view"]["file_type"] }}</type>
-            <dlink><![CDATA[{{ url_for("files.download", file_id=file["view"]["url"], _external=True) }}]]></dlink>
+            <dlink><![CDATA[{{ url_for("files.download", file_id=file["view"]["url"], file_name=file["view"]["qfn"], _external=True) }}]]></dlink>
             {% if file["view"]["md"] %}
             <md>
                 {% for key, value in file["view"]["md"].iteritems() %}

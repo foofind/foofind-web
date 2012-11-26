@@ -2,6 +2,7 @@
 {% block page %}
     {%- if edit_form %}
     <form method="post" action="{{ url_for('admin.db_confirm', collection=collection, document_id=document_id, page=page, mode=list_mode, show=mode, size=page_size) }}">
+        {{ render_field() }}
         <h3 class="list">{{form_title}}</h3>
         {{edit_form.defaults}}{{edit_form.editable}}{{edit_form.confirmed}}
         <dl class="list">

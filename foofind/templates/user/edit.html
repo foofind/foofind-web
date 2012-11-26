@@ -6,10 +6,11 @@
     {{ flash() }}
     <form method="post">
         <fieldset>
-            {{ render_field(form.username) }}            
+            {{ render_field() }}
+            {{ render_field(form.username) }}
             {{ render_field(form.location) }}
             {{ render_field(form.password) }}
-            {{ render_field(form.confirm) }}            
+            {{ render_field(form.confirm) }}
         </fieldset>
         <fieldset>
             {{form.submit}}

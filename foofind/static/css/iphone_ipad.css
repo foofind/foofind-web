@@ -1,0 +1,7 @@
+#container > header #search_file fieldset.small input[type="text"] + span{margin-left:10px}
+input[type="submit"]{-webkit-appearance:none}
+@media screen and (max-width:1024px)
+{
+    #download{position:absolute}
+    footer{display:none}
+}

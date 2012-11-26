@@ -10,6 +10,7 @@
     {% if form %}
         <form class="texts" action="{{ url_for('page.translate') }}?lang={{ lang }}" method="post">
             <fieldset>
+            {{ render_field() }}
             {{ render_field(form.captcha) }}
             </fieldset>
             {% for field in msgids %}

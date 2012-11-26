@@ -3,6 +3,7 @@
 {% block page %}
     <form method="post">
         <fieldset>
+            {{ render_field() }}
             {{ render_field(form.name) }}
             {{ render_field(form.surname) }}
             {{ render_field(form.company) }}

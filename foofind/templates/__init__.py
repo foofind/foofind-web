@@ -8,6 +8,7 @@ from foofind.utils.htmlcompress import HTMLCompress
 from foofind.utils import u, fixurl
 from foofind.blueprints.api import file_embed_link
 from urllib import quote_plus
+from pprint import pformat
 
 # Registra filtros de plantillas
 def register_filters(app):
@@ -19,8 +20,9 @@ def register_filters(app):
     app.jinja_env.filters['urlencode'] = urlencode_filter
     app.jinja_env.filters['querystring_params'] = querystring_params_filter
     app.jinja_env.filters['file_embed_link'] = file_embed_link
+    app.jinja_env.filters['numberfriendly'] = number_friendly_filter
+    app.jinja_env.filters['pprint'] = pformat
     app.jinja_env.add_extension(HTMLCompress)
-
 
 def number_size_format_filter(size):
     '''
@@ -41,8 +43,8 @@ def number_size_format_filter(size):
             dec_part = str(round(float("0.%s" % dec_part), 2))[2:]
 
         return "%s%s%s %s" % (int_part, dec_sep, dec_part.ljust(2, "0"), ("B","KiB","MiB","GiB","TiB")[int(size)+fix])
-
-    return "%s%s00 %s" % (int_part, dec_sep, ("B","KiB","MiB","GiB","TiB")[int(size)+fix])
+    else:
+        return "%s %s" % (int_part, ("B","KiB","MiB","GiB","TiB")[int(size)+fix])
 
 def number_format_filter(number):
     '''
@@ -50,19 +52,42 @@ def number_format_filter(number):
     '''
     return format_number(number, g.lang)
 
-def search_params_filter(new_params, delete_params=[], args=None):
+def search_params_filter(new_params, delete_params=[], args=None, extra_sources=[]):
     '''
     Devuelve los parametros para generar una URL de busqueda
     '''
-    if not args: args = request.args
-    p={}
-    for param in ['q','src','type','size','page','alt']:
+    if not args:
+        args = request.args
+
+    srcs=['streaming','download','p2p']+extra_sources
+    types=['audio','video','image','document','software']
+    query = u(new_params["query"] if "query" in new_params else args["q"] if "q" in args else "").replace(" ","_")
+    p={"query":query, "filters":{}}
+    for param in ('src','type','size','page','alt'): #se recorren todos los parametros para guardarlos en orden
+
+        #añadir el parametro si es necesario
         if param in new_params:
-            p[param]=new_params[param]
+            if param=='src' or param=='type': # parametros concatenables
+                if param in args:
+                    # recorre parametros en orden, añadiendo los de args y el nuevo valor se quita o se añade segun este en args
+                    params = [value for value in (srcs if param=='src' else types) if (value==new_params[param])^(value in args[param])]
+                    if params:
+                        p["filters"][param] = params
+                else:
+                    p["filters"][param] = [new_params[param]]
+
+            else: # parametros no concatenables
+                p["filters"][param] = new_params[param]
+
+        # mantener el parametro si ya estaba
         elif "all" not in delete_params and param not in delete_params and param in args:
-            p[param]=args[param]
-        else:
-            p[param]=None
+            p["filters"][param] = args[param]
+
+    if p["filters"]: #unir los filtros
+        p["filters"]="/".join(param+":"+(",".join(value) if param in ["type", "src", "size"] else value) for param, value in p["filters"].iteritems())
+    else: #necesario para no devolver lista vacia
+        del p["filters"]
+
     return p
 
 def querystring_params_filter(params):
@@ -104,7 +129,7 @@ def format_timedelta_filter(date,granularity='second', threshold=.85, locale="")
 
     return u''
 
-def url_lang_filter(url, lang):
+def url_lang_filter(url, lang="en"):
     '''
     Devuelve la url con la parte del idioma indicada
     '''
@@ -115,3 +140,8 @@ def url_lang_filter(url, lang):
 
 def urlencode_filter(s):
     return quote_plus(s.encode('utf8'))
+
+def number_friendly_filter(number):
+    number_pos = len(str(number))
+    pos_round = (number_pos-1)/2
+    return int(round(number/10.0**pos_round)*10**pos_round)

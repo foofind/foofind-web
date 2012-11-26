@@ -1,5 +1,4 @@
-from wtforms import BooleanField, SelectMultipleField
-from wtforms.widgets import Input
+from flask.ext.wtf import BooleanField, SelectMultipleField, Input
 
 from cgi import escape
 from foofind.utils import u

@@ -2,7 +2,7 @@
 """
     Formularios para manejo de datos de usuarios.
 """
-from wtforms import Form,BooleanField,PasswordField,TextField,SubmitField,ValidationError
+from flask.ext.wtf import Form,BooleanField,PasswordField,TextField,SubmitField,ValidationError
 from flask.ext.babel import lazy_gettext as _
 from foofind.forms.captcha import CaptchaField
 from foofind.forms.validators import *

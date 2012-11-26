@@ -1,0 +1,3 @@
+{%- if results["total_found"]>0 %}
+    {% if results["total_found"]>100 %}{{_('approximately')}}{% endif %} {{ results["total_found"]|numberfriendly|numberformat }} {{_('results_for')}} <strong>{{ args.q }}</strong>{# ({{ results["time"]|float|numberformat }} {{_('seconds')}})#}
+{%- endif %}

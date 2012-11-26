@@ -7,23 +7,24 @@ from foofind.services.db.pagesstore import PagesStore
 from foofind.services.db.usersstore import UsersStore
 from foofind.services.db.feedbackstore import FeedbackStore
 from foofind.services.db.configstore import ConfigStore
+from foofind.services.db.entitiesstore import EntitiesStore
 from foofind.services.searchd import Searchd
 from foofind.utils.profiler import Profiler
 from foofind.utils.event import EventManager
 from foofind.utils.taming import TamingClient
 from extensions import *
 
-__all__ = (
-    'babel', 'cache', 'auth', 'mail', 'send_mail', 'profiler', 'sentry',
-    'filesdb', 'usersdb', 'pagesdb', 'feedbackdb', 'configdb', 'eventmanager',
-    'unit', 'taming', 'searchd'
-    )
-
+__all__=['filesdb', 'usersdb', 'pagesdb', 'feedbackdb', 'configdb', 'entitiesdb',
+                'taming', 'eventmanager', 'profiler', 'searchd']
+                
+__all__.extend(extensions.__all__)
+    
 filesdb = FilesStore()
 usersdb = UsersStore()
 pagesdb = PagesStore()
 feedbackdb = FeedbackStore()
 configdb = ConfigStore()
+entitiesdb = EntitiesStore()
 taming = TamingClient()
 eventmanager = EventManager()
 profiler = Profiler()

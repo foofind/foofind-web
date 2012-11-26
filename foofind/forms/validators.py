@@ -2,8 +2,7 @@
 """
     Formularios para manejo de datos de usuarios.
 """
-from wtforms.validators import *
-from wtforms.validators import ValidationError
+from flask.ext.wtf import *
 from flask.ext.babel import lazy_gettext as _
 from functools import partial
 import re

@@ -1,7 +1,14 @@
-{% extends "base.html" %}
-{% block content %}
-{{flash()}}
-<h2>{{ g.title }}</h2>
-<p>{{ description|safe }}</p>
-<a href="{{ url_for('index.home') }}">{{_('go_home')}}</a>
-{% endblock %}
+{% if not full_screen %}
+    {% extends "base.html" %}
+    {% block content %}
+    <h2>{{ g.title }}</h2>
+    <p>{{ description|safe }}</p>
+    {{flash()}}
+    <a href="{{ url_for('index.home') }}">{{_('go_home')}}</a>
+    {% endblock %}
+{% else %}
+    <h2>{{ g.title }}</h2>
+    {% if error[1] %}
+    <p class="error">{{_(error[1])}}</p>
+    {% endif %}
+{% endif %}

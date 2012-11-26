@@ -1,22 +1,114 @@
 {# Incrustable de fichero para ser usado con include en otras plantillas (no usable como plantilla de página) #}
-<form class="embed-form" action="javascript:handle_embed_form()">
 <script type="text/javascript">
 function handle_embed_form(){
-    var form=$("form.embed-form"),
-        text=$("input[type=submit]", form).data("shortcut"),
-        code=$("textarea", form).val().replace("\n","");
+    var code=$("#embed_block textarea").val().replace("\n","");
     if (window.clipboardData && clipboardData.setData)
         clipboardData.setData('text', code);
     else
         window.prompt(text, code);
-}
+    }
+var iframe_value=null,
+    replace_vars = function(txt, values){
+        for(var i in values) txt = txt.replace("[["+i+"]]", values[i]);
+        return txt;
+        },
+    embed_sizes={
+        small:{
+            src:"{{file|file_embed_link('s')}}",
+            width:200,
+            height:45
+            },
+        medium:{
+            src:"{{file|file_embed_link('m')}}",
+            width:200,
+            height:90
+            },
+        big:{
+            src:"{{file|file_embed_link('b')}}",
+            width:500,
+            height:150
+            }
+        },
+    updateTextarea = function(value){
+        $("#embed_block textarea").val(embed_sizes[value].code);
+        $("#embed_block .preview iframe").hide();
+        $("#preview_"+value).show();
+        var cur = $("#embed_block .sizes input[type=radio][value=\""+value+"\"]");
+        if(!cur.is(":checked")){
+            cur.attr("checked", true);
+            cur.button("refresh");
+            }
+        };
+$(function(){
+    $("#embed_block .sizes").buttonset();
+    $("#embed_block textarea").click(function(){this.select();});
+    $("#embed_block .sizes input[type=radio]").click(function(){updateTextarea(this.value);});
+
+    iframe_value=$("#embed_block textarea").val();
+
+    var maxwidth=0, maxheight=0;
+    for(var size in embed_sizes){
+        $(embed_sizes[size].code = replace_vars(iframe_value, embed_sizes[size]))
+        .css("background-color","white")
+        .attr("id","preview_"+size)
+        .appendTo("#embed_block .preview").hide();
+        maxwidth=Math.max(embed_sizes[size].width, maxwidth);
+        maxheight=Math.max(embed_sizes[size].height, maxheight);
+        }
+    $("#embed_block .preview").css("width", maxwidth + "px").css("height", maxheight + "px");
+
+    updateTextarea("medium");
+    $("#embed_block").show();
+    });
 </script>
-<textarea name="code" readonly="readonly">
-&lt;iframe src="{{file|file_embed_link}}" allowtransparency="true"
-style="width:200px;height:90px;border:0;background:none transparent"&gt;&lt;/iframe&gt;
-</textarea><iframe src="{{file|file_embed_link}}" allowtransparency="true"
-style="width:200px;height:90px;border:0;background:none transparent"></iframe><br/>
-<input type="submit" value="{{_('copy_to_clipboard')}}" data-shortcut="{{_('copy_to_clipboard_shortcut')}}"/>
-<noscript>_("copy_to_clipboard_shortcut")</noscript>
-</form>
+<style type="text/css">
+#embed_block{
+    border:1px solid #CD0069;
+    background-color:#FBEFFB;
+    border-radius:5px;
+    display:none;
+    margin-top:5px;
+    padding:5px;
+    }
+#embed_block textarea{
+    font-size:small;
+    font-family:monospace;
+    width:300px;
+    height:50px;
+    padding:2px;
+    overflow:show;
+    min-height:6em;
+    margin:0;
+    border:0;
+    box-shadow:none;
+    }
+#embed_block article{
+    margin:5px;
+    display:inline-block;
+    vertical-align:top;
+    }
+#embed_block div{
+    text-align:center;
+    }
+#embed_block .preview{
+    border:0;
+    text-align:left;
+    }
+</style>
+
+<section id="embed_block">
+    <article>
+        <header>{{_("embed_code")|capitalize}}</header>
+        <textarea class="embed" readonly="readonly">&lt;iframe src="[[src]]" allowtransparency="true" style="width:[[width]]px;height:[[height]]px;border:0;background:none transparent"&gt;&lt;/iframe&gt;</textarea>
+    </article>
+    <article>
+        <header>{{_("embed_preview")|capitalize}}</header>
+        <div class="preview"></div>
+    </article>
+    <div class="sizes">
+        <input type="radio" id="size-small" name="size" value="small"/><label for="size-small">{{_("embed_size_small", size="200x45")}}</label>
+        <input type="radio" id="size-medium" name="size" value="medium"/><label for="size-medium">{{_("embed_size_medium", size="200x90")}}</label>
+        <input type="radio" id="size-big" name="size" value="big" /><label for="size-big">{{_("embed_size_big", size="500x200")}}</label>
+    </div>
+</section>
 

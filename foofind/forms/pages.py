@@ -3,7 +3,7 @@
     Formularios para las pages
 """
 from flask import request
-from wtforms import Form,BooleanField,PasswordField,TextField,TextAreaField,SelectField,FileField,FieldList,SubmitField,ValidationError
+from flask.ext.wtf import Form,BooleanField,PasswordField,TextField,TextAreaField,SelectField,FileField,FieldList,SubmitField,ValidationError
 from flask.ext.babel import lazy_gettext as _
 from foofind.forms.captcha import CaptchaField
 from foofind.forms.validators import *
@@ -68,20 +68,13 @@ class ReportLinkForm(Form):
     company = TextField(_("your_company"))
     email = TextField(_("your_email"), [require(),email()])
     phonenumber = TextField(_("your_phone"))
-    linkreported = TextField(_("link_reviewed"), [require(),url(),Regexp("^(?!https?://[^/]*foofind.[com|is]/?).*$",re.IGNORECASE,_("not_foofind_page"))])
-    urlreported = TextField(_("url_content"), [require(),url(),Regexp("^https?://foofind.[com|is]/\w\w/download/[a-zA-Z0-9!-]{16}(/.*)?$",re.IGNORECASE,_("not_foofind_link"))])
+    linkreported = TextField(_("link_reviewed"), [require(),Regexp("^(?!https?://[^/]*foofind.(com|is)/?).*$",re.IGNORECASE,_("not_foofind_page"))])
+    urlreported = TextField(_("url_content"), [require(),url(),Regexp("^https?://foofind.(com|is)/\w\w/(search/.*/)?download/[a-zA-Z0-9!-]{16}(/.*)?$",re.IGNORECASE,_("not_foofind_link"))])
     reason = TextField(_("reason_complaint"), [require()])
     message = TextAreaField(_('your_message'), [require()])
     captcha = CaptchaField()
     accept_tos = BooleanField(validators=[require()])
     submit = SubmitField(_("submit"))
-
-    def validate_message(form, field):
-        '''
-        Validador de los enlaces
-        '''
-        if re.match(r'.*https?://[^/]*foofind.[com|is]/?.*',field.data,re.IGNORECASE):
-            raise ValidationError(_("include_reported_links"))
 
 class SelectLanguageForm(Form):
     '''

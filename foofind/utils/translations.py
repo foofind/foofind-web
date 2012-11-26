@@ -5,12 +5,11 @@
 import re, random
 from foofind.translations.samples_values import samples
 from flask.ext.babel import gettext as _
-from foofind.utils import multipartition
 
 _strarg = re.compile('(%\(([^\)]+)\)([s|d]))')
 def fix_lang_values(entry, sample=False):
     '''
-    Si la traduccion contiene campos de valores los sustituimos por ______[X] y ponemos un ejemplo de uso,
+    Si la traduccion contiene campos de valores los sustituimos por _____[X] y ponemos un ejemplo de uso,
     además se eliminan los saltos de linea
     '''
     result=_strarg.finditer(entry.msgstr)
@@ -37,32 +36,38 @@ def fix_lang_values(entry, sample=False):
 
 def unfix_lang_values(entry, base_entry):
     '''
-    Convierte msgstrs de traducción de formato ______[X] a %(n)m.
+    Convierte msgstrs de traducción de formato _____[X] a %(n)m.
+    
+    >>> p = "This is a test of text %(first)s y %(second)s."
+    >>> unfix_lang_values("Esto es una prueba de texto _____[1] y _____[2].", p)
+    'Esto es una prueba de texto %(first)s y %(second)s.'
+    >>> unfix_lang_values("Esto es una prueba de texto _____[1] y _____[1].", p)
+    'Esto es una prueba de texto %(first)s y %(second)s.'
+    >>> unfix_lang_values("Esto es una prueba de texto _____[1], _____[1] y _____[1].", p)
+    'Esto es una prueba de texto _____[1], _____[1] y _____[1].'
+    >>> unfix_lang_values("Esto es una prueba de texto _____[a].", p)
+    'Esto es una prueba de texto _____[a].'
     '''
     original = dict(enumerate(i.group(0) for i in _strarg.finditer(base_entry)))
-
+    
     lf = "_____["
     if not lf in entry:
         return None if original else entry # No se han usado los argumentos
-
+    
     tr = []
-    lpp = False
-    for part in multipartition(entry, (lf,)):
-        if part == lf:
-            lpp = True
-            continue
-        if lpp:
+    for part in entry.split(lf):
+        if tr:
             try:
-                index = int(part[:part.find("]")])
-            except ValueError:
-                return None # Índice inválido
-            try:
-                tr.append(original.pop(index-1))
-            except KeyError:
-                return None # Índice repetido
-            part = part[part.find("]")+1:]
-        tr.append(part)
-        lpp = False
-    if original:
-        return None # No se han usado todos los argumentos
+                index, text = part.split("]", 1)
+                tr.extend((original.pop(int(index)-1), text))
+            except ValueError: # No se encuentra ']' o índice no numérico
+                tr.extend((lf, part))
+            except KeyError: # Índice repetido, devolvemos sin procesar
+                if len(original) == 1: # Sólo queda un posible valor
+                    index = original.iterkeys().next()
+                    tr.extend((original.pop(index), text))
+                else:
+                    return entry
+        else:
+            tr.append(part)
     return "".join(tr)

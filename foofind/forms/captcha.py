@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
-from flask import request, session
+from flask import request, session, current_app
 from flask.ext.babel import lazy_gettext as _
 from wtforms.fields import Field
 from foofind.forms.validators import *
 from foofind.services import cache
-
+from hashlib import sha256
 import Image, ImageFont, ImageDraw, ImageFilter, StringIO
 
 import random
 
+cache_image_font = ImageFont.truetype("foofind/static/DejaVuSans.ttf", 36)
 def generate_image(txt):
     def random_color(total=False):
         if total == False:
@@ -20,7 +21,6 @@ def generate_image(txt):
     height = 40
     font_size = 36
     interval = width/length
-    font = ImageFont.truetype("foofind/static/DejaVuSans.ttf",font_size)
     image = Image.new('RGB', (width, height), (255,255,255))
     draw = ImageDraw.Draw(image)
 
@@ -29,7 +29,7 @@ def generate_image(txt):
         # Crear una imagen para guardar un caracter
         char = Image.new('RGB',(font_size, font_size))
         # Añadirle el caracter con la fuente indicada y un color aleatorio
-        ImageDraw.Draw(char).text((3, 1), txt[i], font=font, fill= random_color())
+        ImageDraw.Draw(char).text((3, 1), txt[i], font=cache_image_font, fill= random_color())
         # Girarlo 40 grados hacia cualquier lado
         char = char.rotate(random.randint(-40,40))
         # Crear una mascara para tapar las partes negras que salen al girar el caracter
@@ -54,7 +54,11 @@ def captcha(form, field):
     Validador para controlar que la coinciden la imagen y el texto enviado por el usuario
     '''
     captcha_id = request.form["%s_id" % field.name]
-    if field.data != cache.get("captcha/" + captcha_id):
+    cache_data = cache.get("captcha/" + captcha_id)
+    if cache_data is None:
+        raise ValidationError(_('captcha_wrong'))
+    code, consumed = cache_data
+    if field.data != code or not consumed:
         raise ValidationError(_('captcha_wrong'))
     cache.delete("captcha/" + captcha_id)
 
@@ -77,8 +81,8 @@ class CaptchaField(Field):
         imgtext = ''.join(random.choice('ABCDEFGHIJKLMNPQRSTUVWZYZ123456789') for i in range(5))
 
         # Encriptarlo
-        captcha_id=imgtext
-        cache.set("captcha/"+captcha_id, imgtext)
+        captcha_id=sha256(current_app.config["SECRET_KEY"]+imgtext).hexdigest()
+        cache.set("captcha/%s" % captcha_id, (imgtext, False))
 
         # Devolverlo codificado para poder usado en una URL
         return captcha_id

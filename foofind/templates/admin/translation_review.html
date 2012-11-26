@@ -1,6 +1,7 @@
 {% extends "admin/base.html" %}
 {% block page %}
     <form method="post">
+        {{ render_field() }}
         <h3 class="list">{{_('admin_translation_info')}}</h3>
         <input type="hidden" name="fields" value="{{field_keys}}"/>
         <dl class="list">

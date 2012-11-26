@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from flask import Blueprint as Blueprint, session, request
+from flask import Blueprint as Blueprint, request, g, make_response
 from collections import OrderedDict
 from functools import wraps
 from random import randint
 from time import time
-from foofind.utils import u
+from foofind.utils import u, pyon, VALUE_UNSET
+
 import logging
 
 #TODO(felipe): Comentar funcionalidad y ejemplo de uso
@@ -98,19 +99,36 @@ class RememberSelector(object):
         self.remember_id = config.get("remember_id", None)
         return self
 
+    @property
+    def cookie(self):
+        if hasattr(g, "cookie_alternatives"):
+            return g.cookie_alternatives
+        elif "alternatives" in request.cookies:
+            try:
+                # Para evitar cookies problemáticas
+                alternatives = pyon.loads(request.cookies["alternatives"].decode("hex"))
+            except BaseException as e:
+                alternatives = {}
+        else:
+            alternatives = {}
+        g.cookie_alternatives = alternatives
+        return alternatives
+
     def __call__(self, endpoint, cargs, ckwargs):
         cookie = endpoint if self.remember_id is None else self.remember_id
-        if "alternatives" in session and cookie in session["alternatives"]:
-            return session["alternatives"][cookie]
-        return ALTERNATIVE_NOT_FOUND
+        return self.cookie.get(cookie, ALTERNATIVE_NOT_FOUND)
 
     def save(self, endpoint, alt):
         cookie = endpoint if self.remember_id is None else self.remember_id
-        if "alternatives" in session:
-            session["alternatives"][cookie] = alt
-            session.modified = True
-        else:
-            session["alternatives"] = {cookie: alt}
+
+        if self.cookie.get(cookie, ALTERNATIVE_NOT_FOUND) != alt:
+            self.cookie[cookie] = alt
+            Fooprint.set_cookie(
+                "alternatives",
+                pyon.dumps(self.cookie).encode("hex"),
+                expires=time()+315576000
+                )
+
 
 class ManagedSelect(object):
     '''
@@ -291,11 +309,24 @@ class DecoratedView(object):
 
     def __call__(self, *args, **kwargs):
         option = self.select
+
+        # Petición de id de alternativa
         if hasattr(option, "__call__"):
             option = option(self.endpoint, args, kwargs)
+
+        # Ejecución del endpoint
         if option in self.alternatives:
-            return self.alternatives[option](*args, **kwargs)
-        return self.alternatives.values()[0](*args, **kwargs)
+            response = self.alternatives[option](*args, **kwargs)
+        else:
+            response = self.alternatives.values()[0](*args, **kwargs)
+
+        # Escribe cookies
+        if hasattr(g, "cookies_to_write"):
+            # make_response ya detecta si se trata de una respuesta
+            response = make_response(response)
+            for key, (cargs, ckwargs) in g.cookies_to_write.iteritems():
+                response.set_cookie(key, *cargs, **ckwargs)
+        return response
 
 class Fooprint(Blueprint):
     '''
@@ -317,7 +348,21 @@ class Fooprint(Blueprint):
 
     '''
 
+    @classmethod
+    def set_cookie(cls, key, *args, **kwargs):
+        if hasattr(g, "cookies_to_write"):
+            g.cookies_to_write[key] = (args, kwargs)
+        else:
+            g.cookies_to_write = {key: (args, kwargs)}
+
+    _dup_on_startswith = ()
     def __init__(self, *args, **kwargs):
+        if "dup_on_startswith" in kwargs:
+            ds = kwargs.pop("dup_on_startswith")
+            if isinstance(ds, basestring) or not hasattr(ds, "__iter__"):
+                self._dup_on_startswith = {ds}
+            else:
+                self._dup_on_startswith = set(ds)
         Blueprint.__init__(self, *args, **kwargs)
         self.decorators = {}
 
@@ -333,6 +378,15 @@ class Fooprint(Blueprint):
                           de la alternativa por defecto (por defecto es None).
 
         '''
+
+        rules = {rule}
+        '''
+        rules.update(
+            "/" if rule == start else rule[len(start):]
+            for start in self._dup_on_startswith
+            if rule.startswith(start))
+        '''
+
         def decorator(f):
             endpoint = options.pop("endpoint", f.__name__)
             aid = options.pop("aid", None)
@@ -345,16 +399,18 @@ class Fooprint(Blueprint):
             else:
                 decorated_view = DecoratedView("%s.%s" % (self.name, endpoint), aid, f)
                 self.decorators[endpoint] = decorated_view
-            self.add_url_rule(rule, endpoint, decorated_view, **options)
+            for rule in rules:
+                self.add_url_rule(rule, endpoint, decorated_view, **options)
             return decorated_view
         return decorator
 
     def add_url_rule(self, rule, endpoint=None, view_func=None, **options):
         def record(app):
             fnc = view_func
-            if len(self.decorators[endpoint].alternatives) == 1:
+            if endpoint in self.decorators and len(self.decorators[endpoint].alternatives) == 1:
                 # Si sólo hay una alternativa, nos saltamos el decorated_view
                 fnc = self.decorators[endpoint].alternatives.values()[0]
+            fnc._fooprint = self
             return app.add_url_rule(rule, endpoint, fnc, **options)
         self.record(record)
 

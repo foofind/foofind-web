@@ -2,6 +2,7 @@
 {% block page %}
     {%- if check_form %}
     <form method="post">
+        {{ render_field() }}
         {{ check_form.defaults }}
         {{ check_form.editable}}
         {{ check_form.confirmed }}

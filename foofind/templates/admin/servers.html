@@ -1,0 +1,40 @@
+{% extends "admin/base.html" %}
+{% block header %}
+    <ul class="tabs">
+        {% for s in (15, 30, 60) %}
+            <li>
+            {% if page_size != s %}<a href="{{url_for('admin.servers', page=page, size=s)}}">{{s}}</a>
+            {% else %}<span>{{s}}</span>{% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+{% block page %}
+    {% if num_items > 0 %}
+        <div class="list">
+        {% for data in alternatives %}
+            <ul>
+                <li>{{ data["_id"] }}</li>
+                <li>{{ data["ip"] }} : {{ data["p"] }}</li>
+                <li>{{ data["rip"] }} : {{ data["rp"] }}</li>
+                <li class="edit_row"><a href="{{url_for('admin.db_edit', collection='server', document_id=data['_id'], page=page, size=page_size)}}">{{_('admin_info')}}</a></li>
+            </ul>
+        {% endfor %}
+        </div>
+        {% if num_pages > 1 %}
+        <ul class="pagination">
+            {%- for i in range(num_pages) -%}
+            <li>
+                {%- if i == page -%}
+                <span>{{ i + 1 }}</span>
+                {%- else -%}
+                <a href="{{url_for('admin.servers', page=i, size=page_size)}}">{{i+1}}</a>{% endif -%}
+            </li>
+            {%- endfor -%}
+        </ul>
+        {% endif %}
+    {% else %}
+        <p>{{_('admin_servers_none')}}</p>
+    {% endif %}
+    <p><a href="{{url_for('admin.db_edit', collection='server', size=page_size)}}" class="button add">{{_('admin_edit_new')}}</a></p>
+{% endblock %}

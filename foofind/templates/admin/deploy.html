@@ -33,6 +33,7 @@
 {%- endblock %}
 {% block page -%}
 <form method="post" {#action="{{ url_for('admin.deploy', show=show, size=page_size ) }}"#} data-confirmation_message="{{_('admin_deploy_confirmation', action='__action__', target='__target__')|forceescape}}">
+{{ render_field() }}
 {% if show == "deploy" %}
 <h3 class="list">{{_('admin_deploy_phase_deploy')}}</h3>
 <dl class="deploy_buttons list">

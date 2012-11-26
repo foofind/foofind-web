@@ -31,6 +31,7 @@
     <h3>Envíanos tus datos</h3>
     <form method="post" enctype="multipart/form-data">
         <fieldset>
+            {{ render_field() }}
             {{ render_field(form.email) }}
             {{ render_field(form.offer) }}
             {{ render_field(form.message,cols=40,rows=10) }}

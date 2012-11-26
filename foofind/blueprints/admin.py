@@ -15,10 +15,12 @@ import multiprocessing
 import time
 import traceback
 import logging
+import zlib
 
 import deploy.fabfile as fabfile
+import foofind.utils.pyon as pyon
 
-from flask import Blueprint, jsonify, render_template, request, redirect, url_for, flash, current_app, abort, send_file, g
+from flask import Blueprint, jsonify, render_template, request, redirect, url_for, flash, current_app, abort, send_file, g, session
 from werkzeug.datastructures import MultiDict
 from flask.ext.babel import gettext as _
 from flask.ext.login import current_user
@@ -26,13 +28,14 @@ from wtforms import BooleanField, TextField, TextAreaField, HiddenField
 from functools import wraps
 from collections import OrderedDict, defaultdict
 
-from foofind.utils import lang_path, expanded_instance, fileurl2mid, mid2hex, hex2mid, url2mid, u
+from foofind.utils import expanded_instance, fileurl2mid, mid2hex, hex2mid, url2mid, u, mid2url
 from foofind.utils.translations import unfix_lang_values
 from foofind.utils.fooprint import ManagedSelect
 from foofind.services import *
 from foofind.services.search import block_files as block_files_in_sphinx, get_id_server_from_search
 from foofind.forms.admin import *
 from foofind.utils.pogit import pomanager
+
 
 class DeployTask(object):
     '''
@@ -65,23 +68,24 @@ class DeployTask(object):
 
         def write(self, x):
             w = None
-            self._tmp.append(x)
+            self._tmp.append(u(x))
             if "\n" in x:
                 now = time.time()
                 if now-self._tim.value > 2.:
                     self._tim.value = now
-                    cache.cache.set(self._memid, "".join(self._tmp))
+                    cache.cache.set(self._memid, u"".join(self._tmp))
 
         def flush(self): pass
         def truncate(self, x=0): pass
         def isatty(self): return False
 
         def clean(self):
-            while self._tmp: self._tmp.pop()
+            #while self._tmp: self._tmp.pop()
+            del self._tmp[:]
             cache.cache.set(self._memid, "")
 
         def get_data(self):
-            return "".join(self._tmp) or cache.cache.get(self._memid) or ""
+            return u"".join(self._tmp) or u(cache.cache.get(self._memid) or u"")
 
     class DeployThread(multiprocessing.Process):
         '''
@@ -331,29 +335,6 @@ def pagination(num, page=0, items_per_page=15):
         items_per_page = request.args.get("size", items_per_page, int)
     return (items_per_page*page, items_per_page, page, (num/items_per_page)+bool(num%items_per_page))
 
-def simple_pyon(x):
-    '''
-    Convierte una cadena representando un objeto de python en un objeto de
-    python con el tipo apropiado. Muy simplificado.
-    '''
-    x = x.strip()
-    if x.lower() in ("","None","null","none"): return None
-    if (x.replace("+", "", x.startswith("+"))
-         .replace("-","", x.startswith("-"))
-         .replace(".", "",x.count(".")==1)
-         .isdigit()):
-        if "." in x: return float(x)
-        return int(x)
-    if x.endswith("j"):
-        return complex(x)
-    if len(x)>1:
-        if x[0] == x[-1] and x[0] in "\"'": return x[1:-1]
-        if x[0] == "u" and x[1] == x[-1] and x[1] in "\"'": return u(x[2:-1])
-        if x[0] == "[" and x[-1] == "]": return list(simple_pyon(i) for i in x[1:-1].split(","))
-        if x[0] == "(" and x[-1] == ")": return tuple(simple_pyon(i) for i in x[1:-1].split(","))
-        if x[0] == "{" and x[-1] == "}": return dict((simple_pyon(i.split(":")[0]), simple_pyon(i.split(":")[1])) for i in x[1:-1].split(","))
-    return x
-
 logOrder = {"overview":-1,"staging.1":256,"staging.2":257,"admin.1":258,"admin.2":259}
 logTask = DeployTask("admin/deploy/log/")
 logRefresh = "admin/log/refresh"
@@ -499,9 +480,9 @@ def index():
     Administración, vista general
     '''
     mode = request.args.get("show","overview")
-    modes = [(_('admin_overview'),"overview")]
-    modes.extend( (v.capitalize(), k ) for k, v in fabfile.list_logs() )
-    modes.sort(key=lambda x: logOrder.get(x[1], None) or ord(x[1][0]))
+    modes = [(v.capitalize(), k) for k, v in fabfile.list_logs()]
+    modes.sort()
+    modes.insert(0, (_('admin_overview'),"overview"))
     form = None
 
     stdsep = "\n\n---\n\n"
@@ -561,11 +542,10 @@ def locks():
         list_modes=("new","old","all"),
         page=page)
 
-
-@admin.route('/<lang>/admin/lockfiles', methods=("GET","POST"))
 @admin.route('/<lang>/admin/locks/<complaint_id>', methods=("GET","POST"))
+@admin.route('/<lang>/admin/lockfiles', methods=("GET","POST"))
 @admin_required
-def lock_file(complaint_id=None):
+def lock_file(complaint_id=None, url_file_ids=None):
     '''
     Información y bloqueo de ficheros, puede recibir un id de queja, o una lista de ids (en hex) de ficheros separados por la letra "g"
     '''
@@ -576,13 +556,14 @@ def lock_file(complaint_id=None):
     filenames = {}
     bugged = []
     fileids = ()
+    permalink = None
     if request.method == 'POST':
         if not "fileids" in request.form:
             searchform = BlockFileSearchForm(request.form)
             identifiers = searchform.identifier.data.split()
             if searchform.mode.data == "hexid":
-                print identifiers
-                fileids = [ mid2hex(hex2mid(i))
+                fileids = [
+                    mid2hex(hex2mid(i))
                     for i in identifiers
                     if all(x in "0123456789abcdef" for x in i.lower())
                     ]
@@ -591,19 +572,28 @@ def lock_file(complaint_id=None):
                     mid2hex(url2mid(i))
                     for i in identifiers
                     if all(x in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!-" for x in i)
-                        and (len(i)*8)%6 == 0
+                        and (len(i)*6)%8 == 0
                     ]
             elif searchform.mode.data == "url":
                 filenames.update(
                     (
                         mid2hex(fileurl2mid(i)),
-                        u".".join(urllib2.unquote(i.split("/")[-1]).split(".")[:-1])
+                        urllib2.unquote(i.split("/")[-1]).rsplit(".",1)[0]
                         )
                     for i in identifiers
                     if i.startswith("http") and len(i.split("//")[1].split("/")) > 3
                     )
                 fileids = filenames.keys()
-            if not fileids:
+            if fileids:
+                permalink = url_for('admin.lock_file',
+                    fileids = zlib.compress((
+                        u"%s;%s" % (
+                            "\0".join(fileids),
+                            "\0".join(filenames.itervalues())
+                            )).encode("utf-8")
+                        ).encode("hex")
+                    )
+            else:
                 return redirect(url_for('admin.locks', page=page, mode=mode, size=size))
         else:
             block = request.form.get("block", False, bool)
@@ -614,11 +604,12 @@ def lock_file(complaint_id=None):
                 sphinx_block = []
                 sphinx_unblock = []
                 for fileid, server in fileids.iteritems():
-                    (sphinx_block if block and not unblock else sphinx_unblock).append((fileid,filenames[fileid]))
+                    if fileid in filenames:
+                        (sphinx_block if block and not unblock else sphinx_unblock).append((fileid, filenames[fileid]))
                     req = {"_id":fileid, "bl": int(block and not unblock)}
                     if server: req["s"] = int(server) # si recibo el servidor, lo uso por eficiencia
                     try:
-                        # TODO(felipe) cuando se arregle el bug de indir: borrar
+                        # TODO(felipe): cuando se arregle el bug de indir: borrar
                         # TODO(felipe): comprobar en qué casos se puede llegar aquí sin "s"
                         filesdb.update_file(req, direct_connection=True, update_sphinx=False)
                     except:
@@ -633,6 +624,11 @@ def lock_file(complaint_id=None):
                     pagesdb.update_complaint({"_id":complaint_id,"processed":True})
                 flash("admin_locks_not_locked", "success")
             return redirect(url_for('admin.locks', page=page, mode=mode, size=size))
+    elif "fileids" in request.args:
+        permalink = request.url
+        fileids, filenames = zlib.decompress(request.args["fileids"].decode("hex")).decode("utf-8").rsplit(";",1)
+        fileids = fileids.split("\0")
+        filenames = dict(itertools.izip(fileids, filenames.split("\0")))
 
     complaint_data = None # Hay un único o ningún registro de queja por formulario
     files_data = OrderedDict() # Pueden haber varios ficheros por formulario
@@ -653,7 +649,7 @@ def lock_file(complaint_id=None):
         data = filesdb.get_file(fileid, bl=None)
         # Arreglo para bug de indir: buscar los servidores en sphinx
         # y obtener los datos del servidor encontrado.
-        # TODO(felipe) cuando se arregle el bug de indir: borrar
+        # TODO(felipe): cuando se arregle el bug de indir: borrar
         if data is None and fileid in filenames:
             bugged.append(fileid)
             sid = get_id_server_from_search(fileid, filenames[fileid])
@@ -665,21 +661,25 @@ def lock_file(complaint_id=None):
         if not "bl" in files_data[fileid] or files_data[fileid]["bl"] == 0: unblocked += 1
         else: blocked += 1
 
+
+
     return render_template('admin/lock_file.html',
         page_title=_('admin_locks_fileinfo'),
         complaint_data=complaint_data,
         files_data=files_data,
         filenames = filenames,
+        permalink = permalink,
         bugged = bugged,
+        mid2url = mid2url,
         fileids=",".join(
             "%s:%s" % (fileid, prop["s"] if "s" in prop else "")
             for fileid, prop in files_data.iteritems()),
         blocked=None if blocked and unblocked else blocked > 0,
         list_mode=mode,
         page=page,
-        title=admin_title('admin_losfdcks_fileinfo'))
+        title=admin_title('admin_locks_fileinfo'))
 
-# TODO(felipe) cuando se arregle el bug de indir: borrar
+# TODO(felipe): cuando se arregle el bug de indir: borrar
 @admin.route('/<lang>/admin/getserver/<fileid>', methods=("GET","POST"))
 @admin.route('/<lang>/admin/getserver/<fileid>/<filename>', methods=("GET","POST"))
 def getserver(fileid, filename=None):
@@ -797,9 +797,9 @@ def review_translation(translation_id):
 
     # Campos de traducción
     fields = {"field_%s" % key:
-        TextAreaField(key, default=unfix_lang_values(value, base_lang[key]) or value)
+        TextAreaField(key, default=unfix_lang_values(value, base_lang[key]))
         if len(value) > 40 else
-        TextField(key, default=unfix_lang_values(value, base_lang[key]) or value)
+        TextField(key, default=unfix_lang_values(value, base_lang[key]))
         for key, value in data_fields.iteritems() if key in base_lang}
 
     # Checkboxes
@@ -898,11 +898,16 @@ def deploy():
                 k for j in dls.itervalues() for k in j)]
             form.script_hosts.choices.sort()
             form.script_available_hosts.data = json.dumps(dls)
+            if request.method == "GET" and "admin_script_select" in session:
+                form.script_mode.data = session["admin_script_select"]
         else:
             form.script_mode.choices = ()
             form.script_hosts.choices = ()
 
     if request.method == "POST":
+        if mode == "script":
+            # Para recordar la opción de script
+            session["admin_script_select"] = form.script_mode.data
         if form.script_clean_cache.data:
             # Botón de borrar caché de scripts
             cache.set(scriptRefresh, time.time())
@@ -1021,17 +1026,22 @@ def origins():
     page = request.args.get("page", 0, int)
     grps = request.args.get("mode", "all", str)
     mode = request.args.get("show", "current", str)
+    embed_mode = request.args.get("embed", "all", str)
 
+    cache.skip = True
     all_groups = tuple(filesdb.get_sources_groups())
     origin_filter = None if grps == "all" else tuple(grps)
     crbl_filter = None if mode == "all" else mode == "blocked"
-    num_items = filesdb.count_sources(crbl_filter, origin_filter, True)
+    embed_filter = None if embed_mode == "all" else embed_mode == "enabled"
+    num_items = filesdb.count_sources(crbl_filter, origin_filter, True, None, embed_filter)
     skip, limit, page, num_pages = pagination(num_items)
-    origin_list = filesdb.get_sources(skip, limit, crbl_filter, origin_filter, True)
+    origin_list = filesdb.get_sources(skip, limit, crbl_filter, origin_filter, True, embed_filter)
 
     return render_template('admin/origins.html',
         page_title=_('admin_origins'),
         title=admin_title('admin_origins'),
+        embed_mode=embed_mode,
+        embed_modes=("enabled","disabled","all"),
         num_pages=num_pages,
         num_items=num_items,
         show_modes=("current","blocked","all"),
@@ -1068,11 +1078,43 @@ def alternatives():
         alternatives=alternative_list,
         page=page)
 
-# Parsers para diccionario de parsers
+@admin.route('/<lang>/admin/servers')
+@admin_required
+def servers():
+    '''
+    Gestión de servers
+    '''
+    page = request.args.get("page", 0, int)
+    grps = request.args.get("mode", "all", str)
+    mode = request.args.get("show", "current", str)
+
+    server_list = filesdb.get_servers()
+
+    # Int fix
+    to_int = {k for k, v in db_parsers["server"].iteritems() if v == db_types[int]}
+    to_int.add("_id")
+    for server in server_list:
+        for i in to_int:
+            if i in server:
+                server[i] = int(server[i])
+
+    num_items = max(server["_id"] for server in server_list)
+    skip, limit, page, num_pages = pagination(num_items)
+    num_items = max(num_items, len(server_list))
+
+    return render_template('admin/servers.html',
+        page_title=_('admin_servers'),
+        title=admin_title('admin_servers'),
+        num_pages=num_pages,
+        num_items=num_items,
+        alternatives=server_list,
+        page=page)
+
+# Parsers para diccionario de parsers (data_to_form, form_to_data [, data_to_json [, json_to_data]])
 db_types = {
     int : (
         lambda x: (
-            "%d" % x if isinstance(x, (int,float)) else
+            "%d" % x if isinstance(x, (int, float, long)) else
             x if isinstance(x, basestring) and x.count(".") in (0,1) and x.replace(".","").isdigit() else "0"
             ),
         lambda x: int(float(x)) if x.count(".") in (0,1) and x.replace(".","").isdigit() else 0
@@ -1086,15 +1128,18 @@ db_types = {
         ),
     bool : (
         lambda x: "1" if x else "0",
-        lambda x: 1 if x.lower() in ("1","true") else 0
+        lambda x: 1 if x.lower() in ("1","true","yes","ok", u"sí") else 0
         ),
     datetime.datetime : (
-        lambda x: x.isoformat(" "),
-        lambda x: datetime.datetime.strptime(x, "%Y-%m-%d %H:%M:%S")
+        lambda x: x.isoformat(" ") if x else None,
+        lambda x: datetime.datetime.strptime(x, "%Y-%m-%d %H:%M:%S.%f") if x else None
         ),
     str: ( u, u ),
     unicode: ( u, u ),
-    bson.ObjectId : ( mid2hex, hex2mid ),
+    bson.ObjectId : (
+        mid2hex,
+        lambda x: hex2mid(x) if x else "" # _id está vacío al crear nuevos registros defecto
+        ),
     "json" : (
         json.dumps,
         lambda x: json.loads(x) if x else None
@@ -1103,28 +1148,66 @@ db_types = {
         lambda x: ",".join(x) if isinstance(x, list) else "",
         lambda x: [i.strip() for i in x.split(",")]
         ),
+    "int_list": (
+        lambda x: ",".join("%d" % i for i in x if isinstance(i, (int, long, float))) if isinstance(x, list) else "",
+        lambda x: [int(i.strip()) for i in x.split(",") if i.isdigit()]
+        ),
     "str_none": (
         lambda x: x if x else "",
         lambda x: x if x else None
         ),
-    "pyon" : (repr, simple_pyon)
+    "pyon" : (
+        pyon.dumps,
+        lambda x: pyon.loads(x.encode("utf-8")) if x else None
+        )
     }
-# Diccionario de parsers [collection][prop] = (data_to_form, form_to_data [, data_to_json [, json_to_data]])
+# Diccionario de campos y parsers
 db_parsers = {
-    "origin": {
+    "server":{
+        '_id': db_types[float],
+        'c': db_types[int],
+        'ip': db_types[str],
+        'p': db_types[int],
+        'rip': db_types[str],
+        'rp': db_types[int],
+        'lt': db_types[datetime.datetime],
+        'mc': db_types[int],
+        'sp': db_types[str],
+        'spp': db_types[int],
+        'ss': db_types[int],
+        },
+    "origin":{
         "_id": db_types[float],
         "g": db_types["str_list"],
         "crbl": db_types[int],
         "ig": db_types["json"],
         "url_lastparts_indexed": db_types[int],
+        "embed_active": db_types[bool],
+        "embed": db_types["str_none"],
+        "embed_enabled": db_types["str_none"],
+        "embed_disabled": db_types["str_none"],
+        "embed_cts": db_types["int_list"],
+        "url_embed_regexp": db_types["str_none"],
+        "icons": db_types["pyon"],
+        "quality": db_types["pyon"],
+        "hidden_extensions": db_types[bool],
+        "tb": db_types["str_none"],
+        "d": db_types[str],
+        "url_pattern": db_types[str],
+        "ct": db_types["int_list"],
         },
     "user":{
-        "_id": db_types[bson.ObjectId],
+        "_id": db_types[int],
         "karma": db_types[float],
         "active": db_types[bool],
         "type": db_types[float],
         "token": db_types["str_none"],
-        "created": db_types[datetime.datetime]
+        "created": db_types[datetime.datetime],
+        "username": db_types[str],
+        "email": db_types[str],
+        "lang": db_types[str],
+        "location": db_types[str],
+        "oauthid": db_types[str],
         },
     "alternatives":{
         "_id": (str, str),
@@ -1138,7 +1221,7 @@ db_parsers = {
         "remember_id": (str, str),
         "probability": (
             lambda x: "\n".join("%s: %s" % (repr(k),repr(v)) for k, v in x.iteritems()),
-            lambda x: dict((simple_pyon(p) for p in line.split(":")) for line in x.replace(";","\n").split("\n") if line.strip()),
+            lambda x: dict((pyon.loads(p.strip()) for p in line.split(":")) for line in x.replace(";","\n").split("\n") if line.strip()),
             lambda x: [j for i in x.iteritems() for j in i],
             lambda x: dict((x[i], x[i+1]) for i in xrange(0, len(x)-1, 2))
             )
@@ -1146,8 +1229,8 @@ db_parsers = {
     }
 db_removable = ("user", "alternatives")
 #
-db_serialize = lambda collection, data: json.dumps({repr(i):db_dtj(collection, i, j) for i, j in data.iteritems()})
-db_unserialize = lambda collection, data: {simple_pyon(k): db_jtd(collection, simple_pyon(k), v) for k, v in json.loads(data).iteritems()}
+db_serialize = lambda collection, data: pyon.dumps({k: db_dtj(collection, k, v) for k, v in data.iteritems()})
+db_unserialize = lambda collection, data: {k: db_jtd(collection, k, v) for k, v in pyon.loads(data).iteritems()}
 # MongoDB data to form
 db_dtf = lambda a, b, c: db_parsers[a][b][0](c) if a in db_parsers and b in db_parsers[a] else c
 # form to MongoDB data
@@ -1167,6 +1250,8 @@ def db_edit(collection, document_id=None):
     Edición de base de datos
     '''
 
+    cache.skip = True # Es importante que los datos estén actualizados
+
     page = request.args.get("page", 0, int)
     grps = request.args.get("mode", "all", str)
     mode = request.args.get("show", "current", str)
@@ -1176,8 +1261,11 @@ def db_edit(collection, document_id=None):
     form_title = "admin_edit"
     data = None
 
-    form_force_fields = ("_id",) if document_id is None else ()
-    form_readonly_fields = ("_id",) if document_id else ()
+    form_force_fields = {"_id"} if document_id is None else set()
+    if collection in db_parsers:
+        form_force_fields.update( db_parsers[collection] )
+
+    form_readonly_fields = {"_id"} if document_id else set()
     form_ignored_fields = ()
     form_fieldtypes = {}
     form_fieldkwargs = {}
@@ -1185,6 +1273,7 @@ def db_edit(collection, document_id=None):
 
     document = {}
     deleteable = bool(document_id) # Mostrar o no el botón de borrar
+    sort_fnc = lambda x: x
 
     # Especificidades de las colecciones
     if collection == "user":
@@ -1193,22 +1282,20 @@ def db_edit(collection, document_id=None):
         #       cambiarla (ver endpoint "db_confirm").
         page_title = 'admin_users'
         form_title = 'admin_users_info'
-        form_force_fields += ("karma", "token", "username", "email", "new password", "lang", "location", "karma", "active", "type", "oauthid")
-        form_readonly_fields += ("created","password")
+        form_force_fields.add("new password")
+        form_readonly_fields.update(("created","password"))
         data = usersdb.find_userid(document_id) if document_id else {}
     elif collection == "origin":
         deleteable = deleteable and current_app.debug
         page_title = 'admin_origins_info'
         form_title = 'admin_origins_info'
-        form_force_fields += ("tb", "crbl", "d", "g", "ig", "url_lastparts_indexed")
-        #form_readonly_fields += ()
         data = filesdb.get_source_by_id(float(document_id)) if document_id else {}
     elif collection == "alternatives":
         url_id = "admin.alternatives"
         available_methods = configdb.list_alternatives_methods()
         available_endpoints = configdb.list_alternatives_endpoints(document_id) if document_id else []
         available_param_types = configdb.list_alternatives_param_types()
-        form_force_fields += ("default", "methods", "param_name", "param_type", "remember_id", "probability")
+
         form_fieldtypes["probability"] = TextAreaField
         form_fieldtypes["param_type"] = SelectField
 
@@ -1227,18 +1314,29 @@ def db_edit(collection, document_id=None):
         form_fieldkwargs["param_type"] = {"choices": ((i, i) for i in available_param_types)}
         form_fieldparams["available_methods"] = form_fieldparams["available_endpoints"] = {"readonly":"readonly"}
         form_fieldparams["probability"] = {"rows": len(available_endpoints), "class":"monospaced"}
+    elif collection == "server":
+        deleteable = deleteable and current_app.debug
+        page_title = 'admin_server'
+        form_title = 'admin_server'
+        data = filesdb.get_server(float(document_id)) if document_id else {}
+        fixed_order = ("ip","p","rip","rp")
+        sort_fnc = lambda x: fixed_order.index(x) if x in fixed_order else x
     else:
         abort(404)
 
-    document.update((i, db_ftd(collection, i, "")) for i in form_force_fields)
     if data: document.update(data)
+    document.update((i, db_ftd(collection, i, "")) for i in form_force_fields if i not in data)
 
     document_defaults = document
-    document_writeable = sorted(k for k in document.iterkeys() if not (k in form_readonly_fields or k in form_ignored_fields))
+    document_writeable = sorted(
+        (k for k in document.iterkeys() if not (k in form_readonly_fields or k in form_ignored_fields)),
+        key=sort_fnc
+        )
 
     edict = {}
     edit_form = expanded_instance(EditForm, {
-        db_fnm(k): form_fieldtypes.get(k, TextField)(k, default=db_dtf(collection, k, document[k]), **form_fieldkwargs.get(k, edict))
+        db_fnm(k): form_fieldtypes.get(k, TextField
+            )(k, default=db_dtf(collection, k, document[k]), **form_fieldkwargs.get(k, edict))
         for k in document_writeable
         }, request.form)
 
@@ -1321,6 +1419,9 @@ def db_confirm(collection, document_id=None):
     elif collection == "alternatives":
         url_id = "admin.alternatives"
         save_fnc = lambda data: configdb.update_alternative_config(document_id or data["_id"], data)
+    elif collection == "server":
+        url_id = 'admin.servers'
+        save_fnc = lambda data: filesdb.update_server(data)
     else:
         abort(404)
 

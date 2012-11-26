@@ -46,7 +46,8 @@
     {% else %}
         <p>{{_('admin_locks_none')}}</p>
     {% endif %}
-        <form method="POST" action="{{ url_for('admin.lock_file') }}">
+        <form method="post" action="{{ url_for('admin.lock_file') }}">
+        {{ render_field() }}
         <h3 class="list">{{_('admin_locks')}}</h3>
             <dl class="list">
             <dt>{{ searchform.identifier.label }}</dt>

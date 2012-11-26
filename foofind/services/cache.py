@@ -4,10 +4,17 @@ from flask.ext.cache import Cache as CacheBase
 from flask import g, request
 from functools import wraps
 from hashlib import md5
-from inspect import getsourcelines, ismethod
+from inspect import getsourcelines, currentframe
 #from slimmer import html_slimmer
+from foofind.utils import LimitedSizeDict
 
-import logging
+import logging, time, re
+
+class ThrowFallback(Exception):
+    '''
+    Excepción para ser usada con Cache.fallback. No se registra la excepción.
+    '''
+    _enabled = type("ThrowFallbackEnabler", (object,), {})
 
 class Cache(CacheBase):
     '''
@@ -16,6 +23,60 @@ class Cache(CacheBase):
 
     def __init__(self, *args, **kwargs):
         CacheBase.__init__(self, *args, **kwargs)
+        self._local_cache = LimitedSizeDict(size_limit=10000)
+        self._regexp_cache = LimitedSizeDict(size_limit=5000)
+
+    def regexp(self, r):
+        if not r in self._regexp_cache:
+            self._regexp_cache[r] = re.compile(r)
+        return self._regexp_cache[r]
+
+    def local_get(self, key):
+        '''
+        Obtiene una clave del caché local para esta instancia de la aplicación.
+
+        @type key: str
+        @param key: clave de caché
+        '''
+        value, expiration = self._local_cache.get(key, (None, None))
+        if expiration is None:
+            if value is None and key is self._local_cache:
+                del self._local_cache[key]
+            return value
+        elif expiration > time.time():
+            return value
+        del self._local_cache[key]
+        return None
+
+    def local_set(self, key, value, timeout=None):
+        '''
+        Asigna una clave del caché local para esta instancia de la aplicación.
+
+        @type key: str
+        @param key:
+        '''
+        self._local_cache[key] = (value, (time.time()+timeout) if timeout > 0 else None)
+
+    def local_delete(self, key):
+        '''
+        Borra una clave del caché local para esta instancia de la aplicación.
+
+        @type key: str
+        @param key: clave de caché
+        '''
+        if key in self._local_cache:
+            del self._local_cache[key]
+
+    def local_delete_multi(self, *keys):
+        '''
+        Borra varias claves de caché local para esta instancia de la aplicación.
+
+        @type key: str
+        @param key: clave de caché
+        '''
+        for key in keys:
+            if key in self._local_cache:
+                del self._local_cache[key]
 
     '''
     @type cacheme: bool
@@ -30,7 +91,38 @@ class Cache(CacheBase):
 
     @cacheme.setter
     def cacheme(self, v):
-        g.cache_cacheme = bool(v)
+        try:
+            g.cache_cacheme = bool(v)
+        except RuntimeError as e:
+            # Si no hay contexto no hace falta controlar el caché
+            logging.debug("cache.cacheme accessed without context", extra={"e":e})
+
+    @property
+    def skip(self):
+        if hasattr(g, "cache_skip"):
+            return bool(g.cache_skip)
+        return False
+
+    @skip.setter
+    def skip(self, v):
+        g.cache_skip = v
+
+    @classmethod
+    def throw_fallback(cls):
+        '''
+        Función de conveniencia que lanza una excepción que hace saltar el
+        fallback si registrar excepción.
+        '''
+        frame = currentframe()
+        if not frame is None:
+            # Comprobación: la pila no es accesible en todas las implementaciones de python
+            while frame:
+                if frame.f_locals.get("__", None) is ThrowFallback._enabled:
+                    break
+                frame = frame.f_back
+            else:
+                raise RuntimeError, "Cache.throw_fallback called outside any fallback scope"
+        raise ThrowFallback
 
     def clear(self):
         '''Borrar todas las claves de caché.'''
@@ -65,7 +157,7 @@ class Cache(CacheBase):
 
                 cache_key = decorated_function.make_cache_key(*args, **kwargs)
 
-                rv = self.get(cache_key)
+                rv = self.get(cache_key) if not self.skip else None
                 if rv is None:
                     rv = f(*args, **kwargs)
                     '''# Optimización: Si la respuesta es html, minificamos
@@ -76,7 +168,6 @@ class Cache(CacheBase):
                     '''
                     if self.cacheme:
                         self.set(cache_key, rv, timeout=decorated_function.cache_timeout)
-
                 return rv
 
             def make_cache_key(*args, **kwargs):
@@ -90,12 +181,6 @@ class Cache(CacheBase):
                     cache_key = key_prefix % request.__dict__
                 return cache_key.encode('utf-8')
 
-            def uncache():
-                if hasattr(f, "uncache") and callable(f.uncache):
-                    f.uncache()
-                self.delete(decorated_function.make_cache_key(*args, **kwargs))
-
-            decorated_function.uncache = uncache
             decorated_function.uncached = f
             decorated_function.cache_timeout = timeout
             decorated_function.make_cache_key = make_cache_key
@@ -173,6 +258,50 @@ class Cache(CacheBase):
             return self._get_uncached(f.uncached)
         return f
 
+    def local_memoize(self, timeout=None):
+        '''
+        Decorador para cachear en el hilo local. Se tendrán en cuenta los parámetros.
+
+        @type timeout: int o None
+        @param timeout: segundos que debe de mantenerse el caché, si es None se
+                        cacheará todo el tiempo que se pueda.
+
+        '''
+        def memoize(f):
+            funcname = self._fnc_name(f)
+            uncached_fnc = self._get_uncached(f)
+
+            @wraps(f)
+            def decorated_function(*args, **kwargs):
+                cache_key = decorated_function.make_cache_key(*args, **kwargs)
+                rv = self.local_get(cache_key) if not self.skip else None
+                if rv is None:
+                    rv = f(*args, **kwargs)
+                    if self.cacheme:
+                        self.local_set(cache_key, rv,
+                                       timeout=decorated_function.cache_timeout)
+                return rv
+
+            def make_cache_key(*args, **kwargs):
+                if self._self_given(args, uncached_fnc):
+                    args = args[1:]
+                return "memoized/%s/%s" % (
+                    funcname,
+                    md5("%s:%s" % (repr(args), repr(kwargs))).hexdigest()
+                    )
+
+            def flush(*args, **kwargs):
+                cache_key = decorated_function.make_cache_key(*args, **kwargs)
+                self.local_delete(cache_key)
+
+            decorated_function.flush = flush
+            decorated_function.uncached = f
+            decorated_function.cache_timeout = timeout
+            decorated_function.make_cache_key = make_cache_key
+
+            return decorated_function
+        return memoize
+
     def memoize(self, timeout=None):
         '''
         Decorador para cachear funciones. Se tendrán en cuenta los parámetros.
@@ -189,7 +318,7 @@ class Cache(CacheBase):
             @wraps(f)
             def decorated_function(*args, **kwargs):
                 cache_key = decorated_function.make_cache_key(*args, **kwargs)
-                rv = self.get(cache_key)
+                rv = self.get(cache_key) if not self.skip else None
                 if rv is None:
                     rv = f(*args, **kwargs)
                     if self.cacheme:
@@ -206,12 +335,11 @@ class Cache(CacheBase):
                     md5("%s:%s" % (repr(args), repr(kwargs))).hexdigest()
                     )
 
-            def uncache():
-                if hasattr(f, "uncache") and callable(f.uncache):
-                    f.uncache()
-                self.delete(decorated_function.make_cache_key(*args, **kwargs))
+            def flush(*args, **kwargs):
+                cache_key = decorated_function.make_cache_key(*args, **kwargs)
+                self.delete(cache_key)
 
-            decorated_function.uncache = uncache
+            decorated_function.flush = flush
             decorated_function.uncached = f
             decorated_function.cache_timeout = timeout
             decorated_function.make_cache_key = make_cache_key
@@ -219,18 +347,19 @@ class Cache(CacheBase):
             return decorated_function
         return memoize
 
-    def fallback(self, errors=(), timeout=None):
+    def fallback(self, errors=(), timeout=0):
         '''
         Decorador para retornar caché en caso de error.
 
-        @type errors: iterable
+        @type errors: iterable o type
         @param errors: lista de tipos de errores que serán capturados para
                        retornar una respuesta cacheada, si está vacío, se
                        capturarán todos los errores.
 
         @type timeout: int o None
-        @param timeout: segundos que debe de mantenerse el caché, si es None se
-                        cacheará todo el tiempo que se pueda.
+        @param timeout: segundos que debe de mantenerse el caché, si es cero
+                        (por defecto) se cacheará todo el tiempo que se pueda,
+                        si es None se cacheará según el default_timeout.
 
         '''
         def memoize(f):
@@ -239,14 +368,20 @@ class Cache(CacheBase):
 
             @wraps(f)
             def decorated_function(*args, **kwargs):
+                __ = ThrowFallback._enabled
                 cache_key = decorated_function.make_cache_key(*args, **kwargs)
                 try:
                     rv = f(*args, **kwargs)
                     self.cache.set(cache_key, rv, timeout=decorated_function.cache_timeout)
                     return rv
+                except ThrowFallback:
+                    # Se ha ordenado usar el fallback
+                    self.cacheme = False
                 except BaseException as e:
                     if errors and not isinstance(e, errors):
-                        raise e
+                        # No se ha especificado capturar el error, propagamos
+                        raise
+                    self.cacheme = False
                     logging.exception(e)
                 return self.cache.get(cache_key)
 
@@ -258,6 +393,11 @@ class Cache(CacheBase):
                     md5("%s:%s" % (repr(args), repr(kwargs))).hexdigest()
                     )
 
+            def flush(*args, **kwargs):
+                cache_key = decorated_function.make_cache_key(*args, **kwargs)
+                self.delete(cache_key)
+
+            decorated_function.flush = flush
             decorated_function.uncached = f
             decorated_function.cache_timeout = timeout
             decorated_function.make_cache_key = make_cache_key

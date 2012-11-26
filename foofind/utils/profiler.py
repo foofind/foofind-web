@@ -13,7 +13,7 @@ class Profiler:
             
         @app.teardown_request
         def end_profiler(resp):
-            if len(g.profiler_info)>0:
+            if has_request_context() and len(g.profiler_info)>0:
                 self.store.save_profile_info(g.profiler_info)
         
     def checkpoint(self, opening=(), closing=()):

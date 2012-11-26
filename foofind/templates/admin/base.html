@@ -1,4 +1,4 @@
-{% from "helpers.html" import flash %}
+{% from "helpers.html" import flash,render_field %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -31,6 +31,7 @@
                 <li><a href="{{ url_for('admin.translations', size=page_size) }}">{{_('admin_translation')}}</a></li>
                 <li><a href="{{ url_for('admin.deploy', size=page_size) }}">{{_('admin_deploy')}}</a></li>
                 <li><a href="{{ url_for('admin.users', size=page_size) }}">{{_('admin_users')}}</a></li>
+                <li><a href="{{ url_for('admin.servers', size=page_size) }}">{{_('admin_servers')}}</a></li>
                 <li><a href="{{ url_for('admin.origins', size=page_size) }}">{{_('admin_origins')}}</a></li>
                 <li><a href="{{ url_for('admin.alternatives', size=page_size) }}">{{_('admin_alternatives')}}</a></li>
                 <li><a href="{{ url_for('admin.actions', size=page_size) }}">{{_('admin_actions')}}</a></li>

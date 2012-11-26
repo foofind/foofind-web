@@ -9,14 +9,25 @@ import pymongo
 import random
 import urllib2
 import traceback
+import threading
+import time
+import ctypes
+import sys
+import trace
 from unicodedata import normalize
 from base64 import b64encode, b64decode
-from os.path import isfile, isdir
+from os.path import isfile, isdir, join
 from urlparse import urlparse
 from functools import wraps
 from content_types import *
 from foofind.utils.splitter import SEPPER
 from collections import OrderedDict
+from itertools import izip, ifilter
+
+try:
+    import  ctypes
+except ImportError:
+    ctypes = None
 
 class VALUE_UNSET(object):
     '''
@@ -43,6 +54,185 @@ class LimitedSizeDict(OrderedDict):
                 extra={"trace":traceback.extract_tb()})
             while len(self) > self.size_limit:
                 self.popitem(last=False)
+
+class Parallel(object):
+    '''
+    Objeto paralelizador de tareas.
+
+    Recibe un iterable de tareas.
+    Cada tarea es un iterable de tres elementos:
+        - Callable,
+        - Iterable de parámetros anónimos o argumentos,
+        - Dict-like de parámetros con nombre.
+
+    Se ejecuta al incializarlo.
+    '''
+    '''
+    # Test de kill desactivado
+    >>> def a(t):
+    ...     time.sleep(t)
+    ...     return t
+    >>> p = Parallel((
+    ...     (a, (1,)),
+    ...     (a, (4,))
+    ...     ), killable=True)
+    >>> p.join_and_terminate(2)
+    True
+    >>> time.sleep(1) # El terminate puede tardar un poco
+    >>> p.exceptions.count(None) # Debe haber una excepción
+    1
+    >>> p.output
+    [1, None]
+    >>> time.sleep(2)
+    >>> p.output # Comprobamos si el valor ha cambiado
+    [1, None]
+    '''
+    @property
+    def killable(self):
+        return self._killable
+
+    def __init__(self, tasks, killable=False):
+        '''
+        Ejecuta las tareas dadas en paralelo.
+
+        @type tasks: iterable
+        @arg tasks: iterable de iterables con tres elementos: callable, args, kwargs.
+        '''
+        self._killed = False
+        self._killable = killable
+        self._threads = [
+            threading.Thread(target=self._wrapper, args=(n, args))
+            for n, args in enumerate(tasks)
+            ]
+        self._thread_ids = [None for i in self._threads]
+        self.exceptions = [None for i in self._threads]
+        self.output = [None for i in self._threads]
+        for thread in self._threads:
+            thread.start()
+
+    def _globaltrace(self, frame, why, arg):
+        return self._localtrace if why == "call" else None
+
+    def _localtrace(self, frame, why, arg):
+        if self._killed:
+            sys.settrace(None)
+            raise SystemExit
+        return self._localtrace
+
+    def terminate(self):
+        '''
+        Finaliza los threads
+        '''
+        if self._killable:
+            self._killed = True
+            #'''
+            # Deadlock en thread.__stop
+            for tid, thread in izip(self._thread_ids, self._threads):
+                res = ctypes.pythonapi.PyThreadState_SetAsyncExc(
+                    ctypes.c_long(tid),
+                    ctypes.py_object(SystemExit))
+                if res == 0 and thread.is_alive():
+                    raise SystemError("PyThreadState_SetAsyncExc failed due wrong thread.ident")
+                elif res > 1:
+                    ctypes.pythonapi.PyThreadState_SetAsyncExc(ctypes.c_long(tid), None)
+                    raise SystemError("PyThreadState_SetAsyncExc failed")
+            '''
+            #'''
+        else:
+            raise RuntimeError, "Parallel.terminate method called on a non killable Parallel"
+
+    def _wrapper(self, n, args):
+        try:
+            # Parseo de argumentos
+            if callable(args):
+                task = args
+                uargs = ()
+                kwargs = {}
+                callback = None
+            else:
+                la = len(args)
+                task = args[0]
+                uargs = args[1] if la > 1 and not args[1] is None else ()
+                kwargs = args[2] if la > 2 and not args[2] is None else {}
+                callback = args[3] if la > 3 else None
+
+            # Ejecución
+            if self._killable: sys.settrace(self._globaltrace) # Traza para terminate
+            self._thread_ids[n] = self._threads[n].ident
+            self.output[n] = task(*uargs, **kwargs)
+        except (BaseException, SystemExit) as e:
+            self.exceptions[n] = e
+        finally:
+            if callable(callback): callback()
+
+    def failed(self):
+        '''
+        Retorna True si ha habido alguna excepción en las tareas.
+        '''
+        return self.exceptions.count(None) < len(self.exceptions)
+
+    def join(self, timeout=None):
+        '''
+        Espera a que las tareas terminen, admite un timeout.
+        Para saber si una tarea ha terminado por timeout, comprobar el método
+        `is_alive`.
+
+        @type timeout: int, float or None
+        @param timeout: Tiempo máximo a esperar,
+        '''
+        if timeout:
+            t0 = time.time()
+            for thread in self._threads:
+                thread.join(timeout)
+                t1 = time.time()
+                timeout -= t1 - t0  # Tiempo de timeout restante
+                if timeout <= 0:
+                    break
+                t0 = t1
+        else:
+            for thread in self._threads:
+                thread.join()
+
+    def join_and_terminate(self, timeout):
+        '''
+        Espera a que las tareas terminen, con un timeout, tas el cual mata los
+        hilos.
+
+        @type timeout: int, float or None
+        @param timeout: Tiempo máximo a esperar
+
+        @rtype bool
+        @return True si se han tenido que cerrar los hilos a la fuerza tras el timeout.
+        '''
+        self.join(timeout)
+        if self.is_alive():
+            self.terminate()
+            return True
+        return False
+
+    def is_alive(self):
+        '''
+        Devuelve True si se están ejecutando las tareas.
+
+        @rtype bool
+        @return True si hay alguna tarea ejecutándose, o False
+        '''
+        for thread in self._threads:
+            if thread.is_alive():
+                return True
+        return False
+
+def userid_parse(user_id):
+    '''
+    Función para soportar la convivencia temporal de los ids de usuario en
+    ObjectId e int
+    '''
+    if isinstance(user_id, basestring):
+        if len(user_id) == 24: # Mongoid
+            return hex2mid(user_id)
+    elif isinstance(user_id, bson.objectid.ObjectId):
+        return user_id
+    return int(user_id)
 
 def bin2mid(binary):
     '''
@@ -85,25 +275,38 @@ def mid2url(objectid):
     '''
     Valida el objectid y lo retorna en base64
     '''
-    return b64encode(mid2bin(objectid), "!-")
+    return bin2url(mid2bin(objectid))
+
+def bin2url(binary):
+    '''
+    Valida el objectid y lo retorna en base64
+    '''
+    return b64encode(binary, "!-")
 
 def url2mid(b64id):
     '''
     Recibe un id de mongo en base64 y retorna ObjectId
     '''
-    return bin2mid(b64decode(str(b64id), "!-"))
+    return bin2mid(url2bin(b64id))
+
+def url2bin(b64id):
+    '''
+    Recibe un id de mongo en base64 y retorna ObjectId
+    '''
+    return b64decode(str(b64id), "!-")
 
 def fileurl2mid(url):
     '''
     Recibe una url de fichero de foofind y retorna ObjectId
     '''
-    return url2mid(urllib2.unquote(urlparse(url).path.split("/")[3]))
+    idpart = urlparse(url).path.split("/download/")[1].split("/", 1)[0]
+    return url2mid(urllib2.unquote(idpart))
 
-def lang_path(lang, ext="po"):
+def lang_path(lang, base_path, ext="po"):
     '''
     Devuelve la ruta de la traducción del idioma pedido o None si no existe
     '''
-    path = "foofind/translations/%s/LC_MESSAGES/messages.%s" % (lang, ext)
+    path = join(base_path, "translations/%s/LC_MESSAGES/messages.%s" % (lang, ext))
     return path if isfile(path) else None
 
 def expanded_instance(cls, attrs, *args, **kwargs):
@@ -137,6 +340,45 @@ def touch_path(path, pathsep=os.sep):
         part = pathsep.join(splited[:i])
         if not isdir(part):
             os.mkdir(part)
+
+def check_collection_indexes(db, indexes_dict):
+    '''
+    Comprueba que lass colecciones tienen los índices dados.
+
+    @type db: pymong.database
+    @param db: Base de datos de pymongo
+
+    @type indexes_dict: dict
+    @param indexes_dict: diccionario con nombres de collecciones como clave y
+                         lista de diccionarios, como valor, con "key" como
+                         lista de índices y el resto de campos como argumentos
+                         por nombre.
+    '''
+
+    # BUG (upstream): ensure_index devuelve valor siempre, en contra de
+    #                 lo dicho en la documentación.
+    #                 Cerrado pero no corregido (no reproducible):
+    #                  - https://jira.mongodb.org/browse/PYTHON-193
+    #                 Workaround [1]: comprobar los índices con index_information
+
+    for collection, indexes in indexes_dict.iteritems():
+        # Workaround [1]
+        collection_indexes = [indef["key"] for indef in db[collection].index_information().itervalues() if "key" in indef]
+        for index_config_with_keys in indexes:
+            # Workaround [1]
+            if index_config_with_keys["key"] in collection_indexes: continue
+            index_config = dict(index_config_with_keys)
+            keys = index_config.pop("key")
+            o = db[collection].ensure_index(keys, **index_config)
+            if not o is None:
+                logging.warn(
+                    "Index %s created on collection %s" % (o, collection),
+                    extra={
+                        "collection": collection,
+                        "config": index_config_with_keys
+                        })
+
+
 
 def check_capped_collections(db, capped_dict):
     '''
@@ -255,25 +497,50 @@ def multipartition(x, s):
     @type x: basestring
     @param x: string a dividir
 
-    @type s: iterable
+    @type s: lista o str
     @param s: separadores
 
     @yield string
+
+    >>> list(multipartition(".^this.is,a-spliteable^string.",".,-^"))
+    ['', '.', '', '^', 'this', '.', 'is', ',', 'a', '-', 'spliteable', '^', 'string', '.', '']
     '''
-    if s:
-        for p in ((x,) if isinstance(x, basestring) else x):
-            while s[0] in p:
-                p0, p1, p = p.partition(s[0])
-                for m in multipartition((p0, p1), s[1:]):
-                    yield m
-            if p:
-                for m in multipartition(p, s[1:]):
-                    yield m
-    elif isinstance(x, basestring):
+    acum = []
+    for char in x:
+        if char in s:
+            yield "".join(acum)
+            del acum[:]
+            yield char
+        else:
+            acum.append(char)
+    yield "".join(acum)
+
+def multisplit(x, s):
+    '''
+    Recibe string y los divide por una lista de separadores.
+
+    @type x: basestring
+    @param x: string a dividir
+
+    @type s: lista o str
+    @param s: separadores
+
+    @yield string
+
+    >>> list(multisplit(".^this.is,a-spliteable^string.",".,-^"))
+    ['', '', 'this', 'is', 'a', 'spliteable', 'string', '']
+    '''
+    try:
+        # Iterador con caracteres de x que son separadores
+        gen = ifilter(s.__contains__, x)
+        sc = gen.next()
+        for sn in gen:
+            x = x.replace(sn, sc)
+        for p in x.split(sc):
+            yield p
+    except StopIteration:
+        # Caso excepcional: ningún separador encontrado
         yield x
-    else:
-        for i in x:
-            yield i
 
 def generator_with_callback(iterator, callback):
     '''
@@ -285,13 +552,13 @@ def generator_with_callback(iterator, callback):
 
 def u(txt):
     ''' Parse any basestring (ascii str, encoded str, or unicode) to unicode '''
-    if isinstance(txt,unicode):
+    if isinstance(txt, unicode):
         return txt
     elif isinstance(txt, basestring):
         try:
             return unicode(txt, chardet.detect(txt)["encoding"])
         except:
-            return unicode("")
+            return u""
     return unicode(txt)
 
 def fixurl(url):

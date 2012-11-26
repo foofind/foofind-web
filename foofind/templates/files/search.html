@@ -1,117 +1,141 @@
 {% extends "files/base.html" %}
-{% block content %}
-    {{ flash() }}
-    <div id="search_info">
-        {%- if results["total_found"]>0 %}
-            {{ ((pagination.page-1)*10)+1 }} -
-            {%- if results["total_found"]<10 %}
-                {{ results["total_found"] }}
-            {%- else %}
-                {{ pagination.page*10 }}
-            {%- endif %}
-            {{_('of_about')}}
-            {{ results["total_found"]|numberformat }} {{_('results_for')}}
-            {%- for word in search %}
-                <a href="{{ url_search(q=word,src='swftge',delete_params=['all']) }}">{{ word }}</a>
-            {% endfor -%}
-            ({{ results["time"]|float|numberformat }} {{_('seconds')}})
-        {%- endif %}
-    </div>
-    <ul id="tabnav">
-        <li><a href="{{ url_search(src='swftge') }}" {{ searched('src','swftge',true) }}>{{_('all')}}</a></li>
-        <li><a href="{{ url_search(src='wf') }}" {{ searched('src','wf') }}>{{_('direct_downloads')}}</a></li>
-        <li><a href="{{ url_search(src='t') }}" {{ searched('src','t') }}>Torrents</a></li>
-        <li><a href="{{ url_search(src='s') }}" {{ searched('src','s') }}>Streaming</a></li>
-        <li><a href="{{ url_search(src='g') }}" {{ searched('src','g') }}>Gnutella</a></li>
-        <li><a href="{{ url_search(src='e') }}" {{ searched('src','e') }}>Ed2k</a></li>
-    </ul>
-    <div id="advsearch">
-        <a href="#"><span>▶</span>{{_('advanced_search')}}</a>
-        <div>
-            <ul class="size">
-                <li><a href="{{ url_search(delete_params=['size']) }}" {{ searched('size') }}>{{_('all_sizes')}}</a></li>
-                <li><a href="{{ url_search(size=1) }}" {{ searched('size','1') }}>{{_('smaller_than')}} 1MiB</a></li>
-                <li><a href="{{ url_search(size=2) }}" {{ searched('size','2') }}>{{_('smaller_than')}} 10MiB</a></li>
-                <li><a href="{{ url_search(size=3) }}" {{ searched('size','3') }}>{{_('smaller_than')}} 100MiB</a></li>
-                <li><a href="{{ url_search(size=4) }}" {{ searched('size','4') }}>{{_('larger_than')}} 100MiB</a></li>
-            </ul>
-            
-        </div>
-    </div>
-    {% if tags %}
-    <ul id="tags">
-        {% for tag, size in tags %}
-        <li><a href="{{ url_search(q=args['q']+" "+tag) }}" style="font-size:{{ size }}%">{{ tag }}</a></li>
-        {% endfor %}
-    </ul>
-    {% endif %}
-    {% if didyoumean %}
-    <p id='didyoumean'>{{ _("did_you_mean", text="<a href='%s'>%s</a>"|safe % (url_search(q=didyoumean),didyoumean)) }}</p>
-    {% endif %}
-    {%- if results["total_found"]>0 %}
-    <ul id="results">
-        {% for file_info in files %}
-            {% set file = file_info["file"] %}
-            {% set search = file_info["search"] %}
-        <li>
-            {% if 'images_server' in file['view'] %}
-            <a class="thumblink" href="{{ url_for('.download',file_id=file['file']['id'],file_name=file['view']['fn']) }}.html">
-                <span>
-                    <img id="{{ file['file']['id'] }}" alt="{{ file['file']['id'] }}" class="img_{{ file['view']['images_server'] }}" src="http://{{ file['view']['first_image_server'] }}/{{ file['file']['_id'] }}0" />
-                </span>
-            </a>
-            {% endif %}
-            <h3><a href="{{ url_for('.download',file_id=file['file']['id'],file_name=file['view']['qfn']) }}.html">{{ file['view']['fnh']|safe }}</a></h3>
-            <dl>
-            {% for metadata,value in file['view']['md'].items() %}
-                <dt>{{_(metadata)}}: </dt>
-                <dd>{{ value }}. </dd>
-            {% endfor %}
-            </dl>
-            {%- if 'z' in file['file'] and file['file']['z'] %}
-                {{ file['file']['z']|numbersizeformat }} -
-            {% endif -%}
-            {% for source,source_data in file['view']['sources'].items() %}
-            <a href="{{ source_data['urls'][0] }}" title="{{ source_data['tip'] }}" class="source">
-                <span class="icon24 {{ source_data['icon'] }}d24"></span>
-                {{ source_data['tip'] }}{% if source_data['count']>1 %} ({{ source_data['count'] }} {{_('sources')}}){% endif %}
-            </a>
-            {% endfor %}
-        </li>
-        {% endfor %}
-    </ul>
-    {% else %}
-    <h2>
-        {%- if 0 < pagination.page < 101 -%}
-            {{_('no_results_for')}}
-            {%- for word in search %}
-                 <a href="{{ url_search(q=word,src='swftge',delete_params=['all']) }}">{{ word }}</a>
-            {% endfor -%}
-        {%- else -%}
-            {{_('not_allow_browse_results')}}
-        {%- endif -%}
-    </h2>
-    {% endif %}
-    {% if pagination.pages>1 %}
-    <ul class="pagination">
-        {% if pagination.page>1 and pagination.has_prev %}
-            <li><a href="{{ url_search(page=pagination.page-1) }}">« {{_('previous')}}</a></li>
-        {% endif %}
-        {%- for page in pagination.iter_pages(right_current=10,right_edge=0) %}
-            {% if page %}
-                {% if page != pagination.page %}
-                    <li><a href="{{ url_search(page=page) }}">{{ page }}</a></li>
-                {% else %}
-                    <li id="current"><span>{{ page }}</span></li>
-                {% endif %}
-            {% else %}
-                <li class="ellipsis">…</li>
-            {% endif %}
-        {%- endfor %}
-        {% if pagination.has_next %}
-            <li><a href="{{ url_search(page=pagination.page+1) }}">{{_('next')}} »</a></li>
-        {% endif %}
-    </ul>
-    {% endif %}
+{%- macro searched(param,value="",more_values=[],parent="") %}
+    {%- if param in args %}
+        {% set params=args[param] %}
+    {%- else -%}
+        {% set params=[] %}
+    {% endif -%}
+    {%- if (value=="" and param not in args) or value in args[param] or (parent!="" and parent in params) %} class="active"
+    {%- else -%}
+        {% set active=false -%}
+        {% for more in more_values if not active and param in args and more in params -%}
+            {% set active=true %} class="active"
+        {%- endfor -%}
+    {% endif -%}
+{% endmacro -%}
+{% macro checkbox(value,parent,text="") -%}
+    <li title="{{_(g.sources_names[value])}}"{{ searched('src',value,parent=parent) }}>
+        <a href="{{url_search(src=value)}}" data-filter="{{ value }}">{%- if text %}{{ text }}{%- else -%}{{ value }}{% endif -%}</a>
+    </li>
+{%- endmacro %}
+{% block head %}
+    {%- assets "js_search" %}
+        <script src="{{ ASSET_URL }}"></script>
+    {%- endassets %}
+    {%- if request.user_agent.platform=="iphone" or "ipad" in request.user_agent.string|lower() %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link href="{{ g.static_prefix }}/css/iphone_ipad.css" rel="stylesheet" type="text/css" />
+    {% endif -%}
+    {%- if alternate %}
+        {% for alternate in alternate -%}
+        <link rel="alternate" href="{{ alternate }}" />
+        {% endfor -%}
+    {% endif -%}
+    {%- if canonical -%}
+        <link rel="canonical" href="{{ canonical }}" />
+    {% endif -%}
 {% endblock %}
-
+{% block content %}
+    <div id="fondo"></div>
+    <div id="subcontent">
+        <div id="flecha"></div>
+        <div id="download"{% if static_download['html'] %} class="active">{{ static_download['html']|safe }}{% else %}>{% endif %}
+        {% if not bot %}
+            <div>
+                <img alt="cargando" src="{{ g.static_prefix }}/img/search/cargando150.png" />
+                <img alt="cargando" src="{{ g.static_prefix }}/img/search/cargando150.png" />
+            </div>
+        {% endif %}
+        </div>
+        {{ flash() }}
+        <section>
+            <aside>
+                <dl>
+                    <dt>{{_('what')|lower}}<a href="{{url_search(delete_params=['type'])}}" data-filter="type" title="{{_('all')}}">{{_('all')|lower}}</a></dt>
+                    <dd id="type">
+                        <ul>
+                            <li{{ searched('type','audio') }}><a href="{{url_search(type='audio')}}" data-filter="audio" title="{{_('audio')}}: mp3, ogg, aac, wma, wav, amr, flac, oga...">{{_('audio')}}</a></li>
+                            <li{{ searched('type','video') }}><a href="{{url_search(type='video')}}" data-filter="video" title="{{_('video')}}: avi, flv, mkv, mp4, wmv, mpg, mov, webm, 3gp, rmvb, vob...">{{_('video')}}</a></li>
+                            <li{{ searched('type','image') }}><a href="{{url_search(type='image')}}" data-filter="image" title="{{_('image')}}: jpg, png, gif, bmp, tiff, psd, xcf...">{{_('image')}}</a></li>
+                            <li{{ searched('type','document') }}><a href="{{url_search(type='document')}}" data-filter="document" title="{{_('document')}}: pdf, epub, doc, xls, ppt, odf, txt...">{{_('document')}}</a></li>
+                            <li{{ searched('type','software') }}><a href="{{url_search(type='software')}}" data-filter="software" title="{{_('software')}}: exe, msi, apk, sys, iso, nrg...">{{_('software')}}</a></li>
+                            <li><a></a></li>
+                        </ul>
+                    </dd>
+                    <dt>{{_('where')|lower}}<a href="{{url_search(delete_params=['src'])}}" data-filter="src" title="{{_('all')}}">{{_('all')|lower}}</a></dt>
+                    <dd id="src">
+                        {% set params=args["src"] if "src" in args else [] %}
+                        <ul>
+                            <li{{ searched('src','streaming',g.sources_streaming) }}>
+                                <a href="{{url_search(src='streaming')}}" data-filter="streaming" title="Streaming">Streaming</a>
+                                <ul class="{% if not params %}inactive{% elif 'other-streamings' in params %}inactive_{{ sources_count['streaming']-(g.sources_streaming|length-9) }}{% else %}inactive_{{ sources_count['streaming'] }}{% endif %}">
+                                    {%- for source in g.sources_streaming[:8] %}{{ checkbox(source,"streaming") }}{% endfor %}
+                                    {{ checkbox("other-streamings","streaming",_("others")+" ("+(g.sources_streaming|length-8)|string+")") }}
+                                    <li><button>{{_("update")}}</button></li>
+                                </ul>
+                                <span class="more">+
+                                {% if params %}
+                                {{ sources_count['streaming']-2 }} {{_("sources")}}</span>
+                                <strong><span>{{ sources_count["streaming"] }}</span> / {{ g.sources_streaming|length }}</strong>
+                                {% else %}
+                                {{ g.sources_streaming|length-2 }} {{_("sources")}}</span>
+                                {% endif %}
+                            </li>
+                            <li{{ searched('src','download',g.sources_download) }}>
+                                <a href="{{url_search(src='download')}}" data-filter="download" title="{{_('direct_downloads')}}">{{_('direct_downloads')}}</a>
+                                <ul class="{% if not params %}inactive{% elif 'other-downloads' in params %}inactive_{{ sources_count['download']-(g.sources_download|length-9) }}{% else %}inactive_{{ sources_count['download'] }}{% endif %}">
+                                    {% for source in g.sources_download[:8] %}{{ checkbox(source,"download") }}{% endfor %}
+                                    {{ checkbox("other-downloads","download",_("others")+" ("+(g.sources_download|length-8)|string+")") }}
+                                    <li><button>{{_("update")}}</button></li>
+                                </ul>
+                                <span class="more">+
+                                {% if params %}
+                                {{ sources_count['download']-2 }} {{_("sources")}}</span>
+                                <strong><span>{{ sources_count["download"] }}</span> / {{ g.sources_download|length }}</strong>
+                                {% else %}
+                                {{ g.sources_download|length-2 }} {{_("sources")}}</span>
+                                {% endif %}
+                            </li>
+                            <li{{ searched('src','p2p',g.sources_p2p) }}>
+                                <a href="{{url_search(src='p2p')}}" data-filter="p2p" title="P2P">P2P</a>
+                                <ul class="{% if not params %}inactive{% else %}inactive_{{ sources_count['p2p'] }}{% endif %}">
+                                    {% for source in g.sources_p2p %}{{ checkbox(source,"p2p") }}{% endfor %}
+                                    <li><button>actualizar</button></li>
+                                </ul>
+                                <span class="more"></span>
+                                {% if params %}<strong><span>{{ sources_count["p2p"] }}</span> / 3</strong>{% endif %}
+                            </li>
+                        </ul>
+                    </dd>
+                    <dt>{{_('size')|lower}}<a href="{{url_search(delete_params=['size'])}}" data-filter="size" title="{{_('all')}}">{{_('all')|lower}}</a></dt>
+                    <dd id="size">
+                        <div></div>
+                        <span>{{_('minimun')}}</span><span>{{_('maximun')}}</span>
+                    </dd>
+                    {#<dt>{{_('quality')}}</dt>
+                    <dd id="quality">
+                    </dd>
+                    <dt>Año</dt>
+                    <dd id="year">
+                    </dd>#}
+                </dl>
+            </aside>
+            <ul id="results">
+            {% if not bot %}
+                <li id="no_results" class="loading">
+                    <img alt="cargando" src="{{ g.static_prefix }}/img/search/cargando.png" />
+                    <img alt="cargando" src="{{ g.static_prefix }}/img/search/cargando.png" />
+                </li>
+            {% endif %}
+            {% if static_results %}
+                {% for result in static_results %}
+                    {{ result|safe }}
+                {% endfor %}
+            {% elif not full_browser %}
+                {{ no_results|safe }}
+            {% endif %}
+            </ul>
+            <a href="#" id="more"></a>
+        </section>
+    </div>
+{% endblock %}

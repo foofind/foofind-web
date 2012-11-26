@@ -22,7 +22,7 @@ import threading
 
 from foofind.utils.fooprint import Fooprint
 
-index = Fooprint('index', __name__, template_folder="template")
+index = Fooprint('index', __name__, template_folder="template", dup_on_startswith="/<lang>")
 
 def gensitemap(server, urlformat):
     '''
@@ -104,37 +104,16 @@ def home():
     '''
     return render_template('index.html',form=SearchForm(),lang=current_app.config["ALL_LANGS_COMPLETE"][g.lang],zone="home")
 
-@index.route('/<lang>/setlang')
-def setlang():
-    '''
-    Cambia el idioma
-    '''
-    session["lang"]=g.lang
-    # si el idioma esta entre los permitidos y el usuario esta logueado se actualiza en la base de datos
-    if g.lang in current_app.config["ALL_LANGS"] and current_user.is_authenticated():
-        current_user.set_lang(g.lang)
-        usersdb.update_user({"_id":current_user.id,"lang":g.lang})
-
-    # si se puede se redirige a la pagina en la que se estaba
-    if request.referrer:
-        parts = url_unquote(request.referrer).split("/")
-        if parts[0] in ("http:","https:"):
-            parts = parts[3:]
-
-        query_string=urlparse(request.url).query
-        return redirect("/%s/%s%s" % (g.lang, "/".join(parts[1:]), "?"+query_string if query_string!="" else ""))
-    else:
-        return redirect(url_for("index.home"))
-
 @index.route("/captcha/<captcha_id>")
 def captcha(captcha_id):
-    try:
-        code = cache.get("captcha/%s" % captcha_id)
-        if code is None:
-            abort(404)
-    except BaseException as e:
-        logging.error(e)
+    cache_id = "captcha/%s" % captcha_id
+    cached_captcha = cache.get(cache_id)
+    if cached_captcha is None:
         abort(404)
+    code, consumed = cached_captcha
+    if consumed:
+        abort(404)
+    cache.set(cache_id, (code, True))
     response = make_response(generate_image(code))
     response.headers['Content-Type'] = 'image/png'
     return response

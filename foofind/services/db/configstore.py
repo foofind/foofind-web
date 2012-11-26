@@ -8,6 +8,7 @@ import socket
 
 from foofind.utils.fooprint import ManagedSelect, ParamSelector, DecoratedView
 from foofind.utils import check_capped_collections
+from foofind.services.extensions import cache
 
 class ConfigStore(object):
     '''
@@ -48,6 +49,25 @@ class ConfigStore(object):
         tr = [doc["_id"] for doc in self.config_conn.foofind.profiles.find()]
         self.config_conn.end_request()
         return tr
+
+    def get_counter(self, counterid, amount=1):
+        '''
+        Obtiene el valor para el contador con el ID dado
+
+        @type counterid: str o unicode
+        @param counterid: Identificador único del contador
+
+        @type amount: int (opcional)
+        @param amount: incr
+
+        @rtype int
+        @return Valor del contador, autoincrementado
+        '''
+        doc = self.config_conn.foofind.counters.find_and_modify(
+            {"_id": counterid},
+            {"$inc": {"n": amount}},
+            upsert = True)
+        return doc.get("n", 0)
 
     def pull(self):
         '''

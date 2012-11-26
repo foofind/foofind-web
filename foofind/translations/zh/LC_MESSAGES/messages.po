@@ -25,14 +25,50 @@ msgstr "发送"
 msgid "required_empty"
 msgstr "评价是必需的 不能为空"
 
+msgid "help_us"
+msgstr "帮助我们"
+
+msgid "go_home"
+msgstr "返回搜索引擎"
+
+msgid "error_500_message"
+msgstr "发生错误"
+
+msgid "error_404_message"
+msgstr "页面未找到"
+
+msgid "error_404_description"
+msgstr "请求的地址未找到。请检查你的地址拼写是否正确。如果正确，请通知网络管理员。"
+
+msgid "error_410_message"
+msgstr "页面不可用"
+
+msgid "error_410_description"
+msgstr "请求的页面当前不可用，以后也不再用"
+
+msgid "error_503_message"
+msgstr "无法提供服务"
+
+msgid "error_503_description"
+msgstr "请求的地址当前不可用，请稍后重试。"
+
+msgid "error_mail_send"
+msgstr "向指定地址发送信息时发生错误。请更换一个或稍后重试。"
+
 msgid "about"
 msgstr "关于"
+
+msgid "no_valid_url"
+msgstr "不是有效的地址"
 
 msgid "contact"
 msgstr "联系"
 
 msgid "legal"
 msgstr "法律"
+
+msgid "technology"
+msgstr "技术"
 
 msgid "tos"
 msgstr "条款"
@@ -58,11 +94,32 @@ msgstr "我。想知道。这个。文件。"
 msgid "all"
 msgstr "所有"
 
+msgid "index_change"
+msgstr "foofind 已变更"
+
+msgid "index_comunity"
+msgstr "成为我们社区的一员"
+
+msgid "index_suggestion"
+msgstr "还有任何意见？"
+
 msgid "direct_downloads"
 msgstr "直接下载"
 
+msgid "direct_download"
+msgstr "重定向下载"
+
 msgid "audio"
 msgstr "音频"
+
+msgid "other_streamings"
+msgstr "其他流媒体"
+
+msgid "other_direct_downloads"
+msgstr "其他重定向下载"
+
+msgid "others"
+msgstr "其他"
 
 msgid "video"
 msgstr "视频"
@@ -103,6 +160,12 @@ msgstr "结果"
 msgid "not_allow_browse_results"
 msgstr "Foofind不允许浏览100页以后的结果。"
 
+msgid "other_categories"
+msgstr "其他种类"
+
+msgid "no_type_count"
+msgstr "在指定目录 %(search)s下的搜索没有相关结果，但是在其他目录 %(results)d中有 %(category)s个结果。"
+
 msgid "how_to_download"
 msgstr "怎样下载"
 
@@ -114,6 +177,27 @@ msgstr "你的意思是%(text)s？"
 
 msgid "all_sizes"
 msgstr "文件完整大小"
+
+msgid "go_to_file"
+msgstr "点击这里查找文件"
+
+msgid "play"
+msgstr "播放"
+
+msgid "what"
+msgstr "这是什么？"
+
+msgid "where"
+msgstr "在哪里？"
+
+msgid "update"
+msgstr "更新"
+
+msgid "minimun"
+msgstr "最小"
+
+msgid "maximun"
+msgstr "最大"
 
 msgid "advanced_search"
 msgstr "高级搜索"
@@ -181,6 +265,9 @@ msgstr "来源"
 msgid "height"
 msgstr "高度"
 
+msgid "seeds"
+msgstr "种子"
+
 msgid "width"
 msgstr "宽度"
 
@@ -192,6 +279,15 @@ msgstr "品质"
 
 msgid "num_pages"
 msgstr "页面序号"
+
+msgid "series"
+msgstr "系列"
+
+msgid "episode"
+msgstr "前传"
+
+msgid "season"
+msgstr "季"
 
 msgid "include_results_from"
 msgstr "包括原因"
@@ -253,6 +349,45 @@ msgstr "秒"
 msgid "loading"
 msgstr "读取"
 
+msgid "tags"
+msgstr "标签"
+
+msgid "license"
+msgstr "许可证"
+
+msgid "private_file"
+msgstr "私人文件"
+
+msgid "composer"
+msgstr "作曲家"
+
+msgid "publisher"
+msgstr "出品方"
+
+msgid "comments"
+msgstr "评论"
+
+msgid "language"
+msgstr "语言"
+
+msgid "date"
+msgstr "日期"
+
+msgid "trackers"
+msgstr "音轨"
+
+msgid "hash"
+msgstr "HASH"
+
+msgid "visualizations"
+msgstr "可视化"
+
+msgid "codec"
+msgstr "编码"
+
+msgid "encoding"
+msgstr "编码器"
+
 msgid "close"
 msgstr "关闭"
 
@@ -278,7 +413,7 @@ msgid "your_comments"
 msgstr "你的评价"
 
 msgid "since"
-msgstr " since s"
+msgstr "自从S时起"
 
 msgid "post_comment"
 msgstr "发表评论"
@@ -303,6 +438,24 @@ msgstr "相关文件"
 
 msgid "user_profile"
 msgstr "用户设置"
+
+msgid "file"
+msgstr "文件"
+
+msgid "add_favorite"
+msgstr "添加%(type)s 到收藏"
+
+msgid "delete_favorite"
+msgstr "从收藏中删除 %(type)s"
+
+msgid "favorite"
+msgstr "%(type)s已添加入收藏"
+
+msgid "download_links"
+msgstr "显示下载链接"
+
+msgid "login_required"
+msgstr "要访问这个页面请登录。"
 
 msgid "your_password"
 msgstr "设置密码"
@@ -394,6 +547,9 @@ msgstr "是的"
 msgid "account_deleted"
 msgstr "你的账号已删除"
 
+msgid "no"
+msgstr "不"
+
 msgid "nice_to_hear_that"
 msgstr "很高兴听你这么说"
 
@@ -454,6 +610,27 @@ msgstr "登录"
 msgid "enter_email"
 msgstr "输入你的电邮地址 将发送一封邮件恢复你的访问"
 
+msgid "send"
+msgstr "发送"
+
+msgid "user_favorites"
+msgstr "加星标的文件"
+
+msgid "user_searches"
+msgstr "加星标的搜索"
+
+msgid "user_fav_lists"
+msgstr "文件列表"
+
+msgid "user_fav_file_list_empty"
+msgstr "列表中没有文件"
+
+msgid "user_fav_search_list_empty"
+msgstr "列表中没有搜索内容"
+
+msgid "user_fav_no_lists"
+msgstr "用户列表未找到"
+
 msgid "email_same_register"
 msgstr "电子邮件地址必须和你登记的相同"
 
@@ -483,6 +660,18 @@ msgstr "对不起，我们的 %(service)s 服务现在遭遇到了技术问题"
 
 msgid "submit_search"
 msgstr "查找"
+
+msgid "allow_access_account"
+msgstr "如要使用此功能，请允许Foofind访问你的%(account)s账户。"
+
+msgid "submit_registration"
+msgstr "登录"
+
+msgid "submit_login"
+msgstr "登陆"
+
+msgid "submit_edit"
+msgstr "保存文件"
 
 msgid "contact_form"
 msgstr "联系方式"
@@ -526,8 +715,20 @@ msgstr "投诉理由："
 msgid "accept_terms"
 msgstr "接受使用条款和隐私政策"
 
+msgid "accept_tos"
+msgstr "我已阅读并接受%(tos)s和%(privacy)s"
+
 msgid "submit_links"
 msgstr "提交连接"
+
+msgid "not_foofind_page"
+msgstr "链接并非Foofind的页面"
+
+msgid "not_foofind_link"
+msgstr "链接必须是一个有效的Foofind下载页面"
+
+msgid "include_reported_links"
+msgstr "请在表格内恰当的地方报告链接。"
 
 msgid "footer"
 msgstr ""
@@ -537,10 +738,19 @@ msgstr ""
 "rel='license source code' "
 "href='http://www.gnu.org/licenses/agpl.html'>Affero GPL</a>协议。"
 
+msgid "include_link_per_line"
+msgstr ""
+"请在每条横线上包含一个http、ftp、ed2k或magnet链接。\r\n"
+"此操作将会自动分类并添加入搜索结果中。"
+
+msgid "link_sent"
+msgstr "链接已经发送。感谢您的帮助！"
+
 msgid "about_text"
 msgstr ""
-"Foofind是一种通用的搜索引擎。通过Foofind创造生成所有网络上的索引文件。通过这种方式,我们打算提供的最大的收集链接可用。<br /><br "
-"/>Foofind是Pablo Soto在西班牙马德里创造发展P2P技术为MP2P技术。"
+"Foofind是一种通用的搜索引擎。通过Foofind创造生成所有网络上的索引文件。通过这种方式,我们打算提供的最大的收集链接可用。\r\n"
+"\r\n"
+"Foofind是Pablo Soto在西班牙马德里创造发展P2P技术为MP2P技术。"
 
 msgid "under_maintenance"
 msgstr "Foofind正在维护中，请稍候访问。"
@@ -551,12 +761,17 @@ msgstr "此链接不存在或者已被删除！"
 msgid "translate"
 msgstr "翻译"
 
+msgid "error_link_removed"
+msgstr "我们很抱歉：此链接已经被资源发布者移除。"
+
 msgid "translate_to_your_language"
 msgstr "协助我们将Foofind翻译为您使用的语言"
 
 msgid "translate_description"
 msgstr ""
-"Foofind当前可用的语言,但你可以帮助我们把它翻译为你自己的语言。只要选择从它下面列出的及翻译的文本。你不需提交所有领域方式,任何的帮助将很感激的。<br/><br/>如果你的语言是不在列表中,请与我们联系来增加。"
+"Foofind当前可用的语言,但你可以帮助我们把它翻译为你自己的语言。只要选择从它下面列出的及翻译的文本。你不需提交所有领域方式,任何的帮助将很感激的。\r\n"
+"\r\n"
+"如果你的语言是不在列表中,请与我们联系来增加。"
 
 msgid "choose_language"
 msgstr "选择语言"
@@ -575,3 +790,15 @@ msgstr "这个语言翻译在测试阶段。如果你发现缺失或是错误的
 
 msgid "other"
 msgstr "其他"
+
+msgid "embed_foofind_button"
+msgstr "在Foofind中查看"
+
+msgid "embed_download_button"
+msgstr "下载"
+
+msgid "copy_to_clipboard_shortcut"
+msgstr "使用CTRL+C复制到你的剪贴板"
+
+msgid "opensearch_description"
+msgstr "使用Foofind搜索"

@@ -1,4 +1,4 @@
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
@@ -199,18 +199,6 @@ msgstr "Quixeches dicir %(text)s?"
 
 msgid "all_sizes"
 msgstr "Tódolos tamaños"
-
-msgid "classic_search"
-msgstr "busca clásica"
-
-msgid "ajax_search"
-msgstr "nova busca"
-
-msgid "change_classic_search"
-msgstr "Se o prefires poder volver á"
-
-msgid "change_ajax_search"
-msgstr "Se queres podes activar a"
 
 msgid "what"
 msgstr "Que?"

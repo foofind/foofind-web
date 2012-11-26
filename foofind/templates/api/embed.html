@@ -4,11 +4,12 @@
     <head>
         <title>{{ g.title }}</title>
         <meta charset="utf-8"/>
+        <meta name="robots" content="noindex,follow"/>
         <meta name="description" content="{{_('i_want_that_file')}}"/>
         <link rel="shortcut icon" href="{{ url_for('index.favicon') }}" />
         <style type="text/css">
         {# TODO: pasar a archivo aparte #}
-            html, html body{
+            html, body{
                 font-family:sans-serif;
                 background-color:none transparent;
                 padding:0; margin:0;
@@ -16,6 +17,8 @@
             body{
                 font-size:12px;
                 position:relative;
+                overflow:hidden;
+                padding:2px;
                 }
             header{
                 font-weight:bold;
@@ -23,7 +26,10 @@
                 white-space:nowrap;
                 text-overflow:ellipsis;
                 overflow:hidden;
-                width:200px;
+                width:196px;
+                height:18px;
+                line-height:18px;
+                vertical-align:middle;
                 display:block;
                 }
             a.awesome{
@@ -39,7 +45,7 @@
                 cursor:pointer;
                 position:relative;
                 display:block;
-                margin:1px 0;
+                margin:0 0 2px;
                 text-decoration:none;
                 }
             a.awesome:active{
@@ -50,9 +56,24 @@
     </head>
     <body>
     <article>
+    {% if embed_size == "s" %}
+    <a href="{{download_url}}" class="awesome" title="{{_('download')}}" target="top">{{_("embed_in_foofind_button", filename=filename)}}</a>
+    {% elif embed_size == "m" %}
     <header>{{filename}}</header>
-    <a href="{{download_url}}" class="awesome" title="{{_('download')}}" target="top">{{_("embed_foofind_button")}}</a>
     <a href="{{download_url}}" class="awesome" title="{{_('download')}}" target="top">{{_("embed_download_button")}}{% if size %} ( {{size|numbersizeformat}} ){% endif %}</a>
+    <a href="{{download_url}}" class="awesome" title="{{_('download')}}" target="top">{{_("embed_foofind_button")}}</a>
+    {% elif embed_size == "b" %}
+    {% include "files/download_info.html" %}
+    {% endif %}
     </article>
+    <script type="text/javascript">
+    if(top==self) document.location.href = "{{download_url}}";
+    var D=document, ch=Math.max(
+        Math.max(D.body.scrollHeight, D.documentElement.scrollHeight),
+        Math.max(D.body.offsetHeight, D.documentElement.offsetHeight),
+        Math.max(D.body.clientHeight, D.documentElement.clientHeight)
+        );
+    self.resizeTo("200px",(ch+2)+"px");
+    </script>
     </body>
 </html>

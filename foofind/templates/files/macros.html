@@ -1,0 +1,18 @@
+{%- macro url_search(delete_params=[],catch_kwargs=true) -%}
+    {{url_for('files.search',**kwargs|search_params(['page','alt']+delete_params,args,extra_sources))}}
+{%- endmacro -%}
+
+{%- macro print_source(source_data,url="") %}
+    <div class="download_source">
+        <input type="text" readonly="readonly" value="{% if url=='' %}{{ source_data['urls'][0] }}{% else %}{{url}}{% endif %}" class="no" />
+        <span class="icon30 {{ source_data['icon'] }}30"></span>
+        <a href="{% if url=='' %}{{ source_data['urls'][0] }}{% else %}{{url}}{% endif %}">{{ source_data['tip'] }}
+        <br/>
+        <span>
+        {% if source_data['count']>1 and url=="" %}
+            ({{ source_data['count'] }} {{_('sources')}})
+        {% endif %}
+        </span>
+        </a>
+    </div>
+{% endmacro -%}

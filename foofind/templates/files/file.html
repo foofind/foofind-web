@@ -1,0 +1,79 @@
+{% from "files/macros.html" import url_search with context %}
+{% set source_data=file['view']['sources'][file['view']['sources']|first] %}
+<li class="{{ file['view']['file_type'] }}"{% if scroll_start %} data-scroll-start="0"{% endif %}>
+    <div>
+        <div class="thumblink" title="{{_(source_data['source'])|capitalize}}"{% if file['view']['play'] and file['view']['play'][0] %} data-play="{{ file['view']['play'][0] }},{{ file['view']['play'][1] }}"{% endif %}>
+            <span class="{% if file['view']['play'] and file['view']['play'][0] %}play" title="{{_('play')}}{% elif file['view']['embed'] %}embed" title="{{_('play')}}{% else %}{{ source_data['source'] }}{% endif %}"></span>
+            {% if 'images_server' in file['view'] %}
+            <img id="{{ file['file']['id'] }}" alt="{{ source_data['source'] }}" data-servers="{{ file['view']['images_server'] }}" data-id="{{ file['file']['_id'] }}" src="http://{{ file['view']['first_image_server'] }}/{{ file['file']['_id'] }}0" />
+            {% endif %}
+        </div>
+        <ul class="source">
+            {#{% if file['view']['list_magnet_source'] or source!='tmagnet' %}#}
+            <li class="source_{{ file['view']['sources']|length - (1-file['view']['list_magnet_source']) }}">
+                {% if source_data["icons"]["32"] %}
+                <img src="{{ g.static_prefix }}/img/{{ source_data['tip'] }}.png" alt="{{ source_data['tip'] }}" title="{{ source_data['tip'] }}" />
+                {% else %}
+                {% for source,source_data in file['view']['sources'].items() if file['view']['list_magnet_source'] or source!='tmagnet' %}
+                <span class="{{ source_data['icon'] }}" title="{{ source_data['tip'] }}"></span>
+                {% endfor %}
+                {% endif %}
+            </li>
+            <li{% if "length" in file['view']['md'] %} title="{{_('length')}}">{{ file['view']['md']['length'] }}{% else %}>{% endif %}</li>
+            {#<li>{% if source_data['icon']=="torrent" %}torrent{% else %}{{ source_data['tip'] | lower }}{% endif %}</li>#}
+            <li><a href="{{ source_data['urls'][0] }}" title="{{_('go_to_file')}}">
+            {% if source_data['icon']=="web" %}
+                {{ source_data['tip'] }}
+            {% elif source_data['icon']=="torrent" or source_data['icon']=="tmagnet" %}
+                {% if "seeds" in file['view']['md'] %}
+                    {{ file['view']['md']["seeds"]|int }} {{_('seeds')|lower}}
+                {% else %}
+                    {{ source_data['urls']|length }} {{_('sources')}}
+                {% endif %}
+            {% else %}
+                {{ source_data['count'] }} {% if source_data['count']>1 %}{{_('sources')}}{% else %}{{_('source')|lower}}{% endif %}
+            {% endif %}
+            </a></li>
+        </ul>
+        <span class="type" title="{{_(file['view']['file_type'])}}"></span>
+        <h3>
+            <a href="{{ url_for('.download',file_id=file['file']['id'],file_name=file['view']['fn']) }}" title="{{ file['view']['nfn'] }}" data-id="{{ file['file']['id'] }}">
+            {% if 'fnhs' in file['view'] %}{{ file['view']['fnhs']|safe }}{% else %}{{ file['view']['fn']|safe }}{% endif %}
+            </a>
+        </h3>
+        <ul class="metadata">
+        {%
+            set metadata=[
+                ('series',file['view']['md']['series'],True,''),
+                ('season',file['view']['md']['season'],False,_('season')+" "),
+                ('episode',file['view']['md']['episode'],False,_('episode')+" "),
+                ('genre',file['view']['md']['genre'],True,''),
+                ('album',file['view']['md']['album'],True,''),
+                ('artist',file['view']['md']['artist'],True,''),
+                ('title',file['view']['md']['title'],True,''),
+            ]
+        %}
+        {% for meta,value,link,extra in metadata if value %}
+            <li><a{% if link %} href="{{ url_search(query=value)|replace('%20','+') }}"{% endif %} title="{{_(meta)|capitalize }}: {{ value }}">{{ extra }}{{ file['view']['mdh'][meta]|safe }}</a></li>
+        {% endfor %}
+        </ul>
+        <span class="ext"
+        {%- if "format" in file['view'] %}
+             title="{{_('format')}}{%if file['view']['format'][1]%}: {{file['view']['format'][1]}}{%endif%}">{{ file['view']['format'][0]|upper }}</span>
+            <span class="size" title="{{_('size')}}">{% if 'z' in file['file'] and file['file']['z'] %}<span></span>{{ file['file']['z']|numbersizeformat }}{% endif %}</span>
+        {% elif 'z' in file['file'] and file['file']['z'] %}
+            ></span><span class="size" title="{{_('size')}}">{{ file['file']['z']|numbersizeformat }}</span>
+        {% else %}
+            ></span>
+        {% endif %}
+        {#{% set favorito=(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,3,4,5,6,7,8,9)|random %}
+        {% set comentario=(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,3,4,5,6,7,8,9)|random %}#}
+        <ul class="links">
+            <li>{#<a href="#"><span></span>{{_('related_files')|lower}}</a>#}</li>
+            {#<li>{% if favorito %}<a href="#" title="{{_('votes')}}"><span></span>{{_('votes')}}<strong>{{ favorito }}</strong></a>{% endif %}</li>
+            <li>{% if comentario %}<a href="#" title="Comentar este archivo"><span></span>comentarios<strong>{{ comentario }}</strong></a>{% endif %}</li>#}
+            <li>{% if 'vs' in file['file'] and g.lang in file['file']['vs'] and file['file']['vs'][g.lang]['t'] %}<a href="#votes" title="{{_('votes')}}"><span></span>{{ file['file']['vs'][g.lang]['t'] }}</a>{% endif %}</li>
+            <li>{% if comments %}<a href="#coments" title="Comentar este archivo"><span></span>{{ comments|count }}</a>{% endif %}</li>
+        </ul>
+    </div>
+</li>

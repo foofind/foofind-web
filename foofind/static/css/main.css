@@ -1,14 +1,15 @@
 /*colores*/
 $magenta:#E1007A;
-$darkwhite:#FAFAFA;
-$darkerwhite:#F7F7F7;
+$darkwhite:#F7F7F0;
+$darkerwhite:#EEEEE5;
 $lightestgray:#EDEDED;
 $lightgray:#C2C2C2;
-$gray:#ABA8A8;
-$darkgray:#919191;
+$gray:#999993;
+$darkgray:#72726D;
 $darkergray:#828282;
 $lightestblack:#666;
 $lightblack:#333;
+$green:#87D3CB;
 /*otras variables*/
 $fuente:Arial,Verdana,Helvetica,sans-serif;
 /* importaciones */
@@ -21,32 +22,35 @@ $fuente:Arial,Verdana,Helvetica,sans-serif;
     @else{@include sprite(307,$status,$size)}
 }
 /* establece todos los estados posibles que puede tener un icono */
-@mixin states($icon,$size:50,$span:0,$active:true,$span_selector:span,$status1:1,$status2:2,$status3:3,$status4:4,$status1_color:$darkergray,$status2_color:$magenta,$status3_color:#000,$status4_color:#000)
+@mixin states($icon,$size:50,$span:0,$active:1,$span_selector:>span,$status1:1,$status2:2,$status3:3,$status4:4,$status5:5,$status1_color:$darkergray,$status2_color:$magenta,$status3_color:#000,$status4_color:#000)
 {
-    //por defecto se le aplican los estados al propio span, sino es al primer span que tenga como hijo y sino todo al 
+    //por defecto se le aplican los estados al propio span, sino es al primer span que tenga como hijo y sino todo al
     @if $span==0{$parent:&;$selector:&}
     @else if $span==1{$parent:&;$selector:$span_selector}
     @else{$parent:&;$selector:$span_selector}
-    
+
     //si se ha cambiado algun estado se cambia tambien el color que tiene asociado
     @for $i from 1 through 4{@if $i!=$status#{$i}{$status#{$i}_color:$status#{$status#{$i}}_color}}
 
     $parent{color:$status1_color;$selector{@include sprite($icon,$status1,$size)}}
     $parent:hover{color:$status2_color;$selector{@include sprite($icon,$status2,$size)}}
-    @if $active
+    $parent:focus{opacity:.7}
+    @if $active==1 or $active==3 //active normal o igual al hover
     {
         $parent.active{color:$status3_color;$selector{@include sprite($icon,$status3,$size)}}
         $parent:active{color:$status4_color;$selector{@include sprite($icon,$status4,$size)}}
-        $parent:focus{opacity:.7}
+        @if $active==3{$parent.active:hover{color:$status2_color;@include sprite($icon,$status5,$size)}} //hover del active
     }
+    @else if $active==2{$parent.active,$parent:active{color:$status2_color;$selector{@include sprite($icon,$status2,$size)}}}
+
 }
 /* para poner un icono */
-@mixin icon($icon,$status:0,$size:50,$color:transparent,$span:0,$active:true)
+@mixin icon($icon:101,$status:0,$size:50,$color:transparent,$span:0,$span_selector:>span,$active:1,$status1:1,$status2:2,$status3:3,$status4:4)
 {
-    @include background_cached(/static/img/icons$size.png, $color);
+    @include background_cached(../img/icons$size.png, $color);
     @if $status>0{@include sprite($icon,$status,$size)}
-    @else if $status<0{@include states($icon,$size,$span,$active)}
-    
+    @else if $status<0{@include states($icon,$size,$span,$active,$span_selector,$status1,$status2,$status3,$status4)}
+
     display:inline-block;
     vertical-align:middle;
     width:$size + px;
@@ -56,24 +60,25 @@ $fuente:Arial,Verdana,Helvetica,sans-serif;
 /* coloca un icono */
 @mixin sprite($icon,$status:0,$size:50)
 {
-    @if $status==1{$status='A'}
-    @else if $status==2{$status='B'}
-    @else if $status==3{$status='C'}
-    @else if $status==4{$status='D'}
-    @else if $status==11{$status='AA'}
-    @else if $status==12{$status='BB'}
-    @else if $status==13{$status='CC'}
-    @else if $status==14{$status='DD'}
+    @if $status==1{$status=A}
+    @else if $status==2{$status=B}
+    @else if $status==3{$status=C}
+    @else if $status==4{$status=D}
+    @else if $status==5{$status=E}
+    @else if $status==11{$status=AA}
+    @else if $status==12{$status=BB}
+    @else if $status==13{$status=CC}
+    @else if $status==14{$status=DD}
     @include icon-#{$size}px-#{$icon}-#{$status};
 }
 /* propiedades necesarias para hacer un text-overflow:ellipsis */
-@mixin ellipsis($width:100,$inline:block,$white-space:nowrap)
+@mixin ellipsis($width:100,$inline:block,$white-space:nowrap,$width-type:max-width)
 {
-    max-width:#{$width}px;display:$inline;white-space:$white-space;overflow:hidden;text-overflow:ellipsis;
+    #{$width-type}:#{$width}px;display:$inline;white-space:$white-space;overflow:hidden;text-overflow:ellipsis;
 }
 *{margin:0;padding:0}
 html,body{height:100%}
-body{font:normal 62.5% $fuente;min-height:625px;min-width:960px;position:absolute;bottom:0;left:0;right:0;top:0}
+body{font:normal 62.5% $fuente;min-height:625px;min-width:940px;position:absolute;bottom:0;left:0;right:0;top:0}
 ul{list-style:none}
 fieldset{padding:0px;text-align:left;border-width:0px}
 input,select,textarea{font-family:Arial,Verdana,Helvetica,sans-serif}
@@ -88,8 +93,9 @@ input[type="text"],input[type="password"],select,textarea
 }
 input[type="radio"], input[type="checkbox"]{vertical-align:-2px;margin-right:3px}
 input[type="radio"]:focus, input[type="checkbox"]:focus{border-style:none;border:0px;border:0px;background-color:blue;color:green}
-input[type="submit"],a.awesome{font-size:1.5em;padding:6px 18px;background:$magenta;color:#fff;border-radius:5px;box-shadow:0px 1px 3px #999;border:none;cursor:pointer;position:relative}
-a.awesome{font-size:1.5em;padding:10px 18px;display:inline-block;text-decoration:none}
+input[type="submit"],.button{font-size:1.5em;padding:6px 18px;background:$magenta;color:#fff;border-radius:5px;box-shadow:0px 1px 3px #999;border:none;cursor:pointer;position:relative}
+.button{font-size:1.5em;padding:10px 18px;display:inline-block;text-decoration:none}
+button{border:none;cursor:pointer}
 input[type="submit"]:active{top:1px;box-shadow:0px 0.5px 1.5px #999}
 input[type="text"]:not(#q)#captcha{width:5em;letter-spacing:0.3em;&+span{left:210px}} //necesario el :not() para que lo coja
 label
@@ -98,7 +104,7 @@ label
     &[for*="captcha"]+img{display:inline-block;width:200px;height:40px}
     span{color:#DB006E}
 }
-a{color:#cd0069;&[rel="external"]{padding-right:15px;background:url(/static/img/external.png) no-repeat right center}}
+a{color:#cd0069;&[rel="external"]{padding-right:15px;background:url(../img/external.png) no-repeat right center}}
 img{border:0;vertical-align:middle}
 p{padding-bottom:1em}
 em{font-weight:bold;font-style:normal}
@@ -106,72 +112,103 @@ hr{position:relative;border:none;border-top:1px solid #cd0069;height:1px;top:12p
 cite{color:#df1279;font-style:normal}
 h2{margin-bottom:10px}
 h3{font-size:1.3em}
-.errors{color:#cd0069;padding-left:0px}
-/* cabecera */
-#container>header
+.errors{color:#cd0069;margin-bottom:10px;margin-top:-5px}
+.advice
 {
-    $header:$lightestblack;
-    font-size:1.3em;color:#dedede;
-    h1{clear:both;float:left;margin:13px 10px 0 15px;width:161px;height:67px;overflow:hidden;position:relative;z-index:10}
-    small{font-variant:small-caps;font-size:.7em;margin-left:.35em;color:$lightgray}
-    >section
-    {
-        background:$header;width:100%;height:30px;
-        >p
-        {
-            float:left;height:15px;padding:5px 1% 10px;
-            a
-            {
-                color:$lightestgray;font-weight:bold;text-decoration:none;
-                &:hover{color:#FFF}
-                small{color:$lightgray}
-            }
-        }
-    }
-    #header_navigation
-    {        
-        padding-right:140px;float:right;margin:0;height:30px;text-align:right;font-weight:bold;position:relative;z-index:2;/*para evitar problemas con poner el logo movido hacia abajo y section subido*/
-        a{display:inline-block;color:$lightestgray;text-decoration:none;&:hover{color:#FFF}}
-        >a{margin:3px 0px 3px 13px}
-        a:nth-child(1){span{@include icon(313,3,24)}&:hover span{@include sprite(313,2,24)}}
-        a:nth-child(2){span{@include icon(310,3,24)}&:hover span{@include sprite(310,2,24)}}
-        &.login a{span{@include icon(311,3,24)}&:hover span{@include sprite(311,2,24)}}
-        #advice
-        {
-            display:none;width:200px;position:absolute;right:10px;z-index:9;color:#FFF;
-            span{border:10px solid transparent;border-bottom-color:$darkgray;margin-top:-9px;margin-left:135px;float:left}
-            a
-            {
-                color:#FFF;font-style:italic;font-weight:bold;display:inline;
-                &:hover{background:#FFF;color:$darkergray}
-                &.close_advice{float:right;padding:0 5px;margin:10px 1px 100px 5px;font-size:1.5em;font-family:Times New Roman, Times;&:hover{background:$lightgray;color:#000}}
-            }    
-            p{background:$darkgray;margin-top:10px;padding:10px;font-weight:normal;font-size:1em;line-height:1.5em;text-align:left}
-        }
-        #select_language_box
-        {
-            position:absolute;right:4px;top:-5px;z-index:10;width:130px;overflow:hidden;text-align:left;
-            &:hover li{display:block;&:first-child span{@include icon(312,2,24)}}
-            li
-            {
-                display:none;background:$header;                
-                &:first-child
-                {
-                    display:block;min-height:35px;margin-left:0;background:$header;cursor:default;
-                    a{height:18px;padding:8px;margin:0;background:none}
-                    span{@include icon(312,3,24)}
-                }
-            }
-            a{height:auto;padding:5px;width:100%;&:hover{background:#999}}
-            span{text-decoration:none;display:none}
-        }
-    }    
-    #search_file{display:inline-block;fieldset{width:100%}}
+    display:none;width:350px;position:absolute;right:10px;z-index:9;color:#FFF;
+    span{border:10px solid transparent;border-bottom-color:$darkgray;margin-top:-9px;float:left}
+    a{color:#FFF;font-style:italic;font-weight:bold;display:inline;text-decoration:none;&:hover{background:#FFF;color:$darkergray}}
+    button{float:right;background:transparent;color:#FFF;padding:0 5px;margin:10px 1px 100px 5px;font-size:1.4em;&:hover{background:$lightgray;color:#000}}
+    p{background:$darkgray;margin-top:10px;padding:10px;font-weight:normal;font-size:1em;line-height:1.5em;text-align:left}
 }
-input#q{height:18px;width:435px}
+#login_required{width:400px;span{margin-left:285px}}
+/* cabecera */
 #container
 {
     min-height:100%;position:relative;overflow:hidden;
+    >header
+    {
+        $header:$lightestblack;
+        font-size:1.3em;color:#dedede;
+        h1{clear:both;float:left;margin:15px 10px 0 24px;width:161px;height:67px;overflow:hidden;position:relative;z-index:10;&#search_logo{margin:14px 4px 0 10px}}
+        >section
+        {
+            background:$header;width:100%;height:30px;
+            >p
+            {
+                float:left;height:15px;padding:5px 1% 10px;
+                a
+                {
+                    color:$lightestgray;font-weight:bold;text-decoration:none;
+                    &:hover{color:#FFF}
+                    small{color:$lightgray}
+                }
+            }
+        }
+        #header_navigation
+        {
+            padding-right:140px;float:right;margin:0;height:30px;text-align:right;font-weight:bold;position:relative;z-index:2;/*para evitar problemas con poner el logo movido hacia abajo y section subido*/
+            a{display:inline-block;color:$lightestgray;text-decoration:none;&:hover{color:#FFF}}
+            >a{margin:3px 0px 3px 13px}
+            a:nth-child(1){span{@include icon(313,3,24)}&:hover span{@include sprite(313,2,24)}}
+            a:nth-child(2){span{@include icon(310,3,24)}&:hover span{@include sprite(310,2,24)}}
+            &.login a{span{@include icon(311,3,24)}&:hover span{@include sprite(311,2,24)}}
+            #beta_lang
+            {
+                a:hover{color:$darkergray}
+                span{margin-left:275px}
+            }
+            #select_language_box
+            {
+                position:absolute;right:4px;top:-5px;z-index:10;width:130px;overflow:hidden;text-align:left;
+                &:hover li{display:block;&:first-child span{@include icon(312,2,24)}}
+                li
+                {
+                    display:none;background:$header;
+                    &:first-child
+                    {
+                        display:block;min-height:35px;margin-left:0;background:$header;cursor:default;
+                        a{height:18px;padding:8px;margin:0;background:none}
+                        span{@include icon(312,3,24)}
+                    }
+                }
+                a
+                {
+                    height:auto;padding:5px 100px 5px 5px;margin-right:-100px;
+                    &:hover{background:#999}
+                    &.beta:after{content:"BETA";font-variant:small-caps;font-size:.7em;margin-left:.35em;color:$lightgray}
+                }
+                span{text-decoration:none;display:none}
+            }
+        }
+        #search_file
+        {
+            display:inline-block;padding-top:8px;
+            input#q{background:#FFF;height:30px;font-size:1.6em;margin-top:5px;margin-right:14px;width:425px;/*padding-right:85px para favoritos y compartir*/}
+            fieldset
+            {
+                width:100%;
+                &.small
+                {
+                    position:relative;
+                    input[type="text"]+span{top:12px}
+                    a
+                    {
+                        position:relative;left:-85px;top:-5px;@include icon(305,0,32);
+                        &:nth-of-type(1){@include states(305,32)}
+                        &:nth-of-type(2){@include states(306,32)}
+                    }
+                }
+            }
+            #search_submit{/*margin-left:-65px; para favoritos y compartir*/width:130px;height:42px;text-transform:lowercase;box-shadow:none}
+            #search_info
+            {
+                height:1em;color:$darkgray;
+                strong{color:$darkergray}
+                em{color:$magenta;font-style:italic}
+            }
+        }
+    }
     >section{padding:10px 10px 60px;font-size:1.3em;clear:both}
 }
 /* pie */
@@ -223,13 +260,14 @@ section#home
 {
     position:absolute;bottom:0;left:0;right:0;top:17%;text-align:center;
     #search
-    {        
+    {
         text-align:center;position:relative;z-index:1;background:#FFF;margin-bottom:5px;
         >img{width:350px}
         >span
         {
             font-size:1.5em;font-weight:bold;text-shadow:0em 0.1em 0.1em #ccc;color:$lightestblack;height:30px;margin:-30px 0 45px 163px;display:block
             &.small{font-size:1.2em}
+            &.smaller{font-size:.9em}
         }
         form
         {
@@ -245,9 +283,9 @@ section#home
                 &:hover>a,&:focus>a,&.hover>a{@include pencil(3,32,$darkwhite);left:7px}
                 >span
                 {
-                    width:234px;overflow:hidden;display:inline-block;vertical-align:top;background:$darkwhite url(/static/img/home/flecha_desplegar.png) no-repeat 200px 17px;border-radius:5px;
+                    width:234px;overflow:hidden;display:inline-block;vertical-align:top;background:$darkwhite url(../img/home/flecha_desplegar.png) no-repeat 200px 17px;border-radius:5px;
                     #type{background:transparent;width:255px;height:35px;border-left:1px solid $gray;font-size:1.8em;margin:7px 0 0 -2px;padding:5px 0 0 50px}
-                }                
+                }
                 #q{font-size:2em;color:$magenta;background:$darkwhite;width:460px;height:35px;padding:4px 10px 4px 40px;margin:5px 0;border-right:1px solid $gray;border-radius:0;box-shadow:0 0 0}
             }
             input[type=submit]{font-size:2em;margin-left:20px;padding:9px 23px;max-height:50px;text-transform:lowercase}
@@ -256,7 +294,7 @@ section#home
     }
     #extra
     {
-        background:url(/static/img/home/fondo.png) repeat-x;border-top:1px solid #DDD;padding-top:10px;position:absolute;z-index:0;bottom:55px;left:0;right:0;
+        background:url(../img/home/fondo.png) repeat-x;border-top:1px solid #DDD;padding-top:10px;position:absolute;z-index:0;bottom:55px;left:0;right:0;
         #live
         {
             padding:15px;width:900px;height:165px;overflow:hidden;margin:0 auto;text-align:left;
@@ -290,7 +328,7 @@ section#page
     nav
     {
         width:200px;float:left;margin-left:15px;margin-top: 70px;
-        dt{height:1.1em;font-size:1.3em;font-weight:bold;margin-top:30px;margin-bottom:5px;color:$magenta;text-transform:lowercase}
+        dt{font-size:1.3em;font-weight:bold;margin-top:30px;margin-bottom:5px;color:$magenta;text-transform:lowercase}
         a{color:$darkergray;font-size:1.3em;text-decoration:none;text-transform:lowercase}
         .active{font-weight:bold}
     }
@@ -301,24 +339,34 @@ section#page
         input[type="text"]:not(#captcha),textarea{width:400px}
         >a
         {
-            width:30px;height:50px;display:block;margin:130px 15px 0;background:url(/static/img/pages/flecha.png);
+            width:30px;height:50px;display:block;margin:130px 15px 0;background:url(../img/pages/flecha.png);
             &:first-of-type{float:left}
             &:last-of-type{float:right;background-position:30px 0}
         }
         >span{float:right;font-size:1.8em;font-weight:bold;margin-top:10px}
         h2{text-transform:lowercase;color:#000;font-size:2em}
         >div{font-size:1.2em;color:$darkergray;border-radius:20px;margin-bottom:-65px;padding:55px 70px 115px;background:no-repeat right bottom transparent}
-        &#about>div{background-image:url(/static/img/pages/about.png);padding-bottom:225px;padding-right:250px}
-        &#contact>div{background-image:url(/static/img/pages/contact.png);label:last-child{margin-right:150px}}
-        &#jobs>div{background-image:url(/static/img/pages/jobs.png);padding-bottom:170px;label:last-child{margin-right:100px}}
-        &#submitlink>div{background-image:url(/static/img/pages/submitlink.png);padding-bottom:75px;label:last-child{margin-right:130px}}
+        &#about>div{background-image:url(../img/pages/about.png);padding-bottom:225px;padding-right:250px}
+        &#contact>div{background-image:url(../img/pages/contact.png);label:last-child{margin-right:150px}}
+        &#jobs
+        {
+            >div{background-image:url(../img/pages/jobs.png);padding-bottom:170px;label:last-child{margin-right:100px}}
+            #joboffer
+            {
+                margin-left:5px;margin-bottom:10px
+                p{margin-top:7px}
+                ul{list-style:circle inside}
+                li{margin-left:20px}
+            }
+        }
+        &#submitlink>div{background-image:url(../img/pages/submitlink.png);padding-bottom:75px;label:last-child{margin-right:130px}}
         &#translate
         {
-            >div{background:url(/static/img/pages/translate.png) no-repeat left bottom;padding-bottom:280px}
+            >div{background:url(../img/pages/translate.png) no-repeat left bottom;padding-bottom:280px}
             label{float:left;margin-right:10px}
             form{margin-left:90px}
             form[method="post"]
-            {                
+            {
                 label,div{width:40%}
                 input,textarea{width:45%}
                 div{font-style:italic;color:$magenta;margin-top:-25px}
@@ -334,76 +382,364 @@ section#page
             option{height:1.2em}
             #searchempty{font-size:2.2em;font-weight:bold;position:fixed;width:145px;left:250px;z-index:1;text-decoration:none;text-align:center;outline:none}
         }
-        &#complaint>div{background-image:url(/static/img/pages/complaint.png);padding-right:0;label:last-child{margin-right:290px}}
-        &#legal>div{background-image:url(/static/img/pages/legal.png);padding-right:325px;padding-bottom:110px}
-        &#tos>div{background-image:url(/static/img/pages/tos.png);padding-bottom:190px}
-        &#privacy>div{background-image:url(/static/img/pages/privacy.png);padding-bottom:250px}
-    }
-    #joboffer
-    {
-        margin-left:5px;margin-bottom:10px
-        p{margin-top:7px}
-        ul{list-style:circle inside}
-        li{margin-left:20px}
+        &#complaint>div{background-image:url(../img/pages/complaint.png);padding-right:0;label:last-child{margin-right:290px}}
+        &#legal>div{background-image:url(../img/pages/legal.png);padding-right:325px;padding-bottom:110px}
+        &#tos>div{background-image:url(../img/pages/tos.png);padding-bottom:190px}
+        &#privacy>div{background-image:url(../img/pages/privacy.png);padding-bottom:250px}
     }
 }
 /* busqueda */
-#container.files{}
-/* cabecera busqueda */
-header #search_file
+section#files
 {
-    padding-top:8px;
-    >ul
+    padding-left:0;
+    .message{width:750px;text-align:center}
+    aside
     {
-        margin-bottom:5px;width:390px;text-align:center;overflow:hidden;
-        li
+        float:left;width:160px;box-shadow:-3px 5px 5px $lightestgray inset;
+        a{outline:none}
+        dt
         {
-            display:inline;margin-right:5px;
-            a{padding:0 2px;&:visited{color:#DF1279}&.actual{color:#000;text-decoration:none;font-weight:bold}}
+            background:$darkerwhite;color:$darkgray;font-size:1.4em;margin-bottom:20px;padding:3px 10px;
+            &:nth-child(1){margin-top:0}
+            a{font-size:.8em;font-weight:bold;color:$green;margin-top:3px;text-decoration:none;float:right}
+        }
+        dd
+        {
+            margin-bottom:20px;
+            >ul>li
+            {
+                @include icon($size:50);font-size:.5em;text-align:center;text-transform:uppercase;width:42px;height:42px;margin:0 0 0 8px;
+                >a{position:relative;top:-7px;display:inline-block;float:left;width:42px;height:50px;padding-right:6px;text-decoration:none;text-align:center;color:$darkergray}
+            }
+        }
+        #type li
+        {
+            margin-bottom:20px;
+            @for $i from 1 through 5{&:nth-child($i){@include states("00"+($i+1),50,$active:3,$status4_color:#FFF)}}
+            &:nth-child(6){background:url(../img/search/no_image.png);border-radius:6px;margin-left:10px}
+        }
+        #src
+        {
+            width:150px;height:166px;overflow:hidden;padding-top:10px;margin-top:-10px;position:relative;
+            &.filter
+            {
+                margin-bottom:6px;height:180px;
+                li>ul.show
+                {
+                    &,&.inactive,&.inactive_0,&.inactive_1,&.inactive_2,&.inactive_3,&.deactive{height:170px;&:nth-child(3){height:55px}}
+                    li:last-child{&:before{content:none}float:right;width:85px;padding-left:7px}
+                }
+            }
+            >ul
+            {
+                height:150px;
+                >li
+                {
+                    display:block;width:142px;text-align:left;padding-bottom:20px;
+                    &:hover
+                    {
+                        ul
+                        {
+                            width:89px;box-shadow:-2px -2px 2px $lightgray inset;margin-bottom:-75px;padding:5px 2px;background:$lightestgray;border-radius:5px;position:relative;z-index:1;
+                            &.inactive_2{&+.more+strong{margin-top:-30px}}
+                            &,&.inactive,&.inactive_0,&.inactive_1,&.inactive_3,&.deactive{height:156px;padding-top:5px;&+.more{display:none}}
+                            a{max-width:67px}
+                        }
+                        li
+                        {
+                            display:block;height:17px;padding:0 2px;background:$lightestgray;
+                            &:before{content:"";@include icon("325",1,16)}
+                            &:hover:before{@include sprite("325",3,16)}
+                            &.active:before{@include sprite("325",2,16)}
+                            &.active:hover:before{@include sprite("325",4,16)}
+                            &:active:before{@include sprite("325",3,16)}
+                        }
+                        strong{display:none}
+                    }
+                    @for $i from 1 through 3{&:nth-child($i){@include states("00"+($i+6),50,$active:3)}}
+                    &:nth-child(2){>a{top:-15px}&:hover ul{margin-top:-62px}}
+                    &:nth-child(3):hover ul{height:50px;margin-top:-18px}
+                    ul,strong,>span{float:right;width:85px;padding-left:8px}
+                    >span{width:86px;height:10px;font-size:1.3em;color:$darkergray;background:#FFF}
+                    strong{background:#FFF;height:32px;font-size:1.8em;font-weight:bold;span{color:$green}}
+                    ul
+                    {
+                        /*display:inline-block;*/background:#FFF;width:86px;height:20px;overflow:hidden;
+                        &.inactive
+                        {
+                            height:30px;
+                            &+.more{margin-top:0;height:12px}
+                            >li{display:block}
+                        }
+                        &.inactive_0{&+.more{display:none}&+.more+strong{padding-top:5px;margin-top:-10px}}
+                        &.inactive_1{height:10px;padding-top:10px;&+.more{display:none}}
+                        &.inactive_2{padding-top:5px;&+.more{display:none}}
+                        &.inactive_3{height:45px;&+.more{display:none}&+.more+strong{margin-top:-15px}}
+                        &.deactive{height:42px;&+.more,&+.more+strong{display:none}}
+                        li
+                        {
+                            display:none;height:10px;font-size:1.3em;
+                            &:last-child{display:none}
+                            &.active{display:block}
+                            a{@include ellipsis(90,inline-block);vertical-align:middle;text-decoration:none;color:$darkergray;&:hover{color:$magenta}}
+                        }
+                    }
+                }
+            }
+            button{@extend .button;background:$magenta;width:84px;margin-top:2px;margin-right:4px;padding:0;box-shadow:none;font-size:1em}
+        }
+        #size
+        {
+            width:120px;margin-left:18px;margin-bottom:35px
+            div
+            {
+                background:$lightestgray;
+                div{background:$green}
+                a
+                {
+                    @include icon(326,-1,16,$active:0);
+                    &.ui-state-hover,&.ui-state-focus{border-color:transparent}
+                }
+            }
+            span
+            {
+                margin:5px -10px 0 -7px;color:$lightblack;font-weight:bold;font-size:.9em;
+                &:first-of-type{float:left}
+                &:last-of-type{float:right}
+            }
+
+        }
+    }
+    &+footer{position:fixed;z-index:100}
+    #fondo{opacity:0;display:none;background:#333;height:100%;width:100%;position:absolute;z-index:5;left:-10px;padding-right:10px}
+    #subcontent{max-width:1490px;min-width:940px;position:relative;/*overflow:hidden;*/}
+    #flecha{cursor:pointer;position:absolute;right:-150px;z-index:7;display:none;border:15px solid transparent;border-left-color:$magenta;margin-top:30px}
+    #download
+    {
+        overflow:hidden;display:none;background:$darkwhite;width:640px;height:100%;position:fixed;z-index:6;right:-800px;border-radius:10px;box-shadow:3px 3px 3px $lightgray inset;text-align:center;
+        &.top{border-top-width:0;border-top-left-radius:0;border-top-right-radius:0;box-shadow:3px 0px 3px $lightgray inset;#comments{padding-bottom:30px}}
+        &.bottom{border-bottom-width:0;border-bottom-left-radius:0;border-bottom-right-radius:0;padding-bottom:3px;#comments{padding-bottom:30px}}
+        &.active{display:block;right:0}
+        >button{float:right;@include icon(315,-1,16,$active:0);width:12px;color:$magenta;cursor:pointer;margin-top:15px;margin-right:15px;position:relative;z-index:8}
+        >div{margin-top:30px}
+        header
+        {
+            background:$darkerwhite;padding-top:10px;border-radius:10px;box-shadow:3px 3px 3px $lightgray inset;
+            ul{height:30px;text-align:left;padding-left:15px}
+            li{float:left}
+            span
+            {
+                @include icon(101,0,24);
+                &.audio{@include sprite(340,1,24)}
+                &.video{@include sprite(341,1,24)}
+                &.image{@include sprite(342,1,24)}
+                &.document{@include sprite(343,1,24)}
+                &.software{@include sprite(344,1,24)}
+                &.unknown{background:none}
+                &.streaming{@include sprite(352,1,24)}
+                &.direct_download{@include sprite(350,1,24)}
+                &.P2P{@include sprite(351,1,24)}
+            }
+            h2{clear:both;padding:20px 40px 0 35px;margin-left:5px;@include ellipsis(560,$white-space:pre-wrap);text-align:left;min-height:30px;background:$darkwhite;color:$magenta;font-weight:normal;line-height:1.2em}
+        }
+        article{height:100%;position:relative}
+        section{overflow:hidden;margin:0 40px}
+        dl
+        {
+            &~a{display:none;width:100%;padding:5px;background:$darkwhite;border-top:1px solid $lightestgray;box-shadow:0 35px 40px #000;outline:none}
+            &~a,dt a{color:$green;text-decoration:none;font-weight:bold;&:hover{text-decoration:underline}}
+            padding-top:20px;margin-bottom:5px;text-align:left;color:#71726C;overflow:hidden;
+            dt{float:left;width:24%;font-weight:bold;padding-right:1%;text-align:right}
+            dd{padding-left:27%;margin-bottom:10px;line-height:1em}
+        }
+        #download_button
+        {
+            background:#E2E2DA;/*padding:0 20px;*/top:0;float:none;text-align:center;min-height:315px;
+            iframe,embed{display:block;margin:0 auto;border:0}
+            /*>span{margin-top:20px}*/
+            >a{margin:40px 0;width:475px}
+        }
+        #sources_links
+        {
+            overflow:hidden;padding-bottom:15px;
+            li
+            {
+                text-align:left;margin:10px 0 10px 25px;
+                a{color:#000;text-decoration:none;font-size:.85em}
+                input{display:block;color:$magenta;font-size:1.4em;padding:5px;width:500px;height:35px;border-radius:10px;margin:0}
+            }
+        }
+        #links
+        {
+            background:$lightestgray;padding:2px;text-align:left;padding-left:10px;
+            #user_actions{float:right}
+            #user_actions li,#actions li
+            {
+                display:inline;
+                >*:not(#download_link):not(#login_required){@include icon($size:24)}
+            }
+            #sources_links{display:none;padding:20px 0;a{background:none}}
+            #facebook{@include states(316,24,$active:0)}
+            #twitter{@include states(317,24,$active:0)}
+            #email{@include states(318,24,$active:0)}
+            #download_links{@include states(320,24,$active:2)}
+            #download_link{@extend .button;font-size:1em;font-weight:bold;padding:2px 5px;margin-left:115px}
+            #complaint{@include states(321,24,$active:2)}
+            #favorite{@include states(305,24,$status3:2,$active:2)}
+            #vote_up{@include states(302,24,$status3:2,$active:2)}
+            #vote_down{@include states(303,24,$status3:2,$active:2)}
+        }
+        #metadata
+        {
+            &.active{dl{height:125px;&+a{display:block}}}
+            dl.active{height:auto}
+        }
+        #comments
+        {
+            margin-top:10px;margin-bottom:20px;
+            &.active{dl{height:125px;&+a{display:block}}}
+            dl.active{height:auto}
+            div{padding-top:10px;background:$darkwhite;font-size:.8em;a{@extend .button;border-top:none;box-shadow:none}}
+            dd{margin-bottom:30px;span{float:right;margin-top:-20px;font-style:italic}}
+            fieldset{background:$darkwhite;padding-top:10px;text-align:center;font-size:.8em;span{left:15px}}
+            textarea{width:500px;background:#FFF}
+        }
+    }
+    #more
+    {
+        display:none;height:38px;background:url(../img/mas_resultados.png) no-repeat 12px 0;margin-left:160px;
+        &:hover{background-position:12px -47px;border:none}
+    }
+    #results
+    {
+        min-height:722px;width:630px;margin:0;overflow:hidden;padding-left:10px;
+        >li
+        {
+            margin:0 5px;position:relative;cursor:pointer;background:transparent;border-bottom:1px solid $lightestgray;
+            &:hover>div,&.active>div
+            {
+                border-color:$magenta;
+                >span,h3 a{color:$magenta;&.size span{border-left-color:$magenta}}
+            }
+            &.active{border-bottom-color:transparent}
+            &.audio{@include states(102,50,2,2,'>div>span')}
+            &.video{@include states(103,50,2,2,'>div>span')}
+            &.image{@include states(104,50,2,2,'>div>span')}
+            &.document{@include states(105,50,2,2,'>div>span')}
+            &.software{@include states(106,50,2,2,'>div>span')}
+            &.unknown{@include states(101,50,2,2,'>div>span')}
+            >div
+            {
+                background:#FFF;height:65px;border:1px solid transparent;border-radius:1px;padding:10px 5px;margin:1px 0;
+                h3 a
+                {
+                    z-index:0;@include ellipsis(380,$width-type:width);text-decoration:none;outline:none;color:#000;font-weight:normal;
+                    strong{color:$magenta}
+                    span{@include ellipsis(250,inline-block);vertical-align:top}
+                }
+                a{z-index:1}
+                >span
+                {
+                    float:left;color:#000;
+                    &.type{@include icon(101,0,50);margin:7px 20px 0 10px}
+                    &.ext{}
+                    &.size{width:90px;span{margin-left:5px;display:inline-block;border:5px solid transparent;border-left-color:$gray}}
+                }
+                ul
+                {
+                    ul{float:left;margin-top:15px;}
+                    &.source
+                    {
+                        float:right;color:$darkergray;text-align:right;margin-top:-5px;margin-left:-1000px;
+                        li{min-height:15px;font-size:0.9em;&:first{margin-bottom:20px}}
+                        a{font-size:0.85em;display:block;color:$darkergray;text-decoration:none;text-transform:uppercase;&:hover{color:$magenta;text-decoration:underline}}
+                        @mixin icon_p2p($icon_size:32)
+                        {
+                            margin-bottom:15px;margin-right:3px;
+                            >span
+                            {
+                                @include icon($size:$icon_size)
+                                &.ed2k{@include sprite(201,1,$icon_size)}
+                                &.gnutella{@include sprite(202,1,$icon_size)}
+                                &.torrent{@include sprite(203,1,$icon_size)}
+                                &.web{@include sprite(204,1,$icon_size)}
+                                margin-right:-3px;
+                            }
+                        }
+                        .source_1{@include icon_p2p;height:32px;img{margin-right:-4px}}
+                        .source_2{@include icon_p2p(24);margin-bottom:25px}
+                        .source_3{@include icon_p2p(16);width:32px;margin-left:10px;text-align:center}
+                    }
+                    &.metadata
+                    {
+                        display:block;height:35px;font-size:.85em;width:465px;
+                        li{display:inline;&:first-child a:before{content:none}}
+                        a
+                        {
+                            @include ellipsis(300,inline-block);color:$darkergray;text-decoration:none;
+                            &:before{content:"";margin:0 1px 0 3px;display:inline-block;border:4px solid transparent;border-left-color:$gray}
+                            &:hover{color:$magenta;text-decoration:underline}
+                        }
+                    }
+                    &.links
+                    {
+                        display:none;float:right;height:32px;/*width:320px;margin-left:120px;margin-top:-3px;*/
+                        a{color:$darkergray;/*font-size:.9em;*/display:block;}
+                        /*span{@include icon(309,0,24);float:left}
+                        li
+                        {
+                            display:inline-block;width:100px;
+                            &:nth-child(1){a{@include states(309,24,1)}}
+                            &:nth-child(2){a{@include states(302,24,1)}}
+                            &:nth-child(3){a{@include states(308,24,1)}}
+                            strong{display:block}
+                        }*/
+                        li
+                        {
+                            /*position:relative;*/display:inline-block;vertical-align:middle;
+                            &:nth-child(1){width:175px;span{/*float:left;*/@include icon(309,0,24)}a{@include states(309,24,1,0)}}
+                            &:nth-child(2){width:50px;/*top:-28px;left:80px;*/span{@include icon(309,0,16)}a{@include states(302,16,1,0)}}
+                            &:nth-child(3){width:50px;/*top:-28px;left:116px;*/span{@include icon(309,0,16)}a{@include states(308,16,1,0)}}
+                            strong{display:block}
+                        }
+                    }
+                }
+                .thumblink
+                {
+                    background:url(../img/search/no_image.png);position:relative;float:right;width:100px;height:75px;margin-top:-5px;margin-left:5px;overflow:hidden;
+                    >img{max-width:102px}
+                    >span
+                    {
+                        @include icon(333,-1,$active:0);position:absolute;top:12.5px;left:26px;width:50px;height:50px;display:block;
+                        &.play{@include states(330,50,$active:0)}
+                        &.embed{@include sprite(330,1)}
+                        &.streaming{@include sprite(331,1)}
+                        &.direct_download{@include sprite(332,1)}
+                        &.P2P{@include sprite(333,1)}
+                    }
+                }
+            }
+        }
+        #no_results
+        {
+            cursor:auto;border:none;
+            ul{list-style:disc inside none}
+            li{display:list-item}
+            em{font-style:italic;font-weight:normal}
+            &:hover{border-color:#FFF;background:#FFF}
+            &.loading{text-align:center;display:none;img{margin-top:10px}}
         }
     }
 }
-/* cuerpo busqueda*/
-section#files
-{
-    #search_info{text-align:right;margin:13px 0 -35px 0}
-    #search_info a{color:#000;text-decoration:none;font-weight:bold}
-    #tabnav
-    {
-        font-weight:bold;border-bottom:1px solid #CD0069;list-style-type:none;padding:20px 0 0 42px;
-        li{display:inline-block;padding:3px 7px}
-        a{padding-top:5px;padding-left:12px;padding-right:12px;padding-bottom:3px;border:1px solid #CD0069;background:#FFF;color:#CD0069;text-decoration:none;border-bottom:none}
-        a.actual,#tabnav a.actual:hover{background:#FBEFFB;color:#000;padding-bottom:4px;}
-        a:hover{background:#FFF;color:#000}
-    }
-    >h2{margin:10px}
     /* resultados */
-    #results
+    /*#results
     {
         margin:10px;text-align:left;overflow:hidden;
         >li{display:block;margin-top:5px;margin-bottom:25px;clear:left}
         li dt, li dd{display:inline}
         li h3 a{color:#000;font-weight:normal;span{font-weight:bold;padding:0 5px}}
         li>a{text-decoration:none;}
-        .thumblink{float:left;display:block;border:1px solid #ccc;background:#000;overflow:hidden;width:120px;height:90px;vertical-align:middle;margin-right:4px; margin-bottom:5px}
-        .thumblink span{display:block;height:200px;position:relative;top:-56px;line-height:200px;}
-        .thumblink img{width:120px;height:auto;vertical-align:middle}
-    }
-    #didyoumean{font-size:1.4em;font-style:italic;font-weight:bold;padding-top:1em}
-    #tags
-    {
-        font-size:1.2em;background:#FBEFFB;max-width:80%;padding:10px;margin-bottom:5px;
-        li{display:inline}
-        a{padding:3px}
-    }
-    #advsearch
-    {
-        text-align:right;float:right;padding:0 10px 10px;
-        div{display:none;text-align:left;clear:left;float:right}
-        ul{margin-top:10px;margin-left:10px;margin-bottom:15px}
-        .actual{color:#000;text-decoration:none;font-weight:bold}
-        >a{padding:4px;display:block}
-        >a span{font:normal 0.92em "Lucida Console",Monaco,monospace;text-decoration:none;display:inline-block;margin-right:5px}
+
     }
 }
 /* taming */
@@ -414,9 +750,6 @@ section#files
     a{display:block;color:$lightestblack;padding-left:30px;&:hover{border-color:transparent}}
     #ui-active-menuitem{background:$magenta;color:#FFF}
 }
-/* otras cosas */
-#agree{display:inline;line-height:10px;height:20px}
-.warning{background:url(/static/foofind3.png) no-repeat -162px -297px;padding-left:20px}
 /* mensajes de error */
 .message, .success, .error{padding:.8em;margin:1em;border:1px solid #cd0069}
 .message{background:#FBEFFB;color:#cd0069}
@@ -428,45 +761,6 @@ section#files
 .pagination li *{border:solid 1px #ccc;margin-right:2px;padding:4px}
 .pagination a{text-decoration:none}
 .pagination span{background-color:#df1279;color:#fff}
-/* download */
-.comments .cpagination{border:0;float:right;margin-right:5px;margin-top:-3px}
-.comments .cpagination span{padding:4px}
-.comments .cpagination a{text-decoration:none;color:#000}
-.comments .cpagination #current{font-weight:bold;color:#cd0096}
-.wrap_download{margin:20px 20px 20px 30px;text-align:left;display:block}
-.file_download
-{
-    vertical-align:top;padding-right:260px;
-    h2{padding-top:20px;font-size:1.6em}
-}
-/* comentarios */
-.file_download_vote, .file_comment_vote{float:right;text-align:center;font-size:0.7em}
-.file_download_vote a{@include icon(302,1,32);text-decoration:none;margin:0 10px}
-.file_download_vote span{display:block;margin:35px 0 0 -14px;width:55px}
-a.vote_down{@include sprite(303,1,32)}
-a.vote_up span{color:$darkergray}
-a.vote_down span{color:$magenta}
-.upactive a.vote_up, a.vote_up:hover{@include sprite(302,2,32)}
-.downactive a.vote_down, a.vote_down:hover{@include sprite(303,3,32)}
-.file_comment_vote a{@include icon(302,1,24);text-decoration:none;margin:0 10px}
-.file_comment_vote span{display:block;margin:28px 0 0 -7px;width:40px}
-.small a.vote_down{@include sprite(303,1,24)}
-.small.upactive a.vote_up, .small a.vote_up:hover{@include sprite(302,2,24)}
-.small.downactive a.vote_down, .small a.vote_down:hover{@include sprite(303,3,24)}
-.top_download{text-align:left;clear:left;padding-bottom:20px;padding-top:30px;width:100%;min-height:120px}
-.download_button{position:relative;text-align:center;display:block;top:-20px;vertical-align:middle;float:left}
-.download_embed{background:black; text-align:center;height:288px;width:512px;padding:0px}
-.download_file_metadata{width:65%;min-width:490px;display:inline-block;padding-left:40px;vertical-align:middle}
-.download_file_torrent_files{margin-top:10px;width:430px}
-.download_file_torrent_files ul{font-size:.92em;display:block;height:8em;max-height:15em;border:1px solid #cdcdcd;padding:2px;overflow:auto}
-.download_file_metadata a{color:#000;font-weight:bold;text-decoration:none}
-#download_more_info{display:inline-block;float:right;width:210px;border:1px solid #cd0069;background-color:#FBEFFB;color:#cd0069;padding:10px;margin-top:10px}
-#download_more_info h3{font-weight:bold;padding:10px;vertical-align:top}
-#download_more_info p{font-size:.92em;padding:8px}
-#download_more_info li{margin:25px 0px}
-.download_source a{color:#000;text-decoration:none;display:inline-block;width:175px;font-weight:bold;vertical-align:middle;margin:5px}
-.download_source input{float:right;width:65%;padding:5px;border:1px solid #A9D0F5;color:#cd0069;display:inline-block;margin:4px}
-.download_source span{display:inline-block;font-weight:normal;font-size:.8em}
 /* icons */
 .icon24{@include icon(106,0,24)}
 .ed2k24{@include sprite(201,2,24)}
@@ -493,37 +787,10 @@ a.vote_down span{color:$magenta}
 .image{@include sprite(104,2)}
 .file{@include sprite(106,2)}
 .video{@include sprite(103,2)}
-.icon
-{
-    background: url("/static/foofind3.png");display:inline-block;overflow:hidden;vertical-align:middle;
-    &.facebook{width:14px;margin-right:4px;height:20px;background-position:-150px -120px}
-    &.twitter{width:14px;margin-right:4px;height:20px;background-position:-150px -140px}
-    &.email{margin-right:2px;width:16px;height:20px;background-position:-164px -140px}
-}
-.balloon{float:left;@include icon(308,3,32)}
-.link{float:left;@include icon(314,3,32)}
-/* comentarios */
-.sharelinks{clear:right;text-align:right;right:120px;margin-bottom:20px}
-.sharelinks ul,.sharelinks li{display:inline}
-.download_section{margin-top:15px;clear:both;margin-bottom:5px}
-.download_section h4{margin-left:36px;border-bottom:2px solid #cd0069;margin-bottom:15px}
-.download_section.related a{color:#000;display:inline-block;margin:5px 0}
-.comment{clear:both;padding:8px;border-bottom:1px solid #cd0069;overflow-x:hidden}
-.comment_form fieldset{text-align:center}
-.comment_form textarea{height:4em;border:1px solid #cd0069;font-weight:normal;margin:20px;padding:3px;width:95%;min-width:580px}
-.comments_paginator{text-align:right}
-.file_comment_number a{float:left;font-size:1.8em;margin-right:8px;font-weight:bold;color:#000;text-decoration:none}
-.file_comment_nick{clear:left;margin-top:3px;font-size:0.9em}
-.file_comment_nick a{color:#cd0069}
-.download_file_metadata table {width:100%}
-.download_file_metadata table tr :first-child{width:25%}
-.download_file_metadata table tr td{vertical-align:top;width:75%}
-.download_button .thumblink {margin:10px; display:block}
-.download_file_sources {clear:left}
 /* user */
 section#user .oauth{width:89px;height:21px;display:inline-block;margin:5px}
 section#user .oauth span{display:none}
-section#user .oauth.tw{background:url(/static/foofind3.png) 0px -362px no-repeat}
-section#user .oauth.fb{background:url(/static/foofind3.png) -89px -362px no-repeat}
+section#user .oauth.tw{background:url(../img/users/oauth.png)}
+section#user .oauth.fb{background:url(../img/users/oauth.png) -89px 0 no-repeat}
 section#user input[type="submit"],section#page input[type="submit"]{margin:10px 0;width:auto}
 section#user fieldset{margin-bottom:10px}

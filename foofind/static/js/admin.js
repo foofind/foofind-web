@@ -20,7 +20,6 @@ $(document).ready(function(){
                     return false;
             return true;
         };
-
     // Mejora de checkboxes (cool_checkbox)
     var checkboxes=$("input[type=checkbox]"), cctested=false, ccwork=false;
     checkboxes.each(function(){
@@ -209,6 +208,26 @@ $(document).ready(function(){
             refresh_interval = setInterval(log_refresh, 500);
             }
         }
+    // Bloqueo / información de ficheros
+    else if(path.indexOf("admin/lockfiles")==0){
+        var prefix="raw_";
+        $("tr.raw_file_data td").each(function(){
+             if(this.id&&(this.id.indexOf(prefix)==0)){
+                var dialog = $("span", this)
+                    .attr("title", "_id: "+ this.id.substr(prefix.length))
+                    .dialog({
+                        width:600,
+                        height:400,
+                        position:"center center",
+                        modal:true,
+                        autoOpen:false,
+                        });
+                $("<input type=\"button\" value=\"View raw data\"/>")
+                    .click(function(){dialog.dialog("open");})
+                    .appendTo(this);
+                }
+            });
+        }
     // Deploy
     else if(path=="admin/deploy"){
         if($("input[type=submit]").attr("disabled")=="disabled"){ // AJAX polling de estado de deploy
@@ -251,6 +270,10 @@ $(document).ready(function(){
                         }
                     });
                 }, 2000);
+            }
+        else{
+            // Ya ha terminado al cargar, se borra el mensaje con timeout
+            setTimeout($(".in_progress_message").remove, 2000);
             }
         // Checkboxes de script
         /* Extrae los _view del select y los procesa por ajax, para mostrar
@@ -329,12 +352,12 @@ $(document).ready(function(){
                 }).change();
             }
         // Desplegable de botones de deploy
-        var showbtn=$('<a href="javascript:" class="showmore button">+</a>')
+        var showbtn=$('<a href="javascript:" class="showmore button">▼</a>')
             .addClass("toggler")
             .click(function(){
                 var cur=$(".deploy_advanced").css("display")=="none";
                 $(".deploy_advanced").css("display",cur?"inherit":"none");
-                showbtn.text(cur?"-":"+");
+                showbtn.text(cur?"▲":"▼");
                 });
         $(".deploy_advanced").css("display","none");
         $(".deploy_buttons")

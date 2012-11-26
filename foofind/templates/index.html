@@ -2,8 +2,8 @@
 {% block header %}{% endblock %}
 {% block content %}
     <div id="search">
-        <img src="/static/img/logo.png" alt="foofind" width="350" height="125" />
-        <span{%- if g.lang in ["zh","pt","eu"] %} class="small"{% endif %}>{{_('i_want_that_file')}}</span>
+        <img src="{{ g.static_prefix }}/img/logo.png" alt="foofind" width="350" height="125" />
+        <span{%- if g.lang in ["pt","zh","ja","eu"] %} class="small{%- if g.lang in ['ja'] %}er{% endif %}"{% endif %}>{{_('i_want_that_file')}}</span>
         {{flash()}}
         <form method="get" action="{{ url_for('files.search') }}">
             <fieldset id="params">
@@ -46,7 +46,7 @@
 {% endblock %}
 {% block logos %}
     <div>
-        <img src="/static/planavanza2_mini.png" alt="plan_avanza" />
-        <img src="/static/ministerio_mini.png" alt="ministerio" />
+        <img src="{{ g.static_prefix }}/planavanza2_mini.png" alt="plan_avanza" />
+        <img src="{{ g.static_prefix }}/ministerio_mini.png" alt="ministerio" />
     </div>
 {% endblock %}

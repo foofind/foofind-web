@@ -8,6 +8,7 @@
     <p>{{_("enter_email")}}</p>
     <form method="post">
         <fieldset>
+            {{ render_field() }}
             {{ render_field(form.email) }}
             {{ render_field(form.captcha) }}
         </fieldset>

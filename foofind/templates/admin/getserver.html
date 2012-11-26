@@ -1,6 +1,7 @@
 {% extends "admin/base.html" %}
 {% block page %}
     <form method="post">
+        {{ render_field() }}
         <h3 class="list">{{_('admin_users')}}</h3>
         <dl class="list">
             <dt>{{ search_form.filename.label }}</dt>

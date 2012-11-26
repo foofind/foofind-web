@@ -2,30 +2,10 @@ if(window != top)
     top.location.href = location.href;
 
 //si llega una busqueda ajax y no esta activado redirecciona solo desde el index
-if(window.location.pathname.substr(4,11)=="" && window.location.hash.charAt(1)=="!")
-    window.location.href=window.location.pathname.substr(1,3)+"/"+"search/?alt=ajax&"+window.location.hash.substring(3)
+//if(window.location.pathname.substr(4,11)=="" && window.location.hash.charAt(1)=="!")
+//    window.location.href=window.location.pathname.substr(1,3)+"/"+"search/?alt=ajax&"+window.location.hash.substring(3)
 
-var filtros={"q":""};
-var imgs=0;
-var jimage, jimagecount, thumbani = 0;
-function animateImage()
-{
-    var src=jimage.attr("src");
-    idx=parseInt(src.substr(src.length-1));
-    idx=(idx+1)%jimagecount;
-    src=src.substr(0,src.length-1) + idx.toString();
-    jimage.attr("src", src);
-}
-function vote(obj,data)
-{
-    var padre=$(obj).parent();
-    padre.find(".vote_up strong").text(data['c'][0]);
-    padre.find(".vote_down strong").text(data['c'][1]);
-    if($(obj).attr('class').search('vote_up')!=-1)
-        padre.removeClass("downactive").addClass("upactive");
-    else
-        padre.removeClass("upactive").addClass("downactive");
-}
+var lang=window.location.pathname.substr(3,1)=="/"?window.location.pathname.substr(0,4):"/";
 function highlight(data,t)
 {
     var i=0, a=data.toLowerCase(), b=t.toLowerCase();
@@ -33,8 +13,14 @@ function highlight(data,t)
         i++;
     return data.substr(0,i)+"<strong>"+data.substr(i)+"</strong>"
 }
+function error(message)
+{
+    return '<p class="error">'+message.responseText+'</p>'
+}
 $(function()
 {
+    //añadir el setlang para cambiar el idioma
+    $('#select_language_box a').click(function(){$(this).attr("href",$(this).attr("href")+"?setlang="+$(this).attr("href").substr(1,2))});
     //autocompletado de busqueda
     var form=$('form[method="get"]').attr("action");
     if($('#q').length)
@@ -45,7 +31,7 @@ $(function()
         .blur(function(){$("#params").removeClass("hover")})
         .autocomplete(
         {
-            source:form.substr(0,(form.indexOf('?')!=-1)?form.indexOf('?'):form.length)+"/autocomplete?t="+$("#type").val(),
+            source:lang+"autocomplete?t="+$("#type").val(),
             select:function(event,ui)
             {
                 if(ui.item)
@@ -88,84 +74,21 @@ $(function()
                     $(this).attr("disabled","disabled")
             })
     })
-    //mostrar y ocultar aviso idioma
+    //mostrar aviso idioma
     if(!document.cookie.match("langtest=0"))
-        $("#advice").fadeIn();
-
-    $(".close_advice").click(function(e)
+        $("#beta_lang").show(0);
+    //ocultar cualquier aviso
+    $(".advice button").click(function(e)
     {
-        document.cookie = "langtest=0";
         $(this).parent().slideUp();
-        e.preventDefault();
-    });
-    //thumbnails
-    $('.thumblink span img').mouseenter(function()
-    {
-        if (thumbani!=0)
-            clearInterval(thumbani);
-
-        jimage=$(this);
-        imgs=jimage.attr("class").substr(4).split("_");
-        jimagecount=imgs.length;
-        thumbani = setInterval(animateImage, 500);
-    });
-    $('.thumblink span img').mouseleave(function()
-    {
-        if (thumbani!=0)
-            clearInterval(thumbani);
-    });
-    $('.thumblink span img').each(function()
-    {
-        icount = imgs.length;
-        src = $(this).attr('src').slice(0,-1);
-        for (i=0; i<icount; i++)
-            $('<img/>')[0].src = src+i.toString();
-    });
-    //search
-    $("#advsearch>a").click(function(event)
-    {
-        event.preventDefault();
-        $("#advsearch div").slideToggle();
-        if($("span",this).text()=="▶")
-            $("span",this).text("▼");
-        else
-            $("span",this).text("▶")
-    });
-    if($(location).attr('href').search("size|brate|year")>0)
-        $("#advsearch>a").click();
-    //download
-    $(".download_source input").click(function(){$(this).select()});
-    $('.file_comment_vote a').click(function(event)
-    {
-        if($(this).hasClass("vote_login"))
-        {
-            event.preventDefault();
-            $.ajax({
-                dataType:"json",
-                url:$(this).attr("href"),
-                context:this,
-                success:function(data){vote($(this),data)}
-            })
-        }
-    });
-    $('.file_download_vote a').click(function(event)
-    {
-        if($(this).hasClass("vote_login"))
-        {
-            event.preventDefault();
-            $.ajax({
-                dataType:"json",
-                url:$(this).attr("href"),
-                context:this,
-                success:function(data){vote(this,data)}
-            });
-        }
+        if($(this).parent().attr("id")=="beta_lang") //para los avisos de idioma en beta se guarda la cookie para que no salga de nuevo
+            document.cookie="langtest=0";
     });
     //translate
     $("#translate #lang").change(function(){$("form:first").submit()});
     var controls = $('textarea,input[type=text]:gt(0)');
     var empties = controls.filter("[value='']");
-    $("#searchempty").click(function(event)
+    $("#translate #searchempty").click(function(event)
     {
         event.preventDefault();
         var offset, docScroll, docHeight;
@@ -190,7 +113,7 @@ $(function()
         }
         $(this).html(Math.round(10000-10000*empties.size()/controls.size())/100+'% &darr;');
     });
-    $("textarea,input[type=text]").change(function()
+    $("#translate textarea,#translate input[type=text]").change(function()
     {
         empties = controls.filter("[value='']");
         $("#searchempty").html(Math.round(10000-10000*empties.size()/controls.size())/100+'% &darr;');

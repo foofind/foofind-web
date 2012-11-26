@@ -1,0 +1,50 @@
+
+{% from "files/macros.html" import url_search, print_source with context%}
+
+<h2>{{ file['view']['fn'] }}</h2>
+<div class="top_download">
+    <div class="download_button">
+        {% if 'images_server' in file['view'] %}
+        <a class="thumblink" href="{{ file['view']['sources'][file['view']['source']]['urls'][0] }}">
+            <img id="{{ file['file']['id'] }}" class="img_{{ file['view']['images_server'] }}" src="http://{{ file['view']['first_image_server'] }}/{{ file['file']['_id'] }}0" />
+        </a>
+        {% else %}
+        <span class="icon50 {{ file['view']['file_type'] }}"></span><br />
+        {% endif %}
+        {% if "source" in file["view"] %}
+        <a href="{{ file['view']['sources'][file['view']['source']]['urls'][0] }}" class="superlarge magenta awesome" title="{{_('download')}}">
+            {{_(file['view']['action'])}}
+            {% if 'z' in file['file'] and file['file']['z'] %}
+                ({{ file['file']['z']|numbersizeformat }})
+            {% endif %}
+        </a>
+        {% endif %}
+    </div>
+    <div class="download_file_metadata">
+        <table>
+            <tbody>
+                <tr>
+                    <th>{{_("name")}}:</th>
+                    <td><a href="{{ url_search(query=file['view']['nfn']) }}">{{ file['view']['nfn'] }}</a></td>
+                </tr>
+                {% for metadata,value in file['view']['md'].items() %}
+                <tr>
+                    <th>{{_(metadata)}}:</th>
+                    <td>{{ value | safe }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="download_file_sources">
+    {% for source,source_data in file['view']['sources'].items() %}
+        {% if source_data['count']>1 and source_data['icon']=="web" %}
+            {% for url in source_data["urls"] %}
+                {{print_source(source_data,url)}}
+            {% endfor %}
+        {% else %}
+            {{print_source(source_data)}}
+        {% endif %}
+    {% endfor %}
+</div>

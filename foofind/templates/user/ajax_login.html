@@ -1,0 +1,33 @@
+
+<section class="loging">
+    <article>
+        <header>{{_("user_login")}}</header>
+        <form method="post" action="{{login.action}}">
+            <fieldset>
+                {{login.email.label}} {{login.email}}
+                {{login.password.label}} {{login.password}}
+                {{login.rememberme.label}} {{login.rememberme}}
+                {{login.submit}}
+            </fieldset>
+        </form>
+        <a href="{{ url_for('user.twitter',next=request.args.get('next')) }}" class="oauth tw"><span>Login using Twitter</span></a>
+        <a href="{{ url_for('user.facebook',next=request.args.get('next')) }}" class="oauth fb"><span>Login using Facebook</span></a>
+        <p><a href="{{ url_for('user.forgot') }}">{{_('forgot')}}</a> {{_('your_password?')}}</p>
+    </article>
+    <article>
+        <header>{{_("new_user")|capitalize}}</header>
+        <form method="post" action="{{signin.action}}">
+            <fieldset>
+                {{signin.email.label}} {{signin.email}}
+                {{signin.username.label}} {{signin.username}}
+                {{signin.password.label}} {{signin.password}}
+                {{signin.confirm.label}} {{signin.confirm}}
+                {{signin.captcha.label}} {{signin.captcha}}
+                {{signin.accept_tos.label}} {{signin.accept_tos}}
+                {{signin.submit}}
+            </fieldset>
+        </form>
+        <a href="/es/user/login/twitter" class="oauth tw"><span>Login using Twitter</span></a>
+        <a href="/es/user/login/facebook" class="oauth fb"><span>Login using Facebook</span></a>
+    </article>
+</section>

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from heapq import heappush, heappop
 import threading
 import time
 import sys
@@ -19,10 +20,11 @@ class EventManager(threading.Thread):
     _intervalids = None
     _wakeup = False
     _stress = 0
+    _running_onetime_tasks = False
     def __init__(self, poll_time=0.1, relax_time=1, stress_limit=10):
         threading.Thread.__init__(self)
         self.daemon = True
-        self._timers = {}
+        self._timers = []
         self._events = {}
         self._callbacks = {}
         self._lock = threading.Lock()
@@ -34,10 +36,7 @@ class EventManager(threading.Thread):
     def _put_timer_id(self, ntime, tid):
         # Tuplas por baja probabilidad de collisión de timers
         with self._lock:
-            if ntime in self._timers:
-                self._timers[ntime] += (tid,)
-            else:
-                self._timers[ntime] = (tid,)
+            heappush(self._timers, (ntime, tid))
             self._wakeup = True
 
     def _put_timer(self, ntime, handler, hargs=None, hkwargs=None, interval=0):
@@ -46,6 +45,11 @@ class EventManager(threading.Thread):
             self._callbacks[tid] = (handler, hargs or (), hkwargs or {}, interval)
         self._put_timer_id(ntime, tid)
 
+    def _put_once(self, ntime, handler, hargs=None, hkwargs=None, interval=0):
+        with self._lock:
+            heappush(self._timers, (ntime, (handler, hargs or (), hkwargs or {}, interval)))
+            self._wakeup = True
+            
     _thread_id = None
     @property
     def thread_id(self):
@@ -57,17 +61,18 @@ class EventManager(threading.Thread):
         raise threading.ThreadError()
 
     def once(self, handler, hargs=None, hkwargs=None):
-        return self._put_timer(time.time(), handler, hargs, hkwargs, 0)
+        self._running_onetime_tasks = True
+        return self._put_once(time.time(), handler, hargs, hkwargs, -1)
 
     def interval(self, seconds, handler, hargs=None, hkwargs=None):
         return self._put_timer(time.time()+seconds, handler, hargs, hkwargs, seconds)
 
     def timeout(self, seconds, handler, hargs=None, hkwargs=None):
-        return self._put_timer(time.time()+seconds, handler, hargs, hkwargs, 0)
+        return self._put_once(time.time()+seconds, handler, hargs, hkwargs, 0)
 
     def clear_interval(self, tid):
         with self._lock:
-            del self._callbacks[fnc]
+            del self._callbacks[tid]
 
     def register(self, event, handler, hargs=None, hkwargs=None, repeat=True):
         if event in self._events:
@@ -100,44 +105,61 @@ class EventManager(threading.Thread):
             self._stress = 0
             ctime = time.time()
             with self._lock:
-                ntime = min(self._timers.iterkeys())
+                ntime = self._timers[0][0]
             wait = ntime - ctime
             if wait > 0:
-                return (), wait
+                return None, wait
             with self._lock:
-                return self._timers.pop(ntime), 0
+                return heappop(self._timers)[1], 0
         if self._stress < self.stress_limit:
             self._stress += 1
-            return (), self.poll_time
-        return (), self.relax_time
+            return None, self.poll_time
+        return None, self.relax_time
+
+    def start(self):
+        self._run = True
+        threading.Thread.start(self)
+        self.wait_for_unique_tasks()
+
+    def wait_for_unique_tasks(self):
+        while self._running_onetime_tasks:
+            time.sleep(self.relax_time)
 
     def run(self):
-        self._run = True
         while self._run:
-            tids, wait = self._poll()
-            if tids:
-                # Si hay timers, los recorro para ejecutar
-                for tid in tids:
+            tid, wait = self._poll()
+            if tid:
+                if isinstance(tid, str):
+                    # Si hay timers, los recorro para ejecutar
                     with self._lock:
                         if not tid in self._callbacks:
                             continue
                         cb, cbargs, cbkwargs, interval = self._callbacks[tid]
-                    try:
-                        cb(*cbargs, **cbkwargs)
-                    except BaseException as e:
-                        logging.exception(e)
-                    except:
-                        et, ev, etb = sys.exc_info()
-                        logging.error(
-                            "Excepción no capturada",
-                            extra={
-                                "type":et,
-                                "value":ev,
-                                "traceback":etb
-                                })
-
-                    if interval:
-                        self._put_timer_id(time.time()+interval, tid)
+                    self._running_onetime_tasks = False
+                else:
+                    cb, cbargs, cbkwargs, interval = tid
+                    self._running_onetime_tasks = True
+                    
+                try:
+                    cb(*cbargs, **cbkwargs)
+                except BaseException as e:
+                    logging.exception(e)
+                except:
+                    et, ev, etb = sys.exc_info()
+                    logging.error(
+                        "Excepción no capturada",
+                        extra={
+                            "type":et,
+                            "value":ev,
+                            "traceback":etb
+                            })
+                            
+                if interval > 0:
+                    self._put_timer_id(time.time()+interval, tid)
+                    
+            elif self._running_onetime_tasks:
+                self._running_onetime_tasks = False
+                
             if wait > 0.:
                 time.sleep(min(wait, self.relax_time))
                 # TODO(felipe) encontrar una forma más eficiente de hacer esto

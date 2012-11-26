@@ -1,4 +1,4 @@
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
@@ -547,12 +547,7 @@ msgstr ""
 "il collegamento è stato inviato con successo. grazie per il vostro aiuto!"
 
 msgid "footer"
-msgstr ""
-"Il sito è sotto licenza Creative Commons <a rel='license content' "
-"href='http://creativecommons.org/licenses/by-sa/3.0/deed.it'>BY-SA</a>. <a "
-"href='http://code.google.com/p/Foofind/'>Codice sorgente</a> sotto licenza "
-"<a rel='license source code' "
-"href='http://www.gnu.org/licenses/agpl.html'>Affero GPL</a>."
+msgstr "Il sito è sotto licenza %(cc)s. %(code)s sotto licenza %(gpl)s."
 
 msgid "about_text"
 msgstr ""
