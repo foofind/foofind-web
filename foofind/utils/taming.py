@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
 import socket
-import logging
 import collections
 import time
 import threading
 import errno
 import json
 import math
+
+from . import logging
 
 class TamingSocket(object):
     control = "\1"

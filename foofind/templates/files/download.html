@@ -1,26 +1,46 @@
-{% from "files/macros.html" import url_search with context %}
+{% from "files/macros.html" import print_share,url_search with context %}
 {% from "helpers.html" import render_field,login_required %}
-{%- macro print_source(source_data,url="") %}
+{% set lang = g.lang %}
+{% set url_search_cache = url_search(query="___") %}
+{%- macro print_filepaths(paths, limit) %}
+    <ul class="filepaths">
+        {%- for path, info in (paths.items() | sort) %}
+            <li>
+                {% if path[0] == "/" %}
+                    <a href="{{ url_search_cache|replace('___', path[1:]|seoize('_', True))}}">{{ path[1:] }}</a>
+                    {{ print_filepaths(info, False) }}
+                {% else %}
+                    <span>{{ info | numbersizeformat(lang) }}</span><a href="{{ url_search_cache|replace('___', path[1:]|seoize('_', True)) }}" title="{{ path }}">{{ path }}</a>
+                {% endif %}
+            </li>
+        {%- endfor %}
+        {%- if limit %}
+        <li class="first_files">{{_("first_files", value=limit)}}</li>
+        {% endif %}
+    </ul>
+{% endmacro -%}
+{%- macro print_source(source_data,link_position,url="") %}
     <li>
-        <a href="{% if url=='' %}{{ source_data['urls'][0] }}{% else %}{{ url }}{% endif %}">{{ source_data['tip']|upper }}</a>
-        <input type="text" value="{% if url=='' %}{{ source_data['urls'][0] }}{% else %}{{ url }}{% endif %}" />
+        <span class="{% if source_data['icons']['16'] %}source16 source_{{ source_data['tip']|replace('.','') }}16{% else %}source {{ source_data['icon'] }}{% endif %}" title="{{ source_data['tip'] }}"></span>
+        <a href="{% if url=='' %}{{ source_data['urls'][0] }}{% else %}{{ url }}{% endif %}" title="{{_('go_to_file')}}" data-stats="Download;{{link_position}};{{source_data['d']}}"
+        {%- if 't' in source_data["g"] %} data-downloader="1"{% endif %}>{{_(file['view']['action']+"_source",source='<em>%s</em>'|safe%source_data['tip'])|lower}}</a>
     </li>
 {% endmacro -%}
-{%- macro print_sources(sources) %}
+{%- macro print_sources(sources,link_position) %}
     <ul id="sources_links">
     {% for source,source_data in sources.items() %}
         {% if source_data['count']>1 and source_data['icon']=="web" %} {# para mostrar sources en los que tienen que aparecer todas las URL #}
             {% for url in source_data["urls"] %}
-                {{print_source(source_data,url)}}
+                {{print_source(source_data,link_position,url)}}
             {% endfor %}
         {% else %}
-            {{print_source(source_data)}}
+            {{print_source(source_data,link_position)}}
         {% endif %}
     {% endfor %}
     </ul>
 {% endmacro -%}
 {% block content %}
-<button title="{{_('close')}}"></button>
+<button title="{{_('close')}}" class="close"></button>
 <article data-id="{{ file['file']['id'] }}">
     <header>
         <ul>
@@ -33,21 +53,19 @@
         {% if "embed" in file["view"] %}
             {{ file['view']['embed']|safe }}
         {% else %}
-            {#{% if 'images_server' in file['view'] %}
-            <a class="thumblink" href="{{ file['view']['sources'][file['view']['source']]['urls'][0] }}" data-play="{{ file['file']['id'] }}" data-active_play="{{ file['file']['id'] }}">
-                <img id="{{ file['file']['id'] }}" class="img_{{ file['view']['images_server'] }}" src="http://{{ file['view']['first_image_server'] }}/{{ file['file']['_id'] }}0" />
-            </a>
-            {% else %}
-            <span class="icon50 {{ file['view']['file_type'] }}"></span><br />
-            {% endif %}#}
-            {% if "source" in file["view"] %}
-            <a href="{{ file['view']['sources'][file['view']['source']]['urls'][0] }}" class="button" title="{{_('download')}}">
-                {{_(file['view']['action'])|lower}}
-                {% if 'z' in file['file'] and file['file']['z'] %}
-                    ({{ file['file']['z']|numbersizeformat }})
+            <div>
+                {% if 'images_server' in file['view'] %}
+                <img id="{{ file['file']['id'] }}" class="img_{{ file['view']['images_server'] }}" src="http://{{ file['view']['first_image_server'] }}/{{ file['view']['images_id'] }}0" alt="preview" />
+                {% else %}
+                <span></span>
                 {% endif %}
-            </a>
+            </div>
+            {% if "source" in file["view"] %}
+            <span class="{% if file['view']['sources'][file['view']['source']]['icons']['32'] %}source32 source_{{ file['view']['sources'][file['view']['source']]['tip']|replace('.','') }}32{% else %}source {{ file['view']['sources'][file['view']['source']]['icon'] }}{% endif %}" title="{{ file['view']['sources'][file['view']['source']]['tip'] }}"></span>
+            <a href="{{ file['view']['sources'][file['view']['source']]['urls'][0] }}" class="button" title="{{_(file['view']['action'])}} ({{_('open_link_new_tab')}})" target="_blank" data-stats="Download;Download big button;{{file['view']['sources'][file['view']['source']]['d']}}"
+{%- if 't' in file['view']['sources'][file['view']['source']]["g"] %} data-downloader="1"{% endif %}>{{_(file['view']['action']+"_source",source='<em>%s</em>'|safe%file['view']['sources'][file['view']['source']]['tip'])|lower}}</a>
             {% endif %}
+            <h4>{{_('all_sources')}}</h4>
             {{print_sources(file['view']['sources'])}}
         {% endif %}
     </section>
@@ -61,9 +79,7 @@
             <li><button id="vote_down" title="{{_('booo')}} ({% if 'vs' in file['file'] and g.lang in file['file']['vs'] %}{{ file['file']['vs'][g.lang]['c'][1]|int }}{% else %}0{% endif %})"{% if vote['k']<0 %} class="active"{% endif %} data-type="file" data-where="{{ file['file']['s'] }}" data-file="{{ file['file']['id'] }}" data-name="{{ file['view']['fn'] }}" data-vote="0" data-login="{{ current_user.is_authenticated()|int }}"></button></li>
         </ul>
         <ul id="actions">
-            <li><a id="facebook" href="http://www.facebook.com/share.php?u=http://foof.in/2/{{file['file']['id']}}" title="{{_('share_facebook')|capitalize}}" rel="nofollow"></a></li>
-            <li><a id="twitter" href="http://twitter.com/home?status=http://foof.in/2/{{file['file']['id']}}" title="{{_('share_twitter')|capitalize}}" rel="nofollow"></a></li>
-            <li><a id="email" href="mailto:?subject={{file['view']['efn']}}&amp;body=http://foof.in/2/{{file['file']['id']}}" title="{{_('send_by_email')|capitalize}}" rel="nofollow"></a></li>
+            <li><button id="share_download_links"><span></span>{{_("share_download")|lower}}</button></li>
             {% if "embed" in file["view"] %}
             <li><button id="download_links" title="{{_('download_links')}}"></button></li>
                 {% if file['view']['sources'][file['view']['sources']|first]['source']=="direct_download" %}
@@ -74,15 +90,37 @@
             <li><a id="embed_code" href=""></a></li>#}
             <li><a id="complaint" href="{{ url_for('page.complaint',file_id=file['file']['id'],file_name=file['view']['fn']) }}" rel="nofollow" title="{{_('complaint')}}"></a></li>
         </ul>
-        {% if "embed" in file["view"] %}{{ print_sources(file['view']['sources']) }}{% endif %}
+        <div id="download_share">
+            <span>{{_("share_this")}}</span>
+            {% if request.path==url_for(".downloada") %}{{ print_share("__url_share__",32) }}{% else %}{{ print_share(request.base_url,32) }}{% endif %}
+        </div>
+        {% if "embed" in file["view"] %}{{ print_sources(file['view']['sources'], "Download bar links") }}{% endif %}
     </section>
     <section id="metadata">
         <dl>
             <dt>{{_("name")}}</dt>
-            <dd>{{ file['view']['nfn'] }}</dd>
-            {% for metadata,value in file['view']['md'].items() %}
+            <dd><a href="{{ url_search(query=file['view']['nfn']|seoize("_",True))}}">{{ file['view']['nfn'] }}</a></dd>
+            {% if 'z' in file['file'] and file['file']['z'] %}
+            <dt>{{_("size")}}</dt>
+            <dd>{{ file['file']['z']|numbersizeformat }}</dd>
+            {% endif %}
+            {% for metadata,value in file['view']['md'].iteritems()  | sort %}
             <dt>{{_(metadata)}}</dt>
-            <dd>{{ (value|string)[:1000].replace("\n","<br />") | safe }}</dd>
+            <dd>
+                {%-if metadata in file['view']['searches'] %}
+                    {%-if file['view']['searches'][metadata] == [] %}
+                        {% for avalue in value.split(",") %}
+                            <a href="{{ url_search(query=avalue|seoize("_",True))}}">{{ avalue|trim }}</a>{{", " if not loop.last}}
+                        {% endfor %}
+                    {%-elif file['view']['searches'][metadata] == {} %}
+                        {{print_filepaths(value, file['file']['md']['torrent:partial_filepaths'] if 'torrent:partial_filepaths' in file['file']['md'] else False)}}
+                    {%-else %}
+                        <a href="{{ url_search(query=file['view']['searches'][metadata])}}">{{ (value|string)[:2000].replace("\n","<br />") | safe }}</a>
+                    {%-endif %}
+                {%-else %}
+                    {{ (value|string)[:2000].replace("\n","<br />") | safe }}
+                {%-endif %}
+            </dd>
             {% endfor %}
         </dl>
         <a href="#metadata" data-info="{{_("less_info")}}">{{_("more_info")}}</a>

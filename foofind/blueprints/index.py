@@ -3,23 +3,22 @@
     Controlador de la portada.
 """
 import os
-from werkzeug import url_unquote
-from flask import Blueprint, render_template, redirect, url_for, g, make_response, current_app, request, send_from_directory, abort, get_flashed_messages, session
-from flask.ext.babel import get_translations, gettext as _
-from flask.ext.login import current_user
-from foofind.forms.files import SearchForm
-from foofind.services import *
-from foofind.forms.captcha import generate_image
-from foofind.utils import u
-from urlparse import urlparse
 import urllib
-import logging
-
 import datetime
 import httplib
 import time
 import threading
+from urlparse import urlparse
+from werkzeug import url_unquote
+from flask import Blueprint, render_template, redirect, url_for, g, make_response, current_app, request, send_from_directory, abort, get_flashed_messages, session
+from flask.ext.babel import get_translations, gettext as _
+from flask.ext.login import current_user
+from flask.ext.seasurf import SeaSurf
+from urlparse import urlparse
 
+from foofind.forms.files import SearchForm
+from foofind.services import *
+from foofind.utils import u, logging
 from foofind.utils.fooprint import Fooprint
 
 index = Fooprint('index', __name__, template_folder="template", dup_on_startswith="/<lang>")
@@ -39,7 +38,7 @@ def gensitemap(server, urlformat):
     subdomain = server["ip"].split(".")[0]
     serverno = int(subdomain[6:])
     url = urlformat % serverno
-    domain = urlparse.urlparse(url)[1]
+    domain = urlparse(url)[1]
     con = httplib.HTTPConnection(domain)
     con.request("HEAD", url)
     response =  con.getresponse()
@@ -61,11 +60,19 @@ def favicon():
 def robots():
     return send_from_directory(os.path.join(current_app.root_path, 'static'), 'robots.txt')
 
+@index.route('/BingSiteAuth.xml')
+def bing():
+    return '<?xml version="1.0"?><users><user>8AC0F33B6CD35133906047D3976BD2F5</user></users>'
+
+@index.route('/yandex_710d63b404ebcae8.txt')
+def yandex():
+    return ''
+
 @cache.cached(
     timeout=86400, # Un día
     unless=lambda:True
     )
-#@index.route('/sitemap.xml')
+@index.route('/sitemap.xml')
 def sitemap():
     urlformat = current_app.config["FILES_SITEMAP_URL"]
     servers = filesdb.get_servers()
@@ -104,16 +111,23 @@ def home():
     '''
     return render_template('index.html',form=SearchForm(),lang=current_app.config["ALL_LANGS_COMPLETE"][g.lang],zone="home")
 
-@index.route("/captcha/<captcha_id>")
-def captcha(captcha_id):
-    cache_id = "captcha/%s" % captcha_id
-    cached_captcha = cache.get(cache_id)
-    if cached_captcha is None:
-        abort(404)
-    code, consumed = cached_captcha
-    if consumed:
-        abort(404)
-    cache.set(cache_id, (code, True))
-    response = make_response(generate_image(code))
-    response.headers['Content-Type'] = 'image/png'
-    return response
+@index.route("/status")
+def status():
+    '''
+    Comprueba si existe un token csrf valido
+    '''
+    if csrf._get_token(): #si hay token no hace nada
+        return ""
+    else: #sino genera uno nuevo y lo devuelve
+        session["_csrf_token"]=csrf._generate_token()
+        return session["_csrf_token"]
+
+@index.route("/error/<int:num>")
+def error(num):
+    '''
+    Devuelve una página de error con el número que se le mande
+    '''
+    if num>499 and num<505:
+        return abort(num)
+
+    return make_response()

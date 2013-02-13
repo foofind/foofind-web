@@ -120,19 +120,51 @@
                     </dd>#}
                 </dl>
             </aside>
+            {% if args|length>1 %}
+            <div id="filters">
+                <a href="{{ url_search(delete_params=['all']) }}" class="close"></a>
+                <ul>
+                    {%- for name,value in top_filters.iteritems() if value -%}
+                    <li title="{% if name=='type' %}{{_('what')}}{% elif name=='src' %}{{_('where')}} {{ value|join(' - ') }}{% else %}{{_('size')}}{% endif %}">
+                    {%- if name=="size" %}
+                        {% if value[0]>0 and value[1]==50 %}
+                            {{_(value[3])}} <em>{{(2**value[0])|numbersizeformat}}</em>
+                        {% elif value[0]==0 and value[1]<50 %}
+                            {{_(value[2])}} <em>{{(2**value[1])|numbersizeformat}}</em>
+                        {% else %}
+                            {{_(value[3])}} <em>{{(2**value[0])|numbersizeformat}}</em> / {{_(value[2])}} <em>{{(2**value[1])|numbersizeformat}}</em>
+                        {% endif %}
+                    {% elif name=="src" %}
+                        {%- if value|length>4 %}
+                            {{ value|top_filters_src }}
+                        {%- elif value|length>2 %}
+                            {% if ("type" in top_filters and top_filters["type"]|length>2) or ("size" in top_filters and top_filters["size"][4]) or ("type" in top_filters and "size" in top_filters) %}
+                                {{ value|top_filters_src }}
+                            {% else %}
+                                {{ value|join(" - ") }}
+                            {% endif -%}
+                        {% else %}
+                            {{ value|join(" - ") }}
+                        {% endif -%}
+                    {% else %}
+                        {{ value|join(" - ") }}
+                    {% endif -%}
+                    </li>
+                    {%- endfor -%}
+                </ul>
+            </div>
+            {% endif %}
             <ul id="results">
             {% if not bot %}
-                <li id="no_results" class="loading">
-                    <img alt="cargando" src="{{ g.static_prefix }}/img/search/cargando.png" />
-                    <img alt="cargando" src="{{ g.static_prefix }}/img/search/cargando.png" />
+                <li id="loading">
+                    <img alt="loading" src="{{ g.static_prefix }}/img/search/cargando.png" />
+                    <img alt="loading" src="{{ g.static_prefix }}/img/search/cargando.png" />
                 </li>
             {% endif %}
             {% if static_results %}
                 {% for result in static_results %}
                     {{ result|safe }}
                 {% endfor %}
-            {% elif not full_browser %}
-                {{ no_results|safe }}
             {% endif %}
             </ul>
             <a href="#" id="more"></a>

@@ -1,11 +1,13 @@
 if(window != top)
     top.location.href = location.href;
 
-//si llega una busqueda ajax y no esta activado redirecciona solo desde el index
-//if(window.location.pathname.substr(4,11)=="" && window.location.hash.charAt(1)=="!")
-//    window.location.href=window.location.pathname.substr(1,3)+"/"+"search/?alt=ajax&"+window.location.hash.substring(3)
+String.prototype.endsWith = function(suffix) {
+    return this.indexOf(suffix, this.length-suffix.length)!==-1;
+}
 
-var lang=window.location.pathname.substr(3,1)=="/"?window.location.pathname.substr(0,4):"/";
+window.lang=window.location.pathname.substr(3,1)=="/"?window.location.pathname.substr(0,4):"/en/";
+window.filtros={};
+
 function highlight(data,t)
 {
     var i=0, a=data.toLowerCase(), b=t.toLowerCase();
@@ -17,10 +19,174 @@ function error(message)
 {
     return '<p class="error">'+message.responseText+'</p>'
 }
+//comprueba sincronamente si hay un token valido para la proteccion csrf y sino lo genera y lo guarda donde corresponde
+function status()
+{
+    $.ajax({url:"/status",type:"get",async:false}).done(function(r)
+    {
+        if(r!="")
+        {
+            csrf_token=r;
+            $("_csrf_token").val(r);
+        }
+    })
+}
+//muestra cuadro de dialogo
+window.modal_dialog = {
+    initialized:false,
+    initialize:function(){
+        var me=this;
+        this.element = $("#dialog");
+        this.element.html(
+            '<div class="outer"><div class="inner"><header></header><section></section>'
+                + '<footer>'
+                    + '<button class="button dialog_ok">'
+                        + this.element.data("dialog_ok")
+                        + '</button>'
+                    + '<button class="button dialog_no">'
+                        + this.element.data("dialog_no")
+                        + '</button>'
+                    + '<button class="button dialog_yes">'
+                        + this.element.data("dialog_yes")
+                        + '</button>'
+                + '</footer></div></div>')
+            .click(function(){me.hide.apply(me);});
+        $(".outer", this.element)
+            .click(function(event){
+                event.preventDefault();
+                event.stopPropagation();
+                });
+        $(".dialog_ok", this.element)
+            .click(function(event){
+                me.hide.apply(me);
+                return me.ok_callback.apply(me, [event]);
+                });
+        $(".dialog_yes", this.element)
+            .click(function(event){
+                me.hide.apply(me);
+                return me.yes_callback.apply(me, [event]);
+                });
+        $(".dialog_no", this.element)
+            .click(function(event){
+                me.hide.apply(me);
+                return me.no_callback.apply(me, [event]);
+                });
+        this.initialized = true;
+        },
+    element:null,
+    show:function(options){
+        /* Opciones (objeto:
+         *  mode:
+         *  title:
+         *  text:
+         *  yes:
+         *  no:
+         *  ok:
+         *  ok_callback
+         *  yes_callback:
+         *  no_callback:
+         */
+        if(!this.initialized) this.initialize();
+
+        var simple=!(options.yes||options.no||options.yes_callback||options.no_callback);
+        $(".dialog_ok", this.element).css("display", (simple?"auto":"none"));
+        $(".dialog_yes", this.element).css("display", (simple?"none":"auto"));
+        $(".dialog_no", this.element).css("display", (simple?"none":"auto"));
+
+        $("header", this.element).html(options.title||"").css("display", "auto");
+        if(!options.title) $("header", this.element).css("display", "none");
+
+        $("section", this.element).html(options.text||"");
+
+        $(".dialog_ok", this.element).html(options.ok||this.element.data("dialog_ok"));
+        $(".dialog_yes", this.element).html(options.yes||this.element.data("dialog_yes"));
+        $(".dialog_no", this.element).html(options.no||this.element.data("dialog_no"));
+
+        this.ok_callback = options.ok_callback||function(){};
+        this.yes_callback = options.yes_callback||function(){};
+        this.no_callback = options.no_callback||function(){};
+
+        this.element.removeClass();
+        if(options.mode) this.element.addClass(options.mode);
+
+        this.element.css("opacity", 0);
+        this.element.css("display", "auto");
+        this.element.fadeTo(250, 1);
+        },
+    hide:function(){
+        if(this.element&&(this.element.css("display")!="none")){
+            var me=this;
+            this.element.fadeTo(250, 0, function(){me.element.css("display", "none");});
+            }
+        }
+    };
+
+window.downloader = {
+    expiration_days:365,
+    initialized:false,
+    skip:false,
+    initialize:function(){
+        this.skip = (document.cookie.indexOf("skip_downloader=1") > -1);
+        this.initialized = true;
+        },
+    disable:function(){
+        if(!this.skip){
+            var expiration=new Date();
+            expiration.setDate(expiration.getDate() + this.expiration_days);
+            document.cookie = "skip_downloader=1; expires=" + expiration.toUTCString() + "; path=/";
+            this.skip = true;
+            }
+        },
+    landmodes:["overview","sharing","safety"],
+    proxy:function(url, target){
+        var me=this,
+            mode="" + parseInt(Math.random()*5), // Eleccion del modo de atterizaje
+            land=me.landmodes[parseInt(Math.random()*me.landmodes.length)],
+            downloader=$("body").data("downloader_href") + "?a=" + mode + "#" + land;
+        _gaq.push(['_trackEvent', "FDM", "offer"]);
+        window.modal_dialog.show({
+            mode: "downloader",
+            title: $("body").data("downloader_title"),
+            text: $("body").data("downloader_text"),
+            yes: $("body").data("downloader_yes"),
+            no: $("body").data("downloader_no"),
+            yes_callback: function(){
+                _gaq.push(['_trackEvent', "FDM", "offer accepted"]);
+                me.disable();
+                setTimeout(function(){window.location.href = downloader}, 100);
+                },
+            no_callback: function(){
+                _gaq.push(['_trackEvent', "FDM", "offer rejected"]);
+                me.disable();
+                if(target=="_blank") window.open(url);
+                else setTimeout(function(){window.location.href = url}, 100);
+                }
+            });
+        },
+    link_lookup:function(parent){
+        if(!this.initialized) this.initialize();
+        if(!this.skip){
+            var me=this, url, target, cback=function(){document.location.href = url;};
+            $("a", parent).each(function(i){
+                var elm=$(this), url=this.href, target=this.target;
+                if(elm.data("downloader"))
+                    elm.click(function(event){
+                        if(me.skip) return;
+                        event.stop_redirection = true; // Usado por link_stats
+                        me.proxy.apply(me, [url, target]);
+                        event.preventDefault();
+                        });
+                });
+            }
+        }
+    };
+
 $(function()
 {
     //añadir el setlang para cambiar el idioma
-    $('#select_language_box a').click(function(){$(this).attr("href",$(this).attr("href")+"?setlang="+$(this).attr("href").substr(1,2))});
+    $('#select_language_box a').click(function(){$(this).attr("href",$(this).attr("href")+"?setlang="+$(this).attr("href").substr(1,2)+window.location.hash)});
+    //mantener viva la sesion de forma ilimitada mientras se tenga la pagina abierta
+    setInterval(status,1000000);
     //autocompletado de busqueda
     var form=$('form[method="get"]').attr("action");
     if($('#q').length)

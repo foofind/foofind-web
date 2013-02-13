@@ -5,7 +5,7 @@
 from flask.ext.wtf import Form, TextField, RadioField, TextAreaField, SubmitField, HiddenField, BooleanField, SelectField
 
 from flask.ext.babel import lazy_gettext as _
-from foofind.forms.validators import *
+from foofind.forms.validators import require, length
 from foofind.forms.fields import VoidSubmitField
 
 class SearchForm(Form):

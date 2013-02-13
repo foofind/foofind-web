@@ -9,30 +9,30 @@ import types
 import bson
 import os
 import inspect
-
 import urllib2
 import multiprocessing
 import time
 import traceback
-import logging
 import zlib
-
-import deploy.fabfile as fabfile
-import foofind.utils.pyon as pyon
+import mimetypes
 
 from flask import Blueprint, jsonify, render_template, request, redirect, url_for, flash, current_app, abort, send_file, g, session
+from werkzeug import secure_filename
 from werkzeug.datastructures import MultiDict
+
 from flask.ext.babel import gettext as _
 from flask.ext.login import current_user
 from wtforms import BooleanField, TextField, TextAreaField, HiddenField
 from functools import wraps
 from collections import OrderedDict, defaultdict
 
-from foofind.utils import expanded_instance, fileurl2mid, mid2hex, hex2mid, url2mid, u, mid2url
+import deploy.fabfile as fabfile
+import foofind.utils.pyon as pyon
+from foofind.utils import expanded_instance, fileurl2mid, mid2hex, hex2mid, url2mid, u, mid2url, logging
 from foofind.utils.translations import unfix_lang_values
 from foofind.utils.fooprint import ManagedSelect
+from foofind.utils.flaskutils import send_gridfs_file
 from foofind.services import *
-from foofind.services.search import block_files as block_files_in_sphinx, get_id_server_from_search
 from foofind.forms.admin import *
 from foofind.utils.pogit import pomanager
 
@@ -347,6 +347,21 @@ def task_output(**kwargs):
     '''
     Devuelve la salida de una tarea.
 
+    La tarea a realizar viene dada por los argumentos con clave
+
+    Tareas:
+        script:
+            @type script: str
+            @param script: nombre del script a ejecutar
+            @type host: lista de str
+            @param hosts: lista de hosts en los que ejecutar el script
+        log:
+            @type log: str
+            @param log: ruta del log
+            @type n: int
+            @param n: Número de líneas a mostrar desde el inicio del fichero.
+                      Si es negativo se refiere a las últimas líneas.
+
     '''
     # Modos de ejecución
     run_args = ()
@@ -604,8 +619,7 @@ def lock_file(complaint_id=None, url_file_ids=None):
                 sphinx_block = []
                 sphinx_unblock = []
                 for fileid, server in fileids.iteritems():
-                    if fileid in filenames:
-                        (sphinx_block if block and not unblock else sphinx_unblock).append((fileid, filenames[fileid]))
+                    (sphinx_block if block and not unblock else sphinx_unblock).append((fileid, int(server), filenames[fileid] if fileid in filenames else None))
                     req = {"_id":fileid, "bl": int(block and not unblock)}
                     if server: req["s"] = int(server) # si recibo el servidor, lo uso por eficiencia
                     try:
@@ -615,9 +629,9 @@ def lock_file(complaint_id=None, url_file_ids=None):
                     except:
                         flash("No se ha podido actualizar el fichero con id %s" % fileid, "error")
                 if sphinx_block:
-                    block_files_in_sphinx(mongo_ids=sphinx_block, block=True)
+                    searchd.block_files(sphinx_block, True)
                 if sphinx_unblock:
-                    block_files_in_sphinx(mongo_ids=sphinx_unblock, block=False)
+                    searchd.block_files(sphinx_unblock, False)
                 flash("admin_locks_locked" if block else "admin_locks_unlocked", "success")
             elif request.form.get("cancel", False, bool): # submit cancelar
                 if complaint_id:
@@ -646,13 +660,13 @@ def lock_file(complaint_id=None, url_file_ids=None):
     blocked = 0
     unblocked = 0
     for fileid in files_data.iterkeys():
-        data = filesdb.get_file(fileid, bl=None)
+        data = filesdb.get_file(hex2mid(fileid), bl=None)
         # Arreglo para bug de indir: buscar los servidores en sphinx
         # y obtener los datos del servidor encontrado.
         # TODO(felipe): cuando se arregle el bug de indir: borrar
         if data is None and fileid in filenames:
             bugged.append(fileid)
-            sid = get_id_server_from_search(fileid, filenames[fileid])
+            sid = searchd.get_id_server_from_search(fileid, filenames[fileid])
             if sid:
                 data = filesdb.get_file(fileid, sid = sid, bl = None)
                 if data is None:
@@ -690,13 +704,14 @@ def getserver(fileid, filename=None):
 
     form = GetServerForm(request.form)
 
+    mfileid = hex2mid(fileid)
     data = None
     if request.method == 'POST':
         fname = form.filename.data
-        sid = get_id_server_from_search(hex2mid(fileid), fname)
+        sid = searchd.get_id_server_from_search(mfileid, fname)
         if sid:
             try:
-                data = filesdb.get_file(fileid, sid = sid, bl = None)
+                data = filesdb.get_file(mfileid, sid = sid, bl = None)
 
             except filesdb.BogusMongoException as e:
                 logging.exception(e)
@@ -1109,6 +1124,75 @@ def servers():
         num_items=num_items,
         alternatives=server_list,
         page=page)
+
+@admin.route('/<lang>/admin/downloads', defaults={"filename":None}, methods=("GET","POST"))
+@admin.route('/<lang>/admin/downloads/<path:filename>', methods=("GET","POST"))
+@admin_required
+def downloads(filename=None):
+    '''
+    Gestión de servers
+    '''
+    page = request.args.get("page", 0, int)
+    grps = request.args.get("mode", "all", str)
+    mode = request.args.get("show", "current", str)
+
+    num_items = downloadsdb.count_files()
+    skip, limit, page, num_pages = pagination(num_items)
+    file_list = downloadsdb.list_files(skip, limit)
+
+    form = DownloadForm(request.form)
+
+    if filename:
+        form.filename.data = filename
+
+    file_data = None
+
+    if request.method == "POST":
+        if form.remove.data:
+            downloadsdb.remove_file(filename)
+            flash("admin_saved", "success")
+            return redirect(url_for("admin.downloads"))
+        else:
+            if form.filename.data and form.version.data:
+                old_version = (
+                    form.old_version.data or
+                    downloadsdb.get_last_version(form.filename.data) or
+                    ""
+                    )
+                if form.version.data:
+                    downloadsdb.store_file(
+                        secure_filename(form.filename.data),
+                        request.files["upfile"],
+                        request.files["upfile"].content_type
+                            or mimetypes.guess_type(form.filename.data)[0],
+                        form.version.data)
+                    flash("admin_saved", "success")
+                    return redirect(url_for("admin.downloads"))
+                else:
+                    flash("admin_version_error", "error")
+            else:
+                flash("admin_nochanges", "error")
+    elif not filename is None:
+        file_data = downloadsdb.get_file(filename)
+        form.old_version.data = file_data["version_code"]
+        form.version.data = file_data["version_code"]
+
+    return render_template('admin/downloads.html',
+        file_data=file_data,
+        page_title=_('admin_downloads'),
+        title=admin_title('admin_downloads'),
+        form=form,
+        num_pages=num_pages,
+        num_items=num_items,
+        downloads=file_list,
+        page=page)
+
+@admin.route('/<lang>/admin/download/<path:filename>', defaults={"version":None})
+@admin.route('/<lang>/admin/download/<version>/<path:filename>')
+@admin_required
+def download(version=None, filename=None):
+    f = downloadsdb.stream_file(filename, version)
+    return send_gridfs_file(f)
 
 # Parsers para diccionario de parsers (data_to_form, form_to_data [, data_to_json [, json_to_data]])
 db_types = {

@@ -7,7 +7,7 @@ from random import randint
 from time import time
 from foofind.utils import u, pyon, VALUE_UNSET
 
-import logging
+from . import logging
 
 #TODO(felipe): Comentar funcionalidad y ejemplo de uso
 

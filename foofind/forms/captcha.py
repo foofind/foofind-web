@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 from flask import request, session, current_app
+from flask.ext.wtf import ValidationError
 from flask.ext.babel import lazy_gettext as _
 from wtforms.fields import Field
-from foofind.forms.validators import *
+from foofind.forms.validators import require
 from foofind.services import cache
 from hashlib import sha256
 import Image, ImageFont, ImageDraw, ImageFilter, StringIO
@@ -78,7 +79,7 @@ class CaptchaField(Field):
 
     def generate_id(self):
         # Generar un texto aleatorio para el captcha
-        imgtext = ''.join(random.choice('ABCDEFGHIJKLMNPQRSTUVWZYZ123456789') for i in range(5))
+        imgtext = ''.join(random.choice('ABCDEFGHIJKLMNPRSTUVWZYZ123456789') for i in range(5))
 
         # Encriptarlo
         captcha_id=sha256(current_app.config["SECRET_KEY"]+imgtext).hexdigest()

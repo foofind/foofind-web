@@ -3,11 +3,13 @@
     Formularios para admin
 """
 
-from flask.ext.wtf import SubmitField,SelectMultipleField,CheckboxInput,SubmitInput,Form,HiddenField,TextAreaField,SelectField,TextField,BooleanField,IntegerField,html_params as whtml_params,HTMLString
+from flask.ext.wtf import SubmitField, SelectMultipleField, CheckboxInput,\
+                           SubmitInput, Form, HiddenField, TextAreaField,\
+                           SelectField, TextField, BooleanField, IntegerField,\
+                           FileField,\
+                           html_params as whtml_params,HTMLString
 from flask.ext.babel import lazy_gettext as _
 from flask.ext.babel import gettext
-
-import logging
 
 from .fields import HTMLString, fix_param_name, html_params
 
@@ -156,6 +158,14 @@ class DeployForm(Form):
 
     clean_log = SubmitField(_("admin_deploy_clean_log"), default="clean_log")
     remove_lock = SubmitField(_("admin_deploy_remove_lock"), default="remove_lock")
+
+class DownloadForm(Form):
+    old_version = HiddenField()
+    version = TextField(_("admin_downloads_version"))
+    filename = TextField(_("admin_filename"))
+    upfile = FileField(_("admin_downloads_file"))
+    submit = SubmitField(_('admin_edit_submit'), default="submit")
+    remove = SubmitField(_('admin_remove'), default="remove")
 
 class EditForm(Form):
     defaults = HiddenField()

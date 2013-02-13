@@ -1,7 +1,6 @@
 {%- macro url_search(delete_params=[],catch_kwargs=true) -%}
     {{url_for('files.search',**kwargs|search_params(['page','alt']+delete_params,args,extra_sources))}}
 {%- endmacro -%}
-
 {%- macro print_source(source_data,url="") %}
     <div class="download_source">
         <input type="text" readonly="readonly" value="{% if url=='' %}{{ source_data['urls'][0] }}{% else %}{{url}}{% endif %}" class="no" />
@@ -15,4 +14,11 @@
         </span>
         </a>
     </div>
+{% endmacro -%}
+{%- macro print_share(url,size=16) %}
+    <ul>
+        {%- for site in share -%}
+        <li><a class="source{{ size }} source_{{ site[1] }}{{ size }}" href="{{_(site[2],url=u(url),title=g.title)}}" title="{% if site[1]=='email' %}{{ site[0]|capitalize }}{% else %}{{_('share',site=u(site[0]))}}{% endif %}" rel="nofollow"></a></li>
+        {%- endfor -%}
+    </ul>
 {% endmacro -%}

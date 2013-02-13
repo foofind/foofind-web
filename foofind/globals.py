@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import flask.globals
+from werkzeug.local import LocalStack, LocalProxy, get_ident
 
 import foofind.utils
-import flask.globals
-
-from werkzeug.local import LocalStack, LocalProxy, get_ident
 
 class ThreadingStack(LocalStack):
     '''

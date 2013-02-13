@@ -1,14 +1,15 @@
-{% from "helpers.html" import flash,advice -%}
+{% from "helpers.html" import flash,advice,logo,search_box with context -%}
 <!DOCTYPE html>
-<html>
+<html lang="{{g.lang}}">
     <head>
         <title>{{ g.title }}</title>
         <meta charset="utf-8" />
-        <meta name="keywords" content="{{g.keywords[:40]|join(', ')}}" />
+        <meta http-equiv="content-language" content="{{g.lang}}" />
+        <meta name="keywords" content="{{(g.keywords|list)[:30]|join(', ')}}" />
         <meta name="description" content="{{g.page_description}}" />
         <link rel="shortcut icon" href="{{ url_for('index.favicon') }}" />
         <link rel="search" type="application/opensearchdescription+xml" href="{{ url_for('index.opensearch') }}" title="Foofind" />
-        {%- for id,data in g.languages.iteritems() if g.lang!=id%}
+        {%- for id,data in g.languages.iteritems() if g.lang!=id %}
         <link rel="alternate" hreflang="{{ id }}" href="{{ u(request.url)|url_lang(id) }}" />
         {%- endfor %}
         {%- block assets_css -%}
@@ -25,7 +26,6 @@
                 <script src="{{ ASSET_URL }}"></script>
             {%- endassets -%}
         {%- endblock -%}
-        {%- block head %}{%- endblock -%}
         <!--[if lt IE 9]>
         {%- assets "js_ie" -%}<script type="text/javascript" src="{{ ASSET_URL }}"></script>{%- endassets -%}
         {%- assets "css_ie" %}<link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet" />{%- endassets %}
@@ -36,22 +36,46 @@
         {#<!--[if IE ]>
         <script type="text/javascript" src="/static/js/PIE.js"></script>
         <![endif]-->#}
-        <script>var _gaq=_gaq||[];_gaq.push(['_setAccount','UA-808946-19']);_gaq.push(['_trackPageview',location.pathname+location.hash]);(function(){var ga=document.createElement('script');ga.type='text/javascript';ga.async=true;ga.src=('https:'==document.location.protocol?'https://ssl':'http://www')+'.google-analytics.com/ga.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(ga,s)})();</script>
+        <script>
+            var _gaq=_gaq||[];_gaq.push(['_setAccount','UA-808946-19']);(function(){var ga=document.createElement('script');ga.type='text/javascript';ga.async=true;ga.src=('https:'==document.location.protocol?'https://ssl':'http://www')+'.google-analytics.com/ga.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(ga,s)})();
+            $(function(){$("#toolbar a").click(function(e){_gaq.push(['_trackEvent','Toolbar',$(this).data("source")]);e.preventDefault();setTimeout('document.location = "'+this.href+'"',100);})});
+        </script>
+        {%- block head %}<script>_gaq.push(['_trackPageview',location.pathname+location.hash]);</script>{%- endblock -%}
     </head>
-    <body{% if body_class %} class="{{body_class}}"{% endif %}>
+    <body
+        {%- if body_class %} class="{{body_class}}"{% endif %}
+        {%- if g.foodownloader %}
+            data-downloader_title="{{_('foodownloader_dialog_title')|emarkdown}}"
+            data-downloader_text="{{_('foodownloader_dialog_text', domain=g.domain)|emarkdown}}"
+            data-downloader_href="{{url_for('downloads.foodownloader_microsite')|forceescape}}"
+            data-downloader_yes="{{_('foodownloader_dialog_yes', domain=g.domain)|emarkdown}}"
+            data-downloader_no="{{_('foodownloader_dialog_no', domain=g.domain)|emarkdown}}"
+        {%- endif %}>
+        <div id="dialog" data-dialog_ok="{{_('ok')|emarkdown}}" data-dialog_no="{{_('no')|emarkdown}}" data-dialog_yes="{{_('yes')|emarkdown}}"></div>
         <div id="container">
             <header>
                 <section>
+                    <div id="social">
+                        <div id="fb-root"></div>
+                        <div class="fb-like" data-href="https://www.facebook.com/foofind" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false"></div>
+                        {#<a href="https://twitter.com/foofind" class="twitter-follow-button" data-show-count="false" data-lang="{{ g.lang }}">Seguir a @foofind</a>#}
+                        <div class="g-plusone" data-size="medium" data-href="http://foofind.is"></div>
+                        <script>
+                            (function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id))return;js=d.createElement(s);js.id=id;js.src="//connect.facebook.net/es_ES/all.js#xfbml=1";fjs.parentNode.insertBefore(js,fjs)}(document,'script','facebook-jssdk'));
+                            {#!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");#}
+                            window.___gcfg={lang:'{{ g.lang }}'};(function(){var po=document.createElement('script');po.type='text/javascript';po.async=true;po.src='https://apis.google.com/js/plusone.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(po, s)})();
+                        </script>
+                    </div>
                     <p>{% block global_message %}{% endblock %}</p>
                     <div id="header_navigation"
-                        {%- if current_user.is_authenticated() %}
+                        {%- if current_user and current_user.is_authenticated() %}
                         ><a href="{{ url_for('user.profile')}}"><span></span>{{current_user.username}}</a> <a href="{{ url_for('user.logout')}}"><span></span>{{_('logout')}}</a>
                         {%- else %}
                         class="login"><a href="{{ url_for('user.login') }}" rel="nofollow"><span></span>{{_('login')}}</a>
                         {%- endif %}
                         <ul id="select_language_box">
                             <li><a title="{{ g.languages[g.lang][0][g.lang]|lower  }}"><span></span>{{ g.languages[g.lang][0][g.lang]|lower }}</a></li>
-                            {%- for id,data in g.languages.iteritems() if g.lang!=id %}
+                            {%- for id,data in g.languages | dictsort if g.lang!=id %}
                             <li><a href="{{ u(request.url)|url_lang(id) }}" rel="alternate" hreflang="{{ id }}" title="{{ g.languages[g.lang][0][id]|lower  }}"{%- if data[1] %} class="beta"{% endif -%}>{{ data[0][id]|lower }}</a></li>
                             {%- endfor %}
                             <li><a href="{{ url_for('page.translate') }}">{{_('other')|lower}}...</a></li>
@@ -61,13 +85,7 @@
                         {% endif %}
                     </div>
                 </section>
-                {%- block header %}
-                <h1>
-                    <a href="{{ url_for('index.home',lang=none) }}">
-                        <img src="{{ g.static_prefix }}/img/logo_small.png" alt="File search engine - {{ g.domain }}" title="{{ g.domain }}"/>
-                    </a>
-                </h1>
-                {%- endblock %}
+                {%- block header %}{{ logo() }}{%- endblock %}
             </header>
             <section id="{{ zone }}">
                 {%- block content %}{%- endblock %}
@@ -81,6 +99,7 @@
                     <li><a href="{{ url_for('page.show',pname='jobs') }}">Trabaja con nosotros</a></li>
                     {%- endif -%}
                     <li><a href="{{ url_for('page.show',pname='lastfiles') }}">{{_("last_indexed_files")}}</a></li>
+                    <li><a href="{{ url_for('downloads.foodownloader_microsite') }}">Download Manager</a></li>
                 </ul>
                 <p>
                     {{_("footer",

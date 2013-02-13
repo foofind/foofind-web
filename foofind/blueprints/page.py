@@ -2,21 +2,22 @@
 """
     Controladores de páginas estáticas.
 """
-from flask import Blueprint, g, render_template, request, flash, current_app, redirect, url_for, abort
-from flask.ext.babel import gettext as _
-from wtforms import Form,FieldList,TextField,TextAreaField,SubmitField
-from babel import localedata
-from foofind.forms.pages import ContactForm, SubmitLinkForm, ReportLinkForm, SelectLanguageForm, TranslateForm, JobsForm
-from foofind.services import *
-from foofind.utils import lang_path, expanded_instance, nocache, url2mid
-from foofind.utils.translations import fix_lang_values
-from foofind.utils.fooprint import Fooprint
-from functools import cmp_to_key
-
 import locale
 import polib
 import re
 import random
+from flask import Blueprint, g, render_template, request, flash, current_app, redirect, url_for, abort
+from flask.ext.babel import gettext as _
+from wtforms import Form,FieldList,TextField,TextAreaField,SubmitField
+from babel import localedata
+from functools import cmp_to_key
+
+from foofind.forms.pages import ContactForm, SubmitLinkForm, ReportLinkForm, SelectLanguageForm, TranslateForm, JobsForm
+from foofind.services import *
+from foofind.utils import lang_path, expanded_instance, nocache, url2mid, logging
+from foofind.utils.translations import fix_lang_values
+from foofind.utils.fooprint import Fooprint
+
 
 page = Fooprint('page', __name__, dup_on_startswith="/<lang>")
 
@@ -74,7 +75,7 @@ def jobs():
     '''
     Página de oferta de trabajo
     '''
-    form = JobsForm(request.form,captcha={'ip_address': request.remote_addr})
+    form = JobsForm(request.form)
     if request.method=='POST' and form.validate():
         attach=None
         ufile=request.files[form.cv.name]
@@ -202,11 +203,14 @@ def translate():
                     description=msgstr[1]
 
                 # si la traduccion es mayor de 80 caracteres se utiliza un textarea en vez de un input text
-                length=len(new_lang[msgid] or msg)
-                if length>50:
-                    formfields[msgid]=TextAreaField(msg,default=new_lang[msgid],description=description)
+                current = new_lang[msgid] or msg
+                length=len(current)
+                breaks = current.count("\n")
+
+                if length>50 or breaks:
+                    formfields[msgid]=TextAreaField(msg.replace("\n", "<br/>"), default=new_lang[msgid], description=description)
                     # se le establecen las filas al text area dependiendo del tamaño de la traduccion
-                    formfields["_args_%s" % msgid]={"rows":length/15}
+                    formfields["_args_%s" % msgid]={"rows":min(length/15+breaks/2, 50)}
                 else:
                     formfields[msgid]=TextField(msg,default=new_lang[msgid],description=description)
                     formfields["_args_%s" % msgid]={}

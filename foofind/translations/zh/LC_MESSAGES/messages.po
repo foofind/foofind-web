@@ -1,4 +1,4 @@
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
@@ -731,12 +731,7 @@ msgid "include_reported_links"
 msgstr "请在表格内恰当的地方报告链接。"
 
 msgid "footer"
-msgstr ""
-"本站内容版权基于创作共享协议<a rel='license content' "
-"href='http://creativecommons.org/licenses/by-sa/3.0/deed.zh'>BY-SA</a>（署名-"
-"非商业性使用-相同方式共享）。<a href='http://code.google.com/p/Foofind/'>源代码</a>版权基于<a "
-"rel='license source code' "
-"href='http://www.gnu.org/licenses/agpl.html'>Affero GPL</a>协议。"
+msgstr "本站内容版权基于创作共享协议 %(cc)s. %(code)s 版权基于 %(gpl)s."
 
 msgid "include_link_per_line"
 msgstr ""

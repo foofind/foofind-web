@@ -1,0 +1,78 @@
+{% extends "admin/base.html" %}
+{% block header %}
+    {% if file_data == None %}
+    <ul class="tabs">
+        {% for s in (15, 30, 60) %}
+            <li>
+            {% if page_size != s %}<a href="{{url_for('admin.downloads', page=page, size=s)}}">{{s}}</a>
+            {% else %}<span>{{s}}</span>{% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% endblock %}
+{% block page %}
+    {%- if file_data == None -%}
+        {% if num_items > 0 %}
+            <div class="list">
+            {% for filename in downloads %}
+                <ul>
+                    <li><a href="{{url_for('admin.download', filename=filename)}}">{{ filename }}</a></li>
+                    <li class="edit_row"><a href="{{url_for('admin.downloads', filename=filename, page=page, size=page_size)}}">{{_('admin_info')}}</a></li>
+                </ul>
+            {% endfor %}
+            </div>
+            {% if num_pages > 1 %}
+            <ul class="pagination">
+                {%- for i in range(num_pages) -%}
+                <li>
+                    {%- if i == page -%}
+                    <span>{{ i + 1 }}</span>
+                    {%- else -%}
+                    <a href="{{url_for('admin.downloads', page=i, size=page_size)}}">{{i+1}}</a>{% endif -%}
+                </li>
+                {%- endfor -%}
+            </ul>
+            {% endif %}
+        {% else %}
+            <p>{{_('admin_downloads_none')}}</p>
+        {% endif %}
+    {%- endif -%}
+    {%- if file_data -%}
+        <form action="{{url_for('admin.downloads', filename=file_data['filename'])}}" method="POST" enctype="multipart/form-data">
+    {%- else -%}
+        <form action="{{url_for('admin.downloads')}}" method="POST" enctype="multipart/form-data">
+    {% endif %}
+        {{ render_field() }}
+        {% if file_data %}
+            {{ form.filename(type="hidden") }}
+        {% endif %}
+        {% if file_data %}
+            <h3 class="list">{{_("admin_downloads_datatitle")}}</h3>
+            <dl class="list">
+                {% for k, v in file_data.iteritems() %}
+                    <dt>{{k}}</dt>
+                    {% if k == "name" %}
+                    <dd><a href="{{url_for('admin.download', version=file_data['version_code'], filename=file_data['name'])}}">{{v}}</a></dd>
+                    {% else %}
+                    <dd>{{v}}</dd>
+                    {% endif %}
+                {% endfor %}
+            </dl>
+            <h3 class="list">{{_("admin_downloads_update")}}</h3>
+            <dl class="list">
+        {% else %}
+            <h3 class="list">{{_("admin_downloads_new")}}</h3>
+            <dl class="list">
+                <dt>{{form.filename.label}}</dt>
+                <dd>{{form.filename}}</dd>
+        {% endif %}
+            <dt>{{form.version.label}}</dt>
+            <dd>{{form.version}}</dd>
+            <dt>{{form.upfile.label}}</dt>
+            <dd>{{form.upfile}}</dd>
+        </dl>
+        {{- form.submit(class="list") -}}
+        {% if file_data %} {{ form.remove }} <a href="{{url_for('admin.downloads', size=page_size)}}" class="button">{{_('admin_edit_cancel')}}</a>{% endif %}
+    </form>
+{% endblock %}

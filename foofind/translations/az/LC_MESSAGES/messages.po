@@ -1,0 +1,263 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: 1\n"
+"Report-Msgid-Bugs-To: ismael@mp2p.net\n"
+"POT-Creation-Date: 2011-12-09 11:49+0100\n"
+"PO-Revision-Date: 2011-12-09 11:49+0100\n"
+"Last-Translator: Foofind <hola@foofind.com>\n"
+"Language-Team: az <hola@foofind.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Foofind's pogit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgid "new_toolbar"
+msgstr "Yeni toolbar yoxlayın!"
+
+msgid "click_here"
+msgstr "Buraya klikləyin!"
+
+msgid "your_email"
+msgstr "Sizin e-poçt:"
+
+msgid "password"
+msgstr "Şifrə:"
+
+msgid "submit"
+msgstr "Göndər"
+
+msgid "ok"
+msgstr "oldu"
+
+msgid "help_us"
+msgstr "Kömək!"
+
+msgid "legal_info"
+msgstr "Legal məlumat"
+
+msgid "go_home"
+msgstr "Axtarış mühərrikinə qayıt"
+
+msgid "error_500_message"
+msgstr "Xəta baş verdi."
+
+msgid "error_500_description"
+msgstr "Mütəxəsislərimiz bu paranormal aktivliyi araşdırır."
+
+msgid "error_404_message"
+msgstr "Belə bir səhifə yoxdur"
+
+msgid "error_404_description"
+msgstr "Bu URL tapılmadı. Doğru yazdığınıza əmin olun."
+
+msgid "error_410_message"
+msgstr "Səhifə tapılmadı"
+
+msgid "error_410_description"
+msgstr "İstənilən URL mövcut deyil."
+
+msgid "error_502_message"
+msgstr "İşlək olmayan şəbəkə keçidi"
+
+msgid "previous"
+msgstr "Geri"
+
+msgid "next"
+msgstr "İrəli"
+
+msgid "play"
+msgstr "Oyna"
+
+msgid "what"
+msgstr "Nə?"
+
+msgid "where"
+msgstr "Hara?"
+
+msgid "update"
+msgstr "yenilə"
+
+msgid "minimun"
+msgstr "min"
+
+msgid "maximun"
+msgstr "maks"
+
+msgid "all_sizes"
+msgstr "Bütün həcm"
+
+msgid "smaller_than"
+msgstr "Daha kiçik"
+
+msgid "larger_than"
+msgstr "Daha böyük"
+
+msgid "album"
+msgstr "Albom"
+
+msgid "length"
+msgstr "Uzunluq"
+
+msgid "genre"
+msgstr "Tərz"
+
+msgid "source"
+msgstr "Mənbə"
+
+msgid "seeds"
+msgstr "Seedlər"
+
+msgid "channels"
+msgstr "kanallar"
+
+msgid "year"
+msgstr "il"
+
+msgid "years"
+msgstr "illər"
+
+msgid "month"
+msgstr "ay"
+
+msgid "months"
+msgstr "aylar"
+
+msgid "day"
+msgstr "gün"
+
+msgid "days"
+msgstr "günlə"
+
+msgid "hour"
+msgstr "saat"
+
+msgid "hours"
+msgstr "saatlar"
+
+msgid "minute"
+msgstr "dəqiqə"
+
+msgid "second"
+msgstr "saniyə"
+
+msgid "tags"
+msgstr "Etiketlər"
+
+msgid "license"
+msgstr "Lisenziya"
+
+msgid "private_file"
+msgstr "Şəxsi sənəd"
+
+msgid "publisher"
+msgstr "Yayıncı"
+
+msgid "comments"
+msgstr "Şərhlər"
+
+msgid "created_by"
+msgstr "Hazırladı:"
+
+msgid "language"
+msgstr "Dil"
+
+msgid "date"
+msgstr "Tarix"
+
+msgid "hash"
+msgstr "Hash"
+
+msgid "close"
+msgstr "Bağla"
+
+msgid "all_sources"
+msgstr "bütün mənbələr"
+
+msgid "share_download"
+msgstr "Paylaş"
+
+msgid "share_search"
+msgstr "Sənədi paylaş"
+
+msgid "share_this"
+msgstr "Paylaş:"
+
+msgid "send_by_email"
+msgstr "e-poçt göndər"
+
+msgid "open_link_new_tab"
+msgstr "yeni səfədə aç"
+
+msgid "download"
+msgstr "Yüklə"
+
+msgid "watch"
+msgstr "İzlə"
+
+msgid "listen"
+msgstr "Dinlə"
+
+msgid "user_profile"
+msgstr "İstifadəçi profili"
+
+msgid "your_password"
+msgstr "Şifrə seçin:"
+
+msgid "insert_your_password"
+msgstr "Yenidən şifrənizi yazın:"
+
+msgid "nickname"
+msgstr "Ləqəb:"
+
+msgid "edit_profile"
+msgstr "profil redaktə"
+
+msgid "edit_your_profile"
+msgstr "Profilinizi redaktə edin"
+
+msgid "profile_edited_succesfully"
+msgstr "Sizin profil redaktə edildi."
+
+msgid "hello"
+msgstr "salam,"
+
+msgid "logout"
+msgstr "çıxış"
+
+msgid "login"
+msgstr "giriş"
+
+msgid "new_user"
+msgstr "yeni istifadəçi"
+
+msgid "or"
+msgstr "və ya"
+
+msgid "register"
+msgstr "qeydiyyat"
+
+msgid "if_new_user"
+msgstr "Əgər siz yeni istifadəçisinizsə xahiş edirik"
+
+msgid "register_here"
+msgstr "qeydiyyat olun"
+
+msgid "choose_nickname"
+msgstr "Ləqəb seçin:"
+
+msgid "user_login"
+msgstr "Giriş:"
+
+msgid "remember_me"
+msgstr "Məni yadda saxla"
+
+msgid "your_location"
+msgstr "Sizin ünvan:"
+
+msgid "new_password"
+msgstr "Şifrənizi dəyişin:"
+
+msgid "save_profile"
+msgstr "Profil yadda saxla"

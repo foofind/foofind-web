@@ -37,7 +37,7 @@ def fix_lang_values(entry, sample=False):
 def unfix_lang_values(entry, base_entry):
     '''
     Convierte msgstrs de traducción de formato _____[X] a %(n)m.
-    
+
     >>> p = "This is a test of text %(first)s y %(second)s."
     >>> unfix_lang_values("Esto es una prueba de texto _____[1] y _____[2].", p)
     'Esto es una prueba de texto %(first)s y %(second)s.'
@@ -49,11 +49,11 @@ def unfix_lang_values(entry, base_entry):
     'Esto es una prueba de texto _____[a].'
     '''
     original = dict(enumerate(i.group(0) for i in _strarg.finditer(base_entry)))
-    
+
     lf = "_____["
     if not lf in entry:
         return None if original else entry # No se han usado los argumentos
-    
+
     tr = []
     for part in entry.split(lf):
         if tr:

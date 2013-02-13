@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import pymongo
 from foofind.services.extensions import cache
+from foofind.utils import logging
 
 class EntitiesStore(object):
     '''
@@ -13,6 +14,7 @@ class EntitiesStore(object):
         '''
         self.max_pool_size = 0
         self.entities_conn = None
+        self.enabled = False
 
     def init_app(self, app):
         '''
@@ -21,9 +23,21 @@ class EntitiesStore(object):
         @param app: Aplicación de Flask.
         '''
         self.max_pool_size = app.config["DATA_SOURCE_MAX_POOL_SIZE"]
+        self.entities_url = app.config["DATA_SOURCE_ENTITIES"]
+        self.connect()
+
+    def connect(self):
+        # no intenta conectar si ya está conectado
+        if self.enabled:
+            return
 
         # Inicia conexiones
-        self.entities_conn = pymongo.Connection(app.config["DATA_SOURCE_ENTITIES"], slave_okay=True, max_pool_size=self.max_pool_size)
+        try:
+            self.entities_conn = pymongo.Connection(self.entities_url, slave_okay=True, max_pool_size=self.max_pool_size)
+            self.enabled = True
+        except BaseException as e:
+            logging.warn("Can't connect to entities database. Entities disabled.")
+
 
     @cache.memoize()
     def get_entity(self, entity_id):
@@ -36,9 +50,49 @@ class EntitiesStore(object):
         @rtype: MongoDB document or None
         @return: resultado
         '''
-        data = self.entities_conn.ontology.ontology.find_one({"_id":entity_id})
-        self.entities_conn.end_request()
-        return data
+        if self.enabled:
+            try:
+                data = self.entities_conn.ontology.ontology.find_one({"_id":entity_id})
+                self.entities_conn.end_request()
+                return data
+            except BaseException as e:
+                logging.warn("Can't access to entities database. Entities disabled.")
+            self.enabled = False
+        return {}
+
+    @cache.memoize()
+    def get_entities(self, entities_ids=None, entities_keys=None, schemas=None):
+        '''
+        Obtiene la información de una entidad por identificador
+
+        @type entity_id: long
+        @param entity_id: id de la entidad
+
+        @rtype: MongoDB document or None
+        @return: resultado
+        '''
+        if self.enabled:
+            try:
+                query = {}
+                if schemas:
+                    if len(schemas[1])==1:
+                        query["s"] = schemas[1][0] if schemas[0] else {"$ne":schemas[1][0]}
+                    else:
+                        query["s"] = {("$in" if schemas[0] else "$nin"):schemas[1]}
+                if entities_ids and entities_keys:
+                    query["$or"] = [{"_id":{"$in":entities_ids}}, {"k":{"$in":entities_keys}}]
+                elif entities_ids:
+                    query["_id"] = {"$in":entities_ids}
+                elif entities_keys:
+                    query["k"] = {"$in":entities_keys}
+
+                data = tuple(self.entities_conn.ontology.ontology.find(query))
+                self.entities_conn.end_request()
+                return data
+            except BaseException as e:
+                logging.warn("Can't access to entities database. Entities disabled.")
+            self.enabled = False
+        return ()
 
     @cache.memoize()
     def find_entities(self, keys, exact = False):
@@ -50,10 +104,16 @@ class EntitiesStore(object):
 
         @type exact: boolean
         @param exact: indica si la clave debe ser exacta o puede ser un subconjunto
-        
+
         @rtype: MongoDB documents or None
         @return: resultado
         '''
-        data = tuple(self.entities_conn.ontology.ontology.find({"k":{"$all":keys} if exact else keys}))
-        self.entities_conn.end_request()
-        return data
+        if self.enabled:
+            try:
+                data = tuple(self.entities_conn.ontology.ontology.find({"k":{"$all":keys} if exact else keys}))
+                self.entities_conn.end_request()
+                return data
+            except BaseException as e:
+                logging.warn("Can't access to entities database. Entities disabled.")
+            self.enabled = False
+        return ()

@@ -1,14 +1,22 @@
 {% if not full_screen %}
     {% extends "base.html" %}
+    {%- block header %}{% endblock %}
     {% block content %}
-    <h2>{{ g.title }}</h2>
-    <p>{{ description|safe }}</p>
-    {{flash()}}
-    <a href="{{ url_for('index.home') }}">{{_('go_home')}}</a>
+        <img src="{{ g.static_prefix }}/img/error.png" alt="error" />
+        <div>
+            {{ logo() }}
+            <h2>{{ g.title }}</h2>
+            <p>{{ description|safe }}</p>
+            <a href="http://status.foofind.is" rel="nofollow">{{_('servers_status')}}</a>
+            {{flash()}}
+            {{ search_box(search_form,query) }}
+        </div>
+        <script>_gaq.push(['_trackEvent','Errores','{{ g.title }}','web']);</script>
     {% endblock %}
 {% else %}
     <h2>{{ g.title }}</h2>
     {% if error[1] %}
     <p class="error">{{_(error[1])}}</p>
     {% endif %}
+    <script>_gaq.push(['_trackEvent','Errores','{{ g.title }}','web']);</script>
 {% endif %}

@@ -5,7 +5,7 @@ import threading
 import time
 import sys
 import uuid
-import logging
+from . import logging
 
 try: import ctypes
 except ImportError: ctypes = None
@@ -49,7 +49,7 @@ class EventManager(threading.Thread):
         with self._lock:
             heappush(self._timers, (ntime, (handler, hargs or (), hkwargs or {}, interval)))
             self._wakeup = True
-            
+
     _thread_id = None
     @property
     def thread_id(self):
@@ -139,7 +139,7 @@ class EventManager(threading.Thread):
                 else:
                     cb, cbargs, cbkwargs, interval = tid
                     self._running_onetime_tasks = True
-                    
+
                 try:
                     cb(*cbargs, **cbkwargs)
                 except BaseException as e:
@@ -153,13 +153,13 @@ class EventManager(threading.Thread):
                             "value":ev,
                             "traceback":etb
                             })
-                            
+
                 if interval > 0:
                     self._put_timer_id(time.time()+interval, tid)
-                    
+
             elif self._running_onetime_tasks:
                 self._running_onetime_tasks = False
-                
+
             if wait > 0.:
                 time.sleep(min(wait, self.relax_time))
                 # TODO(felipe) encontrar una forma más eficiente de hacer esto

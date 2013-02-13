@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 import pymongo, sys
 from bson.code import Code
-from foofind.utils import hex2mid, check_collection_indexes, VALUE_UNSET, userid_parse, mid2hex
-from foofind.services.extensions import cache
 from hashlib import sha256
 from datetime import datetime
 from time import time
+
+from foofind.utils import hex2mid, check_collection_indexes, userid_parse, mid2hex, logging
+from foofind.services.extensions import cache
 
 
 class UsersStore(object):
@@ -21,6 +22,18 @@ class UsersStore(object):
         "favsearch": (
             {"key": [("user_id", 1)]},
             {"key": [("user_id", 1), ("q", 1), ("filter", 1)], "unique":1},
+            ),
+        "users": (
+            {"key": [("email", 1)]},
+            {"key": [("token", 1)]},
+            {"key": [("username", 1)]},
+            {"key": [("oauthid", 1)]},
+            ),
+        "comment": (
+            {"key": [("f", 1), ("l", 1)]},
+            ),
+        "comment_vote": (
+            {"key": [("f", 1)]},
             )
         }
 
@@ -43,7 +56,7 @@ class UsersStore(object):
         self.user_conn = pymongo.Connection(app.config["DATA_SOURCE_USER"], slave_okay=True, max_pool_size=self.max_pool_size)
 
         # Comprueba índices
-        check_collection_indexes(self.user_conn.foofind, self._indexes)
+        check_collection_indexes(self.user_conn.users, self._indexes)
 
     def remove_userid(self, userid):
         '''
@@ -52,7 +65,7 @@ class UsersStore(object):
         @type userid: hex u ObjectID
         @param userid: identificador del usuario
         '''
-        self.user_conn.foofind.users.remove({"_id":userid_parse(userid)})
+        self.user_conn.users.users.remove({"_id":userid_parse(userid)})
 
     def create_user(self,data):
         '''
@@ -60,7 +73,7 @@ class UsersStore(object):
 
         @param data: Diccionario con los datos del usuario a guardar.
         '''
-        data = self.user_conn.foofind.users.insert({
+        data = self.user_conn.users.users.insert({
             "username":data["username"],
             "email":data["email"],
             "password":sha256(data["password"]).hexdigest(),
@@ -102,7 +115,7 @@ class UsersStore(object):
             (key, parser[key](value) if key in parser else parser["*"](value))
             for key, value in update["$set"].iteritems())
 
-        self.user_conn.foofind.users.update({"_id":data["_id"]}, update)
+        self.user_conn.users.users.update({"_id":data["_id"]}, update)
         self.user_conn.end_request()
 
     def find_login(self,email,password):
@@ -127,7 +140,7 @@ class UsersStore(object):
         '''
         Busca por un nombre de usuario
         '''
-        cursor = self.user_conn.foofind.users.find({"username":{'$regex':'^'+username+'(_\\d+)?$'}})
+        cursor = self.user_conn.users.users.find({"username":{'$regex':'^'+username+'(_\\d+)?$'}})
         for document in cursor:
             yield document
         self.user_conn.end_request()
@@ -154,7 +167,7 @@ class UsersStore(object):
         '''
         Busqueda por los campos que se reciban
         '''
-        user = self.user_conn.foofind.users.find_one(data)
+        user = self.user_conn.users.users.find_one(data)
         self.user_conn.end_request()
         return user
 
@@ -174,11 +187,11 @@ class UsersStore(object):
         else:
             if user.is_authenticated():
                 data["_id"] =  "%s_%s" % (mid2hex(file_id), user.id)
-                self.user_conn.foofind.vote.update(
+                self.user_conn.users.vote.update(
                     {"_id": data["_id"]}, data, upsert=True)
             else:
                 data["_id"] = "%s:%s" % (mid2hex(file_id), user.session_ip)
-                self.user_conn.foofind.vote.update(
+                self.user_conn.users.vote.update(
                     {"_id": data["_id"], "u": data["u"]},
                     data, upsert=True)
 
@@ -208,7 +221,7 @@ class UsersStore(object):
                 return {t:1/(1+Math.exp(-((s[0]*c[0]+s[1]*c[1])/(c[0]+c[1])))), c:c, s:s};
             }''')
         # Tercer parametro para devolverlo en vez de generar una coleccion nueva
-        votes = self.user_conn.foofind.vote.map_reduce(
+        votes = self.user_conn.users.vote.map_reduce(
             map_function,
             reduce_function,
             {"inline": 1},
@@ -230,7 +243,7 @@ class UsersStore(object):
         '''
         doc = [
             i["name"]
-            for i in self.user_conn.foofind.favfile.find({
+            for i in self.user_conn.users.favfile.find({
                 "user_id": user.id, "type": 0}, {"files": 0})]
         self.user_conn.end_request()
         return doc
@@ -245,7 +258,7 @@ class UsersStore(object):
         @rtype set
         @return Set de diccionarios con "id", "name" y "server".
         '''
-        doc = {f for doc in self.user_conn.foofind.favfile.find({"user_id": user.id}) for f in doc["files"]}
+        doc = {f for doc in self.user_conn.users.favfile.find({"user_id": user.id}) for f in doc["files"]}
         self.user_conn.end_request()
         return doc
     list_fav_files.make_cache_key = lambda self, user: "memoized/usersstore.list_fav_files/%s" % user.id
@@ -266,7 +279,7 @@ class UsersStore(object):
             qslice = {"files":{"$slice":(skip, limit if limit else sys.maxint)}}
         elif limit:
             qslice = {"files":{"$slice":limit}}
-        doc = self.user_conn.foofind.favfile.find_one(
+        doc = self.user_conn.users.favfile.find_one(
             {"user_id": user.id, "type": category, "name": name if category == 0 else None},
             qslice
             )
@@ -286,7 +299,7 @@ class UsersStore(object):
         @param listname: Nombre de la lista para los favoritos con nombre (category = 0)
         '''
         self.list_fav_files.flush(self, user)
-        self.user_conn.foofind.favfile.update(
+        self.user_conn.users.favfile.update(
             {"user_id": user.id, "name": listname if category == 0 else None, "type": category},
             {"$addToSet":{
                 "files":{
@@ -310,7 +323,7 @@ class UsersStore(object):
         @param listname: Nombre de la lista para los favoritos con nombre (category = 0)
         '''
         self.list_fav_files.flush(self, user)
-        self.user_conn.foofind.favfile.update(
+        self.user_conn.users.favfile.update(
             {"user_id": user.id, "name":listname if category == 0 else None, "type":category},
             {"$pull": {"files": {"id": fileid}}})
         self.user_conn.end_request()
@@ -322,7 +335,7 @@ class UsersStore(object):
         return self._get_fav_files(user, 1, None, skip, limit)
 
     def get_fav_searches(self, user, skip=0, limit=None):
-        data = tuple(self.user_conn.foofind.favsearch.find({"user":user.id}))
+        data = tuple(self.user_conn.users.favsearch.find({"user":user.id}))
         self.user_conn.end_request()
         return data
 
@@ -348,14 +361,14 @@ class UsersStore(object):
         # Borrado de caché
         self.list_fav_lists.flush(self, user)
         self.list_fav_files.flush(self, user)
-        self.user_conn.foofind.favfile.insert(
+        self.user_conn.users.favfile.insert(
             {"user_id": user.id, "type":0, "name": name, "files":[]})
 
     def remove_fav_user_list(self, user, name):
         # Borrado de caché
         self.list_fav_lists.flush(self, user)
         self.list_fav_files.flush(self, user)
-        self.user_conn.foofind.favfile.remove(
+        self.user_conn.users.favfile.remove(
             {"user_id": user.id, "type":0, "name": name})
 
     def get_file_vote(self, file_id, user, lang):
@@ -363,12 +376,12 @@ class UsersStore(object):
         Recupera el voto de un usuario para un archivo
         '''
         if user.is_authenticated():
-            data = self.user_conn.foofind.vote.find_one({
+            data = self.user_conn.users.vote.find_one({
                 "_id": "%s_%s" % (mid2hex(file_id), user.id),
                 "l": lang
                 })
         else:
-            data = self.user_conn.foofind.vote.find_one({
+            data = self.user_conn.users.vote.find_one({
                 "_id": "%s:%s" % (mid2hex(file_id), user.session_ip),
                 "l": lang,
                 "u": user.id
@@ -380,7 +393,7 @@ class UsersStore(object):
         '''
         Guarda un comentario de un archivo
         '''
-        data = self.user_conn.foofind.comment.insert({
+        data = self.user_conn.users.comment.insert({
             "_id": "%s_%s" % (user.id, int(time())),
             "f": file_id,
             "l": lang,
@@ -397,7 +410,7 @@ class UsersStore(object):
         '''
         data = {
             lang["l"]: lang["c"]
-            for lang in self.user_conn.foofind.comment.group(
+            for lang in self.user_conn.users.comment.group(
                 {"l": 1}, {'f': hex2mid(file_id)}, {"c": 0},
                 Code("function(o,p){p.c++}"))
             }
@@ -408,7 +421,7 @@ class UsersStore(object):
         '''
         Recupera los comentarios de un archivo
         '''
-        cursor = self.user_conn.foofind.comment.find({"f": hex2mid(file_id),"l": lang})
+        cursor = self.user_conn.users.comment.find({"f": hex2mid(file_id),"l": lang})
         for document in cursor:
             yield document
         self.user_conn.end_request()
@@ -417,7 +430,7 @@ class UsersStore(object):
         '''
         Guarda el comentario en la colección y actualiza el archivo correspondiente con los nuevos datos
         '''
-        self.user_conn.foofind.comment_vote.save({"_id":"%s_%s"%(str(comment_id), str(user.id)),"u":user.id,"f":file_id,"k":user.karma if vote==1 else -user.karma,"d":datetime.utcnow()})
+        self.user_conn.users.comment_vote.save({"_id":"%s_%s"%(str(comment_id), str(user.id)),"u":user.id,"f":file_id,"k":user.karma if vote==1 else -user.karma,"d":datetime.utcnow()})
         #guarda el karma, la cuenta total, la suma y el usuario
         map_function=Code('''
             function()
@@ -448,21 +461,21 @@ class UsersStore(object):
                 return {t:1/(1+Math.exp(-((s[0]*c[0]+s[1]*c[1])/(c[0]+c[1])))), c:c, s:s/*, u:u*/};
             }''')
         #tercer parametro para devolverlo en vez de generar una coleccion nueva
-        votes=self.user_conn.foofind.comment_vote.map_reduce(map_function,reduce_function,{"inline":1},query={'_id':{'$regex':"^%s"%comment_id}})
+        votes=self.user_conn.users.comment_vote.map_reduce(map_function,reduce_function,{"inline":1},query={'_id':{'$regex':"^%s"%comment_id}})
         #crear diccionario de la forma idioma:valores, actualizar el comentario con el y devolverlo
         data={values["_id"]:values["value"] for values in votes["results"]}
-        self.user_conn.foofind.comment.update({"_id":comment_id},{"$set":{"vs":data}})
+        self.user_conn.users.comment.update({"_id":comment_id},{"$set":{"vs":data}})
         self.user_conn.end_request()
         return data
 
     def count_users(self):
-        return self.user_conn.foofind.users.find({"active":1}).count()
+        return self.user_conn.users.users.find({"active":1}).count()
 
     def get_file_comment_votes(self,file_id):
         '''
         Recuper los votos de los comentarios de un archivo
         '''
-        cursor = self.user_conn.foofind.comment_vote.find({"f":hex2mid(file_id)})
+        cursor = self.user_conn.users.comment_vote.find({"f":hex2mid(file_id)})
         for document in cursor:
             yield cursor
         self.user_conn.end_request()

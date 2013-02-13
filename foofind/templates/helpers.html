@@ -51,7 +51,7 @@
 {%- macro advice(id,text) %}
     <div id="{{ id }}" class="advice">
         <span></span>
-        <button>x</button>
+        <button class="close"></button>
         <p>{{ text|safe }}</p>
     </div>
 {%- endmacro %}
@@ -66,4 +66,31 @@
         _("register"),
         _("register_here")
     )) }}
+{%- endmacro %}
+{%- macro logo(id="") %}
+    <div class="logo"{% if id %} id={{ id }}{% endif %}>
+        <a href="{{ url_for('index.home',lang=none) }}">
+            <img src="{{ g.static_prefix }}/img/logo_small.png" alt="File search engine - {{ g.domain }}" title="{{ g.domain }}"/>
+        </a>
+    </div>
+{%- endmacro %}
+{% from "files/macros.html" import print_share with context %}
+{%- macro search_box(search_form,query,share_url="") %}
+    <div id="search_file">
+        <form method="get" action="{{ url_for('files.search') }}" class="searchbox">
+            <fieldset class="small">
+                {{ search_form.q(autocomplete="off",value=query) }}
+                <span></span>
+                {% if share_url %}
+                <div id="share">
+                    <span title="{{_('share_search')}}"></span>
+                    {{ print_share(share_url) }}
+                </div>
+                {% endif %}
+                {#<button id="favorite" title="{{_('favorite')}}"></button>#}
+                {{ search_form.search_submit(**{"data-no_query":_("write_something")}) }}
+                <div id="search_info">{{ search_info|safe or "&nbsp;"|safe }}</div>
+            </fieldset>
+        </form>
+    </div>
 {%- endmacro %}

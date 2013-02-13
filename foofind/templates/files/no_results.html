@@ -3,7 +3,11 @@
     <ul>
         {% if 'q' in args %}<li><em>{{ args['q'] }}</em></li>{% endif %}
         {% if 'type' in args %}{% for type in args['type'] if type in filters['type'] %}<li>{{ _(type) }}</li>{% endfor %}{% endif %}
-        {% if 'src' in args %}{% for source in args['src'] %}<li>{{ _(filters["src"][source]) }}</li>{% endfor %}{% endif %}
+        {% if 'src' in args %}
+            {% for source in args['src'] %}
+                <li>{% if source in filters["src"] %}{{ _(filters["src"][source]) }}{% else %}{{ source }}{% endif %}</li>
+            {% endfor %}
+        {% endif %}
         {% if 'size' in args and args['size'] %}
             <li>{{_('size')}}
             {% set minval=args['size'][0]|int %}

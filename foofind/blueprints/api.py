@@ -3,12 +3,13 @@
     API pública
 """
 
+import zlib
 from flask import Blueprint, abort, request, render_template, current_app, jsonify, url_for, g
-from foofind.utils import mid2url, url2mid, u
+from foofind.utils import mid2url, url2mid, u, logging
 from foofind.services import *
 from foofind.blueprints.files import secure_fill_data, get_file_metadata, DatabaseError, FileNotExist, FileRemoved, FileUnknownBlock
 
-import logging, zlib
+
 
 api = Blueprint('api', __name__)
 

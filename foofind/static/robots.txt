@@ -5,7 +5,35 @@
 #
 
 User-agent: *
-Disallow: /captcha/
+Disallow: /status/
+Disallow: /en/complaint/
+Disallow: /es/complaint/
+Disallow: /fr/complaint/
+Disallow: /it/complaint/
+Disallow: /pt/complaint/
+Disallow: /de/complaint/
+Disallow: /tr/complaint/
+Disallow: /zh/complaint/
+Disallow: /ja/complaint/
+Disallow: /ko/complaint/
+Disallow: /ca/complaint/
+Disallow: /gl/complaint/
+Disallow: /eu/complaint/
+Disallow: /eo/complaint/
+Disallow: /en/user/
+Disallow: /es/user/
+Disallow: /fr/user/
+Disallow: /it/user/
+Disallow: /pt/user/
+Disallow: /de/user/
+Disallow: /tr/user/
+Disallow: /zh/user/
+Disallow: /ja/user/
+Disallow: /ko/user/
+Disallow: /ca/user/
+Disallow: /gl/user/
+Disallow: /eu/user/
+Disallow: /eo/user/
 
 # Crawlers that are kind enough to obey, but which we'd rather not have
 # unless they're feeding search engines.
@@ -447,4 +475,4 @@ Disallow: /
 User-agent: WebReaper
 Disallow: /
 
-
+Sitemap: http://foofind.is/sitemap.xml

@@ -60,7 +60,7 @@
     <a href="{{download_url}}" class="awesome" title="{{_('download')}}" target="top">{{_("embed_in_foofind_button", filename=filename)}}</a>
     {% elif embed_size == "m" %}
     <header>{{filename}}</header>
-    <a href="{{download_url}}" class="awesome" title="{{_('download')}}" target="top">{{_("embed_download_button")}}{% if size %} ( {{size|numbersizeformat}} ){% endif %}</a>
+    <a href="{{download_url}}" class="awesome" title="{{_('download')}}" target="top">{{_("download")}}{% if size %} ( {{size|numbersizeformat}} ){% endif %}</a>
     <a href="{{download_url}}" class="awesome" title="{{_('download')}}" target="top">{{_("embed_foofind_button")}}</a>
     {% elif embed_size == "b" %}
     {% include "files/download_info.html" %}

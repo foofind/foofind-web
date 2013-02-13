@@ -32,44 +32,44 @@ class FeedbackStore(object):
         self.feedback_conn = pymongo.Connection(app.config["DATA_SOURCE_FEEDBACK"], slave_okay=True, max_pool_size=self.max_pool_size)
 
         # Crea las colecciones capadas si no existen
-        check_capped_collections(self.feedback_conn.foofind, self._capped)
+        check_capped_collections(self.feedback_conn.feedback, self._capped)
         self.feedback_conn.end_request()
 
     def create_links(self,data):
         '''
         Guarda los enlaces enviados
         '''
-        self.feedback_conn.foofind.links.save({"links":data["links"],"ip":sha256(data["ip"]).hexdigest(),"created": datetime.utcnow()})
+        self.feedback_conn.feedback.links.save({"links":data["links"],"ip":sha256(data["ip"]).hexdigest(),"created": datetime.utcnow()})
         self.feedback_conn.end_request()
 
     def notify_indir(self, file_id, server=None):
         '''
         Guarda un id de fichero en la tabla de errores de indir
         '''
-        self.feedback_conn.foofind.notify_indir.save({"_id":file_id,"s":server})
+        self.feedback_conn.feedback.notify_indir.save({"_id":file_id,"s":server})
         self.feedback_conn.end_request()
 
     def notify_source_error(self, file_id, server):
         '''
         Guarda un id de fichero, y servidor, en la tabla de errores de source
         '''
-        self.feedback_conn.foofind.notify_source.save({"_id":file_id,"s":server})
+        self.feedback_conn.feedback.notify_source.save({"_id":file_id,"s":server})
         self.feedback_conn.end_request()
 
     def visited_links(self,links):
         '''
         Guarda los enlaces visitados en la búsqueda
         '''
-        self.feedback_conn.foofind.visited_links.insert(links)
+        self.feedback_conn.feedback.visited_links.insert(links)
         self.feedback_conn.end_request()
 
     def save_profile_info(self, info):
         info["_date"] = time()
-        self.feedback_conn.foofind.profiler.insert(info)
+        self.feedback_conn.feedback.profiler.insert(info)
         self.feedback_conn.end_request()
 
     def get_profile_info(self, start):
-        cursor = self.feedback_conn.foofind.profiler.find({"_date":{"$gt":start}})
+        cursor = self.feedback_conn.feedback.profiler.find({"_date":{"$gt":start}})
         for document in cursor:
             yield document
         self.feedback_conn.end_request()

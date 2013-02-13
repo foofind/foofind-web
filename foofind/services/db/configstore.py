@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import pymongo
+import pymongo.errors
 import time
 import memcache
-import logging
 import socket
 
 from foofind.utils.fooprint import ManagedSelect, ParamSelector, DecoratedView
-from foofind.utils import check_capped_collections
+from foofind.utils import check_capped_collections, logging
 from foofind.services.extensions import cache
 
 class ConfigStore(object):
@@ -33,20 +33,20 @@ class ConfigStore(object):
         self.max_pool_size = app.config["DATA_SOURCE_MAX_POOL_SIZE"]
         self.config_conn = pymongo.Connection(app.config["DATA_SOURCE_CONFIG"], slave_okay=True, max_pool_size=self.max_pool_size)
 
-        check_capped_collections(self.config_conn.foofind, self._capped)
+        check_capped_collections(self.config_conn.config, self._capped)
 
         # Guardamos el timestamp de la última tarea enviada para ignorar
-        for i in self.config_conn.foofind.actions.find().sort("lt", -1).limit(1):
+        for i in self.config_conn.config.actions.find().sort("lt", -1).limit(1):
             self._actions_lt = i["lt"]
         # Registramos este perfil de aplicación
-        self.config_conn.foofind.profiles.save({"_id": self._appid, "lt": time.time()})
+        self.config_conn.config.profiles.save({"_id": self._appid, "lt": time.time()})
         self.config_conn.end_request()
 
     def get_current_profiles(self):
         '''
         Obtiene los application_ids de las instancias registradas
         '''
-        tr = [doc["_id"] for doc in self.config_conn.foofind.profiles.find()]
+        tr = [doc["_id"] for doc in self.config_conn.config.profiles.find()]
         self.config_conn.end_request()
         return tr
 
@@ -63,7 +63,7 @@ class ConfigStore(object):
         @rtype int
         @return Valor del contador, autoincrementado
         '''
-        doc = self.config_conn.foofind.counters.find_and_modify(
+        doc = self.config_conn.config.counters.find_and_modify(
             {"_id": counterid},
             {"$inc": {"n": amount}},
             upsert = True)
@@ -117,7 +117,7 @@ class ConfigStore(object):
                      Por defecto es False.
         '''
         now = time.time()
-        self.config_conn.foofind.actions.save({"actionid":actionid, "target":target, "lt":now})
+        self.config_conn.config.actions.save({"actionid":actionid, "target":target, "lt":now})
         self.config_conn.end_request()
 
     def action(self, actionid, *args, **kwargs):
@@ -147,8 +147,12 @@ class ConfigStore(object):
         last = self._actions_lt
         # Tareas que sólo deben realizarse una vez
         while True:
-            # Operación atómica: obtiene y cambia timestamp para que no se repita
-            action = self.config_conn.foofind.actions.find_and_modify(query, update={"$set":{"lt":0}})
+            try:
+                # Operación atómica: obtiene y cambia timestamp para que no se repita
+                action = self.config_conn.config.actions.find_and_modify(query, update={"$set":{"lt":0}})
+            except pymongo.errors.AutoReconnect as e:
+                action = None
+                logging.exception("Can't access to config database.")
             if action is None: break
             if action["lt"] > last:
                 last = action["lt"]
@@ -159,15 +163,20 @@ class ConfigStore(object):
         # Tareas a realizar en todas las instancias
         query["once"] = False
         del query["actionid"]
-        for action in self.config_conn.foofind.actions.find(query):
-            if action["lt"] > last:
-                last = action["lt"]
-            actionid = action["actionid"]
-            if actionid in self._action_handlers:
-                fnc, unique, args, kwargs = self._action_handlers[actionid]
-                fnc(*args, **kwargs)
-        self._actions_lt = last
-        self.config_conn.end_request()
+
+        try:
+            for action in self.config_conn.config.actions.find(query):
+                if action["lt"] > last:
+                    last = action["lt"]
+                actionid = action["actionid"]
+                if actionid in self._action_handlers:
+                    fnc, unique, args, kwargs = self._action_handlers[actionid]
+                    fnc(*args, **kwargs)
+            self._actions_lt = last
+        except pymongo.errors.AutoReconnect as e:
+            logging.exception("Can't access to config database.")
+        finally:
+            self.config_conn.end_request()
 
     def list_actions(self):
         '''
@@ -185,22 +194,25 @@ class ConfigStore(object):
         y la aplica.
         '''
         last = 0
-        for alternative in self.config_conn.foofind.alternatives.find({
-          "_id": { "$in": self._views.keys() },
-          "lt" : { "$gt": self._alternatives_lt }
-          }):
-            endpoint = alternative["_id"]
-            if endpoint in self._alternatives_skip:
-                self._alternatives_skip.remove(endpoint)
-            elif endpoint in self._views and "config" in alternative:
-                if "probability" in alternative["config"]:
-                    # Probability se guarda como lista por limitaciones de mongodb
-                    alternative["config"]["probability"] = dict(alternative["config"]["probability"])
-                self._views[endpoint].select.config(alternative["config"])
-            if alternative.get("lt", 0) > last:
-                last = alternative["lt"]
-        self._alternatives_lt = max(self._alternatives_lt, last)
-        self.config_conn.end_request()
+        try:
+            for alternative in self.config_conn.config.alternatives.find({
+              "_id": { "$in": self._views.keys() },
+              "lt" : { "$gt": self._alternatives_lt }
+              }):
+                endpoint = alternative["_id"]
+                if endpoint in self._alternatives_skip:
+                    self._alternatives_skip.remove(endpoint)
+                elif endpoint in self._views and "config" in alternative:
+                    if "probability" in alternative["config"]:
+                        # Probability se guarda como lista por limitaciones de mongodb
+                        alternative["config"]["probability"] = dict(alternative["config"]["probability"])
+                    self._views[endpoint].select.config(alternative["config"])
+                if alternative.get("lt", 0) > last:
+                    last = alternative["lt"]
+            self._alternatives_lt = max(self._alternatives_lt, last)
+            self.config_conn.end_request()
+        except pymongo.errors.AutoReconnect as e:
+            logging.exception("Can't access to config database.")
 
     def remove_alternative(self, altid):
         '''
@@ -209,7 +221,7 @@ class ConfigStore(object):
         @type altid: str
         @param altid: identificador de alternativa
         '''
-        self.config_conn.foofind.alternatives.remove({"_id":altid})
+        self.config_conn.config.alternatives.remove({"_id":altid})
         self.config_conn.end_request()
 
     def list_alternatives(self, skip=None, limit=None):
@@ -228,7 +240,7 @@ class ConfigStore(object):
         '''
         tr = []
         ids = []
-        cur = self.config_conn.foofind.alternatives.find().sort("_id")
+        cur = self.config_conn.config.alternatives.find().sort("_id")
         if not skip is None: cur.skip(skip)
         if not limit is None: cur.limit(limit)
         for r in cur:
@@ -254,7 +266,7 @@ class ConfigStore(object):
         @rtype int
         @return número de alternativas
         '''
-        tr = self.config_conn.foofind.alternatives.find({"_id":{"$nin":self._views.keys()}}).count(True)
+        tr = self.config_conn.config.alternatives.find({"_id":{"$nin":self._views.keys()}}).count(True)
         self.config_conn.end_request()
         return len(self._views)+tr
 
@@ -288,14 +300,14 @@ class ConfigStore(object):
         if "probability" in config:
             # Probability se guarda como lista por limitaciones de mongodb
             config["probability"] = config["probability"].items()
-        self.config_conn.foofind.alternatives.save(
+        self.config_conn.config.alternatives.save(
           { "_id": endpoint,
             "config": config,
             "lt": now })
         self.config_conn.end_request()
 
     def _get_alternative_config(self, endpoint):
-        config = self.config_conn.foofind.alternatives.find_one({"_id":endpoint})
+        config = self.config_conn.config.alternatives.find_one({"_id":endpoint})
         self.config_conn.end_request()
         if config:
             if "probability" in config["config"]:

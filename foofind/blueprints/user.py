@@ -2,6 +2,11 @@
 """
     Controladores de páginas de usuario.
 """
+
+import uuid
+import re
+from hashlib import md5
+from urllib import unquote
 from flask import Blueprint, request, render_template, redirect, flash, url_for, session, abort, current_app, g, jsonify
 from flask.ext.babel import gettext as _
 from flask.ext.login import login_required, login_user, logout_user, current_user
@@ -10,16 +15,11 @@ from flask.ext.oauth import OAuth
 from foofind.forms.user import RegistrationForm, LoginForm, ForgotForm, EditForm
 from foofind.services import *
 from foofind.user import User
-from foofind.blueprints.files import get_file_metadata, fill_data, get_files
-from foofind.utils import hex2mid,url2mid
+from foofind.blueprints.files.helpers import get_files
+from foofind.blueprints.files.fill_data import fill_data
+from foofind.utils import hex2mid,url2mid, logging
 from foofind.utils.fooprint import Fooprint
 
-from hashlib import md5
-from urllib import unquote
-
-import uuid
-import re
-import logging
 
 user = Fooprint('user', __name__, template_folder="template", dup_on_startswith="/<lang>")
 o_twitter = None

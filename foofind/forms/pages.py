@@ -2,12 +2,14 @@
 """
     Formularios para las pages
 """
+import re
 from flask import request
-from flask.ext.wtf import Form,BooleanField,PasswordField,TextField,TextAreaField,SelectField,FileField,FieldList,SubmitField,ValidationError
+from flask.ext.wtf import Form, BooleanField, PasswordField, TextField, TextAreaField, SelectField, FileField, FieldList, SubmitField, ValidationError, Regexp, RecaptchaField
 from flask.ext.babel import lazy_gettext as _
-from foofind.forms.captcha import CaptchaField
-from foofind.forms.validators import *
 from urlparse import urlparse
+
+from foofind.forms.validators import require, email, url
+
 
 class ContactForm(Form):
     '''
@@ -15,7 +17,7 @@ class ContactForm(Form):
     '''
     email = TextField(_('your_email'), [require(), email()])
     message = TextAreaField(_('your_message'), [require()])
-    captcha = CaptchaField()
+    captcha = RecaptchaField("")
     accept_tos = BooleanField(validators=[require()])
     submit = SubmitField(_("submit"))
 
@@ -27,7 +29,7 @@ class JobsForm(Form):
     offer = TextField("Oferta", [require()])
     message = TextAreaField(_('your_message'), [require()])
     cv = FileField("Curriculum Vitae (opcional, extensiones permitidas: pdf, doc, odt, html, htm, txt, rtf o zip):")
-    captcha = CaptchaField()
+    captcha = RecaptchaField("")
     accept_tos = BooleanField(validators=[require()])
     submit = SubmitField(_("submit"))
 
@@ -47,7 +49,7 @@ class SubmitLinkForm(Form):
     '''
     urls = TextAreaField('URLs', [require()])
     accept_tos = BooleanField(validators=[require()])
-    captcha = CaptchaField()
+    captcha = RecaptchaField("")
     submit = SubmitField(_("submit"))
     _permited_links = ["https:/","http://","magnet:","ed2k://"]
 
@@ -72,7 +74,7 @@ class ReportLinkForm(Form):
     urlreported = TextField(_("url_content"), [require(),url(),Regexp("^https?://foofind.(com|is)/\w\w/(search/.*/)?download/[a-zA-Z0-9!-]{16}(/.*)?$",re.IGNORECASE,_("not_foofind_link"))])
     reason = TextField(_("reason_complaint"), [require()])
     message = TextAreaField(_('your_message'), [require()])
-    captcha = CaptchaField()
+    captcha = RecaptchaField("")
     accept_tos = BooleanField(validators=[require()])
     submit = SubmitField(_("submit"))
 
@@ -86,5 +88,5 @@ class TranslateForm(Form):
     '''
     Formulario para traducir a un idioma
     '''
-    captcha = CaptchaField()
+    captcha = RecaptchaField("")
     submit_form = SubmitField(_("submit"))

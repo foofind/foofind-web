@@ -4,6 +4,7 @@
 {% endblock %}
 {% block page %}
     <form method="post">
+        {{ render_field() }}
         {% if complaint_data %}
         <h3 class="list">{{_('admin_locks_complaint_info')}}</h3>
         <dl class="list">

@@ -26,9 +26,9 @@
     <a href="{{ pagination[1] }}"></a>
     <span>{{ pagination[2] }} / {{ pagination[3] }}</span>
     <div>
-        {{ flash() }}        
-        <h2>{{ page_title }}</h2>
-        {% block page %}{% endblock %}        
+        {{ flash() }}
+        <h1>{{ page_title }}</h1>
+        {% block page %}{% endblock %}
     </div>
 </article>
 {% endblock %}

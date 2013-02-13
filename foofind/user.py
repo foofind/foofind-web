@@ -6,10 +6,9 @@ from hashlib import md5
 from uuid import uuid1, UUID
 from struct import Struct
 from time import time
-from foofind.services import *
-from foofind.utils import userid_parse
 
-import logging
+from foofind.services import *
+from foofind.utils import userid_parse, logging
 
 class UserBase(object):
     _timepack = Struct("d")

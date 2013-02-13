@@ -1,22 +1,11 @@
 {% extends "base.html" %}
-{% from "files/macros.html" import url_search with context %}
+{% from "files/macros.html" import print_share,url_search with context %}
+{% block head %}{% endblock %}
 {% block header %}
-        <h1 id="search_logo">
-            <a href="{{ url_for('index.home',lang=none) }}">
-                <img src="{{ g.static_prefix }}/img/logo_small.png" alt="File search engine - Foofind" title="Foofind"/>
-            </a>
-        </h1>
-        <div id="search_file">
-            <form method="get" action="{{ url_for('.search') }}" class="searchbox">
-                <fieldset class="small">
-                    {{ search_form.q(autocomplete="off",value=query) }}
-                    <span></span>
-                    {#<a href="#favorite" title="Guardar como favorito"></a>
-                    <a href="#share" title="Compartir"></a>#}
-                    {{ search_form.search_submit(**{"data-no_query":_("write_something")}) }}
-                    <div id="search_info">{{ search_info|safe }}</div>
-                </fieldset>
-            </form>
+        {{ logo("search_logo") }}
+        {{ search_box(search_form,query,share_url) }}
+        <div id="toolbar">
+            <a data-source="Search text" href="http://toolbarstart.com/foofind/">{{_('new_toolbar')}} - </a><a data-source="Search click" href="http://toolbarstart.com/foofind/">{{_('click_here')}}</a>
         </div>
-{% endblock %}
+    {% endblock %}
 {% block content %}{% endblock %}

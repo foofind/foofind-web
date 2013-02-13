@@ -22,6 +22,7 @@ DATA_SOURCE_SERVER = "mongodb://mongo.foofind.com:27017"
 DATA_SOURCE_USER = "mongodb://mongo.foofind.com:27017"
 DATA_SOURCE_FEEDBACK = "mongodb://mongo.foofind.com:27017"
 DATA_SOURCE_ENTITIES = "mongodb://mongo.foofind.com:27017"
+DATA_SOURCE_DOWNLADS = "mongodb://mongo.foofind.com:27017"
 DATA_SOURCE_MAX_POOL_SIZE = 50
 DATA_SOURCE_FOO_THREADS = 30
 GET_FILES_TIMEOUT = 1
@@ -29,23 +30,27 @@ AUTORECONNECT_FOO_INTERVAL = 300
 
 SERVICE_SPHINX = "sphinx.foofind.com"
 SERVICE_SPHINX_PORT = 33000
-SERVICE_SPHINX_SOCKET_TIMEOUT = 30.0
+SERVICE_SPHINX_CONNECT_TIMEOUT = 20.0
 SERVICE_SPHINX_MAX_QUERY_TIME = 800
 SERVICE_SPHINX_CLIENT_MIN = 5
-SERVICE_SPHINX_CLIENT_MAX = 40
-SERVICE_SPHINX_CLIENT_STEP = 5
 
-SERVICE_SPHINX_SEARCH_MAX_RETRIES = 10
+SERVICE_SPHINX_SEARCH_MAX_RETRIES = 5
 SERVICE_SPHINX_WORKERS_PER_SERVER = 3
 SERVICE_SPHINX_CLIENT_RECYCLE = 1000
-SERVICE_SPHINX_CLIENT_MAINTENANCE_INTERVAL = 1
+SERVICE_SEARCH_MAINTENANCE_INTERVAL = 1
+SERVICE_SEARCH_PROFILE_INTERVAL = 60*5
+
+SERVERS_REFRESH_INTERVAL = 60*60 # actualiza servidores cada hora
+
+SENTRY_AUTO_LOG_STACKS = True
 SENTRY_DSN = None
 
 SERVICE_TAMING_SERVERS = (("taming.foofind.com",24642))
 SERVICE_TAMING_TIMEOUT = 1.0
 SERVICE_TAMING_ACTIVE = True
 
-SERVERS_REFRESH_INTERVAL = 60*60 # actualiza servidores cada hora
+FOODOWNLOADER = False
+DOWNLOADER_UA = ()
 
 CACHE_SEARCHES = True
 CACHE_FILES = True
@@ -59,7 +64,40 @@ STATIC_PREFIX = None
 
 REMOTE_MEMCACHED_SERVERS = ()
 
-PROFILER_KEYS = {1:["taming","mongo","sphinx","visited"], 2:["mongo%dm"%s for s in xrange(1,20)], 3:["mongo%ds"%s for s in xrange(1,20)]}
+# Extracted from http://www.monperrus.net/martin/list+of+robot+user+agents (CC-SA license)
+ROBOT_USER_AGENTS=["googlebot/","Googlebot-Mobile","Googlebot-Image","bingbot","slurp","java","wget","curl",
+                    "Commons-HttpClient","Python-urllib","libwww","httpunit","nutch","phpcrawl","msnbot",
+                    "Adidxbot","blekkobot","teoma","ia_archiver","GingerCrawler","webmon ","httrack","webcrawler",
+                    "FAST-WebCrawler","FAST Enterprise Crawler","convera","biglotron","grub.org",
+                    "UsineNouvelleCrawler","antibot","netresearchserver","speedy","fluffy","jyxobot","bibnum.bnf",
+                    "findlink","exabot","gigabot","msrbot","seekbot","ngbot","panscient","yacybot","AISearchBot",
+                    "IOI","ips-agent","tagoobot","MJ12bot","dotbot","woriobot","yanga","buzzbot","mlbot","yandex",
+                    "purebot","Linguee Bot","Voyager","CyberPatrol","voilabot","baiduspider","citeseerxbot","spbot",
+                    "twengabot","postrank","turnitinbot","scribdbot","page2rss","sitebot","linkdex","ezooms","dotbot",
+                    "mail.ru","discobot","heritrix","findthatfile","europarchive.org","NerdByNature.Bot","sistrix crawler",
+                    "ahrefsbot","Aboundex","domaincrawler","wbsearchbot","summify","ccbot","edisterbot","seznambot",
+                    "ec2linkfinder","gslfbot","aihitbot","intelium_bot","facebookexternalhit","yeti","RetrevoPageAnalyzer",
+                    "lb-spider","sogou","lssbot","careerbot","wotbox","wocbot","ichiro","DuckDuckBot","lssrocketcrawler",
+                    "drupact","webcompanycrawler","acoonbot","openindexspider","gnam gnam spider","web-archive-net.com.bot",
+                    "help.yahoo.co.jp"]
+
+ROBOT_USER_AGENTS=[robot.lower() for robot in ROBOT_USER_AGENTS]
+SAFE_ROBOT_USER_AGENTS = [s.strip().replace(" ","_").replace("/", "").replace(".","_").replace("-","_") for s in ROBOT_USER_AGENTS]
+
+PROFILER_GRAPHS = { 1:("Search page", 'TIMING', ["taming","mongo","sphinx","visited"]),
+                    2:("Mongo master accesses", 'TIMING',["mongo%dm"%s for s in xrange(1,20)]),
+                    3:("Mongo slave accesses", 'TIMING', ["mongo%ds"%s for s in xrange(1,20)]),
+                    4:("Search services", 'MEAN', ["updates","pendings"]),
+                    5:("Search pending tasks", 'MEAN', ["sp_tasks%d"%s for s in xrange(1,20)]),
+                    6:("Search open conns", 'MEAN', ["sp_conns%d"%s for s in xrange(1,20)]),
+                    7:("Search free conns", 'MEAN', ["sp_freeconns%d"%s for s in xrange(1,20)]),
+                    8:("Search max conns", 'MEAN', ["sp_preconns%d"%s for s in xrange(1,20)]),
+                    9:("Search adhoc conns", 'MEAN', ["sp_adhoc%d"%s for s in xrange(1,20)]),
+                    10:("Search waiting timeouts", 'SUM', ["sp_timeout%d"%s for s in xrange(1,20)]),
+                    11:("Bots results", 'SUM', ["bot_%s"%s for s in SAFE_ROBOT_USER_AGENTS]),
+                    12:("Bots not results", 'SUM', ["bot_no_%s"%s for s in SAFE_ROBOT_USER_AGENTS]),
+                    13:("Downloader", 'SUM', ["downloader_opened"])
+                    }
 
 OAUTH_TWITTER_CALLBACK_URL = "http://foofind.com/es/user/oauth/tw/callback"
 OAUTH_TWITTER_SITE_URL = "https://api.twitter.com/oauth"

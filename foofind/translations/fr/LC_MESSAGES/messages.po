@@ -16,6 +16,12 @@ msgstr ""
 msgid "your_email"
 msgstr "Votre e-mail :"
 
+msgid "new_toolbar"
+msgstr "Essayez notre nouvelle barre d'outils !"
+
+msgid "click_here"
+msgstr "cliquez ici !"
+
 msgid "password"
 msgstr "Mot de passe :"
 
@@ -24,6 +30,9 @@ msgstr "Envoyer"
 
 msgid "required_empty"
 msgstr "Ce champ est requis et ne peut être laissé vide"
+
+msgid "ok"
+msgstr "OK"
 
 msgid "help_us"
 msgstr "collaborez avec foofind!"
@@ -43,7 +52,7 @@ msgstr ""
 "de travailler là-dessus."
 
 msgid "error_404_message"
-msgstr "Page introuvable."
+msgstr "Page introuvable"
 
 msgid "error_404_description"
 msgstr ""
@@ -51,7 +60,7 @@ msgstr ""
 "de frappe et avertissez les administrateurs du site le cas échéant."
 
 msgid "error_410_message"
-msgstr "Page indisponible."
+msgstr "Page indisponible"
 
 msgid "error_410_description"
 msgstr "L'URL demandé n'est plus disponible et ne le sera plus à l'avenir"
@@ -69,6 +78,9 @@ msgid "error_503_description"
 msgstr ""
 "L'URL demandé est temporairement indisponible. Veuillez réessayer "
 "ultérieurement."
+
+msgid "servers_status"
+msgstr "Vérifier l'état du serveur"
 
 msgid "error_mail_send"
 msgstr ""
@@ -151,6 +163,12 @@ msgstr "Autres streamings"
 msgid "other_direct_downloads"
 msgstr "Autres liens de téléchargement direct"
 
+msgid "some_streamings"
+msgstr "Certains streamings"
+
+msgid "some_downloads"
+msgstr "Certains téléchargements directs"
+
 msgid "others"
 msgstr "Autres"
 
@@ -173,7 +191,7 @@ msgid "archive"
 msgstr "Archive"
 
 msgid "no_results_for"
-msgstr "Aucun résultat pour :"
+msgstr "Aucun résultat pour"
 
 msgid "write_something"
 msgstr "Hé ! Écrivez quelque chose"
@@ -299,6 +317,9 @@ msgstr "Genre"
 msgid "seconds"
 msgstr "secondes"
 
+msgid "leechs"
+msgstr "Sangsues"
+
 msgid "minutes"
 msgstr "minutes"
 
@@ -309,7 +330,7 @@ msgid "height"
 msgstr "Hauteur"
 
 msgid "seeds"
-msgstr "partages"
+msgstr "Partages"
 
 msgid "width"
 msgstr "Largeur"
@@ -431,17 +452,59 @@ msgstr "Hachage"
 msgid "visualizations"
 msgstr "Visualisations"
 
+msgid "all_sources"
+msgstr "toutes les sources"
+
+msgid "share"
+msgstr "Partager sur %(site)s"
+
+msgid "share_search"
+msgstr "Partager cette recherche"
+
 msgid "codec"
 msgstr "Codec"
 
 msgid "encoding"
 msgstr "Encodage"
 
+msgid "director"
+msgstr "Réalisation"
+
+msgid "writer"
+msgstr "Scénario"
+
+msgid "share_download"
+msgstr "Partager"
+
+msgid "starring"
+msgstr "Acteurs principaux"
+
+msgid "producer"
+msgstr "Producteur"
+
+msgid "released"
+msgstr "Sortie"
+
+msgid "open_link_new_tab"
+msgstr "ouvrir dans un nouvel onglet"
+
 msgid "close"
 msgstr "Fermer"
 
+msgid "download_source"
+msgstr "Télécharger de %(source)s"
+
 msgid "share_this"
 msgstr "Partager ceci :"
+
+msgid "watch_source"
+msgstr "Visionner sur %(source)s"
+
+msgid "listen"
+msgstr "Écouter"
+
+msgid "listen_source"
+msgstr "Écouter sur %(source)s"
 
 msgid "share_facebook"
 msgstr "Partager sur facebook"
@@ -865,25 +928,36 @@ msgstr "Foofind est en maintenance. Veuillez vous reconnecter plus tard !"
 
 msgid "technology_text"
 msgstr ""
-"L'équpie Foofind développe la majeure partie du code source du projet, mais nous nous appuyons aussi beaucoup sur les travaux de la communauté du logiciel libre.\r\n"
-"\r\n"
-"Sans tous ces projets incroyables, Foofind n'aurait pu voir le jour. Merci beaucoup ! ;-)\r\n"
-"\r\n"
-"Twisted: Twisted est un moteur de mise en réseau événementiel écrit en Python et placé sous la licence libre MIT.\r\n"
-"\r\n"
-"Scrapy: Scrapy est un outil d'analyse et de parcours du web de haut niveau, utilisé pour parcourir les sites web et extraire des données structurées de leurs pages. Il peut être utilisé pour un large éventail d'objectifs, du data mining à la surveillance en passant par les tests automatisés.\r\n"
-"\r\n"
-"Flask: Flask est un microframework pour Python basé sur Werkzeug, Jinja 2 et placé sous licence BSD.\r\n"
-"\r\n"
-"MongoDB: MongoDB (du mot « humongous » signifiant gigantesque) est une base de données \r\n"
-"\r\n"
-"NoSQL libre, évolutive et de haute performance.\r\n"
-"\r\n"
-"Sentry: Sentry est un outil de journalisation et d'agrégation d'événements en temps réel. Il est spécialisé dans le suivi des erreurs et l'extraction de toutes les informations nécessaires pour faire un bon post-mortem sans les tracas de la boucle de rétroaction standard avec les utilisateurs.\r\n"
-"\r\n"
-"Sphinx: Sphinx est un serveur de recherche de texte open source, conçu dès le départ avec les performances, la pertinence (c'est-à-dire la qualité des recherches) et la simplicité d'intégration à l'esprit. Il est écrit en C++ et fonctionne sous GNU/Linux (RedHat, Ubuntu, etc), Windows, MacOS, Solaris, FreeBSD, ainsi que d'autres systèmes.\r\n"
-"\r\n"
-"Social Network Icon Pack: Le paquet d'icônes de réseaux sociaux par Komodo Media, Rogie King est placé sous licence Creative Commons Attribution-Partage à l'identique 3.0 non transposée."
+"<p>L'équpie Foofind développe la majeure partie du code source du projet, "
+"mais nous nous appuyons aussi beaucoup sur les travaux de la communauté du "
+"logiciel libre.</p><p>Sans tous ces projets incroyables, Foofind n'aurait pu"
+" voir le jour. Merci beaucoup ! ;-)</p><ul><li><a "
+"href=\"http://twistedmatrix.com/\">Twisted</a>: Twisted est un moteur de "
+"mise en réseau événementiel écrit en Python et placé sous la licence libre "
+"MIT.</li><li><a href=\"http://scrapy.org/\">Scrapy</a>: Scrapy est un outil "
+"d'analyse et de parcours du web de haut niveau, utilisé pour parcourir les "
+"sites web et extraire des données structurées de leurs pages. Il peut être "
+"utilisé pour un large éventail d'objectifs, du data mining à la surveillance"
+" en passant par les tests automatisés.</li><li><a "
+"href=\"http://flask.pocoo.org/\">Flask</a>: Flask est un microframework pour"
+" Python basé sur Werkzeug, Jinja 2 et placé sous licence BSD.</li><li><a "
+"href=\"http://www.mongodb.org/\">MongoDB</a>: MongoDB (du mot « humongous » "
+"signifiant gigantesque) est une base de données NoSQL libre, évolutive et de"
+" haute performance.</li><li><a "
+"href=\"http://github.com/dcramer/sentry\">Sentry</a>: Sentry est un outil de"
+" journalisation et d'agrégation d'événements en temps réel. Il est "
+"spécialisé dans le suivi des erreurs et l'extraction de toutes les "
+"informations nécessaires pour faire un bon post-mortem sans les tracas de la"
+" boucle de rétroaction standard avec les utilisateurs.</li><li><a "
+"href=\"http://sphinxsearch.com/\">Sphinx</a>: Sphinx est un serveur de "
+"recherche de texte open source, conçu dès le départ avec les performances, "
+"la pertinence (c'est-à-dire la qualité des recherches) et la simplicité "
+"d'intégration à l'esprit. Il est écrit en C++ et fonctionne sous GNU/Linux "
+"(RedHat, Ubuntu, etc), Windows, MacOS, Solaris, FreeBSD, ainsi que d'autres "
+"systèmes.</li><li><a href=\"http://www.komodomedia.com/blog/2009/06/social-"
+"network-icon-pack/\">Social Network Icon Pack</a>: Le paquet d'icônes de "
+"réseaux sociaux par Komodo Media, Rogie King est placé sous licence Creative"
+" Commons Attribution-Partage à l'identique 3.0 non transposée.</li></ul>"
 
 msgid "link_not_exist"
 msgstr "Ce lien n'existe pas ou a été effacé !"
@@ -915,6 +989,83 @@ msgstr "Votre traduction a été envoyée. Merci de votre aide !"
 msgid "translate_at_least_one"
 msgstr "S'il vous plaît, traduisez au moins une phrase."
 
+msgid "foodownloader_powered"
+msgstr "Propulsé par [%(name)s](%(link)s)"
+
+msgid "foodownloader_overview"
+msgstr "Vue d'ensemble"
+
+msgid "foodownloader_overview_text"
+msgstr ""
+"**Foofind Download Manager** est un client rapide pour le réseau P2P **torrent**.\r\n"
+"\r\n"
+"Foofind Download Manager est conçu pour être intuitif, facile à utiliser et sûr. Vous pouvez mettre en pause, reprendre et trouver vos téléchargements plus facilement que jamais, voyez ce qu'il offre :\r\n"
+"\r\n"
+"*    Un client torrent solide comme du roc.\r\n"
+"*    Une interface simplifiée.\r\n"
+"*    La DHT, l'UPnP et les extensions de protocole de uTorrent.\r\n"
+
+msgid "foodownloader_sharing"
+msgstr "Télécharger et partager des fichiers"
+
+msgid "foodownloader_sharing_text"
+msgstr ""
+"Désormais, avec **Foofind Download Manager** vous pouvez télécharger tout ce que vous voulez plus vite que jamais. Grâce au réseau **torrent** qui est la solution P2P la plus rapide jamais conçue, vos téléchargements vont s'envoler.\r\n"
+"\r\n"
+"Essayez donc ! **L'avenir des téléchargements n'est qu'à un clic.**"
+
+msgid "foodownloader_safety"
+msgstr "Obtenez vos fichiers d'une manière sûre"
+
+msgid "foodownloader_safety_text"
+msgstr ""
+"Nous nous occupons de la sécurité. **Foofind Download Manager** utilise la librairie libtorrent qui a gagné des prix, ce qui rend votre expérience de téléchargement aussi \\* sûre que possible.\r\n"
+"\r\n"
+"\\* _vous pouvez télécharger des logiciels hostiles depuis des sources peu sûres, donc nous recommandons fortement l'utilisation d'un antivirus._"
+
+msgid "foodownloader_download"
+msgstr "Téléchargement gratuit"
+
+msgid "foodownloader_download_source"
+msgstr "Source du téléchargement"
+
+msgid "foodownloader_meta_description"
+msgstr ""
+"Foofind Download Manager est un téléchargeur torrent simple et facile à "
+"utiliser"
+
+msgid "foodownloader_thanks"
+msgstr "Bons téléchargements !"
+
+msgid "foodownloader_thanks_message"
+msgstr ""
+"Merci d'avoir installé Foofind Download Manager, nous espérons qu'il vous "
+"plaira."
+
+msgid "foodownloader_download_coming_soon"
+msgstr "Désolé : pas encore disponible pour votre système d'exploitation."
+
+msgid "foodownloader_dialog_title"
+msgstr "Foofind Download Manager est disponible"
+
+msgid "foodownloader_dialog_yes"
+msgstr ""
+"Oui, télécharger\r\n"
+"\r\n"
+"Foofind Download Manager"
+
+msgid "foodownloader_dialog_no"
+msgstr ""
+"Non, merci\r\n"
+"\r\n"
+"J'ai déjà un client torrent"
+
+msgid "foodownloader_dialog_text"
+msgstr ""
+"%(domain)s vous recommande de télécharger ce fichier plus rapidement et "
+"facilement que jamais en utilisant le tout nouveau gestionnaire de "
+"téléchargement qui est absolument gratuit !"
+
 msgid "here"
 msgstr "ici"
 
@@ -931,9 +1082,6 @@ msgstr "Rechercher avec Foofind"
 
 msgid "embed_foofind_button"
 msgstr "Voir sur foofind"
-
-msgid "embed_download_button"
-msgstr "Télécharger"
 
 msgid "copy_to_clipboard_shortcut"
 msgstr "Utilisez CTRL-C pour copier dans votre presse-papiers"

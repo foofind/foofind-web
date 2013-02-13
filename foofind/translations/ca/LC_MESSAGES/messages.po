@@ -46,12 +46,13 @@ msgid "error_404_message"
 msgstr "No s'ha trobat la pàgina"
 
 msgid "error_404_description"
-msgstr ""
-"L'URL no s'ha trobat.\r\n"
-"Si l'adreça no és correcta agrairíem que ens aviséssiu."
+msgstr "L'URL no s'ha trobat. Si l'adreça no és correcta agrairíem que ens aviséssiu."
+
+msgid "error_410_message"
+msgstr "Pàgina no disponible"
 
 msgid "error_502_message"
-msgstr "Passarel·la incorrecta."
+msgstr "Passarel incorrecta"
 
 msgid "error_502_description"
 msgstr "S'ha intentat accedir al servei web amb una ubicació incorrecta."
@@ -139,6 +140,18 @@ msgstr "descàrrega directa"
 msgid "audio"
 msgstr "Àudio"
 
+msgid "other_streamings"
+msgstr "Altres streamings"
+
+msgid "other_direct_downloads"
+msgstr "Altres descàrregues directes"
+
+msgid "others"
+msgstr "Altres"
+
+msgid "unknown"
+msgstr "Desconegut"
+
 msgid "video"
 msgstr "Vídeo"
 
@@ -155,7 +168,7 @@ msgid "archive"
 msgstr "Arxiu"
 
 msgid "no_results_for"
-msgstr "No hi ha resultats per:"
+msgstr "No hi ha resultats per"
 
 msgid "write_something"
 msgstr "Ep! Escriviu alguna cosa"
@@ -171,6 +184,9 @@ msgstr "Fonts"
 
 msgid "of_about"
 msgstr "d'aprox."
+
+msgid "approximately"
+msgstr "Aproximadament"
 
 msgid "results_for"
 msgstr "resultats per"
@@ -195,17 +211,32 @@ msgstr ""
 "Per descarregar l'arxiu enllaçat en aquesta pàgina es pot necessitar "
 "programari extern. Aquí teniu alguns programes compatibles:"
 
+msgid "go_to_file"
+msgstr "Anar al arxiu"
+
+msgid "play"
+msgstr "Reproduir"
+
 msgid "did_you_mean"
 msgstr "Volies dir %(text)s?"
 
 msgid "all_sizes"
 msgstr "Totes les mides"
 
+msgid "update"
+msgstr "actualitzar"
+
+msgid "minimun"
+msgstr "min"
+
+msgid "maximun"
+msgstr "max"
+
 msgid "what"
 msgstr "Què?"
 
 msgid "where"
-msgstr "On!"
+msgstr "On?"
 
 msgid "advanced_search"
 msgstr "Cerca avançada"
@@ -261,6 +292,12 @@ msgstr "Taxa de bits"
 msgid "genre"
 msgstr "Gènere"
 
+msgid "seeds"
+msgstr "Llavors"
+
+msgid "leechs"
+msgstr "Sangoreres"
+
 msgid "seconds"
 msgstr "segons"
 
@@ -312,6 +349,9 @@ msgstr "Versió"
 msgid "name"
 msgstr "Nom"
 
+msgid "channels"
+msgstr "canals"
+
 msgid "description"
 msgstr "Descripció"
 
@@ -342,6 +382,63 @@ msgstr "dies"
 msgid "hour"
 msgstr "hora"
 
+msgid "tags"
+msgstr "Paraules clau"
+
+msgid "license"
+msgstr "Llicència"
+
+msgid "private_file"
+msgstr "Arxiu privat"
+
+msgid "composer"
+msgstr "Compositor"
+
+msgid "publisher"
+msgstr "Editor"
+
+msgid "comments"
+msgstr "Comentaris"
+
+msgid "created_by"
+msgstr "Creat per"
+
+msgid "language"
+msgstr "Llengua"
+
+msgid "date"
+msgstr "Data"
+
+msgid "trackers"
+msgstr "Trackers"
+
+msgid "hash"
+msgstr "Hash"
+
+msgid "visualizations"
+msgstr "Visualitzacions"
+
+msgid "codec"
+msgstr "Códec"
+
+msgid "encoding"
+msgstr "Codificació"
+
+msgid "director"
+msgstr "Director"
+
+msgid "writer"
+msgstr "Guionista"
+
+msgid "starring"
+msgstr "Protagonistes"
+
+msgid "producer"
+msgstr "Productor"
+
+msgid "released"
+msgstr "Llançament"
+
 msgid "hours"
 msgstr "hores"
 
@@ -370,7 +467,7 @@ msgid "send_by_email"
 msgstr "envia per correu"
 
 msgid "download"
-msgstr "Descarrega"
+msgstr "Descàrrega"
 
 msgid "watch"
 msgstr "Visualitza"
@@ -389,6 +486,33 @@ msgstr "Afegeix un comentari"
 
 msgid "from"
 msgstr "des de"
+
+msgid "file"
+msgstr "arxiu"
+
+msgid "add_favorite"
+msgstr "Afegir %(type)s a favorits"
+
+msgid "delete_favorite"
+msgstr "Eliminar %(type)s de favorits"
+
+msgid "favorite"
+msgstr "%(type)s afegit a favorits"
+
+msgid "download_links"
+msgstr "Vore enllaços de descàrrega"
+
+msgid "more_info"
+msgstr "més informació"
+
+msgid "less_info"
+msgstr "menys informació"
+
+msgid "more_comments"
+msgstr "més comentaris"
+
+msgid "less_comments"
+msgstr "menys comentaris"
 
 msgid "i_like_it"
 msgstr "M'agrada!"
@@ -557,6 +681,24 @@ msgstr "L'equip de Foofind"
 msgid "user_not_exist"
 msgstr "L'usuari no existeix"
 
+msgid "user_favorites"
+msgstr "Fitxers favorits"
+
+msgid "user_searches"
+msgstr "Cerques favorites"
+
+msgid "user_fav_lists"
+msgstr "Llista de fitxers"
+
+msgid "user_fav_file_list_empty"
+msgstr "No hi ha fitxers en la llista"
+
+msgid "user_fav_search_list_empty"
+msgstr "No hi ha cerques en la llista"
+
+msgid "user_fav_no_lists"
+msgstr "No hi ha llistes personalitzades"
+
 msgid "logged_in"
 msgstr "Heu iniciat la sessió,"
 
@@ -712,6 +854,20 @@ msgstr ""
 msgid "submit_links"
 msgstr "Envieu enllaços"
 
+msgid "technology_text"
+msgstr ""
+"L'equip de Foofind desenvolupa la major part del codi del projecte, però també depenem del treball de la comunitat del programari lliure.\r\n"
+"\r\n"
+"Foofind no seria possible sense aquests increïbles projectes. Un porró de gràcies! ;-)\r\n"
+"\r\n"
+"Twisted: Twisted is an event-driven networking engine written in Python and licensed under the open source MIT license.\r\n"
+"Scrapy: Scrapy is a fast high-level screen scraping and web crawling framework, used to crawl websites and extract structured data from their pages. It can be used for a wide range of purposes, from data mining to monitoring and automated testing.\r\n"
+"Flask: Flask is a microframework for Python based on Werkzeug, Jinja 2 and it's BSD licensed.\r\n"
+"MongoDB: MongoDB (from \"humongous\") is a scalable, high-performance, open source NoSQL database.\r\n"
+"Sentry: Sentry is a realtime event logging and aggregation platform. It specializes in monitoring errors and extracting all the information needed to do a proper post-mortem without any of the hassle of the standard user feedback loop.\r\n"
+"Sphinx: Sphinx is an open source full text search server, designed from the ground up with performance, relevance (aka search quality), and integration simplicity in mind. It's written in C++ and works on Linux (RedHat, Ubuntu, etc), Windows, MacOS, Solaris, FreeBSD, and a few other systems.\r\n"
+"Social Network Icon Pack: Social Network Icon Pack by Komodo Media, Rogie King is licensed under a Creative Commons Attribution-Share Alike 3.0 Unported License."
+
 msgid "include_link_per_line"
 msgstr ""
 "Si us plau, incloeu un enllaç HTTP, FTP, Ed2k o magnet per línia.\r\n"
@@ -721,12 +877,7 @@ msgid "link_sent"
 msgstr "Els enllaços s'han enviat. Gràcies per l'ajuda!"
 
 msgid "footer"
-msgstr ""
-"Lloc web sota llicència Creative Commons <a rel='license content' "
-"href='http://creativecommons.org/licenses/by-sa/3.0/deed.ca'>BY-SA</a>. <a "
-"href='http://code.google.com/p/Foofind/'>Codi font</a> sota llicència <a "
-"rel='license source code' "
-"href='http://www.gnu.org/licenses/agpl.html'>Affero GPL</a>."
+msgstr "Lloc web sota llicència %(cc)s. %(code)s sota llicència %(gpl)s."
 
 msgid "about_text"
 msgstr ""
@@ -767,6 +918,15 @@ msgstr "Tria la llengua"
 
 msgid "translation_sent"
 msgstr "La vostra traducció ha estat enviada. Gràcies per la vostra ajuda!"
+
+msgid "embed_foofind_button"
+msgstr "Vore en foofind"
+
+msgid "embed_download_button"
+msgstr "Descàrrega"
+
+msgid "copy_to_clipboard_shortcut"
+msgstr "Utilitza CTRL+C per a copiar al portapapers"
 
 msgid "translate_at_least_one"
 msgstr "Si us plau, entreu un mínim d'una frase abans d'enviar."

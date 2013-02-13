@@ -80,7 +80,7 @@ msgid "archive"
 msgstr "Archivi"
 
 msgid "no_results_for"
-msgstr "Nessun risultato per:"
+msgstr "Nessun risultato per"
 
 msgid "write_something"
 msgstr "Scrivi qualcosa!"

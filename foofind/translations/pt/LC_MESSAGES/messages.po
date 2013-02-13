@@ -1,4 +1,4 @@
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
@@ -80,7 +80,7 @@ msgid "archive"
 msgstr "Arquivo"
 
 msgid "no_results_for"
-msgstr "Nenhum resultado para:"
+msgstr "Nenhum resultado para"
 
 msgid "write_something"
 msgstr "Ei! Escreva alguma coisa!!"
@@ -554,11 +554,7 @@ msgid "link_sent"
 msgstr "Mensagem enviada. Obrigado pela ajuda!"
 
 msgid "footer"
-msgstr ""
-"Site sobre a licença Creative Commons <a rel='license content' "
-"href='http://creativecommons.org/licenses/by-sa/3.0/deed.pt'>BY-SA</a>. <a "
-"href='http://code.google.com/p/Foofind/'>Codigo fonte</a> <a rel='license "
-"source code' href='http://www.gnu.org/licenses/agpl.html'>Affero GPL</a>."
+msgstr "Site sobre a licença %(cc)s. %(code)s licenciado %(gpl)s."
 
 msgid "about_text"
 msgstr ""

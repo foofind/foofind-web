@@ -1,4 +1,4 @@
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
@@ -26,10 +26,10 @@ msgid "go_home"
 msgstr "Reveni al serĉilo"
 
 msgid "error_404_message"
-msgstr "Paĝo ne trovita."
+msgstr "Paĝo ne trovita"
 
 msgid "error_503_message"
-msgstr "Nedisponebla servo."
+msgstr "Nedisponebla servo"
 
 msgid "error_404_description"
 msgstr ""
@@ -37,7 +37,7 @@ msgstr ""
 "URL. Se tiel, bonvole atentigu la retadministrantojn."
 
 msgid "error_502_message"
-msgstr "Malbona portalo."
+msgstr "Malbona portalo"
 
 msgid "error_502_description"
 msgstr "La servo ne atingeblas pro malbona portalo."
@@ -126,7 +126,7 @@ msgid "previous"
 msgstr "Antaŭa"
 
 msgid "no_results_for"
-msgstr "Neniu rezulto por:"
+msgstr "Neniu rezulto por"
 
 msgid "write_something"
 msgstr "Saluton! Skribu ion"

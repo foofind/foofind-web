@@ -14,6 +14,8 @@ section#files #results > li > div .size span{height:1px;margin-bottom:3px}
 section#files #results > li > div ul.source{margin-left:0}
 section#files #results > li > div ul.metadata{width:300px}
 section#files #download > a{left:-20px;max-width:480px}
+#container>header #search_file #share{display:inline;top:-20px}
+#container>header #search_file #share ul{top:50px;left:-30px}
 section#files #flecha{height:1px}
 .download_source input{line-height:35px;vertical-align:middle}
 .file_comment_vote{margin-top:-33px}

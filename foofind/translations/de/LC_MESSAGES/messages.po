@@ -1,4 +1,4 @@
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
@@ -16,11 +16,34 @@ msgstr ""
 msgid "password"
 msgstr "Passwort:"
 
+msgid "your_email"
+msgstr "Deine Email:"
+
 msgid "submit"
 msgstr "Senden"
 
 msgid "about"
 msgstr "Über"
+
+msgid "help_us"
+msgstr "Helfe uns!"
+
+msgid "legal_info"
+msgstr "Rechtliche Hinweise"
+
+msgid "go_home"
+msgstr "Gehe zurück zur Suchmaske"
+
+msgid "error_500_message"
+msgstr "Es ist ein Fehler aufgetreten"
+
+msgid "error_500_description"
+msgstr ""
+"Da ist etwas schiefgelaufen, unsere Spezialisten gehen der Sache auf den "
+"Grund."
+
+msgid "error_404_message"
+msgstr "Seite nicht gefunden"
 
 msgid "contact"
 msgstr "Kontakt"
@@ -77,7 +100,7 @@ msgid "archive"
 msgstr "Datei"
 
 msgid "no_results_for"
-msgstr "Es gibt leider keine Ergebnisse für:"
+msgstr "Es gibt leider keine Ergebnisse für"
 
 msgid "write_something"
 msgstr "Schreib was!"

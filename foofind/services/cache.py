@@ -7,8 +7,8 @@ from hashlib import md5
 from inspect import getsourcelines, currentframe
 #from slimmer import html_slimmer
 from foofind.utils import LimitedSizeDict
-
-import logging, time, re
+from foofind.utils import logging
+import time, re
 
 class ThrowFallback(Exception):
     '''
@@ -25,6 +25,7 @@ class Cache(CacheBase):
         CacheBase.__init__(self, *args, **kwargs)
         self._local_cache = LimitedSizeDict(size_limit=10000)
         self._regexp_cache = LimitedSizeDict(size_limit=5000)
+
 
     def regexp(self, r):
         if not r in self._regexp_cache:
@@ -47,6 +48,23 @@ class Cache(CacheBase):
             return value
         del self._local_cache[key]
         return None
+
+    def append(self, key, value, create=False, separator="", timeout=0):
+        '''
+        Concatena un valor dado al valor de una entrada existente. Puede crear la entrada si no existe.
+
+        @type key: str
+        @param key: clave del cache
+
+        '''
+        must_append = True
+        if create and self.cache._client.add(key, value, timeout):
+            must_append = False
+
+        if must_append:
+            return self.cache._client.append(key, separator+value, timeout)
+        else:
+            return True
 
     def local_set(self, key, value, timeout=None):
         '''

@@ -6,9 +6,9 @@
 import greenlet
 import threading
 from Queue import Queue, Empty
-import logging
 import foofind.globals
 from time import time
+from . import logging
 
 class EOFQueue(object):
     pass

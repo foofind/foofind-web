@@ -1,14 +1,12 @@
 {% extends "files/base.html" %}
 {% block global_message %}{% endblock %}
 {% block content %}
-    <hr />
-    <br />
-    <h2>{{_('last_indexed_files')}} - {{ date|datetimeformat }} UTC</h2>
-    <div id="results">
+    <div id="last_files">
+        <h2>{{_('last_indexed_files')}} - {{ date|datetimeformat }} UTC</h2>
         <ul>
             {% for file in files %}
             <li class="file_excerpt">
-                <h3><a href="{{ url_for('.download',file_id=file['file']['id'],file_name=file['view']['qfn']) }}.html">{{ file['view']['fn'] }}</a></h3>
+                <h3><a href="{{ url_for('.download',file_id=file['file']['id'],file_name=file['view']['qfn']) }}">{{ file['view']['fn'] }}</a></h3>
             </li>
             {% endfor %}
         </ul>

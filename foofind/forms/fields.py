@@ -1,4 +1,5 @@
 from flask.ext.wtf import BooleanField, SelectMultipleField, Input
+from foofind.forms.validators import require, length
 
 from cgi import escape
 from foofind.utils import u

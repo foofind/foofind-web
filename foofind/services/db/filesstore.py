@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
-import pymongo, logging, time, traceback
+import pymongo, time, traceback, bson
 from collections import defaultdict, OrderedDict
-from foofind.utils import hex2mid, u, Parallel
-from foofind.utils.async import MultiAsync
-from foofind.services.extensions import cache
 from threading import Lock, Event
 from itertools import permutations
 from datetime import datetime
 
 import foofind.services
+from foofind.utils import hex2mid, u, Parallel, logging
+from foofind.utils.async import MultiAsync
+from foofind.services.extensions import cache
+
+
 profiler = None
 
 class BogusMongoException(Exception):
@@ -75,10 +77,10 @@ class BongoContext(object):
             except (RuntimeError, BaseException) as e:
                 logging.exception("cache.cacheme no accesible")
 
-            if t is pymongo.connection.AutoReconnect:
+            if t is pymongo.errors.AutoReconnect:
                 logging.warn("Autoreconnection throwed by MongoDB server data: %s." % self.uri, extra=extra)
                 self.bongo.autoreconnection(self.uri)
-            elif t is pymongo.connection.ConnectionFailure:
+            elif t is pymongo.errors.ConnectionFailure:
                 logging.error("Error accessing to MongoDB server data: %s." % self.uri, extra=extra)
                 self.bongo.invalidate(self.uri)
             else:
@@ -143,10 +145,9 @@ class Bongo(object):
                     self.connections[uri] = pymongo.Connection(
                         uri,
                         max_pool_size = self._pool_size,
-                        network_timeout = self._network_timeout
+                        network_timeout = self._network_timeout*10
                         )
                     self.connections_access[uri].set()
-                    logging.warn("Connection has been %sstablished with %s" % ("re" if again else "e", uri))
                 except BaseException as e:
                     logging.warn("Unable to %sconnect with %s" % ("re" if again else "", uri), extra={"error":e})
 
@@ -234,14 +235,13 @@ class FilesStore(object):
         for bongo in self.servers_conn.itervalues():
             bongo.reconnect()
         for server in self.server_conn.foofind.server.find().sort([("lt",-1)]):
-            sid = server["_id"]
+            sid = str(int(server["_id"]))
             if not sid in self.servers_conn:
                 self.servers_conn[sid] = Bongo(server, self.max_pool_size, self.get_files_timeout, self.max_autoreconnects)
         self.server_conn.end_request()
         self.current_server = max(
             self.servers_conn.itervalues(),
             key=lambda x: x.info["lt"] if "lt" in x.info else datetime.min)
-
 
     def _get_server_files(self, async, sid, ids, bl):
         '''
@@ -258,8 +258,7 @@ class FilesStore(object):
         @param ids: lista de ids a obener
         '''
         with self.servers_conn[sid].context as context:
-            profiler_key = "mongo%d%s"%(sid, "m" if context.is_master else "s")
-            profiler.checkpoint(opening=[profiler_key])
+            profiler_key = "mongo%s%s"%(sid, "m" if context.is_master else "s")
             data = tuple(
                 context.conn.foofind.foo.find(
                     {"_id": {"$in": ids}}
@@ -268,7 +267,6 @@ class FilesStore(object):
             context.conn.end_request()
             for doc in data:
                 doc["s"] = sid
-            profiler.checkpoint(closing=[profiler_key])
             async.return_value(data)
 
     def get_files(self, ids, servers_known = False, bl = 0):
@@ -287,8 +285,7 @@ class FilesStore(object):
         @return Generador con los documentos de ficheros
         '''
 
-        files_count = len(ids)
-        if files_count == 0: return ()
+        if not ids: return ()
 
         sids = defaultdict(list)
         # si conoce los servidores en los que están los ficheros,
@@ -296,12 +293,12 @@ class FilesStore(object):
         # y evitamos buscar los servidores
         if servers_known:
             for x in ids:
-                sids[int(x[1])].append(hex2mid(x[0]))
+                sids[x[1]].append(hex2mid(x[0]))
         else:
             # averigua en qué servidor está cada fichero
             nindir = self.server_conn.foofind.indir.find({"_id": {"$in": [hex2mid(fid) for fid in ids]}, "s": {"$exists": 1}})
             for ind in nindir:
-                indserver = int(ind["s"]) # Bug en indir: 's' como float
+                indserver = str(int(ind["s"])) # Bug en indir: 's' como float
                 if indserver in self.servers_conn:
                     if "t" in ind: # si apunta a otro id, lo busca en vez del id dado
                         sids[indserver].append(ind["t"])
@@ -317,15 +314,15 @@ class FilesStore(object):
         return MultiAsync(
             self._get_server_files,
             [(k, v, bl) for k, v in sids.iteritems()],
-            files_count
+            len(sids)
             ).get_values(self.get_files_timeout)
 
     def get_file(self, fid, sid=None, bl=0):
         '''
         Obtiene un fichero del servidor
 
-        @type fid: str
-        @param fid: id de fichero en hexadecimal
+        @type fid: mongo id
+        @param fid: id de fichero
 
         @type sid: str
         @param sid: id del servidor
@@ -336,29 +333,26 @@ class FilesStore(object):
         @rtype mongodb document
         @return Documento del fichero
         '''
-        mfid = hex2mid(fid)
         if sid is None:
             # averigua en qué servidor está el fichero
-            ind = self.server_conn.foofind.indir.find_one({"_id":mfid})
+            ind = self.server_conn.foofind.indir.find_one({"_id":fid})
             # Verificación para evitar basura de indir
-            if ind is None or not "s" in ind:
+            if ind is None or not "s" in ind or not ind["s"]:
                 return None
-            sid = int(ind["s"])
+            sid = str(int(ind["s"]))
             if not sid in self.servers_conn:
                 return None
             if "t" in ind:
-                mfid = ind["t"]
+                fid = ind["t"]
             self.server_conn.end_request()
 
         with self.servers_conn[sid].context as context:
-            profiler_key = "mongo%d%s"%(sid, "m" if context.is_master else "s")
-            profiler.checkpoint(opening=[profiler_key])
+            profiler_key = "mongo%s%s"%(sid, "m" if context.is_master else "s")
             data = context.conn.foofind.foo.find_one(
-                {"_id":mfid} if bl is None else
-                {"_id":mfid,"bl":bl})
+                {"_id":fid} if bl is None else
+                {"_id":fid,"bl":bl})
             context.conn.end_request()
             if data: data["s"] = sid
-            profiler.checkpoint(closing=[profiler_key])
             return data
 
     def get_newid(self, oldid):
@@ -371,10 +365,12 @@ class FilesStore(object):
         @rtype None o ObjectID
         @return None si no es válido o no encontrado, o id de mongo.
         '''
-        if isinstance(oldid, basestring):
+        if isinstance(oldid, bson.objectid.ObjectId):
+            return None
+        elif isinstance(oldid, basestring):
             if not oldid.isdigit():
                 return None
-        with self.servers_conn[1.0].context as context:
+        with self.servers_conn["1"].context as context:
             doc = context.conn.foofind.foo.find_one({"i":int(oldid)})
             context.conn.end_request()
             if doc:
@@ -405,10 +401,10 @@ class FilesStore(object):
         fid = hex2mid(data["_id"])
 
         if "s" in data:
-            server = data["s"]
+            server = str(data["s"])
         else:
             try:
-                server = self.get_file(fid, bl=None)["s"]
+                server = str(self.get_file(fid, bl=None)["s"])
             except (TypeError, KeyError) as e:
                 logging.error("Se ha intentado actualizar un fichero que no se encuentra en la base de datos", extra=data)
                 raise
@@ -689,7 +685,7 @@ class FilesStore(object):
         '''
         Obtiene las estadisticas del servidor
         '''
-        data = self.server_conn.foofind.search_stats.find_one({"_id":server})
+        data = self.server_conn.foofind.search_stats.find_one({"_id":int(server)})
         self.server_conn.end_request()
         return data
 

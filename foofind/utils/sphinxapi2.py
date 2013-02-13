@@ -145,7 +145,7 @@ class SphinxClient:
         self._fieldweights  = {}                            # per-field-name weights
         self._overrides     = {}                            # per-query attribute values overrides
         self._select        = '*'                           # select-list (attributes or expressions, with optional aliases)
-        
+
         self._error         = ''                            # last error message
         self._warning       = ''                            # last warning message
         self._reqs          = []                            # requests array for multi-query
@@ -193,7 +193,7 @@ class SphinxClient:
         assert (isinstance(timeout, float))
         # set timeout to 0 make connaection non-blocking that is wrong so timeout got clipped to reasonable minimum
         self._timeout = max ( 0.001, timeout )
-                    
+
     def _Connect (self):
         """
         INTERNAL METHOD, DO NOT CALL. Connects to searchd server.
@@ -302,11 +302,11 @@ class SphinxClient:
             sent = sock.send ( req[total:] )
             if sent<=0:
                 break
-                
+
             total = total + sent
-        
+
         return total
-        
+
 
     def SetLimits (self, offset, limit, maxmatches=0, cutoff=0):
         """
@@ -358,7 +358,7 @@ class SphinxClient:
         self._sortby = clause
 
 
-    def SetWeights (self, weights): 
+    def SetWeights (self, weights):
         """
         Set per-field weights.
         WARNING, DEPRECATED; do not use it! use SetFieldWeights() instead
@@ -412,7 +412,7 @@ class SphinxClient:
         assert iter(values)
 
         for value in values:
-            AssertInt32 ( value )
+            AssertInt64 ( value )
 
         self._filters.append ( { 'type':SPH_FILTER_VALUES, 'attr':attribute, 'exclude':exclude, 'values':values } )
 
@@ -435,7 +435,7 @@ class SphinxClient:
         assert(isinstance(min_,float))
         assert(isinstance(max_,float))
         assert(min_ <= max_)
-        self._filters.append ( {'type':SPH_FILTER_FLOATRANGE, 'attr':attribute, 'exclude':exclude, 'min':min_, 'max':max_} ) 
+        self._filters.append ( {'type':SPH_FILTER_FLOATRANGE, 'attr':attribute, 'exclude':exclude, 'min':min_, 'max':max_} )
 
 
     def SetGeoAnchor (self, attrlat, attrlong, latitude, longitude):
@@ -556,7 +556,7 @@ class SphinxClient:
         req.append(pack('>L',1)) # id64 range marker
         req.append(pack('>Q', self._min_id))
         req.append(pack('>Q', self._max_id))
-        
+
         # filters
         req.append ( pack ( '>L', len(self._filters) ) )
         for f in self._filters:
@@ -578,7 +578,7 @@ class SphinxClient:
         req.append ( self._groupby )
         req.append ( pack ( '>2L', self._maxmatches, len(self._groupsort) ) )
         req.append ( self._groupsort )
-        req.append ( pack ( '>LLL', self._cutoff, self._retrycount, self._retrydelay)) 
+        req.append ( pack ( '>LLL', self._cutoff, self._retrycount, self._retrydelay))
         req.append ( pack ( '>L', len(self._groupdistinct)))
         req.append ( self._groupdistinct)
 
@@ -599,7 +599,7 @@ class SphinxClient:
             req.append ( pack ('>L',len(indx)) + indx + pack ('>L',weight))
 
         # max query time
-        req.append ( pack ('>L', self._maxquerytime) ) 
+        req.append ( pack ('>L', self._maxquerytime) )
 
         # per-field weights
         req.append ( pack ('>L',len(self._fieldweights) ) )
@@ -718,7 +718,7 @@ class SphinxClient:
             p += 4
             id64 = unpack('>L', response[p:p+4])[0]
             p += 4
-        
+
             # read matches
             result['matches'] = []
             while count>0 and p<max_:
@@ -783,10 +783,10 @@ class SphinxClient:
                 p += 8
 
                 result['words'].append({'word':word, 'docs':docs, 'hits':hits})
-        
+
         self._reqs = []
         return results
-    
+
 
     def BuildExcerpts (self, docs, index, words, opts=None):
         """
@@ -833,7 +833,7 @@ class SphinxClient:
         if opts.get('allow_empty'):     flags |= 256
         if opts.get('emit_zones'):      flags |= 512
         if opts.get('load_files_scattered'):    flags |= 1024
-        
+
         # mode=0, flags
         req = [pack('>2L', 0, flags)]
 
@@ -857,7 +857,7 @@ class SphinxClient:
 
         req.append(pack('>L', int(opts['limit'])))
         req.append(pack('>L', int(opts['around'])))
-        
+
         req.append(pack('>L', int(opts['limit_passages'])))
         req.append(pack('>L', int(opts['limit_words'])))
         req.append(pack('>L', int(opts['start_passage_id'])))
@@ -1079,7 +1079,7 @@ class SphinxClient:
         if self._socket:
             self._error = 'already connected'
             return None
-        
+
         server = self._Connect()
         if not server:
             return None
@@ -1087,7 +1087,7 @@ class SphinxClient:
         # command, command version = 0, body length = 4, body = 1
         request = pack ( '>hhII', SEARCHD_COMMAND_PERSIST, 0, 4, 1 )
         self._Send ( server, request )
-        
+
         self._socket = server
         return True
 
@@ -1097,7 +1097,7 @@ class SphinxClient:
             return
         self._socket.close()
         self._socket = None
-    
+
     def EscapeString(self, string):
         return re.sub(r"([=\(\)|\-!@~\"&/\\\^\$\=])", r"\\\1", string)
 
@@ -1118,14 +1118,25 @@ class SphinxClient:
         tag = unpack ( '>L', response[0:4] )[0]
         return tag
 
+MIN_INT32 = -2**31
+MAX_INT32 = 2**31-1
+MAX_UINT32 = 2**32-1
+MIN_INT64 = -2**63
+MAX_INT64 = 2**63-1
+
+
 def AssertInt32 ( value ):
     assert(isinstance(value, (int, long)))
-    assert(value>=-2**32-1 and value<=2**32-1)
+    assert(value>=MIN_INT32 and value<=MAX_INT32)
 
 def AssertUInt32 ( value ):
     assert(isinstance(value, (int, long)))
-    assert(value>=0 and value<=2**32-1)
-        
+    assert(value>=0 and value<=MAX_UINT32)
+
+def AssertInt64 ( value ):
+    assert(isinstance(value, (int, long)))
+    assert(value>=MIN_INT64 and value<=MAX_INT64)
+
 #
 # $Id$
 #

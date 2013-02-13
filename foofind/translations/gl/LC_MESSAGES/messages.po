@@ -43,7 +43,7 @@ msgstr ""
 "niso."
 
 msgid "error_404_message"
-msgstr "Páxina non atopada."
+msgstr "Páxina non atopada"
 
 msgid "error_404_description"
 msgstr ""
@@ -51,7 +51,7 @@ msgstr ""
 "agradeceríamosche que nos avisaras."
 
 msgid "error_502_message"
-msgstr "Pasarela incorrecta."
+msgstr "Pasarela incorrecta"
 
 msgid "error_502_description"
 msgstr "Tentouse acceder ao servizo web cunha ubicación incorrecta."
@@ -155,7 +155,7 @@ msgid "archive"
 msgstr "Arquivo"
 
 msgid "no_results_for"
-msgstr "Non hai resultados para:"
+msgstr "Non hai resultados para"
 
 msgid "write_something"
 msgstr "Escribe algo!"

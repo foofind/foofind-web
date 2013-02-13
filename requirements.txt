@@ -21,7 +21,7 @@ flask-wtf==0.8
 
 flask-zen
 
-flask-cache
+flask-cache==0.9.2
 
 flask-login==0.1.1
 
@@ -43,7 +43,8 @@ pycrypto
 
 fabric
 
-raven>=2.0.3
+raven==2.0.10
+blinker==1.2
 
 webassets==0.7
 slimmer
@@ -59,3 +60,5 @@ uwsgi
 chardet
 
 timelib
+
+markdown

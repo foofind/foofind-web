@@ -2,8 +2,9 @@
 {% block header %}{% endblock %}
 {% block content %}
     <div id="search">
-        <img src="{{ g.static_prefix }}/img/logo.png" alt="foofind" width="350" height="125" />
+        <h1><img src="{{ g.static_prefix }}/img/logo.png" alt="File search engine - {{g.domain}}" title="{{g.domain}}" width="350" height="125" /></h1>
         <span{%- if g.lang in ["pt","zh","ja","eu"] %} class="small{%- if g.lang in ['ja'] %}er{% endif %}"{% endif %}>{{_('i_want_that_file')}}</span>
+
         {{flash()}}
         <form method="get" action="{{ url_for('files.search') }}">
             <fieldset id="params">
@@ -21,6 +22,9 @@
                 {{- form.search_submit(**{"data-no_query":_("write_something")}) -}}
             </fieldset>
         </form>
+        <div id="toolbar">
+            <a data-source="Index text" href="http://toolbarstart.com/foofind/">{{_('new_toolbar')}} - </a><a data-source="Index click" href="http://toolbarstart.com/foofind/">{{_('click_here')}}</a>
+        </div>
     </div>
     <div id="extra">
         <div id="live">
@@ -32,7 +36,7 @@
             </div>
             <div class="social">
                 <div id="fb-root"></div>
-                <div class="fb-like-box" data-href="http://www.facebook.com/foofind" data-width="600" data-height="180" data-show-faces="true" data-border-color="#F5F5F5" data-stream="false" data-header="false"></div>
+                <div class="fb-like-box" data-href="https://www.facebook.com/foofind" data-width="600" data-height="180" data-show-faces="true" data-border-color="#F5F5F5" data-stream="false" data-header="false"></div>
                 <div class="g-plusone" data-size="medium" data-href="http://foofind.is"></div>
                 <a href="https://twitter.com/foofind" class="twitter-follow-button" data-show-count="false" data-lang="{{ g.lang }}">Seguir a @foofind</a>
                 <script>

@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 import pymongo
-from foofind.utils import hex2mid
 from hashlib import sha256
 from datetime import datetime
+
+from foofind.utils import hex2mid
 
 class PagesStore(object):
     '''
@@ -30,7 +31,7 @@ class PagesStore(object):
         '''
         d = {key: data[key] for key in ('name', 'surname', 'company', 'email','phonenumber','linkreported','urlreported','reason','message')}
         d.update((("ip", sha256(data["ip"]).hexdigest()),("created",datetime.utcnow()),("processed",False)))
-        self.pages_conn.foofind.complaint.insert(d)
+        self.pages_conn.users.complaint.insert(d)
         self.pages_conn.end_request()
 
     def get_complaints(self, skip=None, limit=None, processed=False):
@@ -49,7 +50,7 @@ class PagesStore(object):
         @rtype: MongoDB cursor
         @return: cursor con resultados
         '''
-        complaints = self.pages_conn.foofind.complaint.find(None if processed is None else {"processed":processed}).sort("created",-1)
+        complaints = self.pages_conn.users.complaint.find(None if processed is None else {"processed":processed}).sort("created",-1)
         if not skip is None: complaints.skip(skip)
         if not limit is None: complaints.limit(limit)
         for doc in complaints:
@@ -66,7 +67,7 @@ class PagesStore(object):
         @rtype: MongoDB document or None
         @return: resultado
         '''
-        data = self.pages_conn.foofind.complaint.find_one({"_id":hex2mid(hexid)})
+        data = self.pages_conn.users.complaint.find_one({"_id":hex2mid(hexid)})
         self.pages_conn.end_request()
         return data
 
@@ -85,7 +86,7 @@ class PagesStore(object):
                 update["$unset"][rem]=1
 
         del update["$set"]["_id"]
-        self.pages_conn.foofind.complaint.update({"_id":hex2mid(data["_id"])}, update)
+        self.pages_conn.users.complaint.update({"_id":hex2mid(data["_id"])}, update)
         self.pages_conn.end_request()
 
     def count_complaints(self,  processed=False, limit=0):
@@ -97,7 +98,7 @@ class PagesStore(object):
         @rtype integer
         @return Número de enlaces reportados
         '''
-        count = self.pages_conn.foofind.complaint.find(
+        count = self.pages_conn.users.complaint.find(
             None if processed is None else {"processed":processed},
             limit=limit
             ).count(True)
@@ -113,7 +114,7 @@ class PagesStore(object):
         '''
         d = data.copy()
         d.update((("ip",sha256(data["ip"]).hexdigest()),("created", datetime.utcnow()),("processed",False)))
-        self.pages_conn.foofind.translation.insert(d)
+        self.pages_conn.users.translation.insert(d)
         self.pages_conn.end_request()
 
     def count_translations(self, processed=False, limit=0):
@@ -125,7 +126,7 @@ class PagesStore(object):
         @rtype integer
         @return Número de traducciones
         '''
-        count = self.pages_conn.foofind.translation.find(
+        count = self.pages_conn.users.translation.find(
             None if processed is None else {"processed":processed},
             limit=limit
             ).count(True)
@@ -148,7 +149,7 @@ class PagesStore(object):
         @rtype: MongoDB cursor
         @return: cursor con resultados
         '''
-        translations = self.pages_conn.foofind.translation.find(None if processed is None else {"processed":processed}).sort("created",-1)
+        translations = self.pages_conn.users.translation.find(None if processed is None else {"processed":processed}).sort("created",-1)
         if not skip is None: translations.skip(skip)
         if not limit is None: translations.limit(limit)
         for document in translations:
@@ -165,7 +166,7 @@ class PagesStore(object):
         @rtype: MongoDB document or None
         @return: resultado
         '''
-        data = self.pages_conn.foofind.translation.find_one({"_id":hex2mid(hexid)})
+        data = self.pages_conn.users.translation.find_one({"_id":hex2mid(hexid)})
         self.pages_conn.end_request()
         return data
 
@@ -184,6 +185,6 @@ class PagesStore(object):
                 update["$unset"][rem]=1
 
         del update["$set"]["_id"]
-        self.pages_conn.foofind.translation.update({"_id":hex2mid(data["_id"])}, update)
+        self.pages_conn.users.translation.update({"_id":hex2mid(data["_id"])}, update)
         self.pages_conn.end_request()
 

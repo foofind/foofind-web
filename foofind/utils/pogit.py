@@ -5,11 +5,11 @@ import git
 import polib
 import collections
 import time
-import logging
 import subprocess
 import shutil
 
 from . import touch_path
+from . import logging
 
 '''
 mkdir myrepo

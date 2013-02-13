@@ -6,7 +6,7 @@
     <div class="download_button">
         {% if 'images_server' in file['view'] %}
         <a class="thumblink" href="{{ file['view']['sources'][file['view']['source']]['urls'][0] }}">
-            <img id="{{ file['file']['id'] }}" class="img_{{ file['view']['images_server'] }}" src="http://{{ file['view']['first_image_server'] }}/{{ file['file']['_id'] }}0" />
+            <img id="{{ file['file']['id'] }}" class="img_{{ file['view']['images_server'] }}" src="http://{{ file['view']['first_image_server'] }}/{{ file['view']['images_id'] }}0" />
         </a>
         {% else %}
         <span class="icon50 {{ file['view']['file_type'] }}"></span><br />

@@ -3,30 +3,32 @@
     Módulo principal de la aplicación Web
 """
 import foofind.globals
-
 #import foofind.utils.async  # debe hacerse antes que nada
+
+import os, os.path, defaults
 from collections import OrderedDict
 from flask import Flask, g, request, session, render_template, redirect, abort, url_for, make_response
 from flask.ext.assets import Environment, Bundle
 from flask.ext.babel import get_translations, gettext as _
 from flask.ext.login import current_user
-from flask.ext.seasurf import SeaSurf
+from babel import support, localedata, Locale
+from raven.contrib.flask import Sentry
+from webassets.filter import register_filter
+from hashlib import md5
+
 from foofind.user import User
 from foofind.blueprints.index import index
 from foofind.blueprints.page import page
 from foofind.blueprints.user import user,init_oauth
 from foofind.blueprints.files import files
 from foofind.blueprints.api import api
+from foofind.blueprints.downloads import downloads, track_downloader_info
 from foofind.blueprints.labs import add_labs, init_labs
 from foofind.services import *
 from foofind.templates import register_filters
 from foofind.utils.webassets_filters import JsSlimmer, CssSlimmer
-from foofind.utils import u
-from babel import support, localedata, Locale
-from raven.contrib.flask import Sentry
-from webassets.filter import register_filter
-from hashlib import md5
-import os, os.path, logging, defaults
+from foofind.utils import u, logging
+from foofind.forms.files import SearchForm
 
 try:
     from uwsgidecorators import postfork
@@ -107,10 +109,12 @@ def create_app(config=None, debug=False):
     app.register_blueprint(user)
     app.register_blueprint(files)
     app.register_blueprint(api)
+    app.register_blueprint(downloads)
     add_labs(app) # Labs (blueprints y alternativas en pruebas)
 
     # Web Assets
-    if not os.path.isdir(app.static_folder+"/gen"): os.mkdir(app.static_folder+"/gen")
+    if not os.path.isdir(os.path.join(app.static_folder,"gen")):
+        os.mkdir(os.path.join(app.static_folder,"gen"))
     assets = Environment(app)
     assets.debug = app.debug
 
@@ -122,15 +126,17 @@ def create_app(config=None, debug=False):
     assets.register('css_ie7', 'css/ie7.css', filters='css_slimmer', output='gen/ie7.css')
     assets.register('css_labs', 'css/jquery-ui.css', Bundle('css/labs.css', filters='pyscss', output='gen/l.css', debug=False), filters='css_slimmer', output='gen/labs.css')
     assets.register('css_admin', Bundle('css/admin.css', 'css/jquery-ui.css', filters='css_slimmer', output='gen/admin.css'))
+    assets.register('css_foodownloader', Bundle('css/foodownloader.css', filters='css_slimmer', output='gen/foodownloader.css'))
 
     assets.register('js_all', Bundle('js/jquery.js', 'js/jquery-ui.js', 'js/jquery.ui.selectmenu.js', 'js/files.js', filters='rjsmin', output='gen/foofind.js'), )
     assets.register('js_ie', Bundle('js/html5shiv.js', 'js/jquery-extra-selectors.js', 'js/jquery.ba-hashchange.js', 'js/selectivizr.js', filters='rjsmin', output='gen/ie.js'))
     assets.register('js_search', Bundle('js/jquery.hoverIntent.js', 'js/search.js', filters='rjsmin', output='gen/search.js'))
     assets.register('js_labs', Bundle('js/jquery.js', 'js/jquery-ui.js', 'js/labs.js', filters='rjsmin', output='gen/labs.js'))
     assets.register('js_admin', Bundle('js/jquery.js',  'js/jquery-ui-admin.js', 'js/admin.js', filters='rjsmin', output='gen/admin.js'))
+    assets.register('js_foodownloader', Bundle('js/jquery.js', 'js/foodownloader.js', filters='rjsmin', output='gen/foodownloader.js'))
 
     # proteccion CSRF
-    csrf = SeaSurf(app)
+    csrf.init_app(app)
 
     # Detección de idioma
     @app.url_defaults
@@ -210,6 +216,8 @@ def create_app(config=None, debug=False):
     pagesdb.init_app(app)
     feedbackdb.init_app(app)
     configdb.init_app(app)
+    entitiesdb.init_app(app)
+    downloadsdb.init_app(app)
 
     # Servicio de búsqueda
     @app.before_first_request
@@ -222,18 +230,22 @@ def create_app(config=None, debug=False):
     # Taming
     taming.init_app(app)
 
-    eventmanager.once(searchd.init_app, hargs=(app, filesdb))
+    # Profiler
+    profiler.init_app(app, feedbackdb)
+
+    eventmanager.once(searchd.init_app, hargs=(app, filesdb, entitiesdb, profiler))
 
     # Refresco de conexiones
     eventmanager.once(filesdb.load_servers_conn)
     eventmanager.interval(app.config["FOOCONN_UPDATE_INTERVAL"], filesdb.load_servers_conn)
+    eventmanager.interval(app.config["FOOCONN_UPDATE_INTERVAL"], entitiesdb.connect)
 
     # Refresco de configuración
     eventmanager.once(configdb.pull)
     eventmanager.interval(app.config["CONFIG_UPDATE_INTERVAL"], configdb.pull)
 
-    # Profiler
-    profiler.init_app(app, feedbackdb)
+    # guarda registro de downloader
+    eventmanager.interval(app.config["CONFIG_UPDATE_INTERVAL"], track_downloader_info)
 
     # Carga la traducción alternativa
     fallback_lang = support.Translations.load(os.path.join(app.root_path, 'translations'), ["en"])
@@ -275,7 +287,7 @@ def create_app(config=None, debug=False):
                 if "?" in request.url:
                     root = request.url_root[:-1]
                     path = request.path.rstrip("/")
-                    query = request.url.decode("utf-8")
+                    query = u(request.url)
                     query = query[query.find(u"?"):]
                     return redirect(root+path+query, 301)
                 return redirect(request.url.rstrip("/"), 301)
@@ -295,6 +307,9 @@ def create_app(config=None, debug=False):
 
             return redirect(request.base_url)
 
+        # argumentos de busqueda por defecto
+        g.args = {}
+        g.extra_sources=[]
 
         # dominio de la web
         g.domain = "foofind.is"
@@ -303,9 +318,11 @@ def create_app(config=None, debug=False):
         g.title = g.domain
         g.autocomplete_disabled = "false" if app.config["SERVICE_TAMING_ACTIVE"] else "true"
 
-        g.keywords = [_(keyword) for keyword in ['download', 'watch', 'files', 'submit_search', 'audio', 'video', 'image', 'document', 'software', 'P2P', 'direct_downloads']]
+        g.keywords = set(_(keyword) for keyword in ['download', 'watch', 'files', 'submit_search', 'audio', 'video', 'image', 'document', 'software', 'P2P', 'direct_downloads'])
         descr = _("about_text")
         g.page_description = descr[:descr.find("<br")]
+
+        g.foodownloader = app.config["FOODOWNLOADER"] and (request.user_agent.platform == "windows")
 
     @app.after_request
     def after_request(response):
@@ -313,26 +330,8 @@ def create_app(config=None, debug=False):
         return response
 
     # Páginas de error
-    @app.errorhandler(400)
-    @app.errorhandler(401)
-    @app.errorhandler(403)
-    @app.errorhandler(404)
-    @app.errorhandler(405)
-    @app.errorhandler(408)
-    @app.errorhandler(409)
-    @app.errorhandler(410)
-    @app.errorhandler(411)
-    @app.errorhandler(412)
-    @app.errorhandler(413)
-    @app.errorhandler(414)
-    @app.errorhandler(415)
-    @app.errorhandler(416)
-    @app.errorhandler(417)
-    @app.errorhandler(418)
-    @app.errorhandler(500)
-    @app.errorhandler(501)
-    @app.errorhandler(502)
-    @app.errorhandler(503)
+
+    @allerrors(app, 400, 401, 403, 404, 405, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 500, 501, 502, 503)
     def all_errors(e):
         error = str(e.code) if hasattr(e,"code") else "500"
         message_msgid = "error_%s_message" % error
@@ -345,11 +344,16 @@ def create_app(config=None, debug=False):
             description_msgstr = _("error_500_description")
         try:
             g.title = "%s %s" % (error, message_msgstr)
-            g.keywords = []
+            g.keywords = set()
             g.page_description = g.title
-            return render_template('error.html', zone="errorhandler", error=error, description=description_msgstr), int(error)
+            return render_template('error.html', zone="error", error=error, description=description_msgstr, search_form=SearchForm()), int(error)
         except BaseException as ex: #si el error ha llegado sin contexto se encarga el servidor de él
             logging.warn(ex)
             return make_response("",error)
 
     return app
+
+def allerrors(app, *list_of_codes):
+    def inner(f):
+        return reduce(lambda f, code: app.errorhandler(code)(f), list_of_codes, f)
+    return inner

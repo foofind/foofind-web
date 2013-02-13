@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
+
 import re
 import os
 import bson
-import logging
 import chardet
 import pymongo
 import random
@@ -14,6 +14,7 @@ import time
 import ctypes
 import sys
 import trace
+
 from unicodedata import normalize
 from base64 import b64encode, b64decode
 from os.path import isfile, isdir, join
@@ -23,6 +24,10 @@ from content_types import *
 from foofind.utils.splitter import SEPPER
 from collections import OrderedDict
 from itertools import izip, ifilter
+
+import wlogging
+
+logging = wlogging
 
 try:
     import  ctypes
@@ -254,7 +259,7 @@ def bin2hex(binary):
 
 def hex2bin(hexuri):
     '''
-    Recibe una cadena binaria con el id y retorna un hexadecimal
+    Recibe una cadena hexadecimal con el id y retorna una cadena binaria
     '''
     return hexuri.decode("hex")
 
@@ -295,11 +300,17 @@ def url2bin(b64id):
     '''
     return b64decode(str(b64id), "!-")
 
+def hex2url(hexuri):
+    '''
+    Recibe una cadena hexadecimal con el id y retorna en base64
+    '''
+    return bin2url(hex2bin(hexuri))
+
 def fileurl2mid(url):
     '''
     Recibe una url de fichero de foofind y retorna ObjectId
     '''
-    idpart = urlparse(url).path.split("/download/")[1].split("/", 1)[0]
+    idpart = urlparse(url.replace("#!", "")).path.split("/download/")[1].split("/", 1)[0]
     return url2mid(urllib2.unquote(idpart))
 
 def lang_path(lang, base_path, ext="po"):
@@ -393,25 +404,31 @@ def check_capped_collections(db, capped_dict):
                         clave y su tamaño como valor.
     '''
     collnames = db.collection_names()
-    extra = {"size":100000}
+    extra = {"size":100000, "autoIndexId": False}
     for capped, data in capped_dict.iteritems():
         kwargs = extra.copy()
         if isinstance(data, dict): kwargs.update(data)
         elif isinstance(data, int):
             kwargs["max"] = data
             kwargs["size"] = data*512 # 512 bytes por documento
+
         if capped in collnames:
             options = db[capped].options()
             if not options.get("capped", False):
-                logging.error(u"La colección (%s:%s).%s.%s no está capada."
-                    % (db.connection.host, db.connection.port, db.name, capped)
-                    )
+                result = db.command("convertToCapped", capped, **kwargs)
+                if not result.get("ok", False):
+                    logging.error(u"La colección (%s:%s).%s.%s no se ha podido capar."
+                        % (db.connection.host, db.connection.port, db.name, capped)
+                        )
+
+            if "autoIndexId" not in options:
+                options["autoIndexId"] = False
+
             elif any(True for key, value in extra.iteritems() if key != "size" and options.get(key, VALUE_UNSET) != value ):
                 # Comprobamos las diferencias en las opciones, obviando size
                 # TODO(felipe): Analizar la viabilidad de rehacer automáticamente las capped collections que estén mal
                 # db[capped].drop()
                 # db.create_collection(capped, capped = True, **kwargs)
-
                 logging.warn(
                     u"Diferencia encontrada en la configuración de capped collection en (%s:%s).%s.%s"
                         % (db.connection.host, db.connection.port, db.name, capped),
@@ -532,7 +549,7 @@ def multisplit(x, s):
     '''
     try:
         # Iterador con caracteres de x que son separadores
-        gen = ifilter(s.__contains__, x)
+        gen = (SEPPER.intersection(x)).__iter__()
         sc = gen.next()
         for sn in gen:
             x = x.replace(sn, sc)

@@ -2,11 +2,9 @@
 """
     Formularios para manejo de datos de usuarios.
 """
-from flask.ext.wtf import Form,BooleanField,PasswordField,TextField,SubmitField,ValidationError
+from flask.ext.wtf import Form,BooleanField,PasswordField,TextField,SubmitField,ValidationError,EqualTo, Optional, RecaptchaField
 from flask.ext.babel import lazy_gettext as _
-from foofind.forms.captcha import CaptchaField
-from foofind.forms.validators import *
-
+from foofind.forms.validators import require, email, length, number_letter
 
 class LoginForm(Form):
     '''
@@ -22,7 +20,7 @@ class ForgotForm(Form):
     Formulario de recordatorio de contraseña
     '''
     email = TextField(_('your_email'), [require(), email()])
-    captcha = CaptchaField()
+    captcha = RecaptchaField()
     submit = SubmitField(_("submit"))
 
 class RegistrationForm(Form):
@@ -34,7 +32,7 @@ class RegistrationForm(Form):
     password = PasswordField(_("your_password"), [require(), length(min=5, max=20), EqualTo('confirm', message=_("passwords_not_match"))])
     confirm = PasswordField(_("insert_your_password"), [require(), length(min=5, max=20)])
     accept_tos = BooleanField(validators=[require()])
-    captcha = CaptchaField()
+    captcha = RecaptchaField()
     submit = SubmitField(_("submit_registration"))
 
 class EditForm(Form):

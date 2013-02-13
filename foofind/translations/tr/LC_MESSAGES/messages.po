@@ -16,6 +16,12 @@ msgstr ""
 msgid "your_email"
 msgstr "E-posta adresiniz:"
 
+msgid "new_toolbar"
+msgstr "Yeni araç çubuğumuzu deneyin!"
+
+msgid "click_here"
+msgstr "buraya tıklayın!"
+
 msgid "password"
 msgstr "Parola:"
 
@@ -24,6 +30,9 @@ msgstr "Gönder"
 
 msgid "required_empty"
 msgstr "Bu alan gereklidir ve boş bırakılamaz."
+
+msgid "ok"
+msgstr "tamam"
 
 msgid "help_us"
 msgstr "bize yardım edin!"
@@ -56,18 +65,21 @@ msgid "error_410_description"
 msgstr "İstenen URL artık mevcut değildir ve bu gelecekte de değişmeyecektir"
 
 msgid "error_502_message"
-msgstr "Bozuk ağ geçidi."
+msgstr "Bozuk ağ geçidi"
 
 msgid "error_502_description"
 msgstr "Yanlış geçit nedeniyle servise ulaşılamıyor."
 
 msgid "error_503_message"
-msgstr "Servis hizmette değildir."
+msgstr "Servis hizmette değildir"
 
 msgid "error_503_description"
 msgstr ""
 "İstenilen adres geçici olarak hizmet dışıdır. Bir süre sonra tekrar "
 "deneyiniz."
+
+msgid "servers_status"
+msgstr "Sunucu durumunu kontrol et"
 
 msgid "error_mail_send"
 msgstr ""
@@ -149,6 +161,12 @@ msgstr "Diğer veri akışları"
 msgid "other_direct_downloads"
 msgstr "Diğer doğrudan indirmeler"
 
+msgid "some_streamings"
+msgstr "Bazı veri akışları"
+
+msgid "some_downloads"
+msgstr "Bazı doğrudan indirmeler"
+
 msgid "others"
 msgstr "Diğerleri"
 
@@ -192,7 +210,7 @@ msgid "approximately"
 msgstr "Yaklaşık"
 
 msgid "results_for"
-msgstr "sonuç, şu arama için:"
+msgstr "sonuç, şu arama için"
 
 msgid "not_allow_browse_results"
 msgstr "Foofind 100. sayfadan sonra sonuç göstermez, üzgünüz."
@@ -424,7 +442,22 @@ msgid "date"
 msgstr "Tarih"
 
 msgid "trackers"
-msgstr "Tracker"
+msgstr "İzleyici"
+
+msgid "director"
+msgstr "Yönetmen"
+
+msgid "writer"
+msgstr "Senarist"
+
+msgid "starring"
+msgstr "Oyuncular"
+
+msgid "producer"
+msgstr "Prodüktör"
+
+msgid "released"
+msgstr "Yayın tarihi"
 
 msgid "hash"
 msgstr "Hash değeri"
@@ -432,17 +465,44 @@ msgstr "Hash değeri"
 msgid "visualizations"
 msgstr "Görüntülemeler"
 
+msgid "all_sources"
+msgstr "tüm kaynaklar"
+
+msgid "share"
+msgstr "%(site)s üzerinde paylaş"
+
+msgid "share_download"
+msgstr "Paylaş"
+
+msgid "share_search"
+msgstr "Bu aramayı paylaş"
+
 msgid "codec"
 msgstr "Kodek"
 
 msgid "encoding"
 msgstr "Kodlama"
 
+msgid "open_link_new_tab"
+msgstr "bağlantıyı yeni sekmede aç"
+
 msgid "close"
 msgstr "Kapat"
 
+msgid "download_source"
+msgstr "%(source)s öğesinden indir"
+
 msgid "share_this"
 msgstr "Paylaş"
+
+msgid "watch_source"
+msgstr "%(source)s üzerinde izle"
+
+msgid "listen"
+msgstr "Dinle"
+
+msgid "listen_source"
+msgstr "%(source)s üzerinde dinle"
 
 msgid "share_facebook"
 msgstr "facebook ile paylaş"
@@ -858,22 +918,33 @@ msgstr "Foofind bakımdadır. Daha sonra tekrar ziyaret ediniz."
 
 msgid "technology_text"
 msgstr ""
-"Foofind ekibi projenin kaynak kodunun çoğunu geliştirir ama özgür yazılım topluluğunun çalışmalarına da pek çok dayanıyoruz.\r\n"
-"\r\n"
-"Bu inanılmaz projeler olmasaydı Foofind mümkün olamazdı. Çok teşekkür ederiz! ;-)\r\n"
-"\r\n"
-"Twisted: Python ile yazılmış ve açık kaynak MIT lisansı kapsamında olay kaynaklı ağ motorudur.\r\n"
-"\r\n"
-"Scrapy: Scrapy, web tarama ve sayfalardan yapılandırılmış veri ayıklamak için kullanılan hızlı ve yüksek seviyeli ağ tarama altyapısıdır. Veri araştırmadan izlemeye ve otomatik testlere dek değişik amaçlar için kullanılabilir.\r\n"
-"\r\n"
-"Flask: Werkzeug ve Jinja 2'ye dayalı Python için mikro-altyapıdır ve BSD lisansı kapsamında yayınlanmıştır.\r\n"
-"\r\n"
-"MongoDB: MongoDB (koskoca anlamında \"humongous\" kelimesinden) ölçeklenebilir, yüksek performanslı, açık kaynak NoSQL veritabanıdır.\r\n"
-"Sentry: Sentry gerçek zamanlı olay günlüğü ve agregasyonu platformudur. Standart kullanıcı geri bildirimi döngüsünün sorunları olmaksızın hataları izlemeye ve post-mortem yapmak için gerekli tüm verileri çıkarmaya yarar.\r\n"
-"\r\n"
-"Sphinx: Sphinx alaka (yani arama kalitesi) ve entegrasyon basitliği amacıyla baştan sona yeniden tasarlanmış açık kaynak bir metin arama sunucusudur.  C++ ile yazılmıştır ve GNU/Linux (RedHat, Ubuntu, vs.), Windows, MacOS, Solaris, FreeBSD, ve diğer sistemler üzerinde çalışır.\r\n"
-"\r\n"
-"Social Network Icon Pack: Rogie King, Komodo Media tarafından yayınlanmış Social Ağ İkon Paketi Creative Commons Atıf-Benzer Paylaşım 3.0 Uyarlanmamış lisansı kapsamında yayınlanmıştır."
+"<p>Foofind ekibi projenin kaynak kodunun çoğunu geliştirir ama özgür yazılım"
+" topluluğunun çalışmalarına da pek çok dayanıyoruz.</p><p>Bu inanılmaz "
+"projeler olmasaydı Foofind mümkün olamazdı. Çok teşekkür ederiz! "
+";-)</p><ul><li><a href=\"http://twistedmatrix.com/\">Twisted</a>: Python ile"
+" yazılmış ve açık kaynak MIT lisansı kapsamında olay kaynaklı ağ "
+"motorudur.</li><li><a href=\"http://scrapy.org/\">Scrapy</a>: Scrapy, web "
+"tarama ve sayfalardan yapılandırılmış veri ayıklamak için kullanılan hızlı "
+"ve yüksek seviyeli ağ tarama altyapısıdır. Veri araştırmadan izlemeye ve "
+"otomatik testlere dek değişik amaçlar için kullanılabilir.</li><li><a "
+"href=\"http://flask.pocoo.org/\">Flask</a>: Werkzeug ve Jinja 2'ye dayalı "
+"Python için mikro-altyapıdır ve BSD lisansı kapsamında "
+"yayınlanmıştır.</li><li><a href=\"http://www.mongodb.org/\">MongoDB</a>: "
+"MongoDB (koskoca anlamında \"humongous\" kelimesinden) ölçeklenebilir, "
+"yüksek performanslı, açık kaynak NoSQL veritabanıdır.</li><li><a "
+"href=\"http://github.com/dcramer/sentry\">Sentry</a>: Sentry gerçek zamanlı "
+"olay günlüğü ve agregasyonu platformudur. Standart kullanıcı geri bildirimi "
+"döngüsünün sorunları olmaksızın hataları izlemeye ve post-mortem yapmak için"
+" gerekli tüm verileri çıkarmaya yarar.</li><li><a "
+"href=\"http://sphinxsearch.com/\">Sphinx</a>: Sphinx alaka (yani arama "
+"kalitesi) ve entegrasyon basitliği amacıyla baştan sona yeniden tasarlanmış "
+"açık kaynak bir metin arama sunucusudur.  C++ ile yazılmıştır ve GNU/Linux "
+"(RedHat, Ubuntu, vs.), Windows, MacOS, Solaris, FreeBSD, ve diğer sistemler "
+"üzerinde çalışır.</li><li><a href=\"http://www.komodomedia.com/blog/2009/06"
+"/social-network-icon-pack/\">Social Network Icon Pack</a>: Rogie King, "
+"Komodo Media tarafından yayınlanmış Social Ağ İkon Paketi Creative Commons "
+"Atıf-Benzer Paylaşım 3.0 Uyarlanmamış lisansı kapsamında "
+"yayınlanmıştır.</li></ul>"
 
 msgid "link_not_exist"
 msgstr "Bu bağlantı yoktur ya da silinmiş olabilir!"
@@ -889,7 +960,7 @@ msgstr "Foofind'ı dilinize çevirmemize yardım edin"
 
 msgid "translate_description"
 msgstr ""
-"Foofind şu anda birkaç dilde hizmet sunmaktadır, ama çeviri için bize yardımda bulunabilirsiniz. Aşağıdaki listeden dilinizi seçip gereken alanları tercümeniz ile doldurmanız yeterli olacaktır. Bütün alanları doldurmanıza gerek yoktur, tüm yardımlar makbûle geçecektir.\r\n"
+"Foofind şu anda birkaç dilde hizmet sunmaktadır, ama çeviri için bize yardımda bulunabilirsiniz. Aşağıdaki listeden dilinizi seçip gereken alanları tercümeniz ile doldurmanız yeterli olacaktır. Bütün alanları doldurmanıza gerek yoktur, tüm yardımlar makbule geçecektir.\r\n"
 "\r\n"
 "Eğer diliniz listede mevcut değilse, eklememiz için bizimle iletişime geçmenizi rica ederiz."
 
@@ -901,6 +972,78 @@ msgstr "Tercümeniz gönderilmiştir. Yardımınız için teşekkür ederiz!"
 
 msgid "translate_at_least_one"
 msgstr "Lütfen en az bir metin tercüme ediniz."
+
+msgid "foodownloader_powered"
+msgstr "[%(name)s](%(link)s) ile güçlendirilmiştir"
+
+msgid "foodownloader_overview"
+msgstr "Genel bakış"
+
+msgid "foodownloader_overview_text"
+msgstr ""
+"**Foofind Download Manager**, **torrent** P2P ağı için hızlı bir istemcidir.\r\n"
+"\r\n"
+"Foofind Download Manager kullanımı kolay, sezgisel ve güvenli olması yönünde tasarlanmıştır. İndirmelerinizi her zamankinden daha kolay durdurabilir, sürdürebilir ve bulabilirsiniz; bakın neler sunar:\r\n"
+"\r\n"
+"*    Kaya gibi sağlam torrent istemcisi.\r\n"
+"*    Sade bir arayüz.\r\n"
+"*    DHT, UPnP ve uTorrent protokol uzantıları."
+
+msgid "foodownloader_sharing"
+msgstr "Dosya indir ve paylaş"
+
+msgid "foodownloader_sharing_text"
+msgstr ""
+"Bundan böyle **Foofind Download Manager** ile dosyalarınızı çok daha hızlı indirebilirsiniz. Bu güne dek tasarlanan en hızlı P2P ağı olan **torrent** şebekesi sayesinde indirmeleriniz adeta uçarcasına gerçekleşecektir.\r\n"
+"\r\n"
+"Deneyin! **Geleceğin indirmeleri sadece bir tıklama ötededir.**"
+
+msgid "foodownloader_safety"
+msgstr "Dosyalarınızı güvenli bir şekilde elde edin"
+
+msgid "foodownloader_safety_text"
+msgstr ""
+"Güvenliğe çok önem veririz. **Foofind Download Manager** ödül kazanan libtorrent kütüphanesini kullanır ve bu indirme deneyiminizi mümkün olan\\* en güvenli dereceye yükseltir.\r\n"
+"\r\n"
+"\\* _güvenilir olmayan kaynaklardan kötücül yazılım indirmeniz mümkündür dolayısıyla bir anti-virüs kullanmanızı hararetle tavsiye ederiz._"
+
+msgid "foodownloader_download"
+msgstr "Ücretsiz indirim"
+
+msgid "foodownloader_download_source"
+msgstr "İndirme kaynağı"
+
+msgid "foodownloader_meta_description"
+msgstr ""
+"Foofind Download Manager sade ve kullanımı kolay bir torrent indiricisidir."
+
+msgid "foodownloader_thanks"
+msgstr "Mutlu indirmeler dileriz!"
+
+msgid "foodownloader_thanks_message"
+msgstr ""
+"Foofind Download Manager'ı kurduğunuz için teşekkür ederiz, hoşunuza "
+"gideceğini umuyoruz."
+
+msgid "foodownloader_download_coming_soon"
+msgstr "Özür dileriz: Henüz işletim sisteminiz için sürüm yoktur."
+
+msgid "foodownloader_dialog_title"
+msgstr "Foofind Download Manager mevcuttur"
+
+msgid "foodownloader_dialog_yes"
+msgstr "Evet, Foofind Download Manager'ı indir"
+
+msgid "foodownloader_dialog_no"
+msgstr ""
+"Hayır, teşekkürler\r\n"
+"\r\n"
+"Zaten bir torrent istemcim var"
+
+msgid "foodownloader_dialog_text"
+msgstr ""
+"%(domain)s bu dosyayı tamamen ücretsiz yeni indirme yöneticisini kullanarak "
+"zamankinden daha hızlı ve kolay bir şekilde indirmenizi tavsiye eder!"
 
 msgid "here"
 msgstr "bunu rapor ediniz"

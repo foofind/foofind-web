@@ -1,4 +1,4 @@
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
@@ -166,7 +166,7 @@ msgid "archive"
 msgstr "Fitxategia"
 
 msgid "no_results_for"
-msgstr "Ez dago emaitzarik:"
+msgstr "Ez dago emaitzarik"
 
 msgid "write_something"
 msgstr "Zerbait idatzi!"

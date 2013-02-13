@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 from splitter import SEPPER
-from . import to_seconds, content_types as ct
+from . import to_seconds, content_types as ct, u
 
 import operator
 import itertools
@@ -71,6 +71,8 @@ CONTENT_TYPE_SET = {
     v for k, v in ct.__dict__.iteritems() if k.startswith("CONTENT_") and isinstance(v, int)
     }
 
+EXTENSION_BLACKLIST_CT = {ct.CONTENT_UNKNOWN, ct.CONTENT_TORRENT, ct.CONTENT_ARCHIVE}
+
 CONTENT_TYPE_SUBSET = {
     ct.CONTENT_UNKNOWN,
     ct.CONTENT_AUDIO,
@@ -100,13 +102,17 @@ ARCHIVE_CONTENT_PRIORITY = (
     ct.CONTENT_PRESENTATION, ct.CONTENT_IMAGE, ct.CONTENT_DOCUMENT,
     ct.CONTENT_TORRENT, ct.CONTENT_UNKNOWN
     )
+ARCHIVE_CONTENT_PRIORITY_WEIGHTS = list(ARCHIVE_CONTENT_PRIORITY)
+for i, ict in enumerate(ARCHIVE_CONTENT_PRIORITY):
+    ARCHIVE_CONTENT_PRIORITY_WEIGHTS[ict] = 2./(i+2)
+
 ARCHIVE_CONTENT_PRIORITY_STEP = 0.75
 
 # Confianza del tipo de contenido según orígen
 SOURCE_CT_CONFIDENCE_DEFAULT = 0.25
 SOURCE_CT_CONFIDENCE = {
     # torrent
-     3: 0.1, 7: 0.1, 79: 0.75, 80: 0.75, 81: 0.75, 82: 0.75, 83: 0.75, 90: 0.75,
+     3: 0.1, 7: 0.1, 79: 0.75, 80: 0.75, 81: 0.75, 82: 0.75, 83: 0.75, 90: 0.75, 94:0.75,
     # audio y vídeo
     16: 0.75, 17: 0.75, 18: 0.75, 21: 0.75, 33: 0.75, 36: 0.75, 39: 0.75, 42: 0.75, 45: 0.75, 47: 0.75, 49: 0.75, 50: 0.75, 51: 0.75, 57: 0.75, 60: 0.75, 62: 0.75, 63: 0.75, 64: 0.75, 65: 0.75, 69: 0.75, 71: 0.75, 72: 0.75, 73: 0.75, 75: 0.75, 78: 0.75, 85: 0.75, 86: 0.75, 87: 0.75, 88: 0.75, 89: 0.75, 91: 0.75, 93: 0.75,
     # tipo evidente
@@ -134,6 +140,9 @@ SOURCE_CT_URL = {
 SOURCE_TAG_URL = {
     13: {
         "game": lambda url: "/game/" in url
+        },
+    91: {
+        "porn": lambda url: True
         }
     }
 SOURCES_WITH_RELEVANT_URLS = {key for surl in (SOURCE_CT_URL, SOURCE_TAG_URL) for key in surl}
@@ -363,6 +372,7 @@ FORMAT_SET = {
             (ct.CONTENT_UNKNOWN,)
             )
     }
+
 # Tags dados por palabras clave en el nombre
 TAG_KEYWORDS = {
     ct.CONTENT_VIDEO: {
@@ -382,13 +392,24 @@ TAG_KEYWORDS = {
         }
     }
 # Tags dados por metadatos
-_movie_check = functools.partial(mdcheck, blacklist={"video:%s" % i for i in ("season", "series", "episode")})
+_movie_check = functools.partial(mdcheck, blacklist={"video:season", "video:series", "video:episode", "ntt:schema"})
 _check_os = lambda words, doc: (
     isinstance(doc["md"]["application:os"], basestring) and
     any(i in doc["md"]["application:os"].lower() for i in words)
     )
+
 TAG_METADATA = {
+    ct.CONTENT_AUDIO: {
+        "ntt:schema": {
+            "full_album": lambda doc: doc["md"]["ntt:schema"]=="album",
+            },
+        },
     ct.CONTENT_VIDEO: {
+        "ntt:schema": {
+            "movie": lambda doc: doc["md"]["ntt:schema"]=="movies",
+            "series": lambda doc: doc["md"]["ntt:schema"]=="episode",
+            "documentary": lambda doc: doc["md"]["ntt:schema"]=="documentary",
+            },
         "video:width": {
             "hd": lambda doc: (
                 minpixels(doc["md"]["video:width"], 1280) and
@@ -431,6 +452,9 @@ TAG_METADATA = {
             },
         },
     ct.CONTENT_BOOK: {
+        "ntt:schema": {
+            "ebook": lambda doc: doc["md"]["ntt:schema"]=="books",
+            },
         "book:title": {
             "ebook": True,
             },
@@ -440,15 +464,37 @@ TAG_METADATA = {
 TAG_EXTENSIONS = {
     ct.CONTENT_APPLICATION: {
         "android": {"apk"},
+        "mobile": {"apk", "ipa"},
         "linux": {"deb", "rpm", "tgz", "bz2"},
         "mac": {"pkg", "dmg"},
         "windows": {"msi", "exe"},
         "gamecube": {"dol"},
+        "game": {"dol"},
         },
     ct.CONTENT_AUDIO: {
         "karaoke": {"kar"},
         },
     }
+
+TAG_CONTENT_TYPE = {u"movie":ct.CONTENT_VIDEO,
+                    u"series":ct.CONTENT_VIDEO,
+                    u"documentary":ct.CONTENT_VIDEO,
+                    u"anime":ct.CONTENT_VIDEO,
+                    u"porn":ct.CONTENT_VIDEO,
+                    u"hd":ct.CONTENT_VIDEO,
+                    u"ebook":ct.CONTENT_DOCUMENT,
+                    u"software":ct.CONTENT_APPLICATION,
+                    u"linux":ct.CONTENT_APPLICATION,
+                    u"mac":ct.CONTENT_APPLICATION,
+                    u"windows":ct.CONTENT_APPLICATION,
+                    u"android":ct.CONTENT_APPLICATION,
+                    u"game":ct.CONTENT_APPLICATION,
+                    u"gamecube":ct.CONTENT_APPLICATION,
+                    u"music":ct.CONTENT_AUDIO,
+                    u"full_album":ct.CONTENT_AUDIO,
+                    u"karaoke":ct.CONTENT_AUDIO,
+                    u"mobile":ct.CONTENT_APPLICATION
+                    }
 
 # Tags vinculados a tipos concretos
 _tag_restrictions = [
@@ -472,11 +518,18 @@ _tag_restrictions.extend(
         for origin, (weight, tags) in origins.iteritems()
             for tag in tags
     )
+_tag_restrictions.extend(
+    # Asociación inversa de tags y content types
+    (ctype, tag)
+    for tag, ctype in TAG_CONTENT_TYPE.iteritems()
+    )
+
 _tag_restrictions.sort()
 TAG_RESTRICTIONS = {
     ctype: {tag for ctype, tag in taglist}
     for ctype, taglist in itertools.groupby(_tag_restrictions, key=operator.itemgetter(0))
     }
+
 #
 METADATA_PREFIX = {
     "video":ct.CONTENT_VIDEO,
@@ -569,6 +622,18 @@ REVERSE_FILENAME_KEYWORDS = {
         )
     }
 
+# Todos los formatos y tags en un solo set
+ALL_FORMATS = set(aformat
+                    for aset in FORMAT_SET.itervalues()
+                        for aformat, format_desc in aset)
+
+
+ALL_TAGS = set(tag
+                for aset in itertools.chain(REVERSE_TAG_KEYWORDS.itervalues(), REVERSE_TAG_METADATA.itervalues(),
+                                            REVERSE_TAG_EXTENSIONS.itervalues())
+                    for tag in aset)
+ALL_TAGS.update(TAG_CONTENT_TYPE.iterkeys())
+
 def seppersplit(x):
     '''
     Separa una cadena según los separadores de SEPPER (módulo splitter) y
@@ -581,7 +646,7 @@ def seppersplit(x):
     '''
     try:
         # Iterador con caracteres de x que son separadores
-        gen = itertools.ifilter(SEPPER.__contains__, x)
+        gen = (SEPPER.intersection(x)).__iter__()
         sc = gen.next()
         for sn in gen:
             x = x.replace(sn, sc)
@@ -596,7 +661,7 @@ _scores_initial = _scores_empty[:]
 _scores_initial[ct.CONTENT_UNKNOWN] = CONTENT_UNKNOWN_THRESHOLD
 _formats_initial = defaultdict(float, ((None, 0),))
 
-def analyze_filenames(filenames, skip_ct=False, analyze_extensions=True):
+def analyze_filenames(filenames, filesizes, skip_ct=False, analyze_extensions=True):
     '''
     Develve una lista de tipos de contenido y tags dependiendo de la profundidad
     y prioridad de cada uno de los ficheros (el tipo de contenido de cada
@@ -619,6 +684,11 @@ def analyze_filenames(filenames, skip_ct=False, analyze_extensions=True):
 
     not_skip_ct = not skip_ct
     lower_depths = _depths_empty[:]
+
+    # los tamaños de ficheros deben ser de la misma longitud
+    filesizes_reverse=filesizes[:] if len(filesizes)==numfilenames else []
+    filesizes_reverse.reverse()
+    filesizes_sum = sum(float(asize) for asize in filesizes_reverse) or 1
 
     # Análisis de extensiones
     for fn, counts in filenames:
@@ -665,12 +735,13 @@ def analyze_filenames(filenames, skip_ct=False, analyze_extensions=True):
                         break
             # Tipo de contenido por extensión
             if exts and not_skip_ct:
-                extweight = 1
+                extweight = 2
                 for ext in exts:
                     for extype in ct.EXTENSIONS[ext]:
-                        if extype > 0:
+                        if extype not in EXTENSION_BLACKLIST_CT:
                             file_scores[extype] += EXTENSION_CONFICENCE.get(ext, EXTENSION_CONFIDENCE_DEFAULT) * counts * extweight
                             extweight *= EXTENSION_IMPORTANCE_POSITION
+
         # Análisis de nombre de fichero
         if fn:
             # Puntuación según palabras clave
@@ -700,7 +771,7 @@ def analyze_filenames(filenames, skip_ct=False, analyze_extensions=True):
         # Análisis de content type del fichero
         if not_skip_ct:
             ict = max(_content_type_xrange, key=file_scores.__getitem__)
-            scores[ict] += 1
+            scores[ict] += float(filesizes_reverse.pop())/filesizes_sum if filesizes_reverse else 1
             if lower_depths[ict] > depth:
                 lower_depths[ict] = depth
 
@@ -711,16 +782,17 @@ def analyze_filenames(filenames, skip_ct=False, analyze_extensions=True):
     if scores.count(0.0) == len(scores):
         return scores, tags, fileformats
 
+    # Relativización de cada peso respecto a los pesos por prioridad
+    scores = [sc*w for sc, w in itertools.izip(scores, ARCHIVE_CONTENT_PRIORITY_WEIGHTS)]
+
     # Relativización de cada peso respecto al de mayor prioridad de cada nivel
-    total = sum(scores)
-    minu = min(i for i in scores if i)
+    '''total = sum(scores)
     n = 1
-    for depth, prio, ict in sorted(
-      (lower_depths[ict], n, ict)
-      for n, ict in enumerate(ARCHIVE_CONTENT_PRIORITY)
-      if lower_depths[ict] < sys.maxint):
+    for prio, ict, depth in sorted(
+      ((n, ict, lower_depths[ict]) for n, ict in enumerate(ARCHIVE_CONTENT_PRIORITY)
+      if lower_depths[ict] < sys.maxint)):
         n = n * scores[ict] / total
-        scores[ict] = n
+        scores[ict] = n'''
 
     # Compensación (para que tienda a 1) y actualización
     total = sum(scores) / PRIORITY_FILENAMES
@@ -784,7 +856,6 @@ def restrict_content_type(scores, tags=(), fformats=(), ctype=None):
         ftags = filter(TAG_RESTRICTIONS[ctype].__contains__, tags)
     else:
         ftags = []
-
     return ctype, ftags, fformat
 
 PRIORITY_CT = 1
@@ -807,9 +878,12 @@ def guess_doc_content_type(doc, sources=None):
     # Los ficheros deben de tener sources (de dónde salen los nombres y la configuración por orígen)
     if not sourceids:
         return ct.CONTENT_UNKNOWN, 0, [], None
+
     # Extracción de nombres de ficheros
+    filesizes = []
     if "md" in doc and "torrent:filepaths" in doc["md"] and isinstance(doc["md"]["torrent:filepaths"], basestring):
-        filepaths = [(fn, 1) for fn in doc["md"]["torrent:filepaths"].split("///")]
+        filepaths = [(fn, 1) for fn in doc["md"]["torrent:filepaths"].lstrip("/").split("///")]
+        filesizes = doc["md"]["torrent:filesizes"].split(" ") if "torrent:filesizes" in doc["md"] and isinstance(doc["md"]["torrent:filesizes"], basestring) else []
     elif "fn" in doc:
         filepaths = [
             (( "%s.%s" % (fn["n"], fn["x"])
@@ -824,7 +898,22 @@ def guess_doc_content_type(doc, sources=None):
 
     # Tags por metadatos
     tags = set() # Set de tags
+    torrent_tags_scores = None # content type segun tags del torrent
+
     if "md" in doc:
+        # tags provenientes de torrents
+        try:
+            torrent_tags = u(doc["md"]["torrent:special_tags"]).split(",") if "torrent:special_tags" in doc["md"] else \
+                       u(doc["md"]["torrent:category"]).lower().split(",") if "torrent:category" in doc["md"] else None
+            if torrent_tags:
+                tags.update(tag for tag in torrent_tags if tag in TAG_CONTENT_TYPE)
+                torrent_tags_cts = frozenset(TAG_CONTENT_TYPE[tag] for tag in tags)
+                if len(torrent_tags_cts)==1:
+                    torrent_tags_scores=_scores_empty[:]
+                    torrent_tags_scores[iter(torrent_tags_cts).next()]=1.0
+        except:
+            pass
+
         tags.update(
             tag
             for mdkey in doc["md"].iterkeys() if mdkey in REVERSE_TAG_METADATA
@@ -837,7 +926,8 @@ def guess_doc_content_type(doc, sources=None):
                 dsid = int(d["t"])
                 if dsid in SOURCE_TAG_URL:
                     durl = d["url"]
-                    tags.update(k for tag, cond in SOURCE_TAG_URL[dsid].iteritems() if cond(durl))
+                    tags.update(tag for tag, cond in SOURCE_TAG_URL[dsid].iteritems() if cond(durl))
+
     # Configuración definida por source
     has_extensions = True # Si tratar extensiones en los nombres de fichero
     allowed_ct = None # Futuro set de tipos de contenidos permitidos
@@ -851,7 +941,7 @@ def guess_doc_content_type(doc, sources=None):
                 if "ct" in source and source["ct"] and source["ct"] != ct.CONTENT_UNKNOWN:
                     if len(source["ct"]) == 1:
                         # Análisis de nombres de ficheros sin tipos
-                        empty_scores, ntags, fileformats = analyze_filenames(filepaths, skip_ct=True, analyze_extensions=has_extensions)
+                        empty_scores, ntags, fileformats = analyze_filenames(filepaths, filesizes, skip_ct=True, analyze_extensions=has_extensions)
                         tags.update(ntags)
                         return restrict_content_type(None, tags, fileformats, int(source["ct"][0])) # Tipo dado por el origen
                     source_ct = int(source["ct"])
@@ -867,7 +957,7 @@ def guess_doc_content_type(doc, sources=None):
     scores = None # Lista de puntuaciones para los tipos de contenido
     fileformats = None # Diccionario de puntuaciones para los formatos
     if filepaths:
-        scores, ntags, fileformats = analyze_filenames(filepaths, analyze_extensions=has_extensions)
+        scores, ntags, fileformats = analyze_filenames(filepaths, filesizes, analyze_extensions=has_extensions)
         tags.update(ntags)
     # Si no se han sacado fileformats y scores de los nombres de fichero
     if fileformats is None:
@@ -897,4 +987,5 @@ def guess_doc_content_type(doc, sources=None):
             SERVER_CT_CONFIDENCE.get(doc_s, SERVER_CT_CONFIDENCE_DEFAULT) *
             PRIORITY_CT / len(sourceids)
             )
-    return restrict_content_type(scores, tags, fileformats)
+
+    return restrict_content_type(torrent_tags_scores or scores, tags, fileformats)

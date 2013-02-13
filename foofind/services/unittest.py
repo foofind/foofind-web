@@ -31,7 +31,6 @@ USAGE:
 import os
 import functools
 import inspect
-import logging
 import traceback
 import threading
 from flask import current_app, Response
@@ -41,6 +40,7 @@ from xml.dom.minidom import parseString as dom_parse
 from pyquery import PyQuery
 
 from foofind.utils import u
+from foofind.utils import logging
 
 class TestResponse(Response):
     _d = None

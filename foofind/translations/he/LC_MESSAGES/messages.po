@@ -1,4 +1,4 @@
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
@@ -38,7 +38,7 @@ msgid "error_500_description"
 msgstr "קרה משהו מוזר, המומחים שלנו בודקים את התקלה הזו."
 
 msgid "error_404_message"
-msgstr "הדף לא נמצא."
+msgstr "הדף לא נמצא"
 
 msgid "error_404_description"
 msgstr ""

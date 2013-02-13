@@ -1,12 +1,39 @@
 var cargando,cargando150;
-var filtros,first_download;
-var last_items=pagina=devueltos=0; //necesario ponerlo tambien aqui para que funcione la paginacion de la primera busqueda
+window.first_download=window.current_url=window.current_url_info=false;
+var pagina=devueltos=0; //necesario ponerlo tambien aqui para que funcione la paginacion de la primera busqueda
+var MAX_RESULTS = 10000;
+var last_items="";
 var archivos={};
 var peticiones={},num_peticiones=0;
-var alto,ancho,arriba,container,ancho_max_download=1440,ancho_min_download=930,posicion_flecha=610; //TODO min-width 940
-var respuesta_total_found=-1;
+var alto,ancho,arriba,subcontent_top,ancho_max_download=1440,ancho_min_download=930,posicion_flecha=610; //TODO min-width 940
+var respuesta_total_found=-1, last_wait=500;
 var busqueda_programada=espera=0;
 var hash=checked=false;
+var current_search_page = 0;
+
+function link_lookup(parent){
+    // busqueda de enlaces de downloader (data-downloader)
+    if($("body").data("downloader_text"))
+        window.downloader.link_lookup(parent);
+
+    // enlaces estadísticos (data-link_stats)
+    $("a", parent).each(function(){
+        var elm=$(this), link_href=this.href, target=this.target;
+        if(elm.data("stats")&&!elm.data("link_stats_handled")){
+            var data=elm.data("stats").split(";"), wait=elm.attr("_target");
+            elm.data("link_stats_handled", true);
+            elm.click(function(event){
+                _gaq.push(['_trackEvent', data[0], data[1], data[2]]);
+                if(!target){
+                    setTimeout(function(){
+                        if(!event.stop_redirection) window.location = link_href;
+                        }, 100);
+                    event.preventDefault();
+                    }
+                });
+            }
+        });
+    }
 
 //obtiene la cadena de busqueda con o sin paginación
 function search_string(paginacion)
@@ -19,11 +46,12 @@ function search_string(paginacion)
             window.location="/";
 
     filtro=encodeURIComponent(filtros["q"].replace("/","_")).replace(/%20/g,"_");
-    for(var clave in filtros)
-        if(jQuery.inArray(clave,["d","q","dn"])==-1)
+    order=["src","type","size"];
+    for(var clave in order)
+        if(order[clave] in filtros)
         {
             add_slash=true;
-            filtro+="/"+clave+":"+filtros[clave];
+            filtro+="/"+order[clave]+":"+filtros[order[clave]];
         }
 
     if(add_slash)
@@ -34,33 +62,13 @@ function search_string(paginacion)
     else
         return filtro;
 }
+
 //extraccion de los filtros de busqueda y actualizacion de la interfaz
 function search_params()
 {
     filtros={};
-    var path = window.location.pathname.replace("/download/","/d:");
-    if(path.slice(-1)=="/")
-        path = path.slice(0,-1);
-
-    var pathname=path.split("/").slice(lang=="/"?1:2);
-    var section=pathname.shift();
-    var query="";
-    if(section=="search")
-        query=["q:"+pathname[0]].concat(pathname.slice(1));
-    else if(pathname[0])
-        query=[section].concat(["dn:"+pathname[0]+(pathname[0].substr(-5)!=".html"?".html":"")]);
-    else
-        query=[section]
-
-    if(window.location.hash && window.location.hash!="#")
-        query=query.concat([window.location.hash.replace("#!/download/","d:")]);
-
-    for(values=0;values<query.length;values++)
-    {
-        values_string = decodeURIComponent(query[values]);
-        pair=values_string.split(":", 2);
-        filtros[pair[0]]=pair[1].replace(/_/g," ");
-    }
+    if (current_url_info.has_search) jQuery.extend(filtros, current_url_info.search);
+    if (current_url_info.has_download) jQuery.extend(filtros, current_url_info.download);
 
     //colocar la informacion y activar botones
     $('#src>ul>li, #type li').removeClass("active");
@@ -75,9 +83,10 @@ function search_params()
     }
     if("src" in filtros)
     {
+
         var sources=filtros["src"].split(",");
         for(var src in sources)
-            $('#src a[data-filter^="'+sources[src]+'"]').parents("li").addClass("active");
+            $('#src a[data-filter="'+sources[src]+'"]').parents("li").addClass("active");
     }
     if("size" in filtros)
         if(filtros["size"].indexOf(",")==-1) //si viene de buscar un tamaño en la busqueda clasica se ignora
@@ -100,47 +109,75 @@ function page_reload()
 //cambia la URL de busqueda mediante el history de HTML5, con hashbang (#!) o para hacer una redireccion
 function change_url(change_download)
 {
-    var url; //guarda la url nueva para compararla con la actual y cargarla si no coincide TODO arreglar cuando no viene dn
-    var download="d" in filtros?"download/"+filtros["d"]+(first_download && first_download["dn"] && filtros["d"]==first_download["d"]?"/"+first_download["dn"]+(first_download["dn"].substr(-5)!=".html"?".html":""):""):"";
-    if(change_download) //si hay que cambiar la URL de download
-    {
-        var filters=search_string(false);
-        if(download!="" && filters.slice(-1)!="/") //separa download de texto de busqueda
-            filters+="/";
+    var must_track = true;
+    var has_changed = false;
 
-        //añadir filtros a la URL si no hay download inicial y se esta en la busqueda normal o si hay download inicial y se vuelve a él
-        url=lang+((!first_download && window.location.pathname.substr(4,6)=="search") || (first_download && filtros["d"]!=first_download["d"])?"search/"+filters:"")+download;
-        if(window.history.pushState) //si el navegador soporta history
+    //guarda la url nueva para compararla con la actual y cargarla si no coincide TODO arreglar cuando no viene dn
+    var target_info = clone(current_url_info);
+    var target_url;
+
+    // genera la info para generar la url nueva segun sea cambio de busqueda o de download
+    if(change_download) {
+        target_info.has_search = current_url_info.has_search || !window.history.pushState;
+        target_info.has_download = "d" in filtros;
+        if (target_info.has_download)
         {
-            if(url!=window.location.pathname) //solo se actualiza si cambia la URL
-                window.history.pushState(filtros,"",url);
+            has_changed = (current_url_info.has_search!=target_info.has_search) || !current_url_info.has_download || (filtros["d"]!=current_url_info.download["d"]);
+            target_info.download = {"d":filtros["d"]}
+            if ("dn" in filtros)
+                target_info.download["dn"] = filtros["dn"];
+        } else {
+            has_changed = current_url_info.has_download;
         }
-        else //sino se usa hashbang o se redirige
-        {
-            if(window.location.pathname.substr(4,6)==url.substr(4,6))
-            {
-                hash=true;
-                window.location.hash=!first_download && download?"!/"+download:"";
-            }
-            else
-                window.location=url;
-        }
+    } else {
+        search_filters = clone(filtros);
+        delete search_filters["d"];
+        delete search_filters["dn"];
+
+        target_info.has_search = true;
+        target_info.has_download = false;
+
+        target_info.search = search_filters;
+        has_changed = true; // si ha cambiado se mira despues
     }
-    else
-    {
-        if(window.history.pushState)
-        {
-            filtros["q"]=$("#q").val(); //para que no se pierda la busqueda aunque no se le haya hecho submit
-            url=lang+"search/"+search_string(false);
+
+    // genera la url nueva y mira si es diferente a la actual
+    target_url = format_url(target_info);
+    if (target_url==current_url) {
+        has_changed = false;
+    }
+
+    // si no ha cambiado la url sale
+    if (!has_changed) return;
+
+    // navegar con hashbang (busqueda o desde download sin busqueda en navegador sin soporte para history)
+    if (!window.history.pushState && (!change_download || !current_url_info.has_search))
+        window.location = format_url(target_info, true);
+    // navegar con url normal (busqueda en navegador con soporte para history)
+    else if (!change_download)
+        window.location = target_url;
+
+    // cambio de url sin navegación
+    else {
+
+        if(window.history.pushState) //si el navegador soporta history
+            window.history.pushState(filtros,"",target_url);
+        else {
+            var old_title = document.title;
+            //sino se usa hashbang
+            window.location.hash=format_url(target_info, false); // genera la parte del hash con hashbang
+            document.title = old_title;
         }
-        else
-        {
-            delete filtros["d"];
-            url=lang+"search/"+search_string(false)+((download)?"#!/"+download:"");
-        }
-        window.location=url;
+
+        // actualiza información de url actual y registra visita
+        update_current_url();
+        track_pageview();
+
+        //actualizar los enlaces de cambio de idioma
+        $('#select_language_box a[href]').not(":last").each(function(){$(this).attr("href","/"+$(this).attr("hreflang")+window.location.pathname.substr(3))});
     }
 }
+
 //realiza la busqueda con los filtros actuales
 function search(paginacion)
 {
@@ -169,40 +206,52 @@ function search(paginacion)
             num_peticiones[peticion+"_total"]=0; //reiniciar el contador de peticiones
             pagina=Math.max(pagina,respuesta["page"]);
             last_items=respuesta["last_items"];
-            espera+=respuesta["wait"]; //fecha en milisegundos de la proxima busqueda permitida
-            if(respuesta["files_ids"].length)
-                cargando=rotar(cargando,false); //si hay resultados parar ojitos
 
+            wait=respuesta["wait"];
+            if (wait>0) last_wait = wait;
+            espera += last_wait; //fecha en milisegundos de la proxima busqueda permitida
+
+            sure = respuesta["sure"];
+            respuesta_total_found=respuesta["total_found"];
+
+            //si hay resultados o ya no quedan resultados parar ojitos
+            if(respuesta["files_ids"].length || pagina>=respuesta_total_found || pagina>=MAX_RESULTS)
+                cargando=rotar(cargando,false);
+
+            var respdata;
             for(var resp in respuesta["files_ids"]) //añadir resultado si no estaba ya antes
             {
                 if(!results.find('>li>div>h3>a[data-id="'+respuesta["files_ids"][resp]+'"]').length) //evitar repetidos
                 {
                     devueltos++;
-                    results.append(respuesta["files"][resp]);
+                    respdata = $(respuesta["files"][resp]).appendTo(results);
+
+                    //revisa los enlaces
+                    link_lookup(respdata);
+
                     //precarga de miniaturas
-                    var result=$(respuesta["files"][resp]).find(".thumblink img");
+                    var result=respdata.find(".thumblink img");
                     if(result.data("servers"))
                         for(var index in result.data("servers").split("_"))
                             $('<img>').attr("src",result.attr('src').slice(0,-1)+index);
                 }
             }
-            if(respuesta["total_found"]!=respuesta_total_found) //si no es paginacion
-                if(respuesta["total_found"]==0 && respuesta["sure"] && !$("#download").hasClass("active")) //si no hay resultados ni download
-                    results.html(respuesta["no_results"]);
-                else //si hay resultados se muestra el mensaje resumen
-                    $("#search_info").html(respuesta["result_number"]);
 
-            //$("#related").empty().append(respuesta["tags"]); de momento no hay tags
-            respuesta_total_found=respuesta["total_found"];
-            more_results=load_more_results(respuesta["sure"]);
-            if(more_results<0 && $("#results li:first").hasClass("loading")) //si es la ultima pagina posible y no hay resultados
-                results.html(respuesta["no_results"]);
+            more_results=load_more_results(sure);
+
+            // Si hay resultados o se está seguro de que no hay se muestra el número de resultados
+            if (respuesta_total_found>0 || sure) {
+                if (respuesta_total_found==0) $("#loading").empty();
+                $("#search_info").html(respuesta["result_number"]);
+            }
+
             if(more_results==2)
                 $("#more").css("display","block");
 
             //si es la primera pagina y en la URL venia un archivo se intenta mostrar directamente
             if("d" in filtros && !$("#download").hasClass("active"))
                 mostrar($('#results h3 a[data-id="'+filtros["d"]+'"]'));
+
         }
         else //si hay un error en el servidor se vuelve a pedir
         {
@@ -232,10 +281,10 @@ function search(paginacion)
 //carga mas resultados de busqueda si es necesario
 function load_more_results(sure)
 {
-    if(!sure || pagina<respuesta_total_found) //si hay mas paginas para cargar
+    if(pagina<MAX_RESULTS && (!sure || pagina<respuesta_total_found)) //si hay mas paginas para cargar
     {
         //si ya estan puestos todos los resultados que se han devuelto y la altura de los mismos es menor de lo esperado se busca
-        if($('#results>li[class!="loading"]').length==devueltos && arriba>$("#results").height()-104*(arriba==0?3:5)-alto)
+        if($('#results>li[id!=loading]').length==devueltos && arriba>$("#results").height()-104*(arriba==0?3:5)-alto)
         {
             search(true);
             $("#more").css("display","none");
@@ -251,7 +300,7 @@ function load_more_results(sure)
 function parar_peticiones(paginacion,siempre)
 {
     for(peticion in peticiones)
-        if((paginacion || peticion!="paginacion") && peticiones[peticion] && peticiones[peticion].readyState!=4)
+        if((paginacion || peticion=="descarga") && peticiones[peticion] && peticiones[peticion].readyState!=4)
             peticiones[peticion].abort();
 
     if(siempre) //parar todas las peticiones que pudieran pasar en un futuro
@@ -260,6 +309,7 @@ function parar_peticiones(paginacion,siempre)
         clearTimeout(busqueda_programada);
     }
 }
+
 //muestra la ventana de download
 function mostrar(file,ocul)
 {
@@ -281,8 +331,7 @@ function mostrar(file,ocul)
 
     var file=file.parents("li");
     var play=$(".thumblink",file);
-    alto=$(window).height();
-    ancho=$(window).width();
+    update_global_ui_vars();
     change_url(true);
     if(!$("#fondo").data("visible") || play.data("active_play")) //se carga el download si no esta el fondo oscuro o hay que reproducir
     {
@@ -300,9 +349,9 @@ function mostrar(file,ocul)
                         download.html(archivos[id].replace(play.data("play")[1],play.data("play")[0]))
                 else
                     download.html(archivos[id])
-
                 download.toggleClass("bottom",(download.prop("scrollHeight")>download.outerHeight()));
                 show_metadata_comments(download);
+                link_lookup(download);
             }
             else //sino se carga
             {
@@ -319,11 +368,13 @@ function mostrar(file,ocul)
                         data["html"]=data["html"].replace(data["play"][0],data["play"][1])
                     }
                     $(".thumblink",file).data("play",data["play"]);
+                    data["html"]=data["html"].replace(/__url_share__/g,window.location.protocol+"//"+window.location.host+current_url) //actualizar url para compartir
                     if($('#results li.active h3 a').data("id")==id) //if paranoico para comprobar que se carga donde debe
                         download.html(data["html"]).addClass("active").toggleClass("bottom",(download.prop("scrollHeight")>download.outerHeight()));
 
                     archivos[id]=data["html"];
                     show_metadata_comments(download);
+                    link_lookup(download);
                 }).fail(function(data)
                 {
                     if(data.readyState!=0) //necesario por si se aborta, que se ejecuta esto despues de meter los ojos
@@ -356,8 +407,9 @@ function mostrar(file,ocul)
         $("#results li").removeClass("active").css("z-index",0);
         file.addClass("active").css("z-index",5);
         //como esta en position fixed se limita la posicion ya que no se puede hacer por css
-        download.css({position:"fixed",top:arriba<121?121-arriba:0,height:alto-35}).removeClass("top").show(100)
+        download.css({position:"fixed",top:arriba<subcontent_top?subcontent_top-arriba:0,height:alto-55}).show(100)
         .animate({right:ancho>ancho_max_download?ancho-ancho_max_download:ancho<ancho_min_download?ancho-ancho_min_download:0},{duration:200,queue:false});
+
     }
     else if(ocul)
         ocultar();
@@ -373,7 +425,7 @@ function ocultar(duracion,derecha,cambiar)
     {
         $("#subcontent").animate({"width":ancho_max_download},{duration:duracion,queue:false});
         $("#flecha").animate({right:posicion_flecha},{duration:duracion,queue:false}); //necesario por poner el subcontent -20 de ancho
-        $("#download").css({position:"fixed",top:arriba<130?$("#subcontent").position().top-arriba:0}).animate({right:ancho-ancho_max_download},{duration:duracion,queue:false});
+        $("#download").css({position:"fixed",top:arriba<subcontent_top?subcontent_top-arriba:0}).animate({right:ancho-ancho_max_download},{duration:duracion,queue:false});
     }
     else //ocultar a la derecha completamente
     {
@@ -437,15 +489,15 @@ function size_slider(values,slider)
     else
         filtros["size"]=[values[0]==min?0:values[0], values[1]==max?50:values[1]];
 }
+
 $(function()
 {
+    update_current_url();
+    subcontent_top=$("#subcontent").position().top;
+    update_global_ui_vars();
     $("html").css("overflow-y","scroll");
-    alto=$(window).height();
-    ancho=$(window).width();
-    arriba=$(window).scrollTop();
-    container=$("#subcontent").position().top;
     //inicializar los ojitos
-    cargando=rotar($(".loading"),false);
+    cargando=rotar($("#loading"),false);
     cargando150=rotar($("#download>div"),false);
     //change necesario para inicializar
     $("#size div,#quality").slider({min:17,max:34,values:[17,34],range:true,stop:page_reload,change:function(e,ui){size_slider(ui.values,this)},slide:function(e,ui){size_slider(ui.values,this)}});
@@ -459,7 +511,7 @@ $(function()
         page_reload();
     })
     //filtros
-    $('dd').on("click","a[href]",function(e) //TODO poner strong cuando no hay suborigenes activados y se activa uno
+    $('aside dd').on("click","a[href]",function(e) //TODO poner strong cuando no hay suborigenes activados y se activa uno
     {
         var id=$(this).parents("dd").attr("id");
         //activar o desactivar el li padre
@@ -534,19 +586,20 @@ $(function()
         {
             var animation=function(thumb)
             {
-                if(thumb.length && thumb.data("servers"))
+                if(thumb.length && thumb.data("servers").length>2)
                     return setInterval(function()
                     {
                         var img=(parseInt(thumb.attr("src").substr(-1))+1)%thumb.data("servers").split("_").length;
                         thumb.attr("src","http://images"+thumb.data("servers").substr(img*3,2)+".foofind.com/"+thumb.data("id")+img);
                     },500);
             }
-            thumb_animation=animation($(".thumblink img",this));
+            this.thumb_animation=animation($(".thumblink img",this));
         },
-        mouseleave:function(){clearInterval(thumb_animation)}
-    },">li").on("click",">li[id!=no_results]",function(e) //mostrar ventana de descarga del archivo
+        mouseleave:function(){if(this.thumb_animation) clearInterval(this.thumb_animation)}
+    },">li").on("click",">li[id!=loading]",function(e) //mostrar ventana de descarga del archivo
     {
         $(this).data("scroll-start", $(window).scrollTop());
+        $("#download").scrollTop(0).removeClass("top"); //reiniciar el estado de download solo en este caso
         mostrar($("h3 a",this),true);
         e.preventDefault();
         e.stopPropagation();
@@ -580,7 +633,17 @@ $(function()
     }).on("click","#download_links",function(e) //desplegar los links
     {
         $(this).toggleClass("active");
+        $("#download_share").slideUp();
+        $("#share_download_links").removeClass("active");
         $("#sources_links").slideToggle();
+        e.preventDefault();
+        e.stopPropagation()
+    }).on("click","#share_download_links",function(e) //desplegar share
+    {
+        $(this).toggleClass("active");
+        $("#download_share+#sources_links").slideUp();
+        $("#download_links").removeClass("active");
+        $("#download_share").slideToggle();
         e.preventDefault();
         e.stopPropagation()
     }).on("click","#favorite",function(e) //favoritos
@@ -600,9 +663,9 @@ $(function()
                 {
                     $(this).toggleClass("active");
                     //intercambiar title
-                    var title=$(this).attr("title");
+                    var the_title=$(this).attr("title");
                     $(this).attr("title",$(this).data("title"));
-                    $(this).data("title",title);
+                    $(this).data("title",the_title);
                     //intercambiar action
                     if($(this).data("action")=="add")
                         $(this).data("action","delete");
@@ -641,7 +704,7 @@ $(function()
         else
             metadata.addClass("active",500,function()
             {
-                var new_size=$(this).height()-200+$("#download").scrollTop()+$("#download").height()+container;
+                var new_size=$(this).height()-200+$("#download").scrollTop()+$("#download").height()+subcontent_top;
                 if($("#subcontent").height()<new_size)
                     $("#subcontent").css("min-height",new_size);
             });
@@ -666,18 +729,21 @@ $(function()
         $(window).scrollTop($('#results li.active').data("scroll-start"));
         mostrar($('li.active h3 a'),false)
     });
+    $("#share").hover(function(){$(this).children("button").addClass("active")},function(){$(this).children("button").removeClass("active")});
 
     $(window).scroll(function(e)
     {
-        arriba=$(window).scrollTop();
+        update_global_ui_vars();
+
         //la paginacion continua se activa cuando se baja por los resultados pero antes de llegar al final de la pagina
         load_more_results(true);
 
-        var active = $("#results li.active");
+        var results = $("#results");
+        var active = $("li.active", results);
         if(active.length) //si hay item activo acomoda la pestaña de download en la parte de arriba
         {
             var download=$("#download");
-            download.css({position:"fixed",top:arriba<container?container-arriba:0});
+            download.css({position:"fixed",top:arriba<subcontent_top?subcontent_top-arriba:0});
             if($("#fondo").data("visible") || ancho>ancho_max_download) //si esta desplegado ademas se regula la derecha
                 download.css({right:ancho>ancho_max_download?ancho-ancho_max_download:ancho<ancho_min_download?ancho-ancho_min_download:0});
 
@@ -688,74 +754,81 @@ $(function()
             else //calcula el scroll que se debe hacer
             {
                 var pos=arriba-active.data("scroll-start"); //posicion del scroll interno respecto de donde se empezó
-                var offset_top=container+(pos-arriba)<0?0:container+(pos-arriba); //saca scroll-start de pos
-                download.scrollTop(arriba<container?0:pos<max_scroll+offset_top?pos-offset_top:max_scroll)
-                .toggleClass("top",pos>2 && arriba>container).toggleClass("bottom",pos<=max_scroll-2+offset_top);
+                var offset_top=subcontent_top+(pos-arriba)<0?0:subcontent_top+(pos-arriba); //saca scroll-start de pos
+                download.scrollTop(arriba<subcontent_top?0:pos<max_scroll+offset_top?pos-offset_top:max_scroll)
+                .toggleClass("top",pos>2 && arriba>subcontent_top).toggleClass("bottom",pos<=max_scroll-2+offset_top);
             }
+        }
+
+        var last_item_top = $(window).scrollTop()+$(window).height();
+        var items = results.children();
+        var search_page = current_search_page*10;
+        while(items[search_page] && items[search_page].id!="loading" && $(items[search_page]).position().top<last_item_top) {
+            search_page+=1;
+        }
+        search_page = Math.floor(search_page/10);
+
+        if (search_page>current_search_page) {
+            current_search_page = search_page;
+            track_pageview();
         }
     }).resize(function()
     {
-        alto=$(window).height();
-        ancho=$(window).width();
+        update_global_ui_vars();
         if($("#fondo").data("visible"))
         {
             $("#subcontent").css({width:ancho});
             $("#flecha").css({right:posicion_flecha});
-            $("#download").css({position:"absolute",top:arriba<container?0:arriba-container,right:0,height:alto-35});
+            $("#download").css({position:"absolute",top:arriba<subcontent_top?0:arriba-subcontent_top,right:0,height:alto-55});
             if(ancho>=ancho_max_download) //si la ventana esta desplegada a la derecha
                 $("#fondo").fadeOut(200).data("visible",false);
         }
         else
-        {//TODO ancho_max_download+20
+        {
             $("#subcontent").css({width:ancho-10});
-            $("#flecha").css({right:ancho<ancho_min_download?posicion_flecha-500:ancho-ancho_max_download>60?posicion_flecha+50:ancho-840});
+            $("#flecha").css({right:ancho<ancho_min_download+20?posicion_flecha-500:ancho-ancho_max_download>60?posicion_flecha+50:ancho-840});
             $("#download").css(
             {
                 position:"absolute",
-                top:arriba<container?0:arriba-container,
-                right:ancho<ancho_min_download?-500:ancho-ancho_max_download>60?50:ancho-ancho_max_download-10,
-                height:alto-35
+                top:arriba<subcontent_top?0:arriba-subcontent_top,
+                right:ancho<ancho_min_download+20?-500:ancho-ancho_max_download>60?50:ancho-ancho_max_download-10,
+                height:alto-55
             });
         }
     }).bind(
     {
         hashchange:function() //actualiza download
         {
-            _gaq.push(['_trackPageview',location.pathname+location.hash]);
-            if(!hash)
+            update_current_url();
+            track_pageview();
+            search_params();
+            if(current_url_info.has_download)
             {
-                search_params();
-                if(filtros["d"])
-                {
-                    ocultar(0);
-                    $("#flecha,#download,#subcontent,#fondo").stop();
-                    mostrar($('#results h3 a[data-id="'+filtros["d"]+'"]'));
-                }
-                else
-                    ocultar(0,true);
+                ocultar(0);
+                mostrar($('#results h3 a[data-id="'+filtros["d"]+'"]'));
             }
-            hash=false;
+            else
+                ocultar(0,true);
         },
-        popstate:function(event)
+        popstate:function()
         {
-            _gaq.push(['_trackPageview',location.pathname]); //actualizar analytics
-            if(event.originalEvent.state!=null) //para evitar que se ejecute en la carga de pagina con chrome
+            update_current_url();
+            track_pageview();
+            search_params();
+            if(current_url_info.has_download) //si la nueva URL tiene download se muestra
             {
-                if(event.originalEvent.state && event.originalEvent.state.d) //si la nueva URL tiene download se muestra
-                {
-                    search_params();
-                    ocultar(0);
-                    mostrar($('#results h3 a[data-id="'+filtros["d"]+'"]'));
-                }
-                else //sino se ocultar a la derecha
-                    ocultar(0,true);
+                ocultar(0);
+                mostrar($('#results h3 a[data-id="'+filtros["d"]+'"]'));
             }
+            else
+                ocultar(0,true);
         }
     }).unload(function(){$(":input[disabled=disabled]").removeAttr("disabled")})
+    //configuracion de las peticiones ajax
     $.ajaxSetup(
     {
-        type:"POST",
-        beforeSend:function(xhr, settings)
+        type:"post",
+        beforeSend:function(xhr,settings)
         {
             if(settings.type=="POST")
                 xhr.setRequestHeader("X-CSRFToken",csrf_token);
@@ -769,7 +842,8 @@ $(function()
     });
     //hay que ocultar download porque esta fixed y no se puede poner la lista de idiomas encima al estar en absolute
     $('#select_language_box').hover(function(){$("#download").css("z-index",0);ocultar(0)},function(){$("#download").css("z-index",6)});
-    if(window.location.pathname.indexOf("/download/")!=-1) //si es download se inicializa todo lo necesario
+
+    if (current_url_info.has_download) //si es download se inicializa todo lo necesario
     {
         if($(".thumblink").data("play"))
             $(".thumblink").data("play",$(".thumblink").data("play").split(",")); //adaptar el play si viene
@@ -787,5 +861,177 @@ $(function()
 
         mostrar($('#results h3 a[data-id="'+filtros["d"]+'"]'));
     }
+
+    // Busco enlaces con estadisticas en results (por si vienen precargados)
+    link_lookup($("#results"));
+    link_lookup($("#download"));
+
     search();
+    track_pageview();
 });
+
+function update_global_ui_vars(){
+    alto=$(window).height();
+    ancho=$(window).width();
+    arriba=$(window).scrollTop();
+}
+
+var last_download="";
+var last_search_page=-1;
+function track_pageview()
+{
+    track_download = false;
+    if (current_url_info.has_download) {
+        if (current_url!=last_download) {
+            _gaq.push(['_trackPageview',current_url]);
+            last_download = current_url;
+        }
+    }
+
+    if ((!current_url_info.has_download || current_search_page>0) && last_search_page<current_search_page)
+    {
+        // genera url de busqueda
+        var search_info = clone(current_url_info);
+        search_info.has_download = false;
+        if (!current_url_info.has_search) {
+            search_info.has_search = true;
+        }
+        search_url = format_url(search_info);
+
+        // añade número de página a la url
+        if (current_search_page>0) search_url += "?page="+current_search_page;
+        last_search_page = current_search_page;
+
+        _gaq.push(['_trackPageview',search_url]);
+    }
+}
+
+function update_current_url(){
+    // url sin barra final
+    url = location.pathname
+    var url_len = url.length;
+    if(url.charAt( url_len-1 ) == "/") {
+        url = url.slice(0,url_len-1);
+    }
+
+    // hash sin almohadilla ni hashbang
+    hash = location.hash;
+    if (hash && hash[0]=="#")
+        if (hash[1]=="!")
+            hash = hash.substr(2);
+        else
+            hash = hash.substr(1);
+
+    // barra de separación con hash
+    if (hash && hash[0]!="/")
+        hash = "/"+hash;
+
+    // parsea información de la url actual
+    current_url_info = parse_url(url + hash);
+
+    window.lang = current_url_info.lang;
+
+    // genera la url actual a partir de la info actual, para unificar criterios
+    current_url = format_url(current_url_info);
+
+}
+
+function clone(obj){
+    return jQuery.extend(true, {}, obj);
+}
+
+function parse_url(url)
+{
+    var ret = Object();
+    ret.lang = window.lang;
+
+    var parts;
+    if (window.location.host.endsWith("googleusercontent.com")) {
+        var url_params = window.location.search.substr(1).split("&");
+        for (param in url_params) {
+            var url_param = url_params[param].split("=",2);
+            if (["q", "u"].indexOf(url_param[0])!==-1)
+            {
+                parts = url_param[1].split(":").pop();
+                while (parts[0]=="/") parts = parts.substr(1); // quita barras iniciales
+                parts = parts.substr(parts.indexOf("/")+1); // quita nombre del dominio y barra inicial
+            }
+        }
+        if (parts.endsWith("+")) // quita el + final
+            parts = parts.substr(0, parts.length-1);
+    } else {
+        parts = url.substr(1); // quita la barra inicial
+    }
+
+    parts = parts.split("/");
+
+    // quita la parte del lenguage
+    if (parts[0].length==2) {
+        ret.lang = "/"+parts[0]+"/";
+        parts = parts.slice(1);
+    }
+
+    // información de busqueda
+    ret.has_search = (parts[0]=="search");
+    if (ret.has_search)
+    {
+        ret.search = {"q":decodeURIComponent(parts[1]).replace(/_/g," ")};
+        parts = parts.slice(2);
+
+        while (parts[0] && parts[0]!="download") {
+            pair = parts[0].split(":",2);
+            ret.search[pair[0]]=decodeURIComponent(pair[1]);
+            parts = parts.slice(1);
+        }
+    }
+
+    // información de descarga
+    ret.has_download = (parts[0]=="download");
+    if (ret.has_download) {
+        ret.download = {"d":parts[1]};
+        if (parts[2]) {
+            ret.download["dn"] = decodeURIComponent(parts.slice(2).join("/"));
+            if (ret.download["dn"].substring(ret.download["dn"].length - 5)!=".html")
+                ret.download["dn"] += ".html"
+        }
+    }
+
+    return ret;
+}
+
+/* genera una url a partir de la información de url dada
+    hash_parts:  - undefined: no se usa hashbang
+                 - false: solo parte del hashbang
+                 - true: url completa con hashbang */
+function format_url(info, hash_parts)
+{
+    var ret = (hash_parts==false)?"":lang;
+    if (info.has_search && hash_parts!=false) {
+        if (!info.search)
+            info.search = {"q":$("#q").val()};
+        else if (!("q" in info.search))
+            info.search["q"] = $("#q").val();
+
+        ret += "search/" + encodeURIComponent(info.search["q"].replace("/","_")).replace(/%20/g,"_");
+
+        order=["src","type","size"];
+        for(var key in order)
+            if(order[key] in info.search)
+            {
+                ret+="/"+order[key]+":"+info.search[order[key]];
+            }
+    }
+
+    if (info.has_download) {
+        if (hash_parts!=undefined)
+            ret += "#!/";
+        else if (info.has_search)
+            ret += "/";
+        ret += "download/" + info.download["d"];
+        if ("dn" in info.download) {
+            ret += "/" + encodeURIComponent(info.download["dn"]);
+        }
+    }
+
+    return ret;
+}
