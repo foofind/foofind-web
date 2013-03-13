@@ -17,8 +17,8 @@ class Searchd:
         s = Search(self.proxy, query, filters, order, request_mode, wait_time)
         return s.search(async)
 
-    def get_search_info(self, query, filters={}):
-        s = Search(self.proxy, query, filters)
+    def get_search_info(self, query, filters={}, order=None, request_mode=REQUEST_MODE_PER_GROUPS):
+        s = Search(self.proxy, query, filters, order, request_mode)
         try:
             temp = s.get_modifiable_info()
         except:

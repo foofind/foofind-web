@@ -2,18 +2,20 @@
 '''
     Funciones auxiliares
 '''
+import hashlib
 from itertools import izip
 from cgi import escape
-from flask import request, g, Markup, current_app
+from flask import request, g, Markup, current_app, abort
 from foofind.services import *
-from foofind.utils import mid2hex, multipartition
+from foofind.utils import mid2hex, multipartition, logging
 from foofind.utils.content_types import *
 from foofind.utils.splitter import SEPPER, slugify
+
 
 __all__=(
     "FILTERS","DatabaseError","FileNotExist","FileRemoved","FileFoofindRemoved","FileUnknownBlock","FileNoSources",
     "highlight","extension_filename","url2filters","filters2url","fetch_global_data","prepare_args",
-    "is_search_bot","is_full_browser","get_files","save_visited","comment_votes"
+    "is_search_bot","is_full_browser","get_files","save_visited","comment_votes", "check_rate_limit"
 )
 
 #constantes
@@ -278,3 +280,25 @@ def comment_votes(file_id,comment):
 
     return comment_votes
 
+def check_rate_limit(search_bot):
+    '''
+    Hace que se respeten los limites de peticiones.
+    '''
+    if search_bot: # robots
+        if not cache.add("rlimit_bot_"+search_bot, 1, timeout=60):
+            rate_limit = current_app.config["ROBOT_USER_AGENTS_RATE_LIMIT"].get(search_bot, current_app.config["ROBOT_DEFAULT_RATE_LIMIT"])
+            current = cache.inc("rlimit_bot_"+search_bot) # devuelve None si no existe la clave
+            if current and current > rate_limit:
+                if (current-rate_limit)%20==1:
+                    logging.warn("Request rate over limit from bot %s."%search_bot)
+                abort(429)
+    else: # resto
+       ip = request.headers.getlist("X-Forwarded-For")[0] if request.headers.getlist("X-Forwarded-For") else request.remote_addr
+       client_id = hashlib.md5(ip).hexdigest()
+       if not cache.add("rlimit_user_"+client_id, 1, timeout=60):
+            current = cache.inc("rlimit_user_"+client_id) # devuelve None si no existe la clave
+            if current and current > current_app.config["USER_RATE_LIMIT"]:
+                if (current-current_app.config["USER_RATE_LIMIT"])%20==1:
+                    user_agent = request.user_agent.string
+                    logging.warn("Request rate over limit from user %s."%client_id)
+                abort(429)

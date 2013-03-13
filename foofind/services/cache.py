@@ -422,3 +422,10 @@ class Cache(CacheBase):
 
             return decorated_function
         return memoize
+
+    def inc(self, key, delta=1):
+        if isinstance(key, unicode):
+            key = key.encode('utf-8')
+        if self.cache.key_prefix:
+            key = self.cache.key_prefix + key
+        return self.cache._client.incr(key, delta)

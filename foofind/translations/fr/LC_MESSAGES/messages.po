@@ -320,6 +320,11 @@ msgstr "secondes"
 msgid "leechs"
 msgstr "Sangsues"
 
+msgid "first_files"
+msgstr ""
+"Affichage des %(value)s premiers fichiers. Téléchargez le fichier pour tout "
+"voir."
+
 msgid "minutes"
 msgstr "minutes"
 
@@ -1027,7 +1032,7 @@ msgid "foodownloader_download"
 msgstr "Téléchargement gratuit"
 
 msgid "foodownloader_download_source"
-msgstr "Source du téléchargement"
+msgstr "Télécharger le code source"
 
 msgid "foodownloader_meta_description"
 msgstr ""

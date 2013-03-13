@@ -65,6 +65,13 @@ msgstr "Página no disponible"
 msgid "error_410_description"
 msgstr "La URL ya no esta disponible ni lo estará en el futuro."
 
+msgid "error_429_message"
+msgstr "Demasiadas peticiones"
+
+msgid "error_429_description"
+msgstr ""
+"Hemos recibido demasiadas peticiones desde tu ubicación en estos momentos. Por favor, vuelve a intentarlo en un rato."
+
 msgid "error_502_message"
 msgstr "Pasarela incorrecta"
 
@@ -889,7 +896,11 @@ msgstr "Foofind es un motor de búsqueda universal. En Foofind trabajamos creand
 
 # technology
 msgid "technology_text"
-msgstr "<p>El equipo de Foofind desarrolla la mayor parte del código del proyecto, pero también dependemos del trabajo de la comunidad del software libre.</p><p>Foofind no sería posible sin estos increíbles proyectos. ¡Un porrón de gracias! ;-)</p><ul><li><a href=\"http://twistedmatrix.com/\">Twisted</a>: Twisted is an event-driven networking engine written in Python and licensed under the open source MIT license.</a><li><a href=\"http://scrapy.org/\">Scrapy</a>: Scrapy is a fast high-level screen scraping and web crawling framework, used to crawl websites and extract structured data from their pages. It can be used for a wide range of purposes, from data mining to monitoring and automated testing.</li><li><a href=\"http://flask.pocoo.org/\">Flask</a>: Flask is a microframework for Python based on Werkzeug, Jinja 2 and it's BSD licensed.</li><li><a href=\"http://www.mongodb.org/\">MongoDB</a>: MongoDB (from \"hu<strong>mongo</strong>us\") is a scalable, high-performance, open source NoSQL database.</li><li><a href=\"http://github.com/dcramer/sentry\">Sentry</a>: Sentry is a realtime event logging and aggregation platform. It specializes in monitoring errors and extracting all the information needed to do a proper post-mortem without any of the hassle of the standard user feedback loop.</li><li><a href=\"http://sphinxsearch.com/\">Sphinx</a>: Sphinx is an open source full text search server, designed from the ground up with performance, relevance (aka search quality), and integration simplicity in mind. It's written in C++ and works on Linux (RedHat, Ubuntu, etc), Windows, MacOS, Solaris, FreeBSD, and a few other systems.<li><a href=\"http://www.komodomedia.com/blog/2009/06/social-network-icon-pack/\">Social Network Icon Pack</a>: Social Network Icon Pack by Komodo Media, Rogie King is licensed under a Creative Commons Attribution-Share Alike 3.0 Unported License.</li></ul>"
+msgstr "<p>El equipo de Foofind desarrolla la mayor parte del código del proyecto, pero también dependemos del trabajo de la comunidad del software libre.</p><p>Foofind no sería posible sin estos increíbles proyectos. ¡Un porrón de gracias! ;-)</p>"
+"<ul><li><a href=\"http://twistedmatrix.com/\">Twisted</a>: Twisted is an event-driven networking engine written in Python and licensed under the open source MIT license.</a><li><a href=\"http://scrapy.org/\">Scrapy</a>: Scrapy is a fast high-level screen scraping and web crawling framework, used to crawl websites and extract structured data from their pages. It can be used for a wide range of purposes, from data mining to monitoring and automated testing.</li><li><a href=\"http://flask.pocoo.org/\">Flask</a>: Flask is a microframework for Python based on Werkzeug, Jinja 2 and it's BSD licensed.</li><li><a href=\"http://www.mongodb.org/\">MongoDB</a>: MongoDB (from \"hu<strong>mongo</strong>us\") is a scalable, high-performance, open source NoSQL database.</li><li><a href=\"http://github.com/dcramer/sentry\">Sentry</a>: Sentry is a realtime event logging and aggregation platform. It specializes in monitoring errors and extracting all the information needed to do a proper post-mortem without any of the hassle of the standard user feedback loop.</li><li><a href=\"http://sphinxsearch.com/\">Sphinx</a>: Sphinx is an open source full text search server, designed from the ground up with performance, relevance (aka search quality), and integration simplicity in mind. It's written in C++ and works on Linux (RedHat, Ubuntu, etc), Windows, MacOS, Solaris, FreeBSD, and a few other systems.</li>"
+"<li><a href='http://jquery.com/'>jQuery</a>: jQuery is a fast, small, and feature-rich JavaScript library. It makes things like HTML document traversal and manipulation, event handling, animation, and Ajax much simpler with an easy-to-use API that works across a multitude of browsers. With a combination of versatility and extensibility, jQuery has changed the way that millions of people write JavaScript.</li>"
+"<li><a href='http://jqueryui.com/'>jQuery UI</a>: jQuery UI is a curated set of user interface interactions, effects, widgets, and themes built on top of the jQuery JavaScript Library. Whether you're building highly interactive web applications or you just need to add a date picker to a form control, jQuery UI is the perfect choice.</li>"
+"<li><a href=\"http://www.komodomedia.com/blog/2009/06/social-network-icon-pack/\">Social Network Icon Pack</a>: Social Network Icon Pack by Komodo Media, Rogie King is licensed under a Creative Commons Attribution-Share Alike 3.0 Unported License.</li></ul>"
 
 # tos
 msgid "safe_tos"

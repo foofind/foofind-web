@@ -11,7 +11,7 @@ JOBS_EMAIL = ""
 CONTACT_EMAIL = ""
 DEFAULT_MAIL_SENDER = "noreply@foofind.com"
 
-MAIL_SERVER = "admin1.foofind.com"
+MAIL_SERVER = "mail.foofind.com"
 MAIL_PORT = 25
 MAIL_USE_TLS = False
 MAIL_USE_SSL = False
@@ -39,6 +39,7 @@ SERVICE_SPHINX_WORKERS_PER_SERVER = 3
 SERVICE_SPHINX_CLIENT_RECYCLE = 1000
 SERVICE_SEARCH_MAINTENANCE_INTERVAL = 1
 SERVICE_SEARCH_PROFILE_INTERVAL = 60*5
+SERVICE_SPHINX_DISABLE_QUERY_SEARCH = False
 
 SERVERS_REFRESH_INTERVAL = 60*60 # actualiza servidores cada hora
 
@@ -84,7 +85,12 @@ ROBOT_USER_AGENTS=["googlebot/","Googlebot-Mobile","Googlebot-Image","bingbot","
 ROBOT_USER_AGENTS=[robot.lower() for robot in ROBOT_USER_AGENTS]
 SAFE_ROBOT_USER_AGENTS = [s.strip().replace(" ","_").replace("/", "").replace(".","_").replace("-","_") for s in ROBOT_USER_AGENTS]
 
-PROFILER_GRAPHS = { 1:("Search page", 'TIMING', ["taming","mongo","sphinx","visited"]),
+ROBOT_USER_AGENTS_RATE_LIMIT = {}
+ROBOT_DEFAULT_RATE_LIMIT = 200
+USER_RATE_LIMIT = 200
+
+
+PROFILER_GRAPHS = { 1:("Search page", 'TIMING', ["taming","mongo","sphinx","visited","entities"]),
                     2:("Mongo master accesses", 'TIMING',["mongo%dm"%s for s in xrange(1,20)]),
                     3:("Mongo slave accesses", 'TIMING', ["mongo%ds"%s for s in xrange(1,20)]),
                     4:("Search services", 'MEAN', ["updates","pendings"]),

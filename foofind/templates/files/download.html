@@ -10,7 +10,7 @@
                     <a href="{{ url_search_cache|replace('___', path[1:]|seoize('_', True))}}">{{ path[1:] }}</a>
                     {{ print_filepaths(info, False) }}
                 {% else %}
-                    <span>{{ info | numbersizeformat(lang) }}</span><a href="{{ url_search_cache|replace('___', path[1:]|seoize('_', True)) }}" title="{{ path }}">{{ path }}</a>
+                    <span>{{ info | numbersizeformat(lang) }}</span><a href="{{ url_search_cache|replace('___', path|seoize('_', True)) }}" title="{{ path }}">{{ path }}</a>
                 {% endif %}
             </li>
         {%- endfor %}
@@ -23,7 +23,7 @@
     <li>
         <span class="{% if source_data['icons']['16'] %}source16 source_{{ source_data['tip']|replace('.','') }}16{% else %}source {{ source_data['icon'] }}{% endif %}" title="{{ source_data['tip'] }}"></span>
         <a href="{% if url=='' %}{{ source_data['urls'][0] }}{% else %}{{ url }}{% endif %}" title="{{_('go_to_file')}}" data-stats="Download;{{link_position}};{{source_data['d']}}"
-        {%- if 't' in source_data["g"] %} data-downloader="1"{% endif %}>{{_(file['view']['action']+"_source",source='<em>%s</em>'|safe%source_data['tip'])|lower}}</a>
+        data-downloader="{{source_data['downloader']}}">{{_(file['view']['action']+"_source",source='<em>%s</em>'|safe%source_data['tip'])|lower}}</a>
     </li>
 {% endmacro -%}
 {%- macro print_sources(sources,link_position) %}
@@ -62,11 +62,10 @@
             </div>
             {% if "source" in file["view"] %}
             <span class="{% if file['view']['sources'][file['view']['source']]['icons']['32'] %}source32 source_{{ file['view']['sources'][file['view']['source']]['tip']|replace('.','') }}32{% else %}source {{ file['view']['sources'][file['view']['source']]['icon'] }}{% endif %}" title="{{ file['view']['sources'][file['view']['source']]['tip'] }}"></span>
-            <a href="{{ file['view']['sources'][file['view']['source']]['urls'][0] }}" class="button" title="{{_(file['view']['action'])}} ({{_('open_link_new_tab')}})" target="_blank" data-stats="Download;Download big button;{{file['view']['sources'][file['view']['source']]['d']}}"
-{%- if 't' in file['view']['sources'][file['view']['source']]["g"] %} data-downloader="1"{% endif %}>{{_(file['view']['action']+"_source",source='<em>%s</em>'|safe%file['view']['sources'][file['view']['source']]['tip'])|lower}}</a>
+            <a href="{{ file['view']['sources'][file['view']['source']]['urls'][0] }}" class="button" title="{{_(file['view']['action'])}} ({{_('open_link_new_tab')}})" target="_blank" data-stats="Download;Download big button;{{file['view']['sources'][file['view']['source']]['d']}}" data-downloader="{{file['view']['sources'][file['view']['source']]['downloader']}}">{{_(file['view']['action']+"_source",source='<em>%s</em>'|safe%file['view']['sources'][file['view']['source']]['tip'])|lower}}</a>
             {% endif %}
             <h4>{{_('all_sources')}}</h4>
-            {{print_sources(file['view']['sources'])}}
+            {{print_sources(file['view']['sources'],"Download main links")}}
         {% endif %}
     </section>
     <section id="links">
@@ -82,13 +81,18 @@
             <li><button id="share_download_links"><span></span>{{_("share_download")|lower}}</button></li>
             {% if "embed" in file["view"] %}
             <li><button id="download_links" title="{{_('download_links')}}"></button></li>
-                {% if file['view']['sources'][file['view']['sources']|first]['source']=="direct_download" %}
-                <li><a id="download_link" title="{{_('go_to_file')}}" href="{{ file['view']['sources'][file['view']['source']]['urls'][0] }}">{{_("download")|lower}}</a></li>
+                {% if file['view']['sources'][file['view']['source']]['source']=="direct_download" %}
+                <li><a id="download_link" title="{{_('go_to_file')}}" href="{{ file['view']['sources'][file['view']['source']]['urls'][0] }}" data-stats="Download;Download bar button;{{file['view']['sources'][file['view']['source']]['d']}}">{{_("download")|lower}}</a></li>
                 {% endif %}
             {% endif %}
             {#<li><a id="more_links" href="#"></a></li>
             <li><a id="embed_code" href=""></a></li>#}
-            <li><a id="complaint" href="{{ url_for('page.complaint',file_id=file['file']['id'],file_name=file['view']['fn']) }}" rel="nofollow" title="{{_('complaint')}}"></a></li>
+            <li><form action="{{url_for('page.complaint')}}" method="POST">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="file_id" value="{{file['file']['id']}}"/>
+                    <input type="hidden" name="file_name" value="{{file['view']['fn']}}"/>
+                    <input id="complaint" type="submit" title="{{_('complaint')}}" value=""/>
+                </form></li>
         </ul>
         <div id="download_share">
             <span>{{_("share_this")}}</span>
@@ -109,7 +113,7 @@
             <dd>
                 {%-if metadata in file['view']['searches'] %}
                     {%-if file['view']['searches'][metadata] == [] %}
-                        {% for avalue in value.split(",") %}
+                        {% for avalue in value.split(",")[:50] %}
                             <a href="{{ url_search(query=avalue|seoize("_",True))}}">{{ avalue|trim }}</a>{{", " if not loop.last}}
                         {% endfor %}
                     {%-elif file['view']['searches'][metadata] == {} %}

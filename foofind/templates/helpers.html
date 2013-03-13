@@ -70,7 +70,7 @@
 {%- macro logo(id="") %}
     <div class="logo"{% if id %} id={{ id }}{% endif %}>
         <a href="{{ url_for('index.home',lang=none) }}">
-            <img src="{{ g.static_prefix }}/img/logo_small.png" alt="File search engine - {{ g.domain }}" title="{{ g.domain }}"/>
+            <img src="{{ g.static_prefix }}/img/logo_small.png" width="150" height="54" alt="File search engine - {{ g.domain }}" title="{{ g.domain }}"/>
         </a>
     </div>
 {%- endmacro %}

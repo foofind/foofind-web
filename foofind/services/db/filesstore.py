@@ -145,7 +145,7 @@ class Bongo(object):
                     self.connections[uri] = pymongo.Connection(
                         uri,
                         max_pool_size = self._pool_size,
-                        network_timeout = self._network_timeout*10
+                        network_timeout = self._network_timeout*20
                         )
                     self.connections_access[uri].set()
                 except BaseException as e:
@@ -530,7 +530,7 @@ class FilesStore(object):
         self.request_conn.foofind.source.remove({"_id":sid})
         self.request_conn.end_request()
 
-    @cache.memoize()
+    @cache.memoize(timeout=60*60)
     def get_source_by_id(self, source):
         '''
         Obtiene un origen a través del id
@@ -580,7 +580,7 @@ class FilesStore(object):
         self.server_conn.foofind.source.insert(data)
         self.server_conn.end_request()
 
-    @cache.memoize()
+    @cache.memoize(timeout=60*60)
     def get_sources(self, skip=None, limit=None, blocked=False, group=None, must_contain_all=False, embed_active=None):
         '''
         Obtiene los orígenes como generador
@@ -648,7 +648,7 @@ class FilesStore(object):
         self.server_conn.end_request()
         return count
 
-    @cache.memoize()
+    @cache.memoize(timeout=60*60)
     def get_sources_groups(self):
         '''
         Obtiene los grupos de los orígenes
@@ -661,8 +661,7 @@ class FilesStore(object):
         self.server_conn.end_request()
         return data
 
-
-    @cache.memoize()
+    @cache.memoize(timeout=60*60)
     def get_image_servers(self):
         '''
         Obtiene el servidor que contiene una imagen
@@ -671,7 +670,7 @@ class FilesStore(object):
         self.server_conn.end_request()
         return data
 
-    @cache.memoize()
+    @cache.memoize(timeout=60*60)
     def get_image_server(self, server):
         '''
         Obtiene el servidor que contiene una imagen
@@ -680,7 +679,7 @@ class FilesStore(object):
         self.server_conn.end_request()
         return data
 
-    @cache.memoize()
+    @cache.memoize(timeout=60*60)
     def get_server_stats(self, server):
         '''
         Obtiene las estadisticas del servidor
@@ -689,7 +688,7 @@ class FilesStore(object):
         self.server_conn.end_request()
         return data
 
-    @cache.memoize()
+    @cache.memoize(timeout=60*60)
     def get_servers(self):
         '''
         Obtiene informacion de los servidores de datos
@@ -698,6 +697,7 @@ class FilesStore(object):
         self.server_conn.end_request()
         return data
 
+    @cache.memoize(timeout=60*60)
     def get_server(self, sid):
         data = self.server_conn.foofind.server.find_one({"_id":{"$in":[int(sid), float(sid)]}})
         self.server_conn.end_request()

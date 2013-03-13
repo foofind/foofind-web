@@ -7,7 +7,6 @@ class EntitiesStore(object):
     '''
     Clase para acceder a los datos de las entidades.
     '''
-
     def __init__(self):
         '''
         Inicialización de la clase.
@@ -38,8 +37,7 @@ class EntitiesStore(object):
         except BaseException as e:
             logging.warn("Can't connect to entities database. Entities disabled.")
 
-
-    @cache.memoize()
+    @cache.memoize(timeout=60*60)
     def get_entity(self, entity_id):
         '''
         Obtiene la información de una entidad por identificador
@@ -60,7 +58,7 @@ class EntitiesStore(object):
             self.enabled = False
         return {}
 
-    @cache.memoize()
+    @cache.memoize(timeout=60*60)
     def get_entities(self, entities_ids=None, entities_keys=None, schemas=None):
         '''
         Obtiene la información de una entidad por identificador
@@ -94,7 +92,7 @@ class EntitiesStore(object):
             self.enabled = False
         return ()
 
-    @cache.memoize()
+    @cache.memoize(timeout=60*60)
     def find_entities(self, keys, exact = False):
         '''
         Obtiene la información de una o varias entidades por claves

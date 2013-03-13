@@ -63,7 +63,7 @@ class MultiAsync(object):
                 else:
                     yield ty
         except Empty as e:
-            logging.warn("Timeout retrieving values asynchronally.")
+            pass
         except BaseException as e:
             logging.exception("Error retrieving values asynchronally.")
 

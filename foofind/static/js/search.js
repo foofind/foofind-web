@@ -505,9 +505,13 @@ $(function()
     //envio del formulario
     $('.searchbox').submit(function(e)
     {
-        filtros["q"]=$("#q").val();
-        $(":submit").attr("disabled","disabled")
         e.preventDefault();
+
+        var new_q = $("#q").val();
+        if (filtros["q"]==new_q) return;
+
+        filtros["q"]=new_q;
+        $(":submit").attr("disabled","disabled")
         page_reload();
     })
     //filtros

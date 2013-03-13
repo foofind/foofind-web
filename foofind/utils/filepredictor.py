@@ -444,12 +444,6 @@ TAG_METADATA = {
             "windows": functools.partial(_check_os, ("win32", "win64")),
             "mac": functools.partial(_check_os, ("osx", "mac")),
             },
-        "torrent:category": {
-            "game": lambda doc: (
-                isinstance(doc["md"]["torrent:category"], basestring) and
-                "game" in doc["md"]["torrent:category"].lower()
-                ),
-            },
         },
     ct.CONTENT_BOOK: {
         "ntt:schema": {

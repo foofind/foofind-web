@@ -32,9 +32,6 @@ def init_data(file_data, ntts=[]):
 
         file_se["rel"] = [ntts[relid] for relids in ntt["r"].itervalues() for relid in relids if relid in ntts] if "r" in ntt else []
 
-        ntt_keys = ntt["k"]
-        file_se["rel2"] = [rel2ntt for rel2ntt in ntts.itervalues() for ntt_key in ntt_keys if ntt_key in rel2ntt["k"]]
-
     return {"file":file_data,"view":{}}
 
 def choose_filename(f,text_cache=None):
@@ -117,16 +114,14 @@ def choose_filename(f,text_cache=None):
 
     filename = extension_filename(filename,ext)
     f['view']['fn'] = filename.replace("?", "")
-    f['view']['efn'] = filename.replace(" ", "%20")
+    f['view']['qfn'] = qfn = u(filename).encode("UTF-8")  #nombre del archivo escapado para generar las url de descarga
+    f['view']['pfn'] = urllib.quote(qfn).replace(" ", "%20")  # P2P filename
 
     nfilename = seoize_text(filename, " ",True, 0)
     f['view']['nfn'] = nfilename
 
     # añade el nombre del fichero como palabra clave
     g.keywords.update(set(keyword for keyword in nfilename.split(" ") if len(keyword)>1))
-
-    #nombre del archivo escapado para generar las url de descarga
-    f['view']['qfn'] = u(filename).encode("UTF-8")
 
     #nombre del archivo con las palabras que coinciden con la busqueda resaltadas
     if text_cache:
@@ -166,7 +161,7 @@ def build_source_links(f):
         if not src.get('bl',None) in (0, None):
             continue
 
-        join=False
+        downloader=join=False
         count=0
         part=url=""
         source_data=g.sources[src["t"]] if "t" in src and src["t"] in g.sources else None
@@ -191,6 +186,7 @@ def build_source_links(f):
                 link_weight*=2
         #torrenthash antes de torrent porque es un caso especifico
         elif source_data["d"]=="BitTorrentHash":
+            downloader=True
             link_weight=0.7 if 'torrent:tracker' in f['file']['md'] or 'torrent:trackers' in f['file']['md'] else 0.1
             tip="Torrent MagnetLink"
             source="tmagnet"
@@ -208,6 +204,7 @@ def build_source_links(f):
                     part += unicode("".join('&tr='+urllib.quote_plus(tr) for tr in u(trackers).encode("UTF-8").split(" ")), "UTF-8")
 
         elif "t" in source_data["g"]:
+            downloader=True
             link_weight=0.8
             url=src['url']
             icon="torrent"
@@ -222,10 +219,11 @@ def build_source_links(f):
             count=int(src['m'])
             source_groups[icon] = tip
         elif source_data["d"]=="eD2k":
+            downloader=True
             link_weight=0.1
             tip="eD2k"
             source=icon="ed2k"
-            url="ed2k://|file|"+f['view']['efn']+"|"+str(f['file']['z'] if "z" in f["file"] else 1)+"|"+src['url']+"|/"
+            url="ed2k://|file|"+f['view']['pfn']+"|"+str(f['file']['z'] if "z" in f["file"] else 1)+"|"+src['url']+"|/"
             count=int(src['m'])
             source_groups[icon] = tip
         elif source_data["d"]=="Tiger":
@@ -244,36 +242,44 @@ def build_source_links(f):
         else:
             continue
 
-        f['view']['sources'][source].update(source_data)
-        f['view']['sources'][source]['tip']=tip
-        f['view']['sources'][source]['icon']=icon
-        f['view']['sources'][source]['icons']=source_data.get("icons",False)
-        f['view']['sources'][source]['join']=join
-        f['view']['sources'][source]['source']="streaming" if "s" in source_data["g"] else "direct_download" if "w" in source_data["g"] else "P2P" if "p" in source_data["g"] else ""
+        view_source = f['view']['sources'][source]
+        view_source.update(source_data)
+
+        if 'downloader' in view_source:
+            if downloader:
+                view_source['downloader']=1
+        else:
+            view_source['downloader']=1 if downloader else 0
+
+        view_source['tip']=tip
+        view_source['icon']=icon
+        view_source['icons']=source_data.get("icons",False)
+        view_source['join']=join
+        view_source['source']="streaming" if "s" in source_data["g"] else "direct_download" if "w" in source_data["g"] else "P2P" if "p" in source_data["g"] else ""
         #para no machacar el numero si hay varios archivos del mismo source
-        if not 'count' in f['view']['sources'][source] or count>0:
-            f['view']['sources'][source]['count']=count
+        if not 'count' in view_source or count>0:
+            view_source['count']=count
 
-        if not "parts" in f['view']['sources'][source]:
-            f['view']['sources'][source]['parts']=[]
+        if not "parts" in view_source:
+            view_source['parts']=[]
 
-        if not 'urls' in f['view']['sources'][source]:
-            f['view']['sources'][source]['urls']=[]
+        if not 'urls' in view_source:
+            view_source['urls']=[]
 
         if part:
-            f['view']['sources'][source]['parts'].append(part)
+            view_source['parts'].append(part)
 
         if url:
             if url_pattern:
-                f['view']['sources'][source]['urls']=[source_data["url_pattern"]%url]
+                view_source['urls']=[source_data["url_pattern"]%url]
                 f['view']['source_id']=url
                 url_pattern=False
                 url_pattern_generated=True
             elif not url_pattern_generated:
-                f['view']['sources'][source]['urls'].append(url)
+                view_source['urls'].append(url)
 
             if source_data["d"]!="eD2k":
-                f['view']['sources'][source]['count']+=1
+                view_source['count']+=1
 
         if link_weight>max_weight:
             max_weight = link_weight
@@ -287,7 +293,7 @@ def build_source_links(f):
     if icon!="web":
         for src,info in f['view']['sources'].items():
             if info['join']:
-                f['view']['sources'][src]['urls'].append("magnet:?dn="+f['view']['efn']+("&xl="+str(f['file']['z']) if 'z' in f['file'] else "")+"&"+"&".join(info['parts']))
+                f['view']['sources'][src]['urls'].append("magnet:?dn="+f['view']['pfn']+("&xl="+str(f['file']['z']) if 'z' in f['file'] else "")+"&"+"&".join(info['parts']))
             elif not 'urls' in info:
                 del(f['view']['sources'][src])
 
@@ -310,10 +316,10 @@ def get_images(f):
         images = f["file"]["i"]
         images_id = f["file"]["_id"]
     elif "se" in f["file"] and "info" in f["file"]["se"]:
-        for ntt in chain([f["file"]["se"]["info"]], f["file"]["se"]["rel"], f["file"]["se"]["rel2"]):
+        for ntt in chain([f["file"]["se"]["info"]], f["file"]["se"]["rel"]):
             if "im" in ntt:
                 images = ntt["im"]
-                images_id = str(int(ntt["_id"]))
+                images_id = "e_%d_"%int(ntt["_id"])
                 break
 
     if images:
@@ -400,7 +406,7 @@ def format_metadata(f,text_cache, search_text_shown=False):
         # Metadatos que no cambian
         try:
             view_md.update(
-                (meta, file_md[meta].split("\n") if "\n" in u(file_md[meta]) else file_md[meta]) for meta in
+                (meta, file_md[meta]) for meta in
                 (
                     "folders","description","fileversion","os","files","pages","format",
                     "seeds","leechs","composer","publisher","encoding","director","writer","starring","producer","released"
@@ -425,7 +431,7 @@ def format_metadata(f,text_cache, search_text_shown=False):
             view_md.update(("created_by", file_md[meta]) for meta in ("created_by", "encodedby","encoder") if meta in file_md)
             view_md.update(("language", file_md[meta]) for meta in ("language", "lang") if meta in file_md)
             view_md.update(("date", file_md[meta]) for meta in ("published", "creationdate") if meta in file_md)
-            view_md.update(("trackers", file_md[meta].split(" ")) for meta in ("trackers", "tracker") if meta in file_md and isinstance(file_md[meta], basestring))
+            view_md.update(("trackers", "\n".join(file_md[meta].split(" "))) for meta in ("trackers", "tracker") if meta in file_md and isinstance(file_md[meta], basestring))
             view_md.update(("hash", file_md[meta]) for meta in ("hash", "infohash") if meta in file_md)
             view_md.update(("visualizations", file_md[meta]) for meta in ("count", "viewCount") if meta in file_md)
             if "unpackedsize" in file_md:
@@ -585,29 +591,32 @@ def format_metadata(f,text_cache, search_text_shown=False):
 
         view_mdh=f['view']['mdh']={}
         for metadata,value in view_md.items():
-            # quita tags HTML de los valores
-            if isinstance(value, list):
-
-                # strip de la lista
-                start = 0
-                end = len(value)-1
-                while value and start<end and not value[start].strip(): start+=1
-                while value and end>start and not value[end].strip(): end-=1
-
-                if value and start<end:
-                    value = "\n".join(Markup(aval).striptags() for aval in value[start:end])
-                else:
-                    del view_md[metadata]
-                    continue
-            elif isinstance(value, basestring):
-                value = Markup(value).striptags()
-
-            # resaltar contenidos que coinciden con la busqueda
             if isinstance(value, basestring):
-                if len(value)==0:
-                    del view_md[metadata]
-                    continue
+                value = Markup(Markup(value.replace("|"," ||").replace("\n"," |n")).unescape()).striptags()
+
+                # soporte multilinea
+                if " |n" in value:
+                    values = value.split(" |n")
+
+                    # strip de la lista
+                    start = 0
+                    end = len(values)-1
+                    while values and start<end and not values[start].strip(): start+=1
+                    while values and end>start and not values[end].strip(): end-=1
+
+                    if values and start<end:
+                        value = "\n".join(value.replace(" ||", "|") for value in values[start:end+1])
+                    else:
+                        del view_md[metadata]
+                        continue
+                else:
+                    if len(value)==0:
+                        del view_md[metadata]
+                        continue
+
                 view_md[metadata]=value
+
+                # resaltar contenidos que coinciden con la busqueda
                 view_mdh[metadata]=highlight(text,value) if text else value
             elif isinstance(value, float): #no hay ningun metadato tipo float
                 view_md[metadata]=view_mdh[metadata]=str(int(value))
@@ -754,9 +763,15 @@ def get_file_metadata(file_id, file_name=None):
 
         file_se = data["se"] if "se" in data else None
 
-        ntt = entitiesdb.get_entity(file_se["_id"]) if file_se and "_id" in file_se else None
-        ntts = {int(ntt["_id"]):ntt} if ntt else {}
+        file_ntt = entitiesdb.get_entity(file_se["_id"]) if file_se and "_id" in file_se else None
+        ntts = {file_se["_id"]:file_ntt} if file_ntt else {}
 
+        '''
+        # trae entidades relacionadas
+        if file_ntt and "r" in file_ntt:
+            rel_ids = list(set(eid for eids in file_ntt["r"].itervalues() for eid in eids))
+            ntts.update({int(ntt["_id"]):ntt for ntt in entitiesdb.get_entities(rel_ids, None, (False, [u"episode"]))})
+        '''
     else:
         raise FileNotExist
 

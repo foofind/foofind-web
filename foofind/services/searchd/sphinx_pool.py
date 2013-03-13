@@ -18,7 +18,7 @@ class SphinxClientPool():
         self.connection_failed = False
 
         self.clients_counter = 0
-        self.max_clients_counter = min_clients
+        self.max_clients_counter = float(min_clients)
         self.adhoc = 0
 
         self.maintenance()
@@ -28,12 +28,19 @@ class SphinxClientPool():
         client = None
         self.access.acquire()
 
+        # aumenta la cuenta de clientes en uso, antes de intentar un ad-hoc
+        self.clients_counter+=1
+
+        if self.clients_counter > self.max_clients_counter:
+            self.max_clients_counter = float(self.clients_counter)
+
         # obtiene un cliente conectado, si hay
         if self.clients:
             client = self.clients.popleft()
         self.access.release()
 
-        # si no hay cliente, lo crea
+
+        # si no hay cliente, lo crea ad-hoc
         if not client and not self.connection_failed:
             self.adhoc += 1
             try:
@@ -45,20 +52,21 @@ class SphinxClientPool():
                 self.connection_failed = True
                 client = None
 
-        if client:
-            self.clients_counter+=1
-            if self.clients_counter > self.max_clients_counter:
-                self.max_clients_counter = self.clients_counter
+        # si aun no hay cliente, actualiza la cuenta de clientes en uso
+        if not client:
+            self.clients_counter-=1
 
         return client
 
     def return_sphinx_client(self, client, discard=False):
-        client.uses+=1
-        self.clients_counter-=1
+        client.uses += 1
 
         # si ha alcanzado el limite de usos, lo descarta
         if discard or client.uses>=self.recycle_uses:
+            uses = client.uses
+            recycle = self.recycle_uses
             client.Close()
+            self.clients_counter -= 1
             return
 
         # reinicia el cliente para el próximo uso
@@ -70,13 +78,17 @@ class SphinxClientPool():
 
         # actualiza el timeout del cliente y lo añade a la lista de clientes de nuevo
         self.access.acquire()
+        self.clients_counter -= 1
         self.clients.append(client)
         self.access.release()
 
+
     def maintenance(self):
         client = None
-        # si se han perdido clientes o se han necesitado conexiones extras, añade clientes
-        if len(self.clients) + self.clients_counter < self.max_clients_counter or self.adhoc>0:
+        self.max_clients_counter -= 0.05
+
+        # si se necesitan conexiones extras, añade clientes
+        if len(self.clients) + self.clients_counter < self.max_clients_counter + 2:
             try:
                 client = self.create_sphinx_client()
                 client.Open()
@@ -85,8 +97,6 @@ class SphinxClientPool():
             except:
                 logging.error("Connection to search server %s:%d failed."%self.server)
                 self.connection_failed = True
-
-            self.adhoc = 0
 
         now = time()
         # descarta conexiones caducadas

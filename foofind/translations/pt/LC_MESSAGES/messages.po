@@ -1,4 +1,4 @@
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
@@ -547,8 +547,8 @@ msgstr "Links enviados"
 
 msgid "include_link_per_line"
 msgstr ""
-"Por favor enclua http, ed3k ou um link na vilha.<br />Ele vai ser adicionado"
-" automaticamente nos resultados encurtados."
+"Por favor enclua http, ed2k ou um link na vilha.\r\n"
+"Ele vai ser adicionado automaticamente nos resultados encurtados."
 
 msgid "link_sent"
 msgstr "Mensagem enviada. Obrigado pela ajuda!"
@@ -578,11 +578,9 @@ msgstr "Ajude a traduzir Foofind no seu idioma"
 
 msgid "translate_description"
 msgstr ""
-"Foofind está disponível em alguns idiomas, mas você pode nos ajudar a "
-"traduzir em sua língua. Escolha na lista e preencha os campos com os textos "
-"traduzidos. Você não precisa preencher todos para enviar o formulário, e "
-"qualquer ajuda será bem-vinda.<br/><br/>Se seu idioma não aparece na lista, "
-"por favor, fale conosco para que seja adicionado. "
+"Foofind está disponível em alguns idiomas, mas você pode nos ajudar a traduzir em sua língua. Escolha na lista e preencha os campos com os textos traduzidos. Você não precisa preencher todos para enviar o formulário, e qualquer ajuda será bem-vinda.\r\n"
+"\r\n"
+"Se seu idioma não aparece na lista, por favor, fale conosco para que seja adicionado. "
 
 msgid "choose_language"
 msgstr "Escolha o idioma"

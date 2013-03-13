@@ -29,7 +29,7 @@
                 {%- endif -%}
                 <tr>
                     <td>_id</td>
-                    <td><a href="{{url_for('files.download', lang='en', file_id=mid2url(fileid))}}">{{fileid}}</a></td>
+                    <td><a href="{{url_for('files.download', file_id=mid2url(fileid))}}">{{fileid}}</a></td>
                 </tr>
                 {%- if file_data -%}
                     {%- for prop in file_data -%}

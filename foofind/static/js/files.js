@@ -137,12 +137,8 @@ window.downloader = {
             this.skip = true;
             }
         },
-    landmodes:["overview","sharing","safety"],
     proxy:function(url, target){
-        var me=this,
-            mode="" + parseInt(Math.random()*5), // Eleccion del modo de atterizaje
-            land=me.landmodes[parseInt(Math.random()*me.landmodes.length)],
-            downloader=$("body").data("downloader_href") + "?a=" + mode + "#" + land;
+        var me=this, downloader=$("body").data("downloader_href");
         _gaq.push(['_trackEvent', "FDM", "offer"]);
         window.modal_dialog.show({
             mode: "downloader",
@@ -169,7 +165,7 @@ window.downloader = {
             var me=this, url, target, cback=function(){document.location.href = url;};
             $("a", parent).each(function(i){
                 var elm=$(this), url=this.href, target=this.target;
-                if(elm.data("downloader"))
+                if(elm.data("downloader")=="1")
                     elm.click(function(event){
                         if(me.skip) return;
                         event.stop_redirection = true; // Usado por link_stats

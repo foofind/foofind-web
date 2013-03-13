@@ -3,9 +3,8 @@
     Módulo principal de la aplicación Web
 """
 import foofind.globals
-#import foofind.utils.async  # debe hacerse antes que nada
-
 import os, os.path, defaults
+
 from collections import OrderedDict
 from flask import Flask, g, request, session, render_template, redirect, abort, url_for, make_response
 from flask.ext.assets import Environment, Bundle
@@ -29,12 +28,12 @@ from foofind.templates import register_filters
 from foofind.utils.webassets_filters import JsSlimmer, CssSlimmer
 from foofind.utils import u, logging
 from foofind.forms.files import SearchForm
+from foofind.utils.exceptions import allerrors, get_error_code_information
 
 try:
     from uwsgidecorators import postfork
     @postfork
     def start_eventmanager():
-
         # Inicio del eventManager
         eventmanager.start()
 except ImportError:
@@ -181,6 +180,10 @@ def create_app(config=None, debug=False):
             else:
                 g.lang = app.config["LANGS"][0] # valor por defecto si todo falla
 
+        if g.lang not in app.config["ALL_LANGS"]:
+            logging.warn("Wrong language choosen.")
+            g.lang = app.config["LANGS"][0]
+
         # se carga la lista de idiomas como se dice en cada idioma
         g.languages = pull_lang_code_languages
         g.beta_lang = g.lang in app.config["BETA_LANGS"]
@@ -222,7 +225,6 @@ def create_app(config=None, debug=False):
     # Servicio de búsqueda
     @app.before_first_request
     def init_process():
-
         if not eventmanager.is_alive():
             # Fallback inicio del eventManager
             eventmanager.start()
@@ -281,18 +283,6 @@ def create_app(config=None, debug=False):
         if g.url_lang and not g.url_lang in app.config["ALL_LANGS"]:
             abort(404)
 
-        # ignora peticiones sin blueprint
-        if request.blueprint is None:
-            if request.path.endswith("/"):
-                if "?" in request.url:
-                    root = request.url_root[:-1]
-                    path = request.path.rstrip("/")
-                    query = u(request.url)
-                    query = query[query.find(u"?"):]
-                    return redirect(root+path+query, 301)
-                return redirect(request.url.rstrip("/"), 301)
-            return
-
         # si no es el idioma alternativo, lo añade por si no se encuentra el mensaje
         if g.lang!="en":
             get_translations().add_fallback(fallback_lang)
@@ -324,6 +314,16 @@ def create_app(config=None, debug=False):
 
         g.foodownloader = app.config["FOODOWNLOADER"] and (request.user_agent.platform == "windows")
 
+        # ignora peticiones sin blueprint
+        if request.blueprint is None and request.path.endswith("/"):
+            if "?" in request.url:
+                root = request.url_root[:-1]
+                path = request.path.rstrip("/")
+                query = u(request.url)
+                query = query[query.find(u"?"):]
+                return redirect(root+path+query, 301)
+            return redirect(request.url.rstrip("/"), 301)
+
     @app.after_request
     def after_request(response):
         if request.user_agent.browser == "msie": response.headers["X-UA-Compatible"] = "IE-edge"
@@ -331,29 +331,17 @@ def create_app(config=None, debug=False):
 
     # Páginas de error
 
-    @allerrors(app, 400, 401, 403, 404, 405, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 500, 501, 502, 503)
+    @allerrors(app, 400, 401, 403, 404, 405, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 429, 500, 501, 502, 503)
     def all_errors(e):
-        error = str(e.code) if hasattr(e,"code") else "500"
-        message_msgid = "error_%s_message" % error
-        message_msgstr = _(message_msgid)
-        if message_msgstr == message_msgid:
-            message_msgstr = _("error_500_message")
-        description_msgid = "error_%s_description" % error
-        description_msgstr = _(description_msgid)
-        if description_msgstr == description_msgid and hasattr(e,"description"):
-            description_msgstr = _("error_500_description")
+
+        error_code, error_title, error_description = get_error_code_information(e)
         try:
-            g.title = "%s %s" % (error, message_msgstr)
+            g.title = "%d %s" % (error_code, error_title)
             g.keywords = set()
             g.page_description = g.title
-            return render_template('error.html', zone="error", error=error, description=description_msgstr, search_form=SearchForm()), int(error)
+            return render_template('error.html', zone="error", error=error_code, description=error_description, search_form=SearchForm()), error_code
         except BaseException as ex: #si el error ha llegado sin contexto se encarga el servidor de él
             logging.warn(ex)
-            return make_response("",error)
+            return make_response("", error_code)
 
     return app
-
-def allerrors(app, *list_of_codes):
-    def inner(f):
-        return reduce(lambda f, code: app.errorhandler(code)(f), list_of_codes, f)
-    return inner

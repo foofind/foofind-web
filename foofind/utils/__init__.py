@@ -7,7 +7,6 @@ import bson
 import chardet
 import pymongo
 import random
-import urllib2
 import traceback
 import threading
 import time
@@ -24,6 +23,7 @@ from content_types import *
 from foofind.utils.splitter import SEPPER
 from collections import OrderedDict
 from itertools import izip, ifilter
+from urllib2 import unquote, quote
 
 import wlogging
 
@@ -298,7 +298,7 @@ def url2bin(b64id):
     '''
     Recibe un id de mongo en base64 y retorna ObjectId
     '''
-    return b64decode(str(b64id), "!-")
+    return b64decode(unquote(str(b64id)), "!-")
 
 def hex2url(hexuri):
     '''
@@ -311,7 +311,7 @@ def fileurl2mid(url):
     Recibe una url de fichero de foofind y retorna ObjectId
     '''
     idpart = urlparse(url.replace("#!", "")).path.split("/download/")[1].split("/", 1)[0]
-    return url2mid(urllib2.unquote(idpart))
+    return url2mid(unquote(idpart))
 
 def lang_path(lang, base_path, ext="po"):
     '''
@@ -637,9 +637,9 @@ def canonical_url(data):
     @return Cadena lista para usar como url de descarga.
     '''
 
-    fid = urllib2.quote(mid2url(data["_id"]))
+    fid = quote(mid2url(data["_id"]))
     try:
-        fname = "/%s.html" % urllib2.quote(
+        fname = "/%s.html" % quote(
             ( name["n"] for crc, name in data["fn"].iteritems()
               if "n" in name and name["n"].strip()
               ).next().encode("utf8")[:512]

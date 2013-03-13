@@ -22,9 +22,6 @@
                 {{- form.search_submit(**{"data-no_query":_("write_something")}) -}}
             </fieldset>
         </form>
-        <div id="toolbar">
-            <a data-source="Index text" href="http://toolbarstart.com/foofind/">{{_('new_toolbar')}} - </a><a data-source="Index click" href="http://toolbarstart.com/foofind/">{{_('click_here')}}</a>
-        </div>
     </div>
     <div id="extra">
         <div id="live">
@@ -35,7 +32,6 @@
                 <h4><a href="{{ url_for('page.contact') }}">{{_("index_suggestion")}}</a></h4>
             </div>
             <div class="social">
-                <div id="fb-root"></div>
                 <div class="fb-like-box" data-href="https://www.facebook.com/foofind" data-width="600" data-height="180" data-show-faces="true" data-border-color="#F5F5F5" data-stream="false" data-header="false"></div>
                 <div class="g-plusone" data-size="medium" data-href="http://foofind.is"></div>
                 <a href="https://twitter.com/foofind" class="twitter-follow-button" data-show-count="false" data-lang="{{ g.lang }}">Seguir a @foofind</a>

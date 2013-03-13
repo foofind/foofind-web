@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from struct import Struct
-from threading import Lock
+from threading import Lock, Event
 from string import whitespace
 from heapq import heappop, heappush
 from math import sqrt, log, exp
@@ -30,6 +30,7 @@ class Search(object):
     def __init__(self, proxy, query, filters={}, order=None, request_mode=REQUEST_MODE_PER_GROUPS, wait_time=500):
         self.request_mode = request_mode
         self.access = Lock()
+        self.usable = Event()
         self.has_changes = False
         self.proxy = proxy
         self.max_query_time = proxy.config["SERVICE_SPHINX_MAX_QUERY_TIME"]
@@ -40,7 +41,10 @@ class Search(object):
         self.canonical_parts = []
         self.canonical_words = None
         self.seen_words = {}
-        self.order = order
+        self.disable_query_search = proxy.config["SERVICE_SPHINX_DISABLE_QUERY_SEARCH"] # desactiva busqueda sin filtros
+
+        # orden: rating para el peso, columnas para ordenar, funcion de ordenación y si se deben mezclar grupos en el orden
+        self.order = order or (None, None, None, False)
 
         # normaliza texto de busqueda
         computable = True
@@ -158,7 +162,7 @@ class Search(object):
                                 if guess_mode:
                                     new_word = first_word not in self.seen_words
                                     position_word = position if new_word else self.seen_words[first_word]
-                                    query_parts.append(("G",[("T",first_word), ("F",season_filter+(" "+episode_filter if episode else ""))]))
+                                    query_parts.append(("G",[("T",first_word), ("F","(%s %s)"%(season_filter, episode_filter) if episode else season_filter)]))
                                     self.canonical_parts.append("{%d}"%position_word)
                                     if new_word:
                                         self.seen_words[first_word] = position
@@ -265,18 +269,20 @@ class Search(object):
                         or ("other-downloads" in src and source["d"] not in self.proxy.sources_relevance_download[:8] and ("w" in source["g"] or "f" in source["g"])) #si viene other... y no esta en la lista de sources y el source tiene web
                 ]
 
+        # orden de los resultados
+        order_repr = list(self.order)
+        if order_repr[2]:
+            order_repr[2] = order_repr[2].__module__+"."+order_repr[2].__name__
+
         # extrae informacion de la query recibida
         query_type = query["type"]
         if query_type=="list":
             self.query_key = u"L"+md5(query["user"]+"."+query["list"]).hexdigest()
             self.query = {"y":query_type, "i": "idx_lists", "ids": (query["user"]<<32, query["user"]<<32 | 0xFFFFFFFF)}
         elif query_type=="text":
-            self.query_key = u"Q"+md5(json.dumps(query_parts)).hexdigest()
+            self.query_key = u"Q"+md5(json.dumps(query_parts)+"".join("|"+str(part) if part else "|" for part in order_repr)).hexdigest()
             self.query = {"y":query_type, "i": "idx_files", "p": query_parts}
 
-        # orden de los resultados
-        if self.order:
-            self.query_key += "O"+md5(repr(self.order)).hexdigest()
 
         self.query_state, self.filters_state, self.locked_until, self.blocked_ids = proxy.get_search_state(self.query_key, self.filters)
 
@@ -362,6 +368,10 @@ class Search(object):
 
     def search(self, async=False):
 
+        # avisa que estas busqueda es usable
+        if self.filters_state and self.filters_state["c"]:
+            self.usable.set()
+
         # si la busqueda esta bloqueada o no es computable, sale sin hacer nada
         if self.locked_until or not self.computable:
             return self
@@ -375,6 +385,10 @@ class Search(object):
                                     or self.query_state["d"]<self.proxy.servers_stats[i]["d1"]] \
                             if self.query_state else self.proxy.servers.keys()
 
+        # no busca por query
+        if self.disable_query_search:
+            search_query = []
+
         can_retry_filters = not self.filters_state or self.filters_state["rt"]<self.search_max_retries
 
         search_filters = [i for i in self.proxy.servers.iterkeys()
@@ -385,10 +399,8 @@ class Search(object):
         if search_query or search_filters:
             # tiempo de espera incremental logaritmicamente con los reintentos (elige el tiempo máximo de espera)
             wait_time = self._get_wait_time(3, search_query, search_filters)
-            asearch = {"q":self.query, "f":self.filters, "rm":self.request_mode, "mt":wait_time, "l":(0, 500 if self.request_mode==REQUEST_MODE_PER_GROUPS else 100, 10000, 2000000)}
 
-            if self.order and self.order[0]:
-                asearch["o"] = self.order[0]
+            asearch = {"q":self.query, "f":self.filters, "rm":self.request_mode, "mt":wait_time, "rf":self.order[0], "sr":self.order[1]}
 
             # si no tiene estado para busqueda con filtros, lo crea
             if not self.filters_state:
@@ -407,7 +419,11 @@ class Search(object):
                                         # buscar texto si toca en este servidor
                                         [("st",server in search_query),
                                         # buscar con filtros si se debe y toca en este servidor
-                                        ("sf",must_search_filters and server in search_filters)
+                                        ("sf",must_search_filters and server in search_filters),
+                                        # limite segun situacion
+                                        ("l", (0, 500 if self.request_mode==REQUEST_MODE_PER_GROUPS else
+                                                  5 if server in self.filters_state["i"] else
+                                                100, 10000, 2000000))
                                         ])
                             for server in set(search_query+(search_filters if must_search_filters else []))
                             }
@@ -452,13 +468,13 @@ class Search(object):
                 self.stats = {k:v for k,v in self.filters_state.iteritems() if k in ("v", "t")}
                 self.stats["cs"] = sum(count for server_id, count in self.filters_state["c"].iteritems() if server_id in self.proxy.servers) - sum(diff[0]+diff[1] for server_id, diff in self.filters_state["df"].iteritems() if server_id in self.proxy.servers)
 
-
-                self.stats["s"] = not (self.query_state["i"] or self.filters_state["i"] or
-                                        self.proxy.servers_set.difference(set(self.query_state["c"])) or
-                                        self.proxy.servers_set.difference(set(self.filters_state["c"])))
+                self.stats["rt"] = self.filters_state["rt"]
+                self.stats["st"] = not (self.query_state["i"] or self.proxy.servers_set.difference(set(self.query_state["c"])))
+                self.stats["sf"] = not (self.filters_state["i"] or self.proxy.servers_set.difference(set(self.filters_state["c"])))
+                self.stats["s"] = self.stats["sf"] and (self.disable_query_search or self.stats["st"])
                 self.stats["ct"] = self.query_state["ct"] if "ct" in self.query_state else None
             else:
-                self.stats = {"cs":0, "v":0, "t":0, "s":True, "w":0, "li":[], "ct":None}
+                self.stats = {"cs":0, "rt":0, "v":0, "t":0, "s":True, "w":0, "li":[], "ct":None}
 
     def get_stats(self):
         self.generate_stats()
@@ -501,7 +517,7 @@ class Search(object):
         self.access.release()
         return info
 
-    def get_results(self, last_items=[], min_results=5, max_results=10, hard_limit=10000):
+    def get_results(self, last_items=[], skip=None, min_results=5, max_results=10, hard_limit=10000):
 
         # si todavia no hay informacion de filtros, sale sin devolver nada
         if not self.computable:
@@ -526,7 +542,10 @@ class Search(object):
 
         src_count = defaultdict(int)
 
-        ct_weights = {str(ct):value for ct, value in [(CONTENT_UNKNOWN, 0.1), (CONTENT_AUDIO, 0.7), (CONTENT_VIDEO, 1.0),
+        if self.order[3]:
+            ct_weights = {str(ct):1 for ct in (CONTENT_UNKNOWN, CONTENT_AUDIO, CONTENT_VIDEO, CONTENT_IMAGE, CONTENT_APPLICATION, CONTENT_DOCUMENT)}
+        else:
+            ct_weights = {str(ct):value for ct, value in [(CONTENT_UNKNOWN, 0.1), (CONTENT_AUDIO, 0.7), (CONTENT_VIDEO, 1.0),
                                                       (CONTENT_IMAGE, 0.5), (CONTENT_APPLICATION, 0.5), (CONTENT_DOCUMENT, 0.5)]}
 
         total_results = min(hard_limit,self.filters_state["cs"]+sum(dup+bl for dup, bl in self.filters_state["df"].itervalues()))
@@ -566,7 +585,7 @@ class Search(object):
                 continue
 
             # actualiza pesos y contador de resultados obtenidos de grupos y subgrupo
-            if not self.order or not self.order[2]:
+            if not self.order[3]:
                 og["l"] = l+1
                 og2["l"] = l2+1
                 osg["l"] = ls+1
@@ -598,9 +617,12 @@ class Search(object):
 
             # devuelve el resultado
             if version!=BLOCKED_FILE_VERSION and versions[version]>last_versions[version] and (must_return or returned<min_results):
-                returned+=1
-                new_versions[version] = versions[version]
-                yield (result_id, server, sphinx_id, -result_weight, sg)
+                if skip:
+                    skip-=1
+                else:
+                    returned+=1
+                    new_versions[version] = versions[version]
+                    yield (result_id, server, sphinx_id, -result_weight, sg)
 
             if self.request_mode==REQUEST_MODE_PER_GROUPS:
                 count_diff = subgroup["df"].get(server, [0,0])[1] if "df" in subgroup else 0
@@ -639,7 +661,7 @@ class Search(object):
                     must_return = False
 
         self.generate_stats()
-        self.stats["end"] = must_return and i>=total_results-1
+        self.stats["end"] = i>=total_results-1
         self.stats["total_sure"] = must_return
         self.stats["li"] = new_versions
 
@@ -650,10 +672,11 @@ class Search(object):
             self.stats["w"] = -1
         elif searches:
             wait_time = self._get_wait_time(3, False, True)
+
             if self.request_mode==REQUEST_MODE_PER_GROUPS:
-                allsearches = {"s":{server: {"l":(0, 10, 1000, 2000000), "st":False, "sf":False, "q":self.query, "f":self.filters, "mt":wait_time, "g":subgroups} for server, subgroups in searches.iteritems()}}
+                allsearches = {"s":{server: {"l":(0, 10, 1000, 2000000), "rm":self.request_mode, "st":False, "sf":False, "q":self.query, "f":self.filters, "mt":wait_time, "g":subgroups, "rf":self.order[0], "sr":self.order[1]} for server, subgroups in searches.iteritems()}}
             else:
-                allsearches = {"s":{server: {"l":(position, 10, 1000, 2000000), "st":False, "sf":True, "q":self.query, "f":self.filters, "mt":wait_time} for server, position in searches.iteritems()}}
+                allsearches = {"s":{server: {"l":(position, 100, 1000, 2000000), "rm":self.request_mode, "st":False, "sf":True, "q":self.query, "f":self.filters, "mt":wait_time, "rf":self.order[0], "sr":self.order[1]} for server, position in searches.iteritems()}}
             self.proxy.search(allsearches)
             max_wait_time = wait_time * max_searches
             self.locked_until = self.proxy.set_lock_state(self.query_key, self.filters, 500+max_wait_time)
@@ -729,7 +752,7 @@ class Search(object):
                 any_query_main = any_filters_main = True
             elif asearch["sf"]: # solo consulta con filtros
                 main = [(False, True)]
-                any_filters_main = True
+                any_filters_main = asearch["l"][0]==0 # solo es principal si empieza en cero
             elif asearch["st"]: # solo consulta sin filtros, puede aplicar para la consulta con filtros (si no hay filtro)
                 main = [(True, not self.filters)]
                 any_query_main = any_filters_main = True
@@ -845,11 +868,13 @@ class Search(object):
                                 val = 0
                                 rating = 0.5 if rating==-1 else 1.1 if rating==-2 else rating
 
-                            normalized_weight = weight*self.proxy.sources_weights[src]*(1./(1+exp(-val)) if std_dev else rating)
+                            normalized_rating = self.proxy.sources_weights[src]*(1./(1+exp(-val)) if std_dev else rating)
 
                             # para ordenar, se utiliza la función de orden
-                            if self.order and self.order[1]:
-                                normalized_weight = self.order[1](r, normalized_weight)
+                            if self.order[2]:
+                                normalized_weight = self.order[2](r, weight, rating, normalized_rating)
+                            else:
+                                normalized_weight = weight*normalized_rating
                             heappush(filter_subgroup["h"], (-normalized_weight, fid))
                             filter_subgroup_files[fid] = [server, r["id"], self.filters_state["v"], search_position]
 
@@ -858,7 +883,7 @@ class Search(object):
                         if self.request_mode == REQUEST_MODE_PER_GROUPS:
                             filter_subgroup["lv"][server] = max(1,filter_subgroup["lv"].get(server,0))
                         else:
-                            self.filters_state["lv"][server] = max(1, self.filters_state["lv"].get(server,0))
+                            self.filters_state["lv"][server] = max(search_position, self.filters_state["lv"].get(server,0))
 
                 # totales absolutos
                 if main:
@@ -915,8 +940,10 @@ class Search(object):
                         self.query_state["d"][server]=time()
 
                         # actualiza informacion sobre fiabilidad de los datos
-                        if valid and server in self.query_state["i"]: self.query_state["i"].remove(server)
-                        elif not valid and server not in self.query_state["i"]: self.query_state["i"].append(server)
+                        if valid and server in self.query_state["i"]:
+                            self.query_state["i"].remove(server)
+                        elif not valid and server not in self.query_state["i"]:
+                            self.query_state["i"].append(server)
 
                     if main[0][1]: # almacena en filters_state
                         # actualiza el numero de ficheros en el servidor
@@ -925,9 +952,12 @@ class Search(object):
                         self.filters_state["t"][server] = result["time"]
                         self.filters_state["d"][server] = time()
 
+
                         # actualiza informacion sobre fiabilidad de los datos
-                        if valid and server in self.filters_state["i"]: self.filters_state["i"].remove(server)
-                        elif not valid and server not in self.filters_state["i"]: self.filters_state["i"].append(server)
+                        if valid and server in self.filters_state["i"]:
+                            self.filters_state["i"].remove(server)
+                        elif not valid and server not in self.filters_state["i"]:
+                            self.filters_state["i"].append(server)
 
                     main = main[1:]
 
@@ -941,6 +971,10 @@ class Search(object):
                         filter_subgroup["lv"][server] = max(search_position,filter_subgroup["lv"].get(server,0))
 
             self.access.release()
+
+            # avisa que la busqueda ya es usable
+            if not self.usable.is_set():
+                self.usable.set()
 
         if self.has_changes:
             # actualiza numero de reintentos en ambos estados

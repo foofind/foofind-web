@@ -1,4 +1,4 @@
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
@@ -16,6 +16,12 @@ msgstr ""
 msgid "your_email"
 msgstr "El vostre correu:"
 
+msgid "new_toolbar"
+msgstr "Proveu la nostra nova barra d'eines"
+
+msgid "click_here"
+msgstr "Cliqueu aquí"
+
 msgid "password"
 msgstr "Contrasenya:"
 
@@ -24,6 +30,9 @@ msgstr "Envia"
 
 msgid "required_empty"
 msgstr "Aquest camp no pot estar buit"
+
+msgid "ok"
+msgstr "D'acord"
 
 msgid "help_us"
 msgstr "Ajuda'ns!"
@@ -39,36 +48,41 @@ msgstr "Ha ocorregut un error"
 
 msgid "error_500_description"
 msgstr ""
-"Hi ha quelcom rar, els nostres especialistes investiguen aquesta activitat "
-"paranormal."
+"Hi ha quelcom d'estrany, els nostres especialistes investiguen aquesta "
+"activitat paranormal."
 
 msgid "error_404_message"
 msgstr "No s'ha trobat la pàgina"
 
 msgid "error_404_description"
-msgstr "L'URL no s'ha trobat. Si l'adreça no és correcta agrairíem que ens aviséssiu."
+msgstr ""
+"L'URL no s'ha trobat. Si l'adreça no és correcta agrairíem que ens "
+"aviséssiu."
 
 msgid "error_410_message"
 msgstr "Pàgina no disponible"
 
+msgid "error_410_description"
+msgstr ""
+"La pàgina demanada ja no és disponible ni tampoc no ho serà en el futur"
+
 msgid "error_502_message"
-msgstr "Passarel incorrecta"
+msgstr "Passarel ·la incorrecta"
 
 msgid "error_502_description"
-msgstr "S'ha intentat accedir al servei web amb una ubicació incorrecta."
+msgstr "S'ha mirat d'accedir al servei web amb una ubicació incorrecta."
 
 msgid "error_503_message"
 msgstr "Servei no disponible"
 
 msgid "error_503_description"
 msgstr ""
-"L'URL requerit no es troba disponible temporalment. Si us plau, proveu-ho "
-"més tard."
+"L'URL requerit no es troba disponible temporalment. Proveu-ho més tard."
 
 msgid "error_mail_send"
 msgstr ""
-"Ha ocorregut un error en enviar el missatge a l'adreça de correu indicada. "
-"Per favor triï altra o intenti-ho de nou més tard."
+"Hi ha hagut un error en enviar el missatge a l'adreça de correu indicada. "
+"Trieu-ne una altra o proveu-ho de nou més tard."
 
 msgid "non_alphabetic_digits"
 msgstr "%(value)s conté caràcters que no són lletres ni nombres."
@@ -145,6 +159,12 @@ msgstr "Altres streamings"
 
 msgid "other_direct_downloads"
 msgstr "Altres descàrregues directes"
+
+msgid "some_streamings"
+msgstr "Algunes reproduccions en temps real"
+
+msgid "some_downloads"
+msgstr "Algunes descàrregues directes"
 
 msgid "others"
 msgstr "Altres"
@@ -298,6 +318,11 @@ msgstr "Llavors"
 msgid "leechs"
 msgstr "Sangoreres"
 
+msgid "first_files"
+msgstr ""
+"Mostra els primers %(value)s fitxers. Descarregueu el fitxer per a veure-ho "
+"tot."
+
 msgid "seconds"
 msgstr "segons"
 
@@ -445,17 +470,44 @@ msgstr "hores"
 msgid "minute"
 msgstr "minut"
 
+msgid "all_sources"
+msgstr "Totes les fonts"
+
+msgid "share"
+msgstr "Compartiu a %(site)s"
+
+msgid "share_download"
+msgstr "Compartiu"
+
+msgid "share_search"
+msgstr "Compartiu aquesta cerca"
+
 msgid "second"
 msgstr "segon"
 
 msgid "loading"
 msgstr "Carregant"
 
+msgid "open_link_new_tab"
+msgstr "Obriu el vincle en una nova pastanya"
+
 msgid "close"
 msgstr "Tanca"
 
+msgid "download_source"
+msgstr "Descarregueu de %(source)s"
+
 msgid "share_this"
 msgstr "Comparteix aquest enllaç:"
+
+msgid "watch_source"
+msgstr "Mireu a %(source)s"
+
+msgid "listen"
+msgstr "Escolteu"
+
+msgid "listen_source"
+msgstr "Escolteu a %(source)s"
 
 msgid "share_facebook"
 msgstr "comparteix a Facebook"
@@ -539,8 +591,7 @@ msgid "insert_your_password"
 msgstr "Torneu a escriure la contrasenya (sí, un altre cop):"
 
 msgid "fill_sing_up_form"
-msgstr ""
-"Si us plau, ompliu aquest formulari per ser usuari registrat de Foofind:"
+msgstr "Ompliu aquest formulari per ser usuari registrat de Foofind:"
 
 msgid "nickname"
 msgstr "Àlies:"
@@ -588,7 +639,7 @@ msgid "remember_me"
 msgstr "Recorda'm"
 
 msgid "your_location"
-msgstr "La teva ubicació:"
+msgstr "La teva localització:"
 
 msgid "new_password"
 msgstr ""
@@ -602,12 +653,11 @@ msgid "not_allowed_view_page"
 msgstr "No teniu permisos per accedir a aquesta pàgina"
 
 msgid "username_taken"
-msgstr "Aquest nom d'usuari ja existeix. Si us plau, tria'n un altre"
+msgstr "Aquest nom d'usuari ja existeix. Trieu-ne un altre"
 
 msgid "email_taken"
 msgstr ""
-"Aquest correu ja existeix a la nostra base de dades. Si us plau, utilitzeu-"
-"ne un altre."
+"Aquest correu ja existeix a la nostra base de dades. Utilitzeu-ne un altre."
 
 msgid "forgot"
 msgstr "Heu oblidat"
@@ -619,7 +669,7 @@ msgid "passwords_not_match"
 msgstr "Les contrasenyes no coincideixen."
 
 msgid "sure_delete_account"
-msgstr "Estàs segur de voler eliminar el teu compte de Foofind?"
+msgstr "Segur de voleu eliminar el vostre compte de Foofind?"
 
 msgid "yes"
 msgstr "Sí"
@@ -646,7 +696,7 @@ msgid "last_comments"
 msgstr "Darrers %(comments)d comentaris:"
 
 msgid "location"
-msgstr "Ubicació:"
+msgstr "Localització:"
 
 msgid "delete_account"
 msgstr "Elimina el teu compte de Foofind"
@@ -655,18 +705,16 @@ msgid "forgot_password"
 msgstr "Heu oblidat la vostra contrasenya?"
 
 msgid "wrong_email_password"
-msgstr "Adreça de correu o contrasenya errònia. Prova-ho de nou"
+msgstr "Adreça de correu o contrasenya errònia. Proveu-ho de nou"
 
 msgid "welcome"
 msgstr "Benvingut"
 
 msgid "finish_register"
-msgstr ""
-"Si us plau, feu clic en aquest enllaç per completar el vostre procés de "
-"registre:"
+msgstr "Feu clic en aquest enllaç per enllestir el procés de registre:"
 
 msgid "token_not_exist"
-msgstr "Ho sentim, aquest token no existeix o ja ha estat utilitzat"
+msgstr "Aquest token no existeix o ja ha estat utilitzat"
 
 msgid "confirm_email"
 msgstr ", confirmeu el vostre correu"
@@ -710,8 +758,7 @@ msgstr "accediu aquí"
 
 msgid "enter_email"
 msgstr ""
-"Si us plau, introduïu el vostre correu. Us enviarem un missatge per "
-"recuperar l'accés."
+"Introduïu el vostre correu. Us enviarem un missatge per recuperar l'accés."
 
 msgid "send"
 msgstr "Envia"
@@ -722,8 +769,8 @@ msgstr ""
 
 msgid "email_not_database"
 msgstr ""
-"L'adreça de correu introduida no és a la nostra base de dades. Si us plau, "
-"proveu-ho de nou."
+"L'adreça de correu introduida no és a la nostra base de dades. Proveu-ho de "
+"nou."
 
 msgid "check_inbox_email_restore"
 msgstr "Comproveu el vostre correu per recuperar l'accés a Foofind"
@@ -740,14 +787,13 @@ msgid "ignore_message"
 msgstr "En cas contrari, ignoreu aquest missatge."
 
 msgid "login_vote"
-msgstr "Si us plau, accediu per votar"
+msgstr "Accediu per votar"
 
 msgid "login_comment"
-msgstr "Si us plau, accediu per afegir un comentari"
+msgstr "Accediu per afegir un comentari"
 
 msgid "technical_problems"
-msgstr ""
-"Ens sap greu, estem tenint problemes técnics amb el servei de %(service)s"
+msgstr "Actualment tenim problemes tècnics amb el servei de %(service)s"
 
 msgid "allow_access_account"
 msgstr ""
@@ -779,7 +825,7 @@ msgstr "formulari de reclamació "
 
 msgid "complaints_ignored"
 msgstr ""
-"Les reclamacions realitzades a través d'aquest formulari seran ignorades."
+"Les reclamacions realitzades mitjançant aquest formulari seran ignorades."
 
 msgid "your_message"
 msgstr "El vostre missatge:"
@@ -835,7 +881,7 @@ msgid "reason_complaint"
 msgstr "Motiu de la reclamació:"
 
 msgid "accept_terms"
-msgstr "Si us plau, has d'acceptar els termes d'ú i la política de privacitat"
+msgstr "Heu d'acceptar els termes d'ús i la política de privadesa"
 
 msgid "accept_tos"
 msgstr "He llegit i accepto els %(tos)s i la %(privacy)s."
@@ -848,8 +894,7 @@ msgstr ""
 "La direcció deu correspondre a una pàgina de descàrrega Foofind vàlida."
 
 msgid "include_reported_links"
-msgstr ""
-"Si us plau, incloeu els enllaços en els camps corresponents del formulari."
+msgstr "Incloeu els enllaços en els camps corresponents del formulari."
 
 msgid "submit_links"
 msgstr "Envieu enllaços"
@@ -870,7 +915,7 @@ msgstr ""
 
 msgid "include_link_per_line"
 msgstr ""
-"Si us plau, incloeu un enllaç HTTP, FTP, Ed2k o magnet per línia.\r\n"
+"Incloeu un enllaç HTTP, FTP, Ed2k o magnet per línia.\r\n"
 "Aquests seran analitzats automàticament i, ben aviat seran afegits als resultats de la cerca."
 
 msgid "link_sent"
@@ -885,12 +930,10 @@ msgstr ""
 "programari que recorre totes les xarxes i indexa tots els arxius. D'aquesta "
 "manera volem oferir la major quantitat d´enllaços disponibles. Foofind és "
 "una idea de Pablo Soto, creador de tecnologies P2P, desenvolupades a Madrid,"
-" España per MP2P Technologies."
+" Espanya per MP2P Technologies."
 
 msgid "under_maintenance"
-msgstr ""
-"Foofind està aturat per manteniment. Si us plau, torneu-ho a provar més "
-"tard."
+msgstr "Foofind està aturat per manteniment. Torneu-ho a provar més tard."
 
 msgid "link_not_exist"
 msgstr "Aquest enllaç no existeix o ha sigut eliminat!"
@@ -899,19 +942,16 @@ msgid "translate"
 msgstr "Traduïu"
 
 msgid "error_link_removed"
-msgstr "Ho sentim, aquest enllaç ha estat eliminat del seu origen."
+msgstr "Aquest enllaç ha estat eliminat del seu origen."
 
 msgid "translate_to_your_language"
 msgstr "Ajudeu-nos a traduïr Foofind en la vostra llengua"
 
 msgid "translate_description"
 msgstr ""
-"Actualment, Foofind està disponible en poques llengües, però podeu ajudar-"
-"nos a traduir-lo a la vostra. Trieu de la llista la llengua que es troba a "
-"continuació i ompliu els camps amb els textos traduïts. No cal que ompliu "
-"tots els camps, qualsevol aportació que pugueu realitzar ens serà de gran "
-"ajuda. Si no trobeu la vostra llengua a la llista, poseu-vos en contacte amb"
-" nosaltres per a afegir-la."
+"Actualment, Foofind és disponible en poques llengües, però podeu ajudar-nos a traduir-lo a la vostra. Trieu a la llista la llengua que us interessa i ompliu els camps amb els textos traduïts. No cal que ompliu tots els camps, qualsevol aportació que pugueu fer ens serà de gran ajuda.\r\n"
+"\r\n"
+"Si no trobeu la vostra llengua a la llista, poseu-vos en contacte amb nosaltres per a afegir-la."
 
 msgid "choose_language"
 msgstr "Tria la llengua"
@@ -920,7 +960,86 @@ msgid "translation_sent"
 msgstr "La vostra traducció ha estat enviada. Gràcies per la vostra ajuda!"
 
 msgid "embed_foofind_button"
-msgstr "Vore en foofind"
+msgstr "Veure a foofind"
+
+msgid "foodownloader_powered"
+msgstr "Proposat per [%(name)s](%(link)s)"
+
+msgid "foodownloader_overview"
+msgstr "Visió de conjunt"
+
+msgid "foodownloader_overview_text"
+msgstr ""
+"**Foofind Download Manager** és un client ràpid per la xarxa **Torrent** P2P.\r\n"
+"\r\n"
+"Foofind Download Manager és dissenyat per ser molt fàcil d'usar, intuïtiu i segur. Pot pausar, reprendre i trobar les vostres descàrregues amb més facilitat que mai, feu un cop d'ull a algunes de les seues característiques:\r\n"
+"\r\n"
+"* Client Rock torrent sòlid.\r\n"
+"* Interfície simplificada.\r\n"
+"* DHT, extensions de protocol UPnP i uTorrent."
+
+msgid "foodownloader_sharing"
+msgstr "Descarregueu i compartiu arxius"
+
+msgid "foodownloader_sharing_text"
+msgstr ""
+"Ara, amb **Foofind Download Manager podeu descarregar més ràpid que mai. Gràcies a la xarxa **torrent**, la solució més ràpida P2P que ha existit mai, les descàrregues volaran.\r\n"
+"\r\n"
+"Proveu-ho! ** El futur de la descàrrega és només a un clic de distància."
+
+msgid "foodownloader_safety"
+msgstr "Obtingueu els vostres fitxers de forma segura"
+
+msgid "foodownloader_safety_text"
+msgstr ""
+"Ens prenem la seguretat molt seriosament. **Foofind Download Manager** utilitza la biblioteca libtorrent guardonada que farà que la vostra experiència de descàrrega sigui totalment segura.\r\n"
+"\r\n"
+"Us recomanem d'utilitzar un antivirus, podríeu descarregar programari maliciós de fonts no fiables.\r\n"
+
+msgid "foodownloader_download"
+msgstr "Descàrrega gratuïta"
+
+msgid "foodownloader_download_source"
+msgstr "Descarregueu el codi font"
+
+msgid "foodownloader_meta_description"
+msgstr ""
+"Foofind Download Manager és una eina de descàrrega de torrents simple i "
+"fàcil d'usar"
+
+msgid "foodownloader_thanks"
+msgstr "Bona descàrrega"
+
+msgid "foodownloader_thanks_message"
+msgstr ""
+"Gràcies per instal·lar Download Manager Foofind, esperem que us agradi."
+
+msgid "foodownloader_download_coming_soon"
+msgstr "Encara no és disponible per al vostre sistema operatiu."
+
+msgid "foodownloader_dialog_title"
+msgstr ""
+"Ei!\r\n"
+"\r\n"
+"Us cal un client de torrent per a descarregar aquest arxiu"
+
+msgid "foodownloader_dialog_yes"
+msgstr ""
+"Sí, descarregueu\r\n"
+"\r\n"
+"Foofind Download Manager"
+
+msgid "foodownloader_dialog_no"
+msgstr ""
+"No, gràcies\r\n"
+"\r\n"
+"Ja tinc un client de torrent"
+
+msgid "foodownloader_dialog_text"
+msgstr ""
+"Descarregueu-vos Foofind Download Manager per a descarregar aquests fitxer en un tres i no res.\r\n"
+"\r\n"
+"El nostre programari us permet de descarregar torrents més ràpid i més fàcil que mai - totalment gratis! Si ja teniu un client de Torrent, feu clic a \"No, gràcies\"."
 
 msgid "embed_download_button"
 msgstr "Descàrrega"
@@ -929,18 +1048,18 @@ msgid "copy_to_clipboard_shortcut"
 msgstr "Utilitza CTRL+C per a copiar al portapapers"
 
 msgid "translate_at_least_one"
-msgstr "Si us plau, entreu un mínim d'una frase abans d'enviar."
+msgstr "Entreu un mínim d'una frase abans d'enviar."
 
 msgid "here"
 msgstr "ací"
 
 msgid "translation_beta"
 msgstr ""
-"Aquesta traducció està en fase de proves. Si trobeu alguna errada o text "
-"sense traduir, si us plau informeu-nos-en %(here)s."
+"Aquesta traducció és en fase de proves. Si trobeu alguna errada o text sense"
+" traduir, informeu-nos-en %(here)s."
 
 msgid "other"
 msgstr "Un altre"
 
 msgid "opensearch_description"
-msgstr "Buscar utilitzant Foofind"
+msgstr "Cerca utilitzant Foofind"

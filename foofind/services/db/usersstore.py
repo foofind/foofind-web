@@ -232,7 +232,7 @@ class UsersStore(object):
         self.user_conn.end_request()
         return data
 
-    @cache.memoize()
+    @cache.memoize(timeout=60*60)
     def list_fav_lists(self, user):
         '''
         Obtener los nombres de lista de favoritos con nombre.
@@ -249,7 +249,7 @@ class UsersStore(object):
         return doc
     list_fav_lists.make_cache_key = lambda self, user: "memoized/usersstore.list_fav_list/%s" % user.id
 
-    @cache.memoize()
+    @cache.memoize(timeout=60*60)
     def list_fav_files(self, user):
         '''
         Obtener todos los ficheros de todas las listas de usuario

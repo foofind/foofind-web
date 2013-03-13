@@ -46,5 +46,25 @@ FILTER_PREFIX_TAGS = "T"
 FILTER_PREFIX_YEAR = "Y"
 
 DEFAULT_EMBED_CTS = [CONTENT_AUDIO, CONTENT_VIDEO]
-GOOD_MDS = frozenset({'audio:artist','audio:composer','archive:folders', 'archive:files','video:keywords','audio:album', 'audio:title', 'document:title', 'torrent:name', 'image:title', 'video:title', 'torrent:filepaths', "video:series", "video:director", "video:genre", "video:cast", "book:title", 'torrent:infohash'})
+DEFAULT_MD_MAX_LENGTH = 300
+GOOD_MDS = {
+    'audio:album':DEFAULT_MD_MAX_LENGTH,
+    'audio:artist':DEFAULT_MD_MAX_LENGTH,
+    'audio:composer':DEFAULT_MD_MAX_LENGTH,
+    'audio:title':DEFAULT_MD_MAX_LENGTH,
+    'archive:folders':30000,
+    'archive:files':30000,
+    "book:title":DEFAULT_MD_MAX_LENGTH,
+    'document:title':DEFAULT_MD_MAX_LENGTH,
+    'image:title':DEFAULT_MD_MAX_LENGTH,
+    'torrent:filepaths':30000,
+    'torrent:infohash':40,
+    'torrent:name':DEFAULT_MD_MAX_LENGTH,
+    "video:cast":DEFAULT_MD_MAX_LENGTH,
+    "video:director":DEFAULT_MD_MAX_LENGTH,
+    "video:genre":DEFAULT_MD_MAX_LENGTH,
+    'video:keywords':500,
+    "video:series":DEFAULT_MD_MAX_LENGTH,
+    'video:title':DEFAULT_MD_MAX_LENGTH,
+}
 

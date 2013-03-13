@@ -39,21 +39,21 @@ def file_var():
         ("Google+","plusgooglecom","https://plus.google.com/share?url=%(url)s"),
         ("Myspace","myspacecom","http://www.myspace.com/Modules/PostTo/Page/?u=%(url)s"),
         ("Delicious","deliciouscom","http://delicious.com/post?url=%(url)s"),
-        ("Digg","diggcom","http://digg.com/submit?phase2&url=%(url)s&title=%(title)s"),
+        ("Digg","diggcom","http://digg.com/submit?phase2&amp;url=%(url)s&amp;title=%(title)s"),
         ("Evernote","evernotecom","http://www.evernote.com/clip.action?url=%(url)s"),
-        ("Friendfeed","friendfeedcom","http://www.friendfeed.com/share?title=%(title)s&url=%(url)s"),
-        ("Google","googlecom","http://www.google.com/bookmarks/mark?op=edit&btmk=%(url)s"),
-        ("Newsvine","newsvinecom","http://www.newsvine.com/_tools/seed&save?u=%(url)s"),
+        ("Friendfeed","friendfeedcom","http://www.friendfeed.com/share?title=%(title)s&amp;url=%(url)s"),
+        ("Google","googlecom","http://www.google.com/bookmarks/mark?op=edit&amp;btmk=%(url)s"),
+        ("Newsvine","newsvinecom","http://www.newsvine.com/_tools/seed&amp;save?u=%(url)s"),
         ("Reddit","redditcom","http://www.reddit.com/submit?url=%(url)s"),
         ("Stumbleupon","stumbleuponcom","http://www.stumbleupon.com/submit?url=%(url)s"),
         ("Technorati","technoraticom","http://technorati.com/faves?add=%(url)s"),
-        ("Menéame","meneamenet","http://meneame.net/submit.php?url=%(url)s&title=%(title)s"),
+        ("Menéame","meneamenet","http://meneame.net/submit.php?url=%(url)s&amp;title=%(title)s"),
         ("Tuenti","tuenticom","http://www.tuenti.com/share?url=%(url)s"),
         ("Pinterest","pinterestcom","http://pinterest.com/pin/create/button/?url=%(url)s"),
-        ("Netvibes","netvibescom","http://www.netvibes.com/share?title=%(title)s&url=%(url)s"),
-        ("Linkedin","linkedincom","http://www.linkedin.com/shareArticle?mini=true&url=%(url)s&title=%(title)s"),
+        ("Netvibes","netvibescom","http://www.netvibes.com/share?title=%(title)s&amp;url=%(url)s"),
+        ("Linkedin","linkedincom","http://www.linkedin.com/shareArticle?mini=true&amp;url=%(url)s&amp;title=%(title)s"),
         ("Posterous","posterouscom","http://posterous.com/share?linkto=%(url)s"),
-        ("Yahoo","yahoocom","http://bookmarks.yahoo.com/toolbar/savebm?u=%(url)s&t=%(title)s"),
+        ("Yahoo","yahoocom","http://bookmarks.yahoo.com/toolbar/savebm?u=%(url)s&amp;t=%(title)s"),
     ]
     return {"zone":"files","search_form":SearchForm(request.args),"args":g.args,"extra_sources":g.extra_sources,"share":share}
 
@@ -70,6 +70,10 @@ def search(query=None,filters=None,file_id=None,file_name=None):
     canonical_query=query #la busqueda canonica es la misma por defecto
     full_browser=is_full_browser()
     search_bot=is_search_bot()
+
+    # comprueba limite de ratio de peticiones
+    check_rate_limit(search_bot)
+
     url_with_get_params=False
     if "_escaped_fragment_" in request.args: #si la URL tiene que ser una "captura de pantalla" de una ajax se redirige a la normal
         return redirect(url_for(".search",query=query,filters=filters,file_id=file_id,file_name=file_name),301 if search_bot else 302)
@@ -237,15 +241,16 @@ def search_files(query,filters,min_results=0,max_results=10,download=None,last_i
     profiler.checkpoint(profiler_data,opening=["sphinx"])
     s = searchd.search({"type":"text", "text":query}, filters=filters, wait_time=wait_time)
     ids = list(s.get_results(last_items, min_results, max_results))
-    profiler.checkpoint(profiler_data,opening=["mongo"], closing=["sphinx"])
-    ntts = {int(ntt["_id"]):ntt for ntt in entitiesdb.get_entities(list(s.entities))} if s.entities else {}
+    profiler.checkpoint(profiler_data,opening=["entities"], closing=["sphinx"])
 
-    '''
-    # trae entidades relacionadas con las relacionadas
+    results_entities = list(set(int(aid[4])>>32 for aid in ids if int(aid[4])>>32))
+    ntts = {int(ntt["_id"]):ntt for ntt in entitiesdb.get_entities(results_entities)} if results_entities else {}
+    profiler.checkpoint(profiler_data, closing=["entities"])
+    '''# trae entidades relacionadas
     if ntts:
         rel_ids = list(set(eid for ntt in ntts.itervalues() for eids in ntt["r"].itervalues() if "r" in ntt for eid in eids))
-        rel_keys = [dict(kv) for kv in set(tuple(key.items()) for ntt in ntts.itervalues() for key in ntt["k"] if "episode" not in key and "season" not in key)]
-        ntts.update({int(ntt["_id"]):ntt for ntt in entitiesdb.get_entities(rel_ids, rel_keys, (False, [u"episode"]))}) '''
+        ntts.update({int(ntt["_id"]):ntt for ntt in entitiesdb.get_entities(rel_ids, None, (False, [u"episode"]))})
+    '''
 
     stats = s.get_stats()
     result = {"time": max(stats["t"].itervalues()) if stats["t"] else 0, "total_found": stats["cs"]}
@@ -257,8 +262,9 @@ def search_files(query,filters,min_results=0,max_results=10,download=None,last_i
     else:
         download_id = None
 
+    profiler.checkpoint(profiler_data, opening=["mongo"])
     files_dict={str(f["_id"]):secure_fill_data(f,text=query,ntts=ntts) for f in get_files(ids,s)}
-    profiler.checkpoint(profiler_data,closing=["mongo"])
+    profiler.checkpoint(profiler_data, closing=["mongo"])
 
     # añade download a los resultados
     if download_id:

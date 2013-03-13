@@ -7,7 +7,7 @@ from hashlib import md5
 from time import time
 from random import shuffle
 from math import sqrt, log
-import json
+import json, zlib
 
 from foofind.utils import mid2hex, hex2bin, logging
 from foofind.utils.event import EventManager
@@ -72,6 +72,7 @@ class SearchProxy:
             profiling_info["sp_freeconns"+server_id] = len(cp.clients)
             profiling_info["sp_preconns"+server_id] = cp.max_clients_counter
             profiling_info["sp_adhoc"+server_id] = cp.adhoc
+            cp.adhoc = 0
 
         # evita repetir valores a cero
         for key, value in profiling_info.items():
@@ -141,8 +142,8 @@ class SearchProxy:
         cache_data = cache.cache.get_many(query_cache_key, filters_cache_key, lock_cache_key, block_files_cache_key)
 
         # extrae informacion de los valores obtenidos
-        query_state = cache_data[0] or {}
-        filters_state = json.loads(cache_data[1]) if query_state and cache_data[1] else {}
+        query_state = json.loads(zlib.decompress(cache_data[0])) if cache_data[0] else {}
+        filters_state = json.loads(zlib.decompress(cache_data[1])) if query_state and cache_data[1] else {}
         locked_until = cache_data[2] or False
         block_files_from_cache = [block_file.split(",") for block_file in cache_data[3].split(";")] if cache_data[3] else []
 
@@ -165,15 +166,15 @@ class SearchProxy:
         filterskey = md5(json.dumps(filters)).hexdigest()
 
         if filters_state:
-            filters_state = json.dumps(filters_state)
+            filters_state = zlib.compress(json.dumps(filters_state))
 
         # borra ids bloqueados
         if blocked_ids:
             block_files_cache_key = "search_b%s_%s"%(querykey, filterskey)
             cache.delete(block_files_cache_key) # TO-DO: podría borrar ids nuevos a bloquear que no han sido bloqueados
 
-        cache.cache.set_many({"search_t%s"%querykey: query_state, "search_f%s_%s"%(querykey, filterskey): filters_state},
-                            timeout=0)
+        cache.cache.set_many({"search_t%s"%querykey: zlib.compress(json.dumps(query_state)), "search_f%s_%s"%(querykey, filterskey): filters_state}, timeout=0)
+
 
         # procesa bloqueo separadamente
         if locking_time==False: # borrar bloqueo

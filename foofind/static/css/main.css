@@ -96,7 +96,7 @@ input[type="text"]:not(#recaptcha_response_field),input[type="password"],select,
 }
 input[type="radio"], input[type="checkbox"]{vertical-align:-2px;margin-right:3px}
 input[type="radio"]:focus, input[type="checkbox"]:focus{border-style:none;border:0px;border:0px;background-color:blue;color:green}
-input[type="submit"],.button{font-size:1.5em;padding:6px 18px;background:$magenta;color:#fff;border-radius:7px;box-shadow:0px 1px 3px #999;text-shadow:0 0 5px rgba(0,0,0,0.25);border:none;cursor:pointer;position:relative;margin-top:10px}
+input[type="submit"],.button{font-size:1.5em;padding:6px 18px;background:$magenta;color:#fff;border-radius:7px;box-shadow:0px 0px 3px #999;text-shadow:0 0 5px rgba(0,0,0,0.25);border:none;cursor:pointer;position:relative;margin-top:10px}
 .button{font-size:1.5em;padding:10px 18px;display:inline-block;text-decoration:none}
 button{border:none;cursor:pointer}
 input[type="submit"]:active{top:1px;box-shadow:0px 0.5px 1.5px #999}
@@ -200,7 +200,7 @@ h3{font-size:1.3em}
     {
         display:inline-block;padding-top:8px;
         input#q{background:#FFF;height:30px;font-size:1.6em;margin:5px;width:390px}
-        .small{position:relative;input[type="text"]+span{top:12px}}
+        .small{position:relative;input[type="text"]+span{top:16px;left:8px}}
         #share
         {
             display:inline-block;position:relative;
@@ -218,15 +218,16 @@ h3{font-size:1.3em}
     }
     #error
     {
-        background:$darkerwhite;margin-top:30px;padding:50px 0 40px;overflow:hidden;
+        background:$darkerwhite;margin-top:30px;padding:40px 0 30px;overflow:hidden;
         >img,>div{display:inline-block;vertical-align:middle;min-height:224px}
         >img{margin:-10px 50px 0 35px}
         >div{width:55%}
-        h1{margin-bottom:20px}
-        h2{color:$magenta;font-size:1.8em;font-weight:normal}
-        p{color:$darkgray;font-size:1em;font-weight:bold;padding:10px 0 5px 0}
-        #search_file{display:block}
-        input#q{width:60%}
+        h1{color:$magenta;font-size:1.8em;font-weight:normal;margin-top:25px;letter-spacing:1px}
+        p{color:$darkgray;font-size:1em;font-weight:bold;padding:10px 0 5px 0; width:60%}
+        #search_file{display:block;
+            span{left:5px}
+            input#q{width:60%;margin-left:0px}
+        }
     }
 }
 /* pie */
@@ -317,7 +318,7 @@ section#home
                 }
                 #q{font-size:2em;color:$magenta;background:$darkwhite;width:458px;height:35px;padding:4px 10px 4px 40px;margin:5px 0;border-right:1px solid $gray;border-radius:0;box-shadow:0 0 0}
             }
-            input[type=submit]{font-size:2em;margin-left:20px;padding:9px 23px;max-height:50px;text-transform:lowercase}
+            input[type=submit]{font-size:2em;margin: 0px 0px 0px 20px;line-height:32px;padding:13px 23px;text-transform:lowercase}
         }
         .message{margin:-35px auto -15px;width:30%}
     }
@@ -649,20 +650,23 @@ section#files
         }
         #links
         {
-            background:$lightestgray;padding:2px;text-align:left;padding-left:10px;
+            background:$lightestgray;padding:0px 0px 0px 4px;text-align:left;
             #user_actions{float:right}
             #user_actions li,#actions li{display:inline}
             #sources_links{display:none;padding:20px;a{background:none}}
             #share_download_links
             {
-                background:$green;color:#FFF;border-radius:5px;font-size:1em;font-weight:bold;padding:0 5px 0 3px;
+                background:$green;color:#FFF;border-radius:5px;font-size:1em;font-weight:bold;padding:0 7px 0 2px;
                 &:hover,&:active,&.active{background:$magenta;span{@include sprite(306,2,24)}}
-                span{@include icon(306,1,24);height:16px}
+                span{@include icon(306,1,24);height:18px;width:20px;vertical-align:-5px;margin-right:0px}
             }
+            #actions {margin-top: 3px;}
             #download_links,#complaint,#favorite,#vote_up,#vote_down{@include icon($size:24)}
-            #download_links{@include states(320,24,$active:2)}
-            #download_link{@extend .button;font-size:1em;font-weight:bold;padding:2px 5px;margin-left:115px}
-            #complaint{@include states(321,24,$active:2)}
+            #download_links{@include states(320,24,$active:2);vertical-align: bottom;width:20px;height: 21px;margin-top:-3px}
+            #download_link{@extend .button;font-size:1em;font-weight:bold;padding:1px 7px;margin-left:115px;line-height:16px;vertical-align:bottom;margin-top:0px;border-radius:5px;}
+            form {display:inline;}
+            #complaint{border:none;display:inline;margin:-3px 0px 0px;padding:0px;box-shadow:none;@include states(321,24,$active:2);
+                    vertical-align: bottom;width: 20px;height: 21px;}
             #favorite{@include states(305,24,$status3:2,$active:2)}
             #vote_up{@include states(302,24,$status3:2,$active:2)}
             #vote_down{@include states(303,24,$status3:2,$active:2)}

@@ -318,6 +318,9 @@ msgstr "saniye"
 msgid "minutes"
 msgstr "dakika"
 
+msgid "first_files"
+msgstr "İlk %(value)s dosya gösterildi. Tümünü görmek için dosyayı indirin."
+
 msgid "source"
 msgstr "Kaynak"
 
@@ -1011,7 +1014,7 @@ msgid "foodownloader_download"
 msgstr "Ücretsiz indirim"
 
 msgid "foodownloader_download_source"
-msgstr "İndirme kaynağı"
+msgstr "Kaynak kodu indirin"
 
 msgid "foodownloader_meta_description"
 msgstr ""

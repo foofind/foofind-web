@@ -45,8 +45,11 @@ class Profiler:
                 results[key] = current
             last_date = max(log["_date"], last_date)
 
+        length = (last_date-start) or 1 # segundos transcurridos
+
         for key in results.iterkeys():
             if "sum" in results[key]:
                 results[key]["mean"] = results[key]["sum"]/results[key]["count"]
-
+                results[key]["sum"]  = results[key]["sum"]/length
+            results[key]["count"] /= length
         return results, last_date

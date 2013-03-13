@@ -125,27 +125,27 @@ def submit_link():
     return render_template('pages/submit_link.html',page_title=_("submit_links"),pagination=["translate","translate",1,2],form=form,pname="submitlink")
 
 @page.route('/<lang>/complaint', methods=['GET', 'POST'])
-@page.route('/<lang>/complaint/<file_id>', methods=['GET', 'POST'])
-@page.route('/<lang>/complaint/<file_id>/<file_name>', methods=['GET', 'POST'])
 @nocache
 def complaint(file_id=None,file_name=None):
     '''
     Muestra el formulario para reportar enlaces
     '''
     form = ReportLinkForm(request.form)
-    if request.method=='POST' and form.validate():
-        pagesdb.create_complaint(dict([("ip",request.remote_addr)]+[(field.name,field.data) for field in form]))
-        flash("message_sent")
-        return redirect(url_for('index.home'))
-
-    if file_id and not form.urlreported.data and not form.linkreported.data:
-        try:
-            data = filesdb.get_file(url2mid(file_id), bl = None)
-            if data:
-                form.urlreported.data=url_for("files.download",file_id=file_id,file_name=file_name,_external=True).replace("%21","!")
-                form.linkreported.data=data["src"].itervalues().next()["url"]
-        except filesdb.BogusMongoException as e:
-            logging.exception(e)
+    if request.method=='POST':
+        if "file_id" in request.form:
+            try:
+                file_id = request.form["file_id"]
+                file_name = request.form.get("file_name",None)
+                data = filesdb.get_file(url2mid(file_id), bl = None)
+                if data:
+                    form.urlreported.data=url_for("files.download",file_id=file_id,file_name=file_name,_external=True).replace("%21","!")
+                    form.linkreported.data=data["src"].itervalues().next()["url"]
+            except filesdb.BogusMongoException as e:
+                logging.exception(e)
+        elif form.validate():
+            pagesdb.create_complaint(dict([("ip",request.remote_addr)]+[(field.name,field.data) for field in form]))
+            flash("message_sent")
+            return redirect(url_for('index.home'))
 
     g.title+=_("complaint")
     return render_template('pages/complaint.html',page_title=_("complaint"),pagination=["privacy","legal",4,4],form=form,pname="complaint")

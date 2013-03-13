@@ -14,12 +14,12 @@ class SphinxWorker(Thread):
     def __init__(self, server, config, tasks, clients, proxy, *args, **kwargs):
         super(SphinxWorker, self).__init__(*args, **kwargs)
         self.server = server
-        self.config = config
         self.tasks = tasks
         self.clients = clients
         self.proxy = proxy
         self.daemon = True
         self.stopped = False
+        self.disable_query_search = config["SERVICE_SPHINX_DISABLE_QUERY_SEARCH"] # desactiva busqueda sin filtros
 
     def stop(self):
         self.stopped = True
@@ -50,7 +50,9 @@ class SphinxWorker(Thread):
 
             try:
                 filters = asearch["f"] if "f" in asearch else {}
-                order = asearch["o"] if "o" in asearch else "e DESC, rw DESC, r2 DESC, fs DESC, uri1 DESC"
+                sort = asearch["sr"] or "e DESC, rw DESC, r2 DESC, fs DESC, uri1 DESC"
+                rating_formula = asearch["rf"] or "@weight*(r+10)"
+
                 request_mode = asearch["rm"] if "rm" in asearch else REQUEST_MODE_PER_GROUPS
                 offset, limit, max_matches, cutoff = asearch["l"]
                 st, sf = asearch["st"], asearch["sf"]
@@ -63,7 +65,7 @@ class SphinxWorker(Thread):
                 index = query["i"]+self.server
 
                 client.SetFieldWeights({"fn":100, "md":1, "fil":100, "ntt":200})
-                client.SetSortMode(sphinxapi2.SPH_SORT_EXTENDED, order )
+                client.SetSortMode(sphinxapi2.SPH_SORT_EXTENDED, sort)
                 client.SetMatchMode(sphinxapi2.SPH_MATCH_EXTENDED)
                 client.SetRankingMode(sphinxapi2.SPH_RANK_EXPR, "sum((4*lcs+2.0/min_hit_pos)*user_weight)")
 
@@ -71,7 +73,7 @@ class SphinxWorker(Thread):
                 last_part_type = None
                 for part_type, part_value in query_parts:
                     if part_type=="G":
-                        text_query_parts.append("("+"|".join(FIELD_NAMES[key]+value for key, value in part_value)+")")
+                        text_query_parts.append("("+" | ".join(FIELD_NAMES[key]+value for key, value in part_value)+")")
                     elif last_part_type == part_type: # evita repetir nombres de campos
                         text_query_parts.append(part_value)
                     else:
@@ -80,7 +82,7 @@ class SphinxWorker(Thread):
                 text = " ".join(text_query_parts).encode("utf-8")
 
                 # suma 10 a r, si r es 0, evita anular el peso de la coincidencia, si es -1, mantiene el peso positivo
-                client.SetSelect("*, if(g>0xFFFFFFFF,1,0) as e, @weight*(r+10) as rw, min(if(z>0,z,100)) as zm, max(z) as zx")
+                client.SetSelect("*, if(g>0xFFFFFFFF,1,0) as e, "+rating_formula+" as rw, min(if(z>0,z,100)) as zm, max(z) as zx")
                 client.SetMaxQueryTime(asearch["mt"])
 
                 # filtra por rango de ids
@@ -109,10 +111,10 @@ class SphinxWorker(Thread):
                     client.SetLimits(offset, limit, max_matches, cutoff)
                     client.SetGroupBy("g", sphinxapi2.SPH_GROUPBY_ATTR, "e ASC, @count desc")
 
-                    if st: # realiza la busqueda sin filtros
+                    if not self.disable_query_search and st: # realiza la busqueda sin filtros
                         client.AddQuery(text, index, "w_st "+str(asearch["mt"]))
 
-                    if sf: # realiza la busqueda con filtros
+                    if sf or self.disable_query_search: # realiza la busqueda con filtros
                         if request_mode != REQUEST_MODE_PER_GROUPS:
                             client.ResetGroupBy()
                         if filters: self.apply_filters(client, filters)

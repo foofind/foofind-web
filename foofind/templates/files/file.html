@@ -19,7 +19,7 @@
                 {% endif %}
             </li>
             <li{% if "length" in file['view']['md'] %} title="{{_('length')}}">{{ file['view']['md']['length'] }}{% else %}>{% endif %}</li>
-            <li><a href="{{ source_data['urls'][0] }}" title="{{_('go_to_file')}}" data-stats="Download;Search result;{{source_data['d']}}">
+            <li><a href="{{ source_data['urls'][0] }}" title="{{_('go_to_file')}}" data-stats="Download;Search result;{{source_data['d']}}" data-downloader="{{source_data['downloader']}}">
             {% if source_data['icon']=="web" %}
                 {{ source_data['tip'] }}
             {% elif source_data['icon']=="torrent" or source_data['icon']=="tmagnet" %}

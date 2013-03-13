@@ -130,5 +130,5 @@ def split_phrase(phrase, filename=False):
 
 def split_file(f):
     res = [split_phrase(fn["n"], True) for fn in f["fn"].itervalues()]
-    res = list(chain(*res)) + list(chain(*[split_phrase(value) for key,value in f["md"].iteritems() if key in GOOD_MDS and isinstance(value, basestring)]))
+    res = list(chain(*res)) + list(chain(*[split_phrase(value) for key,value in f["md"].iteritems() if key in GOOD_MDS and isinstance(value, basestring) and len(value)<GOOD_MDS[key]]))
     return res
