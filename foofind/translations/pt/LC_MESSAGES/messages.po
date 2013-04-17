@@ -25,6 +25,32 @@ msgstr "Enviar"
 msgid "required_empty"
 msgstr "O valor é necessário e não pode ser nulo"
 
+msgid "ok"
+msgstr "aceitar"
+
+msgid "help_us"
+msgstr "Colabora com foofind!"
+
+msgid "error_500_message"
+msgstr "Um erro aconteceu"
+
+msgid "error_404_message"
+msgstr "Página não encontrada"
+
+msgid "error_410_message"
+msgstr "Página não disponível"
+
+msgid "error_410_description"
+msgstr "A URL solicitada não está mais disponível e nem estará no futuro"
+
+msgid "error_503_message"
+msgstr "Serviço indisponível"
+
+msgid "error_503_description"
+msgstr ""
+"A URL solicitada está temporariamente indisponível. Por favor tente "
+"novamente mais tarde."
+
 msgid "about"
 msgstr "Sobre"
 
@@ -58,11 +84,26 @@ msgstr "Eu. Quero. Aquele. Arquivo."
 msgid "all"
 msgstr "Tudo"
 
+msgid "index_comunity"
+msgstr "Faça parte da nossa comunidade."
+
+msgid "index_first"
+msgstr "Seja o primeiro a obter todas as novidades e participe."
+
+msgid "index_suggestion"
+msgstr "Alguma sugestão?"
+
 msgid "direct_downloads"
 msgstr "Downloads diretos"
 
 msgid "audio"
 msgstr "Áudio"
+
+msgid "others"
+msgstr "Outros"
+
+msgid "unknown"
+msgstr "Desconhecido"
 
 msgid "video"
 msgstr "Vídeo"
@@ -240,11 +281,38 @@ msgstr "dias"
 msgid "hour"
 msgstr "hora"
 
+msgid "comments"
+msgstr "Comentários"
+
+msgid "created_by"
+msgstr "Criado por"
+
+msgid "language"
+msgstr "Idioma"
+
+msgid "date"
+msgstr "Data"
+
+msgid "director"
+msgstr "Diretor"
+
+msgid "writer"
+msgstr "Escritor"
+
+msgid "producer"
+msgstr "Produtor"
+
 msgid "hours"
 msgstr "horas"
 
 msgid "minute"
 msgstr "minuto"
+
+msgid "all_sources"
+msgstr "todas as fontes"
+
+msgid "share_download"
+msgstr "Compartilhar"
 
 msgid "second"
 msgstr "segundo"
@@ -252,11 +320,17 @@ msgstr "segundo"
 msgid "loading"
 msgstr "Carregando"
 
+msgid "open_link_new_tab"
+msgstr "abrir link numa nova aba"
+
 msgid "close"
 msgstr "Fechar"
 
 msgid "share_this"
 msgstr "Compartilhe"
+
+msgid "listen"
+msgstr "Ouça"
 
 msgid "share_facebook"
 msgstr "Compartilhe no Facebook"
@@ -281,6 +355,21 @@ msgstr " since s atr s"
 
 msgid "post_comment"
 msgstr "Comentar"
+
+msgid "more_info"
+msgstr "mais"
+
+msgid "less_info"
+msgstr "Menos"
+
+msgid "more_comments"
+msgstr "mais comentários"
+
+msgid "less_comments"
+msgstr "menos comentários"
+
+msgid "login_required"
+msgstr "Você precisa estar logado para acessar essa página"
 
 msgid "add_comment"
 msgstr "Adicionar comentário"
@@ -374,6 +463,9 @@ msgstr "Não é permitido visualizar esta página"
 msgid "username_taken"
 msgstr "Esse nome de usuário está sendo usado. Por favor, escolha outro."
 
+msgid "no"
+msgstr "Não"
+
 msgid "email_taken"
 msgstr "Este email está sendo usado. Por favor, escolha outro."
 
@@ -433,6 +525,12 @@ msgstr "Sinto muito, o token não existe ou já está sendo usado."
 
 msgid "confirm_email"
 msgstr ", confirme seu email"
+
+msgid "send"
+msgstr "Enviar"
+
+msgid "user_fav_lists"
+msgstr "Arquivos"
 
 msgid "check_inbox_email_finish"
 msgstr ""
@@ -524,6 +622,9 @@ msgstr "Nome"
 msgid "your_surname"
 msgstr "Sobrenome"
 
+msgid "not_foofind_page"
+msgstr "O link não é uma página do site"
+
 msgid "your_company"
 msgstr "Empresa"
 
@@ -544,6 +645,9 @@ msgstr "Por favor, aceite os termos de uso e a política de privacidade"
 
 msgid "submit_links"
 msgstr "Links enviados"
+
+msgid "error_link_removed"
+msgstr "Lamentamos: este link foi removido por sua fonte."
 
 msgid "include_link_per_line"
 msgstr ""
@@ -581,6 +685,12 @@ msgstr ""
 "Foofind está disponível em alguns idiomas, mas você pode nos ajudar a traduzir em sua língua. Escolha na lista e preencha os campos com os textos traduzidos. Você não precisa preencher todos para enviar o formulário, e qualquer ajuda será bem-vinda.\r\n"
 "\r\n"
 "Se seu idioma não aparece na lista, por favor, fale conosco para que seja adicionado. "
+
+msgid "opensearch_description"
+msgstr "Pesquise usando o Foofind"
+
+msgid "foodownloader_safety"
+msgstr "Obtenha seus arquivos de maneira segura"
 
 msgid "choose_language"
 msgstr "Escolha o idioma"

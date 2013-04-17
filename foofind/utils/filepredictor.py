@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from collections import defaultdict
-from splitter import SEPPER
+from splitter import SEPPER, seppersplit
 from . import to_seconds, content_types as ct, u
 
 import operator
@@ -628,27 +628,6 @@ ALL_TAGS = set(tag
                     for tag in aset)
 ALL_TAGS.update(TAG_CONTENT_TYPE.iterkeys())
 
-def seppersplit(x):
-    '''
-    Separa una cadena según los separadores de SEPPER (módulo splitter) y
-    la devuelve como lista obviando los elementos vacíos.
-
-    @type x: basestring
-    @param x: cadena
-    @rtype list
-    @return lista de elementos no vacíos separados de la cadena
-    '''
-    try:
-        # Iterador con caracteres de x que son separadores
-        gen = (SEPPER.intersection(x)).__iter__()
-        sc = gen.next()
-        for sn in gen:
-            x = x.replace(sn, sc)
-        return [i for i in x.split(sc) if i]
-    except StopIteration:
-        # Caso excepcional: ningún separador encontrado
-        return [x]
-
 _scores_empty = [0.0] * len(CONTENT_TYPE_SET)
 _depths_empty = [sys.maxint] * len(CONTENT_TYPE_SET)
 _scores_initial = _scores_empty[:]
@@ -739,7 +718,7 @@ def analyze_filenames(filenames, filesizes, skip_ct=False, analyze_extensions=Tr
         # Análisis de nombre de fichero
         if fn:
             # Puntuación según palabras clave
-            singlesplit = seppersplit(fn)
+            singlesplit = filter(None, seppersplit(fn))
             doublesplit = itertools.izip(singlesplit, itertools.islice(singlesplit, 1, sys.maxint)) if len(singlesplit) > 1 else ()
             if skip_ct:
                 for splitted_words in (singlesplit, doublesplit):

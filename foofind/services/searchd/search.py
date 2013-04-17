@@ -12,7 +12,7 @@ import re, json
 
 from foofind.utils.splitter import split_file, SEPPER
 from foofind.utils.content_types import *
-from foofind.utils import bin2hex, logging, hex2url
+from foofind.utils import bin2hex, logging, hex2url, u
 from foofind.utils.filepredictor import ALL_TAGS, ALL_FORMATS
 
 from .worker import REQUEST_MODE_PER_GROUPS, REQUEST_MODE_PER_SERVER
@@ -26,17 +26,26 @@ BLOCKED_WORDS = frozenset(["www"])
 
 BLOCKED_FILE_VERSION = -1
 
+# arregla problemas de codificación de la version de sphinx
+SPHINX_WRONG_RANGE = re.compile("\xf0([\x80-\x8f])")
+def fixer(char):
+    return chr(ord(char.group(1))+96)
+
+def fix_sphinx_result(word):
+    return u(SPHINX_WRONG_RANGE.sub(fixer, word))
+
 class Search(object):
-    def __init__(self, proxy, query, filters={}, order=None, request_mode=REQUEST_MODE_PER_GROUPS, wait_time=500):
+    def __init__(self, proxy, query, filters={}, order=None, request_mode=REQUEST_MODE_PER_GROUPS, query_time=None, extra_wait_time=500, max_query_time=None):
         self.request_mode = request_mode
         self.access = Lock()
         self.usable = Event()
         self.has_changes = False
         self.proxy = proxy
-        self.max_query_time = proxy.config["SERVICE_SPHINX_MAX_QUERY_TIME"]
+        self.query_time = query_time or proxy.config["SERVICE_SPHINX_MAX_QUERY_TIME"]
+        self.extra_wait_time = extra_wait_time
+        self.max_query_time = max_query_time
         self.search_max_retries = proxy.config["SERVICE_SPHINX_SEARCH_MAX_RETRIES"]
         self.stats = None
-        self.extra_wait_time = wait_time
         self.computable = True
         self.canonical_parts = []
         self.canonical_words = None
@@ -91,30 +100,37 @@ class Search(object):
                         mode = False
 
                     # mira si se trata de un tag
-                    if mode and words_count==1 and first_word in ALL_TAGS:
-
-                        current_filter = FILTER_PREFIX_TAGS.lower()+first_word
-                        if current_filter in seen_filters: # no procesa dos veces el mismo filtro
-                            mode = guess_mode # procesa como texto esta palabra
+                    if mode and words_count==1:
+                        if first_word in ALL_TAGS:
+                            tag_word = first_word
                         else:
-                            if guess_mode:
-                                new_word = first_word not in self.seen_words
-                                position_word = position if new_word else self.seen_words[first_word]
-                                query_parts.append(("G", [("T",first_word), ("F",current_filter)]))
-                                self.canonical_parts.append("{%d}"%position_word)
-                                if new_word:
-                                    self.seen_words[first_word] = position
-                                    position+=1
+                            tag_word = first_word[:-1] if first_word.endswith("s") else first_word+"s"
+                            if not tag_word in ALL_TAGS:
+                                tag_word = None
+
+                        if tag_word:
+                            current_filter = FILTER_PREFIX_TAGS.lower()+tag_word
+                            if current_filter in seen_filters: # no procesa dos veces el mismo filtro
+                                mode = guess_mode # procesa como texto esta palabra
                             else:
-                                query_parts.append(("F", not_prefix+current_filter))
-                                self.canonical_parts.append(not_prefix+"("+first_word+")")
+                                if guess_mode:
+                                    new_word = first_word not in self.seen_words
+                                    position_word = position if new_word else self.seen_words[first_word]
+                                    query_parts.append(("G", [("T",first_word), ("F",current_filter)]))
+                                    self.canonical_parts.append("{%d}"%position_word)
+                                    if new_word:
+                                        self.seen_words[first_word] = position
+                                        position+=1
+                                else:
+                                    query_parts.append(("F", not_prefix+current_filter))
+                                    self.canonical_parts.append(not_prefix+"("+tag_word+")")
 
-                            if current_filter not in self.seen_words:
-                                self.seen_words[current_filter] = position
-                                position+=1
+                                if current_filter not in self.seen_words:
+                                    self.seen_words[current_filter] = position
+                                    position+=1
 
-                            seen_filters.add(current_filter)
-                            mode = False
+                                seen_filters.add(current_filter)
+                                mode = False
 
                     # mira si es un formato
                     if mode and (words_count<3 and guess_mode and first_word in ALL_FORMATS) or (not guess_mode and words_count==2 and first_word=="format" and part_words[1].lower() in ALL_FORMATS):
@@ -283,7 +299,6 @@ class Search(object):
             self.query_key = u"Q"+md5(json.dumps(query_parts)+"".join("|"+str(part) if part else "|" for part in order_repr)).hexdigest()
             self.query = {"y":query_type, "i": "idx_files", "p": query_parts}
 
-
         self.query_state, self.filters_state, self.locked_until, self.blocked_ids = proxy.get_search_state(self.query_key, self.filters)
 
         self.entities = set(int(key)>>32 for key in self.filters_state["sg"].iterkeys() if int(key)>>32) if self.filters_state and "sg" in self.filters_state else set()
@@ -363,21 +378,23 @@ class Search(object):
             self.computable = False
 
     def _get_wait_time(self, multiplier, search_query=True, search_filters=True):
-        return int(self.max_query_time*(1 + log(max(1, self.query_state["rt"] if search_query and self.query_state else 0,
-                       self.filters_state["rt"] if search_filters and self.filters_state else 0))*multiplier))
+        wait_time = int(self.query_time*(1 + log(max(1, self.query_state["rt"] if search_query and self.query_state          else 0, self.filters_state["rt"] if search_filters and self.filters_state else 0))*multiplier))
+        if self.max_query_time:
+            return min(wait_time, self.max_query_time)
+        else:
+            return wait_time
 
-    def search(self, async=False):
-
+    def search(self, async=False, just_usable=False):
         # avisa que estas busqueda es usable
         if self.filters_state and self.filters_state["c"]:
             self.usable.set()
 
-        # si la busqueda esta bloqueada o no es computable, sale sin hacer nada
-        if self.locked_until or not self.computable:
-            return self
-
         # comprueba a qué servidores debe pedirsele los datos iniciales de la busqueda
         now = time()
+
+        # si la busqueda esta bloqueada o no es computable, sale sin hacer nada
+        if (self.locked_until and self.locked_until<now) or not self.computable:
+            return self
 
         can_retry_query = not self.query_state or self.query_state["rt"]<self.search_max_retries
         search_query = [i for i in self.proxy.servers.iterkeys()
@@ -436,7 +453,8 @@ class Search(object):
             # cuando hay dos busquedas en algun servidor (con y sin filtros) se espera el doble
             max_wait_time = (wait_time*2 if any((s["st"] and s["sf"]) for s in allsearches["s"].itervalues()) else wait_time)+self.extra_wait_time
 
-            if async:
+            # si la busqueda es asyncrona o sólo se requieren resultados usables, no bloquea
+            if async or (just_usable and self.usable.is_set()):
                 self.proxy.async_process_results(allsearches, self.store_files_timeout, [max_wait_time, 1000])
             else:
                 # si no llegan todos los resultados espera otro segundo más, por si hubiera habido problemas en la respuesta
@@ -461,10 +479,10 @@ class Search(object):
         if new_locked_until!=None:
             self.locked_until = new_locked_until
 
-    def generate_stats(self):
+    def generate_stats(self, force_refresh=False):
         # generar estadisticas de la busqueda
-        if not self.stats:
-            if self.computable:
+        if self.computable:
+            if force_refresh or not self.stats:
                 self.stats = {k:v for k,v in self.filters_state.iteritems() if k in ("v", "t")}
                 self.stats["cs"] = sum(count for server_id, count in self.filters_state["c"].iteritems() if server_id in self.proxy.servers) - sum(diff[0]+diff[1] for server_id, diff in self.filters_state["df"].iteritems() if server_id in self.proxy.servers)
 
@@ -473,8 +491,8 @@ class Search(object):
                 self.stats["sf"] = not (self.filters_state["i"] or self.proxy.servers_set.difference(set(self.filters_state["c"])))
                 self.stats["s"] = self.stats["sf"] and (self.disable_query_search or self.stats["st"])
                 self.stats["ct"] = self.query_state["ct"] if "ct" in self.query_state else None
-            else:
-                self.stats = {"cs":0, "rt":0, "v":0, "t":0, "s":True, "w":0, "li":[], "ct":None}
+        else:
+            self.stats = {"cs":0, "rt":0, "v":0, "t":0, "s":True, "w":0, "li":[], "ct":None}
 
     def get_stats(self):
         self.generate_stats()
@@ -517,7 +535,7 @@ class Search(object):
         self.access.release()
         return info
 
-    def get_results(self, last_items=[], skip=None, min_results=5, max_results=10, hard_limit=10000):
+    def get_results(self, last_items=[], skip=None, min_results=5, max_results=10, hard_limit=10000, max_extra_searches=4):
 
         # si todavia no hay informacion de filtros, sale sin devolver nada
         if not self.computable:
@@ -550,6 +568,7 @@ class Search(object):
 
         total_results = min(hard_limit,self.filters_state["cs"]+sum(dup+bl for dup, bl in self.filters_state["df"].itervalues()))
         i = 0
+
         for i in xrange(total_results):
 
             # si se han devuelto el minimo y no se puede más o se ha devuelto el maximo, para
@@ -628,10 +647,10 @@ class Search(object):
                 count_diff = subgroup["df"].get(server, [0,0])[1] if "df" in subgroup else 0
                 if subgroup["c"][server]-count_diff > search_position >= subgroup["lv"][server]-count_diff:
 
-                    # no realiza más de 4 busquedas por vez en un servidor para no tener que esperar mucho
+                    # no realiza más de un numero de busquedas por vez en un servidor para no tener que esperar mucho
                     if not self.locked_until:
                         searches_len = len(searches[server])
-                        if sg not in searches[server] and searches_len<4:
+                        if sg not in searches[server] and searches_len<max_extra_searches:
                             # al pedir mas ficheros tiene que tener en cuenta los ficheros movidos o bloqueados
                             last_visited_position = subgroup["lv"][server] - count_diff
                             if last_visited_position<0:
@@ -640,7 +659,7 @@ class Search(object):
                             searches[server][str(sg)] = last_visited_position
                             if searches_len >= max_searches:
                                 max_searches = searches_len+1
-                        elif searches_len==4:
+                        elif searches_len==max_extra_searches:
                             stop_browsing = True
 
                     # ya no debe devolver resultados si no son forzados
@@ -685,7 +704,7 @@ class Search(object):
         elif returned:
             self.stats["w"] = 0
         else:
-            self.stats["w"] = self.max_query_time*2
+            self.stats["w"] = self.query_time*2
 
     def store_files_timeout(self, allsearches, timeouts):
         self.has_changes = False
@@ -888,14 +907,13 @@ class Search(object):
                 # totales absolutos
                 if main:
                     self.has_changes = True
-
                     # recorre la informacion de palabras buscadas
                     if "words" in result and result["words"] and self.canonical_parts:
                         words = result["words"]
 
                         # busqueda canonica
+                        word_list = [fix_sphinx_result(word["word"]) for word in words]
                         if not "ct" in self.query_state:
-                            word_list = [word["word"] for word in words]
 
                             word_positions = {word:position for word,position in self.seen_words.iteritems() if position>=0} # evita palabras bloqueadas
                             new_word_list = [""]*len(word_positions)
@@ -910,11 +928,11 @@ class Search(object):
 
                             word_list = new_word_list
 
-                            self.query_state["ct"] = "_".join(self.canonical_parts).encode("utf-8").format(*word_list)
+                            self.query_state["ct"] = u"_".join(self.canonical_parts).format(*word_list)
 
                         # obtiene el total del numero de resultados con la palabra
                         if self.special_search:
-                            word = words[0]["word"].decode("utf-8")
+                            word = word_list[0]
                             prefix = word[0].upper()
 
                             # No lo hace cuando la palabra es una palabra especial de filtro
@@ -972,10 +990,6 @@ class Search(object):
 
             self.access.release()
 
-            # avisa que la busqueda ya es usable
-            if not self.usable.is_set():
-                self.usable.set()
-
         if self.has_changes:
             # actualiza numero de reintentos en ambos estados
             if any_query_main: self.query_state["rt"]+=1
@@ -984,6 +998,10 @@ class Search(object):
             self.save_state(False if len(allsearches["_pt"])==0 else None if timeout==0 or not fallback_timeouts else sum(fallback_timeouts))
             self.has_changes = False
             self.access.release()
+
+            # avisa que la busqueda ya es usable
+            if not self.usable.is_set():
+                self.usable.set()
 
 _escaper = re.compile(r"([=|\-!@~&/\\\)\(\"\^\$\=])")
 def escape_string(text):

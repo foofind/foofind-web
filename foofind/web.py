@@ -6,7 +6,7 @@ import foofind.globals
 import os, os.path, defaults
 
 from collections import OrderedDict
-from flask import Flask, g, request, session, render_template, redirect, abort, url_for, make_response
+from flask import Flask, g, request, session, render_template, redirect, abort, url_for, make_response, current_app
 from flask.ext.assets import Environment, Bundle
 from flask.ext.babel import get_translations, gettext as _
 from flask.ext.login import current_user
@@ -29,6 +29,7 @@ from foofind.utils.webassets_filters import JsSlimmer, CssSlimmer
 from foofind.utils import u, logging
 from foofind.forms.files import SearchForm
 from foofind.utils.exceptions import allerrors, get_error_code_information
+from foofind.utils.bots import is_search_bot, is_full_browser, check_rate_limit
 
 try:
     from uwsgidecorators import postfork
@@ -114,8 +115,9 @@ def create_app(config=None, debug=False):
     # Web Assets
     if not os.path.isdir(os.path.join(app.static_folder,"gen")):
         os.mkdir(os.path.join(app.static_folder,"gen"))
-    assets = Environment(app)
+    app.assets = assets = Environment(app)
     assets.debug = app.debug
+    assets.versions = "timestamp"
 
     register_filter(JsSlimmer)
     register_filter(CssSlimmer)
@@ -269,15 +271,11 @@ def create_app(config=None, debug=False):
         if request.path.startswith("/static"):
             return
 
-        # peticiones en modo preproduccion
-        g.beta_request = request.url_root[request.url_root.index("//")+2:].startswith("beta.")
+        # default values for g object
+        init_g()
 
-        # prefijo para los contenidos estáticos
-        if g.beta_request:
-            app_static_prefix = app.static_url_path
-        else:
-            app_static_prefix = app.config["STATIC_PREFIX"] or app.static_url_path
-        g.static_prefix = assets.url = app_static_prefix
+        # comprueba limite de ratio de peticiones
+        check_rate_limit(g.search_bot)
 
         # si el idioma de la URL es inválido, devuelve página no encontrada
         if g.url_lang and not g.url_lang in app.config["ALL_LANGS"]:
@@ -296,17 +294,6 @@ def create_app(config=None, debug=False):
                 usersdb.update_user({"_id":current_user.id,"lang":g.lang})
 
             return redirect(request.base_url)
-
-        # argumentos de busqueda por defecto
-        g.args = {}
-        g.extra_sources=[]
-
-        # dominio de la web
-        g.domain = "foofind.is"
-
-        # título de la página por defecto
-        g.title = g.domain
-        g.autocomplete_disabled = "false" if app.config["SERVICE_TAMING_ACTIVE"] else "true"
 
         g.keywords = set(_(keyword) for keyword in ['download', 'watch', 'files', 'submit_search', 'audio', 'video', 'image', 'document', 'software', 'P2P', 'direct_downloads'])
         descr = _("about_text")
@@ -333,15 +320,42 @@ def create_app(config=None, debug=False):
 
     @allerrors(app, 400, 401, 403, 404, 405, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 429, 500, 501, 502, 503)
     def all_errors(e):
-
         error_code, error_title, error_description = get_error_code_information(e)
         try:
-            g.title = "%d %s" % (error_code, error_title)
-            g.keywords = set()
-            g.page_description = g.title
+            init_g()
+            g.page_description = g.title = "%d %s" % (error_code, error_title)
             return render_template('error.html', zone="error", error=error_code, description=error_description, search_form=SearchForm()), error_code
         except BaseException as ex: #si el error ha llegado sin contexto se encarga el servidor de él
             logging.warn(ex)
             return make_response("", error_code)
 
     return app
+
+def init_g():
+    # argumentos de busqueda por defecto
+    g.args = {}
+    g.extra_sources=[]
+
+    # caracteristicas del cliente
+    g.full_browser=is_full_browser()
+    g.search_bot=is_search_bot()
+
+    # peticiones en modo preproduccion
+    g.beta_request = request.url_root[request.url_root.index("//")+2:].startswith("beta.")
+
+    # prefijo para los contenidos estáticos
+    if g.beta_request:
+        app_static_prefix = current_app.static_url_path
+    else:
+        app_static_prefix = current_app.config["STATIC_PREFIX"] or current_app.static_url_path
+    g.static_prefix = current_app.assets.url = app_static_prefix
+
+    g.autocomplete_disabled = "false" if current_app.config["SERVICE_TAMING_ACTIVE"] else "true"
+
+    # dominio de la web
+    g.domain = "foofind.is"
+
+    # informacion de la página por defecto
+    g.title = g.domain
+    g.keywords = set()
+    g.page_description = g.title

@@ -200,7 +200,7 @@ class Parallel(object):
 
     def join_and_terminate(self, timeout):
         '''
-        Espera a que las tareas terminen, con un timeout, tas el cual mata los
+        Espera a que las tareas terminen, con un timeout, tras el cual mata los
         hilos.
 
         @type timeout: int, float or None
@@ -542,22 +542,24 @@ def multisplit(x, s):
     @type s: lista o str
     @param s: separadores
 
-    @yield string
+    @return string
 
     >>> list(multisplit(".^this.is,a-spliteable^string.",".,-^"))
     ['', '', 'this', 'is', 'a', 'spliteable', 'string', '']
     '''
+    # Iterador con caracteres de x que son separadores
+    if not isinstance(s, (set, frozenset)):
+        s = frozenset(s)
+    gen = s.intersection(x).__iter__()
     try:
-        # Iterador con caracteres de x que son separadores
-        gen = (SEPPER.intersection(x)).__iter__()
         sc = gen.next()
         for sn in gen:
             x = x.replace(sn, sc)
-        for p in x.split(sc):
-            yield p
+        return x.split(sc)
     except StopIteration:
         # Caso excepcional: ningún separador encontrado
-        yield x
+        pass
+    return [x]
 
 def generator_with_callback(iterator, callback):
     '''
@@ -571,12 +573,18 @@ def u(txt):
     ''' Parse any basestring (ascii str, encoded str, or unicode) to unicode '''
     if isinstance(txt, unicode):
         return txt
-    elif isinstance(txt, basestring):
+    elif isinstance(txt, basestring) and txt:
         try:
-            return unicode(txt, chardet.detect(txt)["encoding"])
+            c = chardet.detect(txt)
+            return unicode(txt, c["encoding"], "ignore")
+        except LookupError:
+            if c=="EUC-TW":
+                return unicode(txt, "gb2312", "ignore")
         except:
-            return u""
+            pass
+        return unicode(str(txt), "utf-8", "ignore")
     return unicode(txt)
+
 
 def fixurl(url):
     '''
@@ -657,22 +665,3 @@ def uchr(x):
     elif x < 65536:
         return (u"\\u%04x" % x).decode("unicode_escape")
     return ""
-
-_punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.:]+')
-def slugify(text, delim=u' ', return_separators=False):
-    '''
-    Genera una cadena solo con caracteres ASCII
-    '''
-    result = []
-    separators = []
-    for word in _punct_re.split(u(text.lower())):
-        word = normalize('NFKD', word).encode('ascii', 'ignore')
-        if word:
-            result.append(word)
-        else:
-            separators.append(word)
-
-    if return_separators:
-        return unicode(delim.join(separators))
-    else:
-        return unicode(delim.join(result))

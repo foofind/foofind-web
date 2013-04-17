@@ -1,4 +1,4 @@
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
@@ -279,7 +279,7 @@ msgid "your_password"
 msgstr "パスワードを書いてください:"
 
 msgid "insert_your_password"
-msgstr "パスワードを書いてください　（はい、も一度）："
+msgstr "パスワードを書いてください　（もう一度）："
 
 msgid "nickname"
 msgstr "ニックネーム"

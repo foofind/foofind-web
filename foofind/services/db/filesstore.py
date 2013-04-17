@@ -5,11 +5,11 @@ from threading import Lock, Event
 from itertools import permutations
 from datetime import datetime
 
+
 import foofind.services
 from foofind.utils import hex2mid, u, Parallel, logging
 from foofind.utils.async import MultiAsync
 from foofind.services.extensions import cache
-
 
 profiler = None
 
@@ -95,9 +95,14 @@ class Bongo(object):
     '''
     def __init__(self, server, pool_size, network_timeout, max_autoreconnects):
         self.info = server
-        self.connections = OrderedDict((
-            ("mongodb://%(rip)s:%(rp)d" % server, None),
-            ("mongodb://%(ip)s:%(p)d" % server, None)
+        if "rs" in server:
+            self.connections = OrderedDict((
+                ("mongodb://%(rip)s:%(rp)d/?replicaSet=%(rs)s" % server, None),
+            ))
+        else:
+            self.connections = OrderedDict((
+                ("mongodb://%(rip)s:%(rp)d" % server, None),
+                ("mongodb://%(ip)s:%(p)d" % server, None)
             ))
         self.connections_access = {uri:Event() for uri in self.connections.iterkeys()}
         self._pool_size = pool_size
@@ -138,15 +143,26 @@ class Bongo(object):
         Vuelve a crear conexiones con los mongos que hayan fallado.
         Debería ser llamado cada cierto tiempo.
         '''
+        replicaSet = len(self.connections)==1
         for uri, conn in self.connections.iteritems():
             self._numfails[uri] = 0
             if not self.connections_access[uri].is_set():
                 try:
-                    self.connections[uri] = pymongo.Connection(
-                        uri,
-                        max_pool_size = self._pool_size,
-                        network_timeout = self._network_timeout*20
-                        )
+                    if replicaSet:
+                        self.connections[uri] = pymongo.ReplicaSetConnection(
+                            uri,
+                            max_pool_size = self._pool_size,
+                            network_timeout = self._network_timeout*20,
+                            read_preference = pymongo.read_preferences.ReadPreference.SECONDARY_PREFERRED
+                            )
+                    else:
+                        self.connections[uri] = pymongo.Connection(
+                            uri,
+                            max_pool_size = self._pool_size,
+                            network_timeout = self._network_timeout*20,
+                            read_preference = pymongo.read_preferences.ReadPreference.SECONDARY_PREFERRED
+                            )
+
                     self.connections_access[uri].set()
                 except BaseException as e:
                     logging.warn("Unable to %sconnect with %s" % ("re" if again else "", uri), extra={"error":e})

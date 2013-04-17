@@ -1,0 +1,947 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: 1\n"
+"Report-Msgid-Bugs-To: ismael@mp2p.net\n"
+"POT-Creation-Date: 2011-12-09 11:49+0100\n"
+"PO-Revision-Date: 2011-12-09 11:49+0100\n"
+"Last-Translator: Foofind <hola@foofind.com>\n"
+"Language-Team: ro <hola@foofind.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Foofind's pogit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgid "new_toolbar"
+msgstr "Încercă noua noastră bară de instrumente"
+
+msgid "click_here"
+msgstr "clic aici!"
+
+msgid "your_email"
+msgstr "Adresa ta de email:"
+
+msgid "password"
+msgstr "Parolă:"
+
+msgid "submit"
+msgstr "Trimite"
+
+msgid "ok"
+msgstr "ok"
+
+msgid "help_us"
+msgstr "ajută-ne!"
+
+msgid "legal_info"
+msgstr "informații legale"
+
+msgid "go_home"
+msgstr "Înapoi la motorul de căutare"
+
+msgid "error_500_message"
+msgstr "S-a produs o eroare"
+
+msgid "error_500_description"
+msgstr ""
+"S-a întâmplat ceva ciudat, specialiștii noştrii cercetează această "
+"activitate anormală."
+
+msgid "error_404_message"
+msgstr "Pagina nu a fost găsită"
+
+msgid "error_404_description"
+msgstr ""
+"URL-ul solicitat nu a fost găsit. Te rugăm să verifici dacă ai scris corect "
+"URL-ul, dacă este corect, atunci te rugăm să contactezi administratorul web."
+
+msgid "error_410_message"
+msgstr "Pagina nu este disponibilă"
+
+msgid "error_410_description"
+msgstr ""
+"URL-ul solicitat nu mai este disponibil şi nici nu va mai fi în viitor"
+
+msgid "error_502_message"
+msgstr "Gateway greşit"
+
+msgid "error_502_description"
+msgstr "Nu se poate accesa serviciul din cauza unei erori de gateway."
+
+msgid "error_503_message"
+msgstr "Serviciu indisponibil"
+
+msgid "error_503_description"
+msgstr ""
+"URL-ul solicitat este temporar indisponibil. Te rugăm să încerci din nou mai"
+" târziu."
+
+msgid "servers_status"
+msgstr "Verifică starea serverelor"
+
+msgid "error_mail_send"
+msgstr ""
+"A apărut o eroare la trimiterea mesajului la adresa specificată. Te rugăm să"
+" alegi altă adresă sau încearcă din nou mai târziu."
+
+msgid "required_empty"
+msgstr "Este necesară o valoare și nu poate fi gol"
+
+msgid "no_valid_email"
+msgstr ""
+"Aceasta nu este o adresă de email validă cu formatul: utilizator@exemplu.com"
+
+msgid "no_valid_url"
+msgstr "URL invalid"
+
+msgid "about"
+msgstr "Despre"
+
+msgid "contact"
+msgstr "Contact"
+
+msgid "technology"
+msgstr "Tehnologie"
+
+msgid "legal"
+msgstr "Legal"
+
+msgid "tos"
+msgstr "Condiții de utilizare"
+
+msgid "privacy"
+msgstr "Politică privată"
+
+msgid "complaint"
+msgstr "Raportează link-ul"
+
+msgid "source_code"
+msgstr "Codul sursă"
+
+msgid "files_indexed"
+msgstr "fişiere indexate"
+
+msgid "last_indexed_files"
+msgstr "Ultimul fișier indexat"
+
+msgid "i_want_that_file"
+msgstr "Vreau. Acest. Fișier"
+
+msgid "index_change"
+msgstr "foofind se schimbă"
+
+msgid "index_comunity"
+msgstr "Alătură-te comunității noastre."
+
+msgid "index_first"
+msgstr "Fii primul care obține toate știrile și participă."
+
+msgid "index_suggestion"
+msgstr "Vreo sugestie?"
+
+msgid "all"
+msgstr "Tot"
+
+msgid "direct_download"
+msgstr "descărca direct"
+
+msgid "direct_downloads"
+msgstr "Descărcări directe"
+
+msgid "other_streamings"
+msgstr "Alte fluxuri"
+
+msgid "other_direct_downloads"
+msgstr "Alte descărcări directe"
+
+msgid "some_streamings"
+msgstr "Unele fluxuri"
+
+msgid "some_downloads"
+msgstr "Unele descărcări directe"
+
+msgid "others"
+msgstr "Altele"
+
+msgid "unknown"
+msgstr "Necunoscut"
+
+msgid "audio"
+msgstr "Audio"
+
+msgid "video"
+msgstr "Video"
+
+msgid "image"
+msgstr "Imagine"
+
+msgid "document"
+msgstr "Document"
+
+msgid "software"
+msgstr "Software"
+
+msgid "archive"
+msgstr "Arhivă"
+
+msgid "no_results_for"
+msgstr "Niciun rezultat pentru"
+
+msgid "write_something"
+msgstr "Hei! Scrie ceva"
+
+msgid "previous"
+msgstr "Anterior"
+
+msgid "next"
+msgstr "Următorul"
+
+msgid "sources"
+msgstr "surse"
+
+msgid "approximately"
+msgstr "Aproximativ"
+
+msgid "of_about"
+msgstr "despre"
+
+msgid "results_for"
+msgstr "rezultate pentru"
+
+msgid "other_categories"
+msgstr "alte categorii"
+
+msgid "not_allow_browse_results"
+msgstr "Foofind nu arată rezultate dincolo de pagina 100."
+
+msgid "go_to_file"
+msgstr "Mergi la fişierul"
+
+msgid "play"
+msgstr "Rulează"
+
+msgid "what"
+msgstr "Ce?"
+
+msgid "where"
+msgstr "Unde?"
+
+msgid "update"
+msgstr "actualizare"
+
+msgid "minimun"
+msgstr "min"
+
+msgid "maximun"
+msgstr "max"
+
+msgid "all_sizes"
+msgstr "Toate dimensiunile"
+
+msgid "smaller_than"
+msgstr "Mai mic decât"
+
+msgid "larger_than"
+msgstr "Mai mare decât"
+
+msgid "all_qualities"
+msgstr "Toate calităţile"
+
+msgid "or_better"
+msgstr "sau mai bun"
+
+msgid "all_years"
+msgstr "Toţi anii"
+
+msgid "before"
+msgstr "Înainte"
+
+msgid "last_year"
+msgstr "Ultimul an"
+
+msgid "artist"
+msgstr "Artist"
+
+msgid "title"
+msgstr "Titlu"
+
+msgid "author"
+msgstr "Autor"
+
+msgid "format"
+msgstr "Format"
+
+msgid "pages"
+msgstr "Pagini"
+
+msgid "album"
+msgstr "Album"
+
+msgid "length"
+msgstr "Durată"
+
+msgid "bitrate"
+msgstr "Bitrate"
+
+msgid "genre"
+msgstr "Gen"
+
+msgid "seconds"
+msgstr "Secunde"
+
+msgid "minutes"
+msgstr "Minute"
+
+msgid "source"
+msgstr "Sursă"
+
+msgid "seeds"
+msgstr "Seeds"
+
+msgid "leechs"
+msgstr "Leechs"
+
+msgid "height"
+msgstr "Înălțime"
+
+msgid "width"
+msgstr "Lățime"
+
+msgid "track"
+msgstr "Pistă"
+
+msgid "quality"
+msgstr "Calitate"
+
+msgid "series"
+msgstr "Serial"
+
+msgid "episode"
+msgstr "Episod"
+
+msgid "season"
+msgstr "Sezon"
+
+msgid "num_pages"
+msgstr "Nr. de pagini"
+
+msgid "include_results_from"
+msgstr "Include rezultatele de la:"
+
+msgid "size"
+msgstr "Dimensiune"
+
+msgid "unpacked_size"
+msgstr "Dimensiune necomprimată"
+
+msgid "colors"
+msgstr "Culori"
+
+msgid "version"
+msgstr "Versiune"
+
+msgid "name"
+msgstr "Nume"
+
+msgid "description"
+msgstr "Descriere"
+
+msgid "files"
+msgstr "Fişiere"
+
+msgid "soundtype"
+msgstr "Format audio"
+
+msgid "channels"
+msgstr "canale"
+
+msgid "year"
+msgstr "an"
+
+msgid "years"
+msgstr "ani"
+
+msgid "month"
+msgstr "lună"
+
+msgid "months"
+msgstr "luni"
+
+msgid "day"
+msgstr "zi"
+
+msgid "days"
+msgstr "zile"
+
+msgid "hour"
+msgstr "oră"
+
+msgid "hours"
+msgstr "ore"
+
+msgid "minute"
+msgstr "minut"
+
+msgid "second"
+msgstr "secundă"
+
+msgid "tags"
+msgstr "Etichete"
+
+msgid "license"
+msgstr "Licenţă"
+
+msgid "private_file"
+msgstr "Fişier privat"
+
+msgid "composer"
+msgstr "Compozitor"
+
+msgid "publisher"
+msgstr "Editor"
+
+msgid "comments"
+msgstr "Comentarii"
+
+msgid "created_by"
+msgstr "Creat de"
+
+msgid "language"
+msgstr "Limba"
+
+msgid "date"
+msgstr "Data"
+
+msgid "trackers"
+msgstr "Trackers"
+
+msgid "hash"
+msgstr "Algoritm"
+
+msgid "visualizations"
+msgstr "Vizualizări"
+
+msgid "codec"
+msgstr "Codec"
+
+msgid "encoding"
+msgstr "Codare"
+
+msgid "director"
+msgstr "Director"
+
+msgid "writer"
+msgstr "Scriitor"
+
+msgid "starring"
+msgstr "În rolurile principale"
+
+msgid "producer"
+msgstr "Producător"
+
+msgid "released"
+msgstr "Lansat"
+
+msgid "loading"
+msgstr "Încărcat"
+
+msgid "close"
+msgstr "Închis"
+
+msgid "all_sources"
+msgstr "toate sursele"
+
+msgid "share"
+msgstr ""
+
+msgid "share_download"
+msgstr "Partajează"
+
+msgid "share_search"
+msgstr "Partajează această căutare"
+
+msgid "share_this"
+msgstr "Partajează această:"
+
+msgid "send_by_email"
+msgstr "timite prin email"
+
+msgid "open_link_new_tab"
+msgstr "deschide link-ul într-o pagină nouă"
+
+msgid "download"
+msgstr "Descarcă"
+
+msgid "download_source"
+msgstr "Descarcă de la %(source)s"
+
+msgid "watch"
+msgstr "Priveşte"
+
+msgid "watch_source"
+msgstr "Privește cu %(source)s"
+
+msgid "listen"
+msgstr "Ascultă"
+
+msgid "listen_source"
+msgstr "Ascultă cu %(source)s"
+
+msgid "since"
+msgstr "de acum %(since)s"
+
+msgid "post_comment"
+msgstr "Comentează"
+
+msgid "add_comment"
+msgstr "Adaugă comentariu"
+
+msgid "from"
+msgstr "de la"
+
+msgid "i_like_it"
+msgstr "Îmi place!"
+
+msgid "booo"
+msgstr "Booo!"
+
+msgid "comment_published_succesfully"
+msgstr "Comentariu publicat cu succes"
+
+msgid "related_files"
+msgstr "Fişiere asemănătoare"
+
+msgid "file"
+msgstr "fişier"
+
+msgid "download_links"
+msgstr "Arată link-urile descărcate"
+
+msgid "more_info"
+msgstr "mai multe informaţii"
+
+msgid "less_info"
+msgstr "mai puţine informaţii"
+
+msgid "more_comments"
+msgstr "mai multe comentarii"
+
+msgid "less_comments"
+msgstr "mai puţine comentarii"
+
+msgid "login_required"
+msgstr "Trebuie să te autentifici pentru a accesa această pagină."
+
+msgid "user_profile"
+msgstr "Profil utilizator"
+
+msgid "your_password"
+msgstr "Alege-ţi o parolă:"
+
+msgid "insert_your_password"
+msgstr "Introdu parola (da, din nou):"
+
+msgid "fill_sing_up_form"
+msgstr ""
+"Te rugăm să complectezi acest formular pentru a fi membru înregistrat în "
+"Foofind:"
+
+msgid "nickname"
+msgstr "Pseudonim:"
+
+msgid "edit_profile"
+msgstr "editarea profilului"
+
+msgid "edit_your_profile"
+msgstr "Editează-ţi profilul"
+
+msgid "profile_edited_succesfully"
+msgstr "Profilul tău a fost editat cu succes!"
+
+msgid "hello"
+msgstr "bună,"
+
+msgid "logout"
+msgstr "deconectare"
+
+msgid "login"
+msgstr "autentificare"
+
+msgid "new_user"
+msgstr "utilizator nou"
+
+msgid "or"
+msgstr "sau"
+
+msgid "register"
+msgstr "înregistrează"
+
+msgid "if_new_user"
+msgstr "Dacă ești un utilizator nou, te rugăm să"
+
+msgid "register_here"
+msgstr "înregistrează-te aici"
+
+msgid "choose_nickname"
+msgstr "Alege un pseudonim:"
+
+msgid "user_login"
+msgstr "Autentificare utilizator"
+
+msgid "remember_me"
+msgstr "Aminteşte-ţi de mine"
+
+msgid "your_location"
+msgstr "Locația ta:"
+
+msgid "new_password"
+msgstr "Schimbă-ți parola aici: (în caz contrar, lăsă spațiul gol)"
+
+msgid "save_profile"
+msgstr "Salvează profilul"
+
+msgid "not_allowed_view_page"
+msgstr "Nu ai permisiunea de a vizualiza această pagină"
+
+msgid "username_taken"
+msgstr "Acest nume de utilizator este atribuit. Te rugăm să îți alegi altul."
+
+msgid "email_taken"
+msgstr "Acest email este atribuit. Te rugăm să folosești altul."
+
+msgid "forgot"
+msgstr "Ai uitat"
+
+msgid "your_password?"
+msgstr "parola?"
+
+msgid "passwords_not_match"
+msgstr "Parolele introduse nu se aseamănă."
+
+msgid "sure_delete_account"
+msgstr "Ești sigur că dorești să îți ștergi contul Foofind?"
+
+msgid "yes"
+msgstr "Da"
+
+msgid "no"
+msgstr "Nu"
+
+msgid "account_deleted"
+msgstr "Contul tău a fost șters."
+
+msgid "nice_to_hear_that"
+msgstr "Mă bucur să aud că"
+
+msgid "profile"
+msgstr "profil"
+
+msgid "username"
+msgstr "pseudonim:"
+
+msgid "member_since"
+msgstr "Membru din:"
+
+msgid "location"
+msgstr "Locația:"
+
+msgid "delete_account"
+msgstr "Șterge contul Foofind"
+
+msgid "forgot_password"
+msgstr "Ai uitat parola?"
+
+msgid "wrong_email_password"
+msgstr "Email sau parolă greșită, te rugăm să încerci din nou"
+
+msgid "welcome"
+msgstr "Bun venit"
+
+msgid "finish_register"
+msgstr ""
+"Te rugăm să faci clic pe această adresă URL pentru a termina procesul de "
+"înregistrare:"
+
+msgid "token_not_exist"
+msgstr "Ne pare rău, dar acest simbol nu există sau a fost deja folosit"
+
+msgid "confirm_email"
+msgstr ", confirmă adresa de email"
+
+msgid "check_inbox_email_finish"
+msgstr ""
+"Verifică-ți căsuţa de email pentru a finaliza procesul de înregistrare"
+
+msgid "foofind_team"
+msgstr "Echipa Foofind."
+
+msgid "user_not_exist"
+msgstr "Acest utilizator nu există"
+
+msgid "logged_in"
+msgstr "Ești autentificat,"
+
+msgid "registered_user"
+msgstr "Dacă eşti deja un utilizator înregistrat, te rugăm să"
+
+msgid "login_here"
+msgstr "autentifică aici"
+
+msgid "send"
+msgstr "trimite"
+
+msgid "user_favorites"
+msgstr "Fișiere cu steluță"
+
+msgid "user_searches"
+msgstr "Căutări cu steluță"
+
+msgid "user_fav_lists"
+msgstr "Liste de fișiere"
+
+msgid "user_fav_file_list_empty"
+msgstr "Niciun fișier în listă"
+
+msgid "user_fav_search_list_empty"
+msgstr "Nicio căutare în listă"
+
+msgid "user_fav_no_lists"
+msgstr "Nu s-au găsit liste personalizate"
+
+msgid "enter_email"
+msgstr ""
+"Te rugăm să introduci adresa de email. Un email pentru recupera accesului "
+"îți va fi trimis."
+
+msgid "email_same_register"
+msgstr ""
+"Adresa de email trebuie să fie același cu cea folosită la înregistrare."
+
+msgid "email_not_database"
+msgstr ""
+"Acest email nu este în baza noastră de date. Te rugăm să încerci din nou."
+
+msgid "check_inbox_email_restore"
+msgstr "Verifică căsuţa de email pentru a recupera accesul la Foofind"
+
+msgid "restore_access"
+msgstr ", recuperarea accesului la Foofind"
+
+msgid "restore_account"
+msgstr ""
+"Cineva, cel mai probabil tu, vrea să recupereze accesul la Foofind. Fă clic "
+"pe această adresă URL pentru a recupera contul la Foofind:"
+
+msgid "ignore_message"
+msgstr "În caz contrar, ignoră acest mesaj."
+
+msgid "login_vote"
+msgstr "Te rugăm să te autentifici pentru a vota"
+
+msgid "login_comment"
+msgstr "Te rugăm să te autentifici pentru a comenta"
+
+msgid "submit_registration"
+msgstr "Înregistrează-te"
+
+msgid "submit_login"
+msgstr "Autentificare"
+
+msgid "submit_edit"
+msgstr "Salvează profilul"
+
+msgid "submit_search"
+msgstr "Caută"
+
+msgid "contact_form"
+msgstr "Formular de contact"
+
+msgid "report_form"
+msgstr "Formular de reclamaţie link"
+
+msgid "complaints_ignored"
+msgstr "Plângerile făcut prin acest formular vor fi ignorate."
+
+msgid "your_message"
+msgstr "Mesajul tău:"
+
+msgid "insert_characters"
+msgstr "Te rugăm să introduci cele 5 caractere prezentate:"
+
+msgid "captcha_wrong"
+msgstr "Evaluare captcha este greșită"
+
+msgid "message_sent"
+msgstr "Mesajul a fost trimis cu succes!"
+
+msgid "your_name"
+msgstr "Prenumele:"
+
+msgid "your_surname"
+msgstr "Numele:"
+
+msgid "your_company"
+msgstr "Compania:"
+
+msgid "your_phone"
+msgstr "Nr. de telefon:"
+
+msgid "link_reviewed"
+msgstr "Te rugăm să introduci link-ul pentru a fi evaluat:"
+
+msgid "url_content"
+msgstr "Te rugăm să introduci URL-ul unde apare acest conținut:"
+
+msgid "reason_complaint"
+msgstr "Motivul reclamației:"
+
+msgid "accept_terms"
+msgstr ""
+"Te rugăm să accepți condiţiile de utilizare și politica de confidențialitate"
+
+msgid "not_foofind_page"
+msgstr "Link-ul nu poate fi o pagină Foofind"
+
+msgid "not_foofind_link"
+msgstr "URL-ul trebuie să fie o pagină de descărcare validă Foofind."
+
+msgid "include_reported_links"
+msgstr ""
+"Te rugăm să introduci în câmpurile corespunzătoare de pe formular, link-uri "
+"raportate."
+
+msgid "submit_links"
+msgstr "Trimite link-urile"
+
+msgid "include_link_per_line"
+msgstr ""
+"Te rugăm să introduci un http, ftp, ed2k sau magnet link pe câte o linie.\r\n"
+"Acestea vor fi indexate în mod automat și adăugate pentru a căuta rezultatele într-un timp mai scurt."
+
+msgid "link_sent"
+msgstr "Link-urile au fost trimise. Îți mulțumim pentru ajutor!"
+
+msgid "about_text"
+msgstr ""
+"Foofind este un motor de căutare universal. La Foofind lucrăm pentru crearea de soft-uri care accesează prin investigare în fiecare rețea și indexează fiecare fișier. În acest fel, ne propunem să oferim cea mai mare colecție de link-uri disponibile.\r\n"
+"\r\n"
+"Foofind este o creație a lui Pablo Soto, designer de tehnologie P2P, dezvoltată în Madrid, Spania, prin Foofind Labs S.L. în asociere cu tehnologiile MP2P."
+
+msgid "under_maintenance"
+msgstr "Foofind este în întreținere. Te rugăm să revii mai târziu."
+
+msgid "link_not_exist"
+msgstr "Acest link nu există sau a fost șters."
+
+msgid "error_link_removed"
+msgstr "Ne pare rău: acest link a fost eliminat de sursă."
+
+msgid "translate"
+msgstr "Traducere"
+
+msgid "translate_to_your_language"
+msgstr "Ajută-ne să traducem Foofind în limba ta."
+
+msgid "translate_description"
+msgstr ""
+"Foofind este în prezent disponibil în câteva limbi, dar tu ne poți ajuta să-l traducem în limba ta. Trebuie doar s-o alegi din lista următoare și să complectezi câmpurile cu textele traduse. Nu trebuie să complectezi toate câmpurile pentru a trimite formularul, orice ajutor va fi apreciat în mod deosebit.\r\n"
+"\r\n"
+"Dacă limba ta nu este în listă, te rugăm să ne contactezi pentru a o adăuga."
+
+msgid "choose_language"
+msgstr "Alege limba"
+
+msgid "translation_sent"
+msgstr "Traducerea ta a fost trimisă. Îți mulțumim pentru ajutor!"
+
+msgid "translate_at_least_one"
+msgstr "Te rugăm să traduci ceva înainte de a trimite."
+
+msgid "here"
+msgstr "aici"
+
+msgid "other"
+msgstr "Altele"
+
+msgid "embed_foofind_button"
+msgstr "Vezi în foofind"
+
+msgid "copy_to_clipboard_shortcut"
+msgstr "Foloseşte CTRL + C pentru a copia în clipboard"
+
+msgid "opensearch_description"
+msgstr "Caută folosind Foofind"
+
+msgid "foodownloader_overview"
+msgstr "Prezentare"
+
+msgid "foodownloader_overview_text"
+msgstr ""
+"**Foofind Download Manager** este un client de **torrent**rapid pentru rețele P2P.\r\n"
+"\r\n"
+"Foofind Download Manager este conceput pentru a fi foarte ușor de utilizat, intuitiv, și în condiții de siguranță. Puteți întrerupe, relua și găsi descărcările mai ușor decât oricând, verifică unele din caracteristicile sale:\r\n"
+"\r\n"
+"* Client de torrent solid.\r\n"
+"* Interfață simplificată.\r\n"
+"* Extensii pentru protocolul DHT, UPnP și uTorrent."
+
+msgid "foodownloader_sharing"
+msgstr "Descarcă şi partajează fișiere"
+
+msgid "foodownloader_sharing_text"
+msgstr ""
+"Acum, cu **Foofind Download Manager** poți descărca mai repede decât oricând altcândva. Datorită rețelei **torrent**, cea mai rapidă soluție P2P realizată vreodată, descărcările tale vor zbura.\r\n"
+"\r\n"
+"Încearcă! **Viitorul în descărcare este doar la un clic distanță.**"
+
+msgid "foodownloader_safety"
+msgstr "Ia-ţi fișierele într-un mod sigur"
+
+msgid "foodownloader_safety_text"
+msgstr ""
+"Noi acordăm toată atenția siguranței. **Foofind Download Manager** utilizează o bibliotecă libtorrent premiată, ceea ce va face ca experiența ta de descărcare să fie una sigură şi securizată.\r\n"
+"\r\n"
+"Te sfătuim insistent să utilizezi un antivirus, poți descărca malware-uri din surse nesigure."
+
+msgid "foodownloader_download"
+msgstr "Descărcare gratuită"
+
+msgid "foodownloader_download_source"
+msgstr "Descarcă sursa"
+
+msgid "foodownloader_meta_description"
+msgstr ""
+"Foofind Download Manager este un downloader de torrent simplu și ușor de "
+"utilizat"
+
+msgid "foodownloader_thanks"
+msgstr "Descărcare cu succes!"
+
+msgid "foodownloader_thanks_message"
+msgstr ""
+"Îți mulțumim că ai instalat Foofind Download Manager, sperăm să îți placă."
+
+msgid "foodownloader_download_coming_soon"
+msgstr "Ne pare rău: Nu este încă disponibil pentru sistemul tău de operare."
+
+msgid "foodownloader_dialog_title"
+msgstr ""
+"Hei!\r\n"
+"\r\n"
+"Îţi trebuie un client torrent pentru a descărca acest fișier"
+
+msgid "foodownloader_dialog_yes"
+msgstr "Da, descarcăFoofind Download Manager"
+
+msgid "foodownloader_dialog_no"
+msgstr ""
+"Nu, mulțumesc\r\n"
+"\r\n"
+"Am deja un client de torrent"
+
+msgid "foodownloader_dialog_text"
+msgstr ""
+"Descarcă Foofind Download Manager pentru a obține acest fișier chiar acum.\r\n"
+"\r\n"
+"Soft-ul nostru îți permite să descarci torrente mai rapid și mai ușor decât oricând - absolut gratuit! Dacă ai deja un client de torrent, fă clic pe \"Nu, mulțumesc\"."

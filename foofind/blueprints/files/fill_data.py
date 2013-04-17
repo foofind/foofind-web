@@ -17,6 +17,7 @@ from foofind.utils.filepredictor import guess_doc_content_type
 from foofind.datafixes import content_fixes
 from foofind.utils.splitter import slugify
 from foofind.utils.seo import seoize_text
+from foofind.utils.html import clean_html
 
 def init_data(file_data, ntts=[]):
     '''
@@ -207,8 +208,12 @@ def build_source_links(f):
             downloader=True
             link_weight=0.8
             url=src['url']
+            if "url_pattern" in source_data and not url.startswith(("https://","http://","ftp://")):
+                url_pattern=True
+                tip=source=get_domain(source_data["url_pattern"]%url)
+            else:
+                tip=source=get_domain(src['url'])
             icon="torrent"
-            tip=source=get_domain(src['url'])
             source_groups[icon] = tip
         elif source_data["d"]=="Gnutella":
             link_weight=0.2
@@ -333,37 +338,56 @@ def get_images(f):
         f["view"]["images_server"]="_".join(images_servers)
         f["view"]["images_id"] = images_id
 
-NUMBERS_RE=re.compile("^[\d.]+")
-
 def get_int(adict, key):
-    value = adict[key] if key in adict else None
+    if not key in adict:
+        return None
+    value = adict[key]
     if isinstance(value, (int,long)):
         return value
     elif isinstance(value, float):
         return int(value)
     elif isinstance(value, basestring):
-        value = NUMBERS_RE.findall(value.replace(",","."))
-        if value:
-            try:
-                return int(float(value[0]))
-            except:
-                pass
+        result = None
+        for c in value:
+            digit = ord(c)-48
+            if 0<=digit<=9:
+                if result:
+                    result *= 10
+                else:
+                    result = 0
+                result += digit
+            else:
+                break
+        return result
     return None
 
 def get_float(adict, key):
-    value = adict[key] if key in adict else None
+    if not key in adict:
+        return None
+    value = adict[key]
     if isinstance(value, float):
         return value
     elif isinstance(value, (int,long)):
         return float(value)
     elif isinstance(value, basestring):
-        value = NUMBERS_RE.findall(value.replace(",","."))
-        if value:
+        result = ""
+        decimal = False
+        for c in value:
+            if c in "0123456789":
+                result += c
+            elif c in ".," and not decimal:
+                result += "."
+                decimal = True
+            else:
+                break
+
+        if result:
             try:
-                return float(value[0])
+                return float(result)
             except:
                 pass
     return None
+
 
 def format_metadata(f,text_cache, search_text_shown=False):
     '''
@@ -471,8 +495,8 @@ def format_metadata(f,text_cache, search_text_shown=False):
                 filepaths = {"/"+u(file_md["filedir"]).strip("/"):filepaths}
 
             if filepaths:
-                view_md["files"] = filepaths
-                view_searches["files"] = {}
+                view_md["filepaths"] = filepaths
+                view_searches["filepaths"] = {}
 
         # Metadatos multimedia
         try:
@@ -592,32 +616,15 @@ def format_metadata(f,text_cache, search_text_shown=False):
         view_mdh=f['view']['mdh']={}
         for metadata,value in view_md.items():
             if isinstance(value, basestring):
-                value = Markup(Markup(value.replace("|"," ||").replace("\n"," |n")).unescape()).striptags()
-
-                # soporte multilinea
-                if " |n" in value:
-                    values = value.split(" |n")
-
-                    # strip de la lista
-                    start = 0
-                    end = len(values)-1
-                    while values and start<end and not values[start].strip(): start+=1
-                    while values and end>start and not values[end].strip(): end-=1
-
-                    if values and start<end:
-                        value = "\n".join(value.replace(" ||", "|") for value in values[start:end+1])
-                    else:
-                        del view_md[metadata]
-                        continue
-                else:
-                    if len(value)==0:
-                        del view_md[metadata]
-                        continue
+                value = clean_html(value)
+                if not value:
+                    del view_md[metadata]
+                    continue
 
                 view_md[metadata]=value
 
                 # resaltar contenidos que coinciden con la busqueda
-                view_mdh[metadata]=highlight(text,value) if text else value
+                view_mdh[metadata]=highlight(text,value) if text and len(text)<100 else value
             elif isinstance(value, float): #no hay ningun metadato tipo float
                 view_md[metadata]=view_mdh[metadata]=str(int(value))
             else:

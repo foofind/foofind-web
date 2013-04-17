@@ -12,7 +12,7 @@ flask
 
 python-memcached
 
-flask-assets==0.7
+flask-assets==0.8
 cssutils
 
 flask-babel
@@ -29,7 +29,7 @@ flask-mail
 
 flask-seasurf
 
-pymongo
+pymongo==2.5
 
 polib
 
@@ -46,7 +46,7 @@ fabric
 raven==2.0.10
 blinker==1.2
 
-webassets==0.7
+webassets==0.8
 slimmer
 
 pyquery
@@ -62,3 +62,10 @@ chardet
 timelib
 
 markdown
+
+newrelic
+
+# Para el microsite del downloader, detección de metadatos de fichero
+hachoir-parser
+hachoir-metadata
+hachoir-core

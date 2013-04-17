@@ -1,0 +1,709 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: 1\n"
+"Report-Msgid-Bugs-To: ismael@mp2p.net\n"
+"POT-Creation-Date: 2011-12-09 11:49+0100\n"
+"PO-Revision-Date: 2011-12-09 11:49+0100\n"
+"Last-Translator: Foofind <hola@foofind.com>\n"
+"Language-Team: fa <hola@foofind.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Foofind's pogit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgid "new_toolbar"
+msgstr "نوار ابزار جديد ما رو تست كنيد"
+
+msgid "click_here"
+msgstr "اينجا كليك كنيد!"
+
+msgid "your_email"
+msgstr "پست الکترونیک شما:"
+
+msgid "password"
+msgstr "رمز عبور:"
+
+msgid "submit"
+msgstr "ارسال"
+
+msgid "ok"
+msgstr "قبول"
+
+msgid "help_us"
+msgstr "به ما کمک کنيد!"
+
+msgid "legal_info"
+msgstr "اطلاعات حقوقی"
+
+msgid "go_home"
+msgstr "بازگشت به موتور جستجو"
+
+msgid "error_500_message"
+msgstr "یک خطا رخ داده است"
+
+msgid "error_500_description"
+msgstr "چیزی عجیب است، متخصصان ما در حال بررسی این فعالیت های غيرطبيعي هستند."
+
+msgid "error_404_message"
+msgstr "صفحه یافت نشد"
+
+msgid "error_404_description"
+msgstr ""
+"آدرس درخواستي يافت نشد. صحيح بودن آن را بررسي كنيد، درصورتي كه صحيح است ، "
+"لطفا به مديران وب اطلاع رساني كنيد."
+
+msgid "error_410_message"
+msgstr "صفحه در دسترس نیست"
+
+msgid "error_410_description"
+msgstr "آدرس درخواستي دیگر در دسترس نیست و در آینده نيز نخواهد بود"
+
+msgid "error_502_message"
+msgstr "مسير اشتباه"
+
+msgid "error_502_description"
+msgstr "به دليل مسير اشتباه امكان دسترسي ممكن نيست"
+
+msgid "error_503_message"
+msgstr "سرویس در دسترس نیست"
+
+msgid "error_503_description"
+msgstr "آدرس درخواستي به طور موقت در دسترس نیست. لطفا بعدا دوباره تلاش کنید. "
+
+msgid "servers_status"
+msgstr "بررسی وضعیت سرور"
+
+msgid "error_mail_send"
+msgstr ""
+"در ارسال پيام به آدرس مشخص شده خطا وجود دارد. لطفا يكي ديگر رو امتحان كنيد "
+"يا بعدا دوباره تلاش كنيد."
+
+msgid "required_empty"
+msgstr "مقدار لازم است و نمی تواند خالی باشد"
+
+msgid "no_valid_email"
+msgstr ""
+": آدرس ایمیل با فرمت معتبر نمی باشد.\r\n"
+"user@example.com"
+
+msgid "no_valid_url"
+msgstr "آدرس معتبر نیست"
+
+msgid "about"
+msgstr "درباره"
+
+msgid "contact"
+msgstr "تماس"
+
+msgid "technology"
+msgstr "تكنولوژي"
+
+msgid "legal"
+msgstr "حقوقي"
+
+msgid "tos"
+msgstr "شرايط استفاده"
+
+msgid "privacy"
+msgstr "سیاست حفظ اسرار"
+
+msgid "complaint"
+msgstr "گزارش لینک"
+
+msgid "source_code"
+msgstr "کد منبع"
+
+msgid "files_indexed"
+msgstr "فایل های فهرست شده"
+
+msgid "last_indexed_files"
+msgstr "آخرین فايل هاي فهرست شده"
+
+msgid "i_want_that_file"
+msgstr "آن فايل را مي خواهم"
+
+msgid "index_change"
+msgstr "foofind در حال تغییر است"
+
+msgid "index_comunity"
+msgstr "به اجتماع ما بپيونديد."
+
+msgid "index_first"
+msgstr "برای دريافت اخبار و مشارکت اولین باشید."
+
+msgid "index_suggestion"
+msgstr "پیشنهاداتي داريد؟"
+
+msgid "all"
+msgstr "همه"
+
+msgid "direct_download"
+msgstr "دانلود مستقيم"
+
+msgid "direct_downloads"
+msgstr "دانلودهاي مستقيم"
+
+msgid "other_streamings"
+msgstr "استریمینگ هاي ديگر"
+
+msgid "other_direct_downloads"
+msgstr "دانلودهاي مستقيم ديگر"
+
+msgid "some_streamings"
+msgstr "بعضي استریمینگ ها"
+
+msgid "some_downloads"
+msgstr "بعضي دانلودهاي مستقيم"
+
+msgid "others"
+msgstr "ديگران"
+
+msgid "unknown"
+msgstr "ناشناخته"
+
+msgid "audio"
+msgstr "صدا"
+
+msgid "video"
+msgstr "ويدئو"
+
+msgid "image"
+msgstr "تصوير"
+
+msgid "document"
+msgstr "پرونده متني"
+
+msgid "software"
+msgstr "نرم افزار"
+
+msgid "archive"
+msgstr "آرشيو"
+
+msgid "no_results_for"
+msgstr "براي... نتيجه اي نيست"
+
+msgid "write_something"
+msgstr "هي! چيزي بنويس"
+
+msgid "previous"
+msgstr "قبلي"
+
+msgid "next"
+msgstr "بعدي"
+
+msgid "sources"
+msgstr "منابع"
+
+msgid "approximately"
+msgstr "تقريبا"
+
+msgid "of_about"
+msgstr "در حدود"
+
+msgid "results_for"
+msgstr "نتايج براي"
+
+msgid "other_categories"
+msgstr "ديگر دسته بندي ها"
+
+msgid "not_allow_browse_results"
+msgstr "Foofind نتایج بيشتر از صفحه 100 را نشان نمی دهد."
+
+msgid "did_you_mean"
+msgstr ""
+
+msgid "go_to_file"
+msgstr "برو به فایل"
+
+msgid "play"
+msgstr "پخش"
+
+msgid "what"
+msgstr "چي؟"
+
+msgid "where"
+msgstr "كجا؟"
+
+msgid "update"
+msgstr "به روزرساني"
+
+msgid "minimun"
+msgstr "كمترين"
+
+msgid "maximun"
+msgstr "بيشترين"
+
+msgid "all_sizes"
+msgstr "همه ظرفيت ها"
+
+msgid "smaller_than"
+msgstr "كوچكتر از"
+
+msgid "larger_than"
+msgstr "بزرگتر از"
+
+msgid "all_qualities"
+msgstr "همه كيفيت ها"
+
+msgid "or_better"
+msgstr "يا بهتر"
+
+msgid "all_years"
+msgstr "همه سالها"
+
+msgid "before"
+msgstr "قبل از"
+
+msgid "last_year"
+msgstr "سال گذشته"
+
+msgid "artist"
+msgstr "هنرمند"
+
+msgid "title"
+msgstr "عنوان"
+
+msgid "author"
+msgstr "سازنده"
+
+msgid "format"
+msgstr "فرمت"
+
+msgid "pages"
+msgstr "صفحات"
+
+msgid "album"
+msgstr "آلبوم"
+
+msgid "length"
+msgstr "طول"
+
+msgid "bitrate"
+msgstr "بيت ريت"
+
+msgid "genre"
+msgstr "ژانر"
+
+msgid "seconds"
+msgstr "ثانه"
+
+msgid "minutes"
+msgstr "دقيقه"
+
+msgid "source"
+msgstr "منبع"
+
+msgid "seeds"
+msgstr "آپلودر"
+
+msgid "leechs"
+msgstr "دانلودر"
+
+msgid "height"
+msgstr "ارتفاع"
+
+msgid "width"
+msgstr "عرض"
+
+msgid "track"
+msgstr "تراك"
+
+msgid "quality"
+msgstr "كيفيت"
+
+msgid "series"
+msgstr "سري"
+
+msgid "episode"
+msgstr "اپيزود"
+
+msgid "season"
+msgstr "فصل"
+
+msgid "num_pages"
+msgstr "شماره . از صفحه"
+
+msgid "include_results_from"
+msgstr "شامل نتايج از:"
+
+msgid "size"
+msgstr "اندازه"
+
+msgid "unpacked_size"
+msgstr "سايز غيرفشرده"
+
+msgid "colors"
+msgstr "رنگها"
+
+msgid "version"
+msgstr "ورژن"
+
+msgid "name"
+msgstr "نام"
+
+msgid "description"
+msgstr "شرح"
+
+msgid "files"
+msgstr "فايل ها"
+
+msgid "soundtype"
+msgstr "نوع صدا"
+
+msgid "channels"
+msgstr "كانال"
+
+msgid "year"
+msgstr "سال"
+
+msgid "years"
+msgstr "سال"
+
+msgid "month"
+msgstr "ماه"
+
+msgid "months"
+msgstr "ماه"
+
+msgid "day"
+msgstr "روز"
+
+msgid "days"
+msgstr "روز"
+
+msgid "hour"
+msgstr "ساعت"
+
+msgid "hours"
+msgstr "ساعت"
+
+msgid "minute"
+msgstr "دقيقه"
+
+msgid "second"
+msgstr "دوم"
+
+msgid "tags"
+msgstr "برچسب ها"
+
+msgid "license"
+msgstr "پروانه"
+
+msgid "private_file"
+msgstr "فايل خصوصي"
+
+msgid "composer"
+msgstr "آهنگساز"
+
+msgid "publisher"
+msgstr "ناشر"
+
+msgid "comments"
+msgstr "نظرات"
+
+msgid "created_by"
+msgstr "ایجاد شده توسط"
+
+msgid "language"
+msgstr "زبان"
+
+msgid "date"
+msgstr "تاریخ"
+
+msgid "trackers"
+msgstr "تراك"
+
+msgid "hash"
+msgstr "هش"
+
+msgid "visualizations"
+msgstr "نمايه تصويري"
+
+msgid "codec"
+msgstr "كدك"
+
+msgid "encoding"
+msgstr "رمزگذاری"
+
+msgid "director"
+msgstr "كارگردان"
+
+msgid "writer"
+msgstr "نويسنده"
+
+msgid "starring"
+msgstr "بازيگر"
+
+msgid "producer"
+msgstr "تولید کننده"
+
+msgid "released"
+msgstr "انتشار"
+
+msgid "loading"
+msgstr "بارگزاري"
+
+msgid "close"
+msgstr "ببند"
+
+msgid "all_sources"
+msgstr "همه منابع"
+
+msgid "share_download"
+msgstr "اشتراك"
+
+msgid "share_search"
+msgstr "اشتراك اين جستجو"
+
+msgid "share_this"
+msgstr "اشتراك اين:"
+
+msgid "send_by_email"
+msgstr "ارسال از طریق ایمیل"
+
+msgid "open_link_new_tab"
+msgstr "بازكردن لينك در پنجره جديد"
+
+msgid "download"
+msgstr "دانلود"
+
+msgid "download_source"
+msgstr ""
+
+msgid "watch"
+msgstr "پخش"
+
+msgid "listen"
+msgstr "شنيدن"
+
+msgid "post_comment"
+msgstr "ارسال نظر"
+
+msgid "add_comment"
+msgstr "افزودن نظر"
+
+msgid "from"
+msgstr "از"
+
+msgid "i_like_it"
+msgstr "مي پسندم!"
+
+msgid "booo"
+msgstr "وااا!"
+
+msgid "comment_published_succesfully"
+msgstr "نظر با موفقيت منتشر شد"
+
+msgid "related_files"
+msgstr "فایل های مرتبط"
+
+msgid "file"
+msgstr "فايل"
+
+msgid "delete_favorite"
+msgstr ""
+
+msgid "download_links"
+msgstr "نمایش لینک های دانلود"
+
+msgid "more_info"
+msgstr "اطلاعات بیشتر"
+
+msgid "less_info"
+msgstr "کمتر اطلاعات"
+
+msgid "more_comments"
+msgstr "نظرات بيشتر"
+
+msgid "less_comments"
+msgstr "نظرات كمتر"
+
+msgid "login_required"
+msgstr "براي دسترسي به اين صفحه بايد وارد شويد."
+
+msgid "user_profile"
+msgstr "پروفايل كاربر"
+
+msgid "your_password"
+msgstr "پسوردتان را انتخاب كنيد:"
+
+msgid "insert_your_password"
+msgstr "پسوردتان را وارد كنيد(دوباره):"
+
+msgid "fill_sing_up_form"
+msgstr "لطفا اين فرم را پركنيد تا عضو Foofind شويد:"
+
+msgid "nickname"
+msgstr "اسم مستعار:"
+
+msgid "edit_profile"
+msgstr "ويرايش مشخصات"
+
+msgid "edit_your_profile"
+msgstr "مشخصات تان را ويرايش كنيد"
+
+msgid "profile_edited_succesfully"
+msgstr "مشخصات تان با موفقيت ويرايش شد!"
+
+msgid "hello"
+msgstr "سلام."
+
+msgid "logout"
+msgstr "خروج"
+
+msgid "login"
+msgstr "ورود"
+
+msgid "new_user"
+msgstr "عضو جديد"
+
+msgid "or"
+msgstr "يا"
+
+msgid "register"
+msgstr "عضويت"
+
+msgid "if_new_user"
+msgstr "لطفا، اگر عضو جديد هستيد"
+
+msgid "register_here"
+msgstr "اينجا عضو شويد"
+
+msgid "choose_nickname"
+msgstr "اسم مستعار انتخاب كنيد"
+
+msgid "user_login"
+msgstr "ورود اعضاء"
+
+msgid "remember_me"
+msgstr "مرا بياد داشته باش"
+
+msgid "your_location"
+msgstr "موقعيت شما:"
+
+msgid "new_password"
+msgstr "پسوردتان را اينجا تغيير دهيد:(درغير اينصورت خالي بگذاريد)"
+
+msgid "save_profile"
+msgstr "ذخيره مشخصات"
+
+msgid "not_allowed_view_page"
+msgstr "شما مجاز به مشاهده اين صفحه نيستيد"
+
+msgid "username_taken"
+msgstr "این نام کاربری گرفته شده است. يك نام ديگر انتخاب كنيد."
+
+msgid "email_taken"
+msgstr "اين ايميل گرفته شده است، لطفا يك ايميل ديگر انتخاب كنيد."
+
+msgid "forgot"
+msgstr "فراموش كرديد"
+
+msgid "your_password?"
+msgstr "پسوردتان را؟"
+
+msgid "passwords_not_match"
+msgstr "پسوردهايي كه وارد كرده ايد يكي نيستند"
+
+msgid "sure_delete_account"
+msgstr "مطمئن هستيد مي خواهيد اكانت Foofind را حذف كنيد؟"
+
+msgid "yes"
+msgstr "بله"
+
+msgid "no"
+msgstr "خير"
+
+msgid "account_deleted"
+msgstr "اكانت شما حذف شد."
+
+msgid "nice_to_hear_that"
+msgstr "از شنيدنش خوشحالم"
+
+msgid "profile"
+msgstr "مشخصات"
+
+msgid "username"
+msgstr "نام مستعار:"
+
+msgid "member_since"
+msgstr "عضو از:"
+
+msgid "last_comments"
+msgstr " %(comments)d نظر اخير:"
+
+msgid "location"
+msgstr "موقعيت:"
+
+msgid "delete_account"
+msgstr "حذف اكانت Foofind "
+
+msgid "forgot_password"
+msgstr "پسوردتان را فراموش كرديد؟"
+
+msgid "wrong_email_password"
+msgstr "ايميل يا پسورد اشتباه است، دوباره سعي كنيد"
+
+msgid "welcome"
+msgstr "خوش آمديد"
+
+msgid "finish_register"
+msgstr "لطفا، روي اين لينك كليك كنيد تا مراحل عضويت تان تكميل شود:"
+
+msgid "token_not_exist"
+msgstr "متاسفيم، اين نشانه وجود ندارد يا قبلا استفاده شده است"
+
+msgid "confirm_email"
+msgstr "ايميل تان را تاييد كنيد"
+
+msgid "check_inbox_email_finish"
+msgstr "صندوق دريافت ايميل تان را چك كنيد تا مراحل عضويت تكميل شود"
+
+msgid "foofind_team"
+msgstr "تيم Foofind "
+
+msgid "user_not_exist"
+msgstr "اين كاربر وجود ندارد"
+
+msgid "logged_in"
+msgstr "شما وارد شديد،"
+
+msgid "registered_user"
+msgstr "اگر قبلا ثبت نام كرده ايد"
+
+msgid "login_here"
+msgstr "از اینجا وارد شوید"
+
+msgid "send"
+msgstr "ارسال"
+
+msgid "user_favorites"
+msgstr "فايل هاي نشانه خورده"
+
+msgid "user_searches"
+msgstr "جستجو هاي نشانه خورده"
+
+msgid "user_fav_lists"
+msgstr "ليست هاي فايل"
+
+msgid "user_fav_file_list_empty"
+msgstr "فايل ها در ليست نيست"
+
+msgid "user_fav_search_list_empty"
+msgstr "جستجوها در ليست نيست"
+
+msgid "user_fav_no_lists"
+msgstr "هیچ لیست سفارشی یافت نشد"
+
+msgid "enter_email"
+msgstr ""
+"لطفا آدرس ایمیل خود را وارد کنید. یک ایمیل براي بازيابي دسترسی شما به شما "
+"فرستاده خواهد شد. "
+
+msgid "email_same_register"
+msgstr "آدرس ايميل بايد مشابه ايميل ثبت نام شما باشد"
+
+msgid "email_not_database"
+msgstr "اين ايميل در بانك اطلاعات ما نيست ، دوباره سعي كنيد."

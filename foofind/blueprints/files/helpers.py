@@ -2,10 +2,8 @@
 '''
     Funciones auxiliares
 '''
-import hashlib
-from itertools import izip
 from cgi import escape
-from flask import request, g, Markup, current_app, abort
+from flask import request, g, Markup
 from foofind.services import *
 from foofind.utils import mid2hex, multipartition, logging
 from foofind.utils.content_types import *
@@ -15,7 +13,7 @@ from foofind.utils.splitter import SEPPER, slugify
 __all__=(
     "FILTERS","DatabaseError","FileNotExist","FileRemoved","FileFoofindRemoved","FileUnknownBlock","FileNoSources",
     "highlight","extension_filename","url2filters","filters2url","fetch_global_data","prepare_args",
-    "is_search_bot","is_full_browser","get_files","save_visited","comment_votes", "check_rate_limit"
+    "get_files","save_visited","comment_votes"
 )
 
 #constantes
@@ -26,7 +24,6 @@ FILTERS={
     "size":['all_sizes','smaller_than','larger_than'],
     }
 
-_FULL_BROWSERS_USER_AGENTS=("chrome", "firefox", "msie", "opera", "safari", "webkit")
 
 class DatabaseError(Exception):
     pass
@@ -53,10 +50,24 @@ def highlight(text_parts,match,limit_length=False):
     separators = u"".join({i for i in match if i in SEPPER or i=="'"})
     parts = list(multipartition(match,separators))
     parts_type = [0 if part in separators else 1 if slugify(part) in text_parts else -1 for part in parts]
-    if len(parts)>2:
-        parts_type[1:-1] = [1 if p1==0 and p0==p2==1 else p1 for p0, p1, p2 in izip(parts_type[2:], parts_type[1:-1], parts_type[:-2])]
+    parts_type.extend([0, 0])
 
-    result = u"".join(("<strong>%s</strong>" if strong==1 else "%s") % escape(part,True) for part, strong in izip(parts, parts_type))
+    result = []
+    strong = False
+    for position, part in enumerate(parts):
+        # abre tag si toca
+        if not strong and parts_type[position]==1:
+            result.append("<strong>")
+            strong = True
+
+        result.append(escape(part, True))
+
+        # cierra tag si toca
+        if strong and parts_type[position+1]<1 and not (parts_type[position+1]==0 and parts_type[position+2]==1):
+            result.append("</strong>")
+            strong = False
+
+    result = u"".join(result)
 
     if limit_length: #si se quiere acortar el nombre del archivo para que aparezca al principio la primera palabra resaltada
         first_term = result.find("<strong>")
@@ -198,25 +209,6 @@ def prepare_args(query, filters):
 
     g.extra_sources=g.sources_streaming+g.sources_download+g.sources_p2p
 
-def is_search_bot():
-    '''
-    Detecta si la peticion es de un robot de busqueda
-    '''
-    if request.user_agent.browser in _FULL_BROWSERS_USER_AGENTS:
-        return False
-
-    user_agent = request.user_agent.string.lower()
-    for i, bot in enumerate(current_app.config["ROBOT_USER_AGENTS"]):
-        if bot in user_agent:
-            return current_app.config["SAFE_ROBOT_USER_AGENTS"][i]
-    return False
-
-def is_full_browser():
-    '''
-    Detecta si la peticion es de un robot de busqueda
-    '''
-    return request.user_agent.browser in _FULL_BROWSERS_USER_AGENTS
-
 def get_files(ids, sphinx_search=None):
     '''
     Recibe lista de tuplas de tamaño 3 o mayor (como las devueltas por search)
@@ -246,16 +238,14 @@ def save_visited(files):
     '''
     Recibe una lista de resultados de fill_data y guarda las url que sean de web
     '''
-    if not is_search_bot():
-        result=[]
-        for file in files:
-            result+=([{"_id": data['urls'][0], "type":src} for src, data in file['view']['sources'].iteritems() if data['icon'] in ['web','torrent']])
+    if not g.search_bot:
+        result=[{"_id": data['urls'][0], "type":src} for afile in files for src, data in afile['view']['sources'].iteritems() if data['icon'] in ['web','torrent']]
 
         if result:
             try:
                 feedbackdb.visited_links(result)
             except:
-                pass
+                logging.error("Error saving visited links.")
 
 def comment_votes(file_id,comment):
     '''
@@ -279,26 +269,3 @@ def comment_votes(file_id,comment):
                 comment_votes[comment_vote["_id"][0:40]][2]=comment_vote["k"]
 
     return comment_votes
-
-def check_rate_limit(search_bot):
-    '''
-    Hace que se respeten los limites de peticiones.
-    '''
-    if search_bot: # robots
-        if not cache.add("rlimit_bot_"+search_bot, 1, timeout=60):
-            rate_limit = current_app.config["ROBOT_USER_AGENTS_RATE_LIMIT"].get(search_bot, current_app.config["ROBOT_DEFAULT_RATE_LIMIT"])
-            current = cache.inc("rlimit_bot_"+search_bot) # devuelve None si no existe la clave
-            if current and current > rate_limit:
-                if (current-rate_limit)%20==1:
-                    logging.warn("Request rate over limit from bot %s."%search_bot)
-                abort(429)
-    else: # resto
-       ip = request.headers.getlist("X-Forwarded-For")[0] if request.headers.getlist("X-Forwarded-For") else request.remote_addr
-       client_id = hashlib.md5(ip).hexdigest()
-       if not cache.add("rlimit_user_"+client_id, 1, timeout=60):
-            current = cache.inc("rlimit_user_"+client_id) # devuelve None si no existe la clave
-            if current and current > current_app.config["USER_RATE_LIMIT"]:
-                if (current-current_app.config["USER_RATE_LIMIT"])%20==1:
-                    user_agent = request.user_agent.string
-                    logging.warn("Request rate over limit from user %s."%client_id)
-                abort(429)

@@ -22,7 +22,11 @@
     <meta http-equiv="content-language" content="{{g.lang}}" />
     <meta name="keywords" content="foofind downloader" />
     <meta name="description" content="{{_('foodownloader_meta_description')}}" />
+    {%- if standalone_microsite -%}
+    <link rel="shortcut icon" href="{{ url_for('web.favicon') }}" />
+    {%- else  -%}
     <link rel="shortcut icon" href="{{ url_for('index.favicon') }}" />
+    {%- endif -%}
     {%- for id, data in g.languages.iteritems() if g.lang != id %}
     <link rel="alternate" hreflang="{{ id }}" href="{{ u(request.url)|url_lang(id) }}" />
     {%- endfor %}
@@ -87,19 +91,27 @@
 <section id="download_bar">
     <div class="inner">
         {% if properties["available"] %}
-        <a class="download" id="download_button" href="{{url_for('downloads.foodownloader_download')}}">
+        <a class="download" id="download_button"
+            {%- if standalone_microsite %}
+            href="{{url_for('downloads.download', instfile=properties['filename'])}}"
+            {%- else -%}
+            href="{{url_for('downloads.foodownloader_download')}}"
+            {%- endif -%}>
             <span><span><span>
-                {{_("foodownloader_download")|capitalize}}
-                <span class="info">
-                    Windows · {{properties["version_code"].split("-")[0]}} · {{properties["length"]|numbersizeformat}}
-                </span>
+                <span>{{_("foodownloader_download")|capitalize}}</span>
+                <span class="info">Windows · {{properties["version_code"].split("-")[0]}} · {{properties["length"]|numbersizeformat}}</span>
             </span></span></span>
         </a>
         {% else %}
         <p>{{_("foodownloader_download_coming_soon")}}</p>
         {% endif %}
-        {% if properties["source_available"] %}
-        <a class="source" href="{{url_for('downloads.foodownloader_source_download')}}">{{_("foodownloader_download_source")|capitalize}} · {{properties["source_length"]|numbersizeformat}}</a>
+        {% if properties["source_available"] -%}
+        <a class="source"
+            {%- if standalone_microsite -%}
+            href="{{url_for('downloads.download', instfile=properties['source_filename'])}}"
+            {%- else -%}
+            href="{{url_for('downloads.foodownloader_source_download')}}"
+            {%- endif -%}>{{_("foodownloader_download_source")|capitalize}} · {{properties["source_length"]|numbersizeformat}}</a>
         {% endif %}
     </div>
 </section>
@@ -113,12 +125,21 @@
     </ul>
     {% endif %}
     <ul class="links">
+        {%- if standalone_microsite -%}
+        <li><a href="http://foofind.is/{{g.lang}}/about">{{_('about')}}</a></li>
+        <li><a href="http://foofind.is/{{g.lang}}/legal">{{_('legal')}}</a></li>
+        {%- if g.lang == "es" -%}
+        <li><a href="http://foofind.is/{{g.lang}}/jobs">Trabaja con nosotros</a></li>
+        {%- endif -%}
+        <li><a href="http://foofind.is/{{g.lang}}/lastfiles">{{_("last_indexed_files")}}</a></li>
+        {%- else -%}
         <li><a href="{{ url_for('page.show',pname='about') }}">{{_('about')}}</a></li>
         <li><a href="{{ url_for('page.show',pname='legal') }}">{{_('legal')}}</a></li>
         {%- if g.lang == "es" -%}
         <li><a href="{{ url_for('page.show',pname='jobs') }}">Trabaja con nosotros</a></li>
         {%- endif -%}
         <li><a href="{{ url_for('page.show',pname='lastfiles') }}">{{_("last_indexed_files")}}</a></li>
+        {%- endif -%}
     </ul>
     <p>
         {{_("footer",

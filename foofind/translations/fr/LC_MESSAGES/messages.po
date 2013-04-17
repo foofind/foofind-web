@@ -1071,6 +1071,11 @@ msgstr ""
 "facilement que jamais en utilisant le tout nouveau gestionnaire de "
 "téléchargement qui est absolument gratuit !"
 
+msgid "downloader_update_message"
+msgstr ""
+"Un nouvelle version de %(appname)s (%(version)s) est prête à être installée.\r\n"
+"Voulez-vous mettre à jour ?"
+
 msgid "here"
 msgstr "ici"
 

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import re, logging
-from itertools import izip, groupby, chain
+from itertools import izip, groupby, chain, imap, ifilterfalse
 from collections import defaultdict, Counter
 from operator import itemgetter
 from foofind.utils.content_types import *
@@ -13,7 +13,10 @@ wsepsws = {" ":2, "_":1, "+":1, ".":1, "-":0.5}
 psepsws = {"-":2, "~":1, "\"": 0.5}
 
 sepre = re.compile(r"[^\w\']", re.UNICODE)
-SEPPER = frozenset(unichr(i) for i in xrange(0x10000) if not (0xD7FF<i<0xE000) and sepre.match(unichr(i)) or unichr(i)=='_')
+# SEPPER = frozenset(unichr(i) for i in xrange(0x10000) if not (0xD7FF<i<0xE000) and sepre.match(unichr(i)) or unichr(i)=='_')
+SEPPER = sepre.findall(u"".join(imap(unichr, chain(xrange(0xD800), xrange(0xE000, 0x10000)))))
+SEPPER.append(u"_")
+SEPPER = frozenset(SEPPER)
 
 empty_join = "".join
 space_join = " ".join
@@ -21,10 +24,20 @@ space_join = " ".join
 proper_case_options = {"u^": ("U",  False), "uL": ("U",  True),
                        "uD2":("U",  True),                        # mayus lleva a minus desde nada, minus o numero largo
                        "lU": ("L",  False), "lL": ("L",  False),  # minus lleva a minus desde mayus o minus
-                       "d^": ("D1", False),"dL":  ("D1", True),   # num lleva a num1 desde nada o minus
-                       "dD1":("D2", False),"dD2": ("D2", False),  # num lleva a num2 desde num1 o num2
-                       "$L": ("$",  True),  "$D2":("$",  True),   # fin lleva a fin desde minus o num2
+                       "d^": ("D1", False), "dL": ("D1", True),   # num lleva a num1 desde nada o minus
+                       "dD1":("D2", False), "dD2": ("D2", False),  # num lleva a num2 desde num1 o num2
+                       "$L": ("$",  True),  "$D2": ("$",  True),   # fin lleva a fin desde minus o num2
                       }
+
+sepper_re = re.compile("|".join(imap(re.escape, SEPPER)))
+def seppersplit(text):
+    '''
+    Separa texto por separadores
+
+    >>> seppersplit("Hola soy un texto, o eso parece; y me gusta tener separadores.")
+    ['Hola', 'soy', 'un', 'texto', '', 'o', 'eso', 'parece', '', 'y', 'me', 'gusta', 'tener', 'separadores', '']
+    '''
+    return sepper_re.split(text)
 
 def proper_case(expr):
     ''' Separa palabras por mayusculas o numeros de más de 2 digitos. '''
@@ -66,13 +79,17 @@ def group_parts(phrase):
     if acum:
         yield empty_join(acum)
 
+TRANSLATION_TABLE = {
+    ord(i): u" " if i in SEPPER else u"".join(ifilterfalse(SEPPER.__contains__, normalize("NFKD", i.lower())))
+    for i in imap(unichr, chain(xrange(0xD800), xrange(0xE000, 0x10000)))
+    }
+
 def slugify(text):
-    text = empty_join(" " if c in SEPPER else c for c in text.lower())
     try:
-        text = empty_join(c for c in normalize('NFKD', unicode(text)) if c==" " or c not in SEPPER)
+        return unicode(text).translate(TRANSLATION_TABLE)
     except:
         logging.warn("Problem slugifing text.")
-    return text
+        return text
 
 def split_phrase(phrase, filename=False):
     #split between words and separators

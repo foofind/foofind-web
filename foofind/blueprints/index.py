@@ -64,6 +64,10 @@ def robots():
 def bing():
     return '<?xml version="1.0"?><users><user>8AC0F33B6CD35133906047D3976BD2F5</user></users>'
 
+@index.route('/bdsitemap.txt')
+def baidu():
+    return 'QGi2IRtOvHd5NJ47'
+
 @index.route('/yandex_710d63b404ebcae8.txt')
 def yandex():
     return ''

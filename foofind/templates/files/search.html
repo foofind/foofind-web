@@ -36,10 +36,11 @@
     {% endif -%}
 {% endblock %}
 {% block content %}
+    {% autoescape false %}
     <div id="fondo"></div>
     <div id="subcontent">
         <div id="flecha"></div>
-        <div id="download"{% if static_download['html'] %} class="active">{{ static_download['html']|safe }}{% else %}>{% endif %}
+        <div id="download"{% if static_download['html'] %} class="active">{{ static_download['html'] }}{% else %}>{% endif %}
         {% if not bot %}
             <div>
                 <img alt="cargando" src="{{ g.static_prefix }}/img/search/cargando150.png" />
@@ -112,12 +113,6 @@
                         <div></div>
                         <span>{{_('minimun')}}</span><span>{{_('maximun')}}</span>
                     </dd>
-                    {#<dt>{{_('quality')}}</dt>
-                    <dd id="quality">
-                    </dd>
-                    <dt>Año</dt>
-                    <dd id="year">
-                    </dd>#}
                 </dl>
             </aside>
             {% if args|length>1 %}
@@ -163,11 +158,12 @@
             {% endif %}
             {% if static_results %}
                 {% for result in static_results %}
-                    {{ result|safe }}
+                    {{ result }}
                 {% endfor %}
             {% endif %}
             </ul>
             <a href="#" id="more"></a>
         </section>
     </div>
+    {% endautoescape %}
 {% endblock %}

@@ -1415,3 +1415,9 @@ msgstr "Foofind Download Manager disponible"
 
 msgid "foodownloader_dialog_text"
 msgstr "%(domain)s te ofrece la oportunidad de realizar esta descarga de manera fácil, cómoda y rápida, de forma totalmente gratuita."
+
+# Downloader
+msgid "downloader_update_message"
+msgstr ""
+"Una nueva versión %(appname)s (%(version)s) está lista para instalar.\n"
+"¿Quieres actualizar?"

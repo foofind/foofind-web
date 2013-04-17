@@ -1,4 +1,4 @@
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
@@ -15,6 +15,12 @@ msgstr ""
 
 msgid "your_email"
 msgstr "你的电子邮件地址"
+
+msgid "new_toolbar"
+msgstr "试试我们的新工具栏"
+
+msgid "click_here"
+msgstr "点击这里"
 
 msgid "password"
 msgstr "密码："
@@ -121,6 +127,9 @@ msgstr "其他重定向下载"
 msgid "others"
 msgstr "其他"
 
+msgid "unknown"
+msgstr "未知"
+
 msgid "video"
 msgstr "视频"
 
@@ -185,10 +194,10 @@ msgid "play"
 msgstr "播放"
 
 msgid "what"
-msgstr "这是什么？"
+msgstr "文件类型"
 
 msgid "where"
-msgstr "在哪里？"
+msgstr "来源"
 
 msgid "update"
 msgstr "更新"
@@ -245,7 +254,7 @@ msgid "album"
 msgstr "专辑"
 
 msgid "length"
-msgstr "长度"
+msgstr "时长"
 
 msgid "bitrate"
 msgstr "比特率"
@@ -293,7 +302,7 @@ msgid "include_results_from"
 msgstr "包括原因"
 
 msgid "size"
-msgstr "尺寸"
+msgstr "大小"
 
 msgid "unpacked_size"
 msgstr "未包装尺寸"
@@ -382,11 +391,20 @@ msgstr "HASH"
 msgid "visualizations"
 msgstr "可视化"
 
+msgid "share_download"
+msgstr "分享"
+
+msgid "share_search"
+msgstr "分享搜索结果"
+
 msgid "codec"
 msgstr "编码"
 
 msgid "encoding"
 msgstr "编码器"
+
+msgid "open_link_new_tab"
+msgstr "新窗口打开链接"
 
 msgid "close"
 msgstr "关闭"
@@ -432,6 +450,18 @@ msgstr "赞!"
 
 msgid "comment_published_succesfully"
 msgstr "发表评论成功!"
+
+msgid "more_info"
+msgstr "更多描述"
+
+msgid "less_info"
+msgstr "精简描述"
+
+msgid "more_comments"
+msgstr "更多评论"
+
+msgid "less_comments"
+msgstr "精简评论"
 
 msgid "related_files"
 msgstr "相关文件"
@@ -776,6 +806,38 @@ msgstr "您的翻译结果已经提交成功。谢谢您的帮助！"
 
 msgid "translate_at_least_one"
 msgstr "请至少一个文本翻译"
+
+msgid "foodownloader_overview"
+msgstr "概述"
+
+msgid "foodownloader_overview_text"
+msgstr ""
+"**Foofind Download Manager** 是一个小巧快速的 **Torrent** P2P网络客户端\r\n"
+"\r\n"
+"Foofind Download Manager  容易使用，界面直观，安全。你可以随时暂停，恢复下载\r\n"
+"软件特点：\r\n"
+"\r\n"
+"*小巧的Torrent客户端\r\n"
+"*直观的界面\r\n"
+"*支持DHT,uPnP和uTorrent"
+
+msgid "foodownloader_sharing"
+msgstr "下载并且分享软件"
+
+msgid "foodownloader_download"
+msgstr "免费下载"
+
+msgid "foodownloader_download_source"
+msgstr "下载原始版"
+
+msgid "foodownloader_meta_description"
+msgstr "Foofind Download Manager是一个小巧方便的torrent下载软件"
+
+msgid "foodownloader_thanks"
+msgstr "感谢下载！"
+
+msgid "foodownloader_thanks_message"
+msgstr "感谢安装Foofing Download Manager！"
 
 msgid "here"
 msgstr "里报告"

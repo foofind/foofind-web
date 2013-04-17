@@ -27,34 +27,35 @@ from foofind.utils.seo import seoize_text
 
 files = Fooprint('files', __name__, dup_on_startswith="/<lang>")
 
+share=[
+        ("send_by_email","email","mailto:?subject=%(title)s&amp;body=%(url)s"),
+        (u"Facebook","facebookcom","http://www.facebook.com/share.php?u=%(url)s"),
+        (u"Twitter","twittercom","http://twitter.com/home?status=%(url)s"),
+        (u"Google+","plusgooglecom","https://plus.google.com/share?url=%(url)s"),
+        (u"Myspace","myspacecom","http://www.myspace.com/Modules/PostTo/Page/?u=%(url)s"),
+        (u"Delicious","deliciouscom","http://delicious.com/post?url=%(url)s"),
+        (u"Digg","diggcom","http://digg.com/submit?phase2&amp;url=%(url)s&amp;title=%(title)s"),
+        (u"Evernote","evernotecom","http://www.evernote.com/clip.action?url=%(url)s"),
+        (u"Friendfeed","friendfeedcom","http://www.friendfeed.com/share?title=%(title)s&amp;url=%(url)s"),
+        (u"Google","googlecom","http://www.google.com/bookmarks/mark?op=edit&amp;btmk=%(url)s"),
+        (u"Newsvine","newsvinecom","http://www.newsvine.com/_tools/seed&amp;save?u=%(url)s"),
+        (u"Reddit","redditcom","http://www.reddit.com/submit?url=%(url)s"),
+        (u"Stumbleupon","stumbleuponcom","http://www.stumbleupon.com/submit?url=%(url)s"),
+        (u"Technorati","technoraticom","http://technorati.com/faves?add=%(url)s"),
+        (u"Menéame","meneamenet","http://meneame.net/submit.php?url=%(url)s&amp;title=%(title)s"),
+        (u"Tuenti","tuenticom","http://www.tuenti.com/share?url=%(url)s"),
+        (u"Pinterest","pinterestcom","http://pinterest.com/pin/create/button/?url=%(url)s"),
+        (u"Netvibes","netvibescom","http://www.netvibes.com/share?title=%(title)s&amp;url=%(url)s"),
+        (u"Linkedin","linkedincom","http://www.linkedin.com/shareArticle?mini=true&amp;url=%(url)s&amp;title=%(title)s"),
+        (u"Posterous","posterouscom","http://posterous.com/share?linkto=%(url)s"),
+        (u"Yahoo","yahoocom","http://bookmarks.yahoo.com/toolbar/savebm?u=%(url)s&amp;t=%(title)s"),
+    ]
+
 @files.context_processor
 def file_var():
     if request.args.get("error",None)=="error":
         abort(404)
 
-    share=[
-        (_("send_by_email"),"email","mailto:?subject=%(title)s&amp;body=%(url)s"),
-        ("Facebook","facebookcom","http://www.facebook.com/share.php?u=%(url)s"),
-        ("Twitter","twittercom","http://twitter.com/home?status=%(url)s"),
-        ("Google+","plusgooglecom","https://plus.google.com/share?url=%(url)s"),
-        ("Myspace","myspacecom","http://www.myspace.com/Modules/PostTo/Page/?u=%(url)s"),
-        ("Delicious","deliciouscom","http://delicious.com/post?url=%(url)s"),
-        ("Digg","diggcom","http://digg.com/submit?phase2&amp;url=%(url)s&amp;title=%(title)s"),
-        ("Evernote","evernotecom","http://www.evernote.com/clip.action?url=%(url)s"),
-        ("Friendfeed","friendfeedcom","http://www.friendfeed.com/share?title=%(title)s&amp;url=%(url)s"),
-        ("Google","googlecom","http://www.google.com/bookmarks/mark?op=edit&amp;btmk=%(url)s"),
-        ("Newsvine","newsvinecom","http://www.newsvine.com/_tools/seed&amp;save?u=%(url)s"),
-        ("Reddit","redditcom","http://www.reddit.com/submit?url=%(url)s"),
-        ("Stumbleupon","stumbleuponcom","http://www.stumbleupon.com/submit?url=%(url)s"),
-        ("Technorati","technoraticom","http://technorati.com/faves?add=%(url)s"),
-        ("Menéame","meneamenet","http://meneame.net/submit.php?url=%(url)s&amp;title=%(title)s"),
-        ("Tuenti","tuenticom","http://www.tuenti.com/share?url=%(url)s"),
-        ("Pinterest","pinterestcom","http://pinterest.com/pin/create/button/?url=%(url)s"),
-        ("Netvibes","netvibescom","http://www.netvibes.com/share?title=%(title)s&amp;url=%(url)s"),
-        ("Linkedin","linkedincom","http://www.linkedin.com/shareArticle?mini=true&amp;url=%(url)s&amp;title=%(title)s"),
-        ("Posterous","posterouscom","http://posterous.com/share?linkto=%(url)s"),
-        ("Yahoo","yahoocom","http://bookmarks.yahoo.com/toolbar/savebm?u=%(url)s&amp;t=%(title)s"),
-    ]
     return {"zone":"files","search_form":SearchForm(request.args),"args":g.args,"extra_sources":g.extra_sources,"share":share}
 
 @unit.observe
@@ -68,11 +69,8 @@ def search(query=None,filters=None,file_id=None,file_name=None):
     Gestiona las URL de busqueda de archivos
     '''
     canonical_query=query #la busqueda canonica es la misma por defecto
-    full_browser=is_full_browser()
-    search_bot=is_search_bot()
-
-    # comprueba limite de ratio de peticiones
-    check_rate_limit(search_bot)
+    search_bot = g.search_bot
+    full_browser = g.full_browser
 
     url_with_get_params=False
     if "_escaped_fragment_" in request.args: #si la URL tiene que ser una "captura de pantalla" de una ajax se redirige a la normal
@@ -128,11 +126,14 @@ def search(query=None,filters=None,file_id=None,file_name=None):
         flash(static_download["error"][1])
         abort(static_download["error"][0])
     elif not full_browser: #busqueda estatica para browsers "incompletos"
-        results=search_files(query,dict_filters,50,50,static_download, wait_time=1000)
+        wait_time = 400 if dict_filters else 800 if file_id is None else 400
+        async_time = (wait_time*2 if dict_filters else wait_time) + 300
+        results=search_files(query, dict_filters, 50, 50, static_download, query_time=wait_time, extra_wait_time=300, async=async_time, max_extra_searches=1 if search_bot else 4)
         # cambia la busqueda canonica
         canonical_query = results["canonical_query"]
         if search_bot:
-            searchd.log_bot_event(search_bot, (results["total_found"]>0 or results["sure"]))
+            # si la busqueda devuelve resultados pero mongo no los da, tambien cuenta como "not results".
+            searchd.log_bot_event(search_bot, (results["total_found"]>0 or results["sure"]) and not (len(results["files"])==0 and results["total_found"]>0 ))
 
         static_results=results["files"]
         total_found=results["total_found"]
@@ -226,10 +227,9 @@ def searcha():
 
     dict_filters, has_changed = url2filters(filters)
     prepare_args(query, dict_filters)
-    return jsonify(search_files(query, dict_filters, min_results=request.args.get("min_results",0), last_items=last_items or []))
+    return jsonify(search_files(query, dict_filters, min_results=request.args.get("min_results",0), last_items=last_items or [], extra_wait_time=400))
 
-from time import time
-def search_files(query,filters,min_results=0,max_results=10,download=None,last_items=[],wait_time=500):
+def search_files(query,filters,min_results=0,max_results=10,download=None,last_items=[],query_time=None,extra_wait_time=500,max_query_time=None, async=False, max_extra_searches=4):
     '''
     Realiza una búsqueda de archivos
     '''
@@ -239,8 +239,14 @@ def search_files(query,filters,min_results=0,max_results=10,download=None,last_i
     # obtener los resultados
     profiler_data={}
     profiler.checkpoint(profiler_data,opening=["sphinx"])
-    s = searchd.search({"type":"text", "text":query}, filters=filters, wait_time=wait_time)
-    ids = list(s.get_results(last_items, min_results, max_results))
+    s = searchd.search({"type":"text", "text":query}, filters=filters, query_time=query_time, extra_wait_time=extra_wait_time, max_query_time=max_query_time, just_usable=bool(async))
+
+    if async:
+        s.usable.wait(async/1000.)
+
+    ids = list(s.get_results(last_items=last_items, min_results=min_results, max_results=max_results, max_extra_searches=max_extra_searches))
+    stats = s.get_stats()
+
     profiler.checkpoint(profiler_data,opening=["entities"], closing=["sphinx"])
 
     results_entities = list(set(int(aid[4])>>32 for aid in ids if int(aid[4])>>32))
@@ -252,7 +258,6 @@ def search_files(query,filters,min_results=0,max_results=10,download=None,last_i
         ntts.update({int(ntt["_id"]):ntt for ntt in entitiesdb.get_entities(rel_ids, None, (False, [u"episode"]))})
     '''
 
-    stats = s.get_stats()
     result = {"time": max(stats["t"].itervalues()) if stats["t"] else 0, "total_found": stats["cs"]}
 
     # elimina el id del download de la lista de resultados
@@ -282,19 +287,36 @@ def search_files(query,filters,min_results=0,max_results=10,download=None,last_i
 
     # completa la descripcion de la pagina
     if files:
-        names = set(". "+f["view"]["nfn"].capitalize() for f in files)
-        page_description = g.page_description + "".join(names)
+        # Descripcion inicial
+        page_description = g.page_description + ". "
 
-        # largo minimo
-        if len(page_description)<50:
-            descriptions = set(seoize_text(u(f["view"]["md"]["description"]), " ",True).capitalize() for f in files if "description" in f["view"]["md"])
-            page_description += " " +". ".join(descriptions)
+        # Descripcion de alguno de los primeros ficheros
+        for f in files[:3]:
+            if "description" in f["view"]["md"]:
+                phrase = u(f["view"]["md"]["description"]).capitalize()
+                page_description += phrase + " " if phrase[-1]=="." else ". "
+                break
+
+        # Busca frases para completar la descripcion hasta un minimo de 100 caracteres
+        page_description_len = len(page_description)
+        if page_description_len<100:
+            phrases = []
+            for f in files[1:]: # se salta el primer fichero, que podría ser el download actual
+                phrase = f["view"]["nfn"].capitalize()
+
+                if phrase not in phrases:
+                    phrases.append(phrase)
+                    page_description_len += len(phrase)
+
+                if page_description_len>=100:
+                    break
+            page_description += ". ".join(phrases)
 
         # largo maximo
-        if len(page_description)>250:
-            page_description = page_description[:250]
+        if len(page_description)>230:
+            page_description = page_description[:230]
             if " " in page_description:
-                page_description = page_description[:page_description.rindex(" ")]
+                page_description = page_description[:page_description.rindex(" ")] + "..."
 
         # punto final
         if page_description[-1]!=".":
@@ -304,6 +326,7 @@ def search_files(query,filters,min_results=0,max_results=10,download=None,last_i
     profiler.checkpoint(profiler_data,opening=["visited"])
     save_visited(files)
     profiler.checkpoint(profiler_data,closing=["visited"])
+
     profiler.save_data(profiler_data)
     #añadir todos los sources a FILTERS
     filters_with_all_src=deepcopy(FILTERS)

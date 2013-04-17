@@ -18,7 +18,7 @@
 {%- macro print_share(url,size=16) %}
     <ul>
         {%- for site in share -%}
-        <li><a class="source{{ size }} source_{{ site[1] }}{{ size }}" href="{{_(site[2],url=u(url)|urlencode,title=g.title|urlencode)}}" title="{% if site[1]=='email' %}{{ site[0]|capitalize }}{% else %}{{_('share',site=u(site[0]))}}{% endif %}" rel="nofollow"></a></li>
+        <li><a class="source{{ size }} source_{{ site[1] }}{{ size }}" href="{{_(site[2],url=u(url)|urlencode,title=g.title|urlencode)}}" title="{% if site[1]=='email' %}{{ _(site[0])|capitalize }}{% else %}{{_('share',site=site[0])}}{% endif %}" rel="nofollow"></a></li>
         {%- endfor -%}
     </ul>
 {% endmacro -%}

@@ -83,7 +83,7 @@ input[type="submit"]:active,input[type="button"]:active, a.button:active{
 .header .logo{
     text-indent:-999em; overflow:hidden;
     width:171px;height:67px;
-    /*background:transparent url('../img/logo_small.png') left top;*/
+    background:transparent url('../img/logo_small.png') 5px 5px no-repeat;
     display:block;
     }
 .header h2{

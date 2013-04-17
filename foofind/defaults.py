@@ -134,6 +134,9 @@ UNITTEST_INTERVAL = 0
 
 CSRF_ENABLED=False #deshabilita CSRF de Flask-WTF
 
+CSRF_COOKIE_NAME = "_csrf_token"
+CSRF_DISABLED = False
+
 ADMIN_HOSTS = ()
 ADMIN_LANG_LOCAL_REPO = "repo/lang"
 ADMIN_LANG_REMOTE_REPO = ""

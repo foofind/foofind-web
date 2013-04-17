@@ -1048,6 +1048,11 @@ msgstr ""
 "%(domain)s bu dosyayı tamamen ücretsiz yeni indirme yöneticisini kullanarak "
 "zamankinden daha hızlı ve kolay bir şekilde indirmenizi tavsiye eder!"
 
+msgid "downloader_update_message"
+msgstr ""
+"%(appname)s'ın yeni bir sürümü (%(version)s) kurulmaya hazırdır.\r\n"
+"Yükseltmek istiyor musunuz?"
+
 msgid "here"
 msgstr "bunu rapor ediniz"
 

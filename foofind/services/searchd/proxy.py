@@ -144,14 +144,16 @@ class SearchProxy:
         # extrae informacion de los valores obtenidos
         query_state = json.loads(zlib.decompress(cache_data[0])) if cache_data[0] else {}
         filters_state = json.loads(zlib.decompress(cache_data[1])) if query_state and cache_data[1] else {}
-        locked_until = cache_data[2] or False
+        locked_until = cache_data[2] if cache_data[2] and cache_data[2]>time() else False
+
         block_files_from_cache = [block_file.split(",") for block_file in cache_data[3].split(";")] if cache_data[3] else []
 
         return (query_state, filters_state, locked_until, block_files_from_cache)
 
     def get_lock_state(self, querykey, filters):
         filterskey = md5(json.dumps(filters)).hexdigest()
-        return cache.get("search_l%s_%s"%(querykey, filterskey)) or False
+        locked_until = cache.get("search_l%s_%s"%(querykey, filterskey))
+        return locked_until if locked_until and locked_until<time() else False
 
     def get_blocked_files_state(self, querykey, filters):
         filterskey = md5(json.dumps(filters)).hexdigest()
@@ -174,7 +176,6 @@ class SearchProxy:
             cache.delete(block_files_cache_key) # TO-DO: podría borrar ids nuevos a bloquear que no han sido bloqueados
 
         cache.cache.set_many({"search_t%s"%querykey: zlib.compress(json.dumps(query_state)), "search_f%s_%s"%(querykey, filterskey): filters_state}, timeout=0)
-
 
         # procesa bloqueo separadamente
         if locking_time==False: # borrar bloqueo
@@ -256,6 +257,7 @@ class SearchProxy:
     def update_servers(self):
         # obtiene los servidores activos para busquedas
         self.servers = {str(int(server["_id"])):(str(server["sp"]), int(server["spp"])) for server in self.filesdb.get_servers() if "sp" in server and server["sp"]}
+
         self.servers_set = set(self.servers.iterkeys())
 
         # estadisticas de busqueda por servidor

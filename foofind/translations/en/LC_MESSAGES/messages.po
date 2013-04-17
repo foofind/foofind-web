@@ -1502,7 +1502,7 @@ msgid "admin_edit"
 msgstr "Edit"
 
 msgid "admin_confirm"
-msgstr "Confirmar"
+msgstr "Confirm"
 
 msgid "admin_search_mode"
 msgstr "Search mode"
@@ -1637,3 +1637,9 @@ msgstr ""
 "Download Foofind Download Manager to get this file right now. \r\n"
 "\r\n"
 "Our sofware lets you download torrents faster and more easily than ever -  absolutely free! If you already have a Torrent client, click \"No, thanks\"."
+
+# Downloader
+msgid "downloader_update_message"
+msgstr ""
+"A new version of %(appname)s (%(version)s) is ready to install.\n"
+"Do you want to upgrade?"

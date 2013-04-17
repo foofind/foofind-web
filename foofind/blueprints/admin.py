@@ -1259,6 +1259,7 @@ db_parsers = {
         'sp': db_types[str],
         'spp': db_types[int],
         'ss': db_types[int],
+        'rs': db_types[str],
         },
     "origin":{
         "_id": db_types[float],
@@ -1399,6 +1400,7 @@ def db_edit(collection, document_id=None):
         form_fieldparams["available_methods"] = form_fieldparams["available_endpoints"] = {"readonly":"readonly"}
         form_fieldparams["probability"] = {"rows": len(available_endpoints), "class":"monospaced"}
     elif collection == "server":
+        form_force_fields.add("rs")
         deleteable = deleteable and current_app.debug
         page_title = 'admin_server'
         form_title = 'admin_server'
