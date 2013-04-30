@@ -1287,6 +1287,19 @@ msgstr "Por razones de estabilidad este despliegue no reiniciará el servidor au
 msgid "admin_deploy_debug"
 msgstr "Información de debug"
 
+msgid "admin_deploy_downloader_upload"
+msgstr "Subida de archivos de downloader"
+
+msgid "admin_deploy_downloader"
+msgstr "Despliegue de downloader"
+
+msgid "admin_deploy_downloader_upload"
+msgstr "Subir archivos de downloader"
+
+msgid "admin_deploy_downloader_distribute"
+msgstr "Distribuir archivos de downloader"
+
+
 msgid "admin_locks_search_mode"
 msgstr "Buscar por"
 

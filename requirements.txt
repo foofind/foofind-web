@@ -29,7 +29,7 @@ flask-mail
 
 flask-seasurf
 
-pymongo==2.5
+pymongo>=2.5
 
 polib
 
@@ -46,13 +46,13 @@ fabric
 raven==2.0.10
 blinker==1.2
 
-webassets==0.8
+webassets>=0.8
 slimmer
 
 pyquery
 lxml
 
-pyScss
+pyScss>=1.1.5
 
 greenlet
 uwsgi
@@ -63,7 +63,7 @@ timelib
 
 markdown
 
-newrelic
+newrelic>=1.11
 
 # Para el microsite del downloader, detección de metadatos de fichero
 hachoir-parser

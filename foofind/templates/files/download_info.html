@@ -1,5 +1,4 @@
-
-{% from "files/macros.html" import url_search, print_source with context%}
+{% from "files/macros.html" import print_source with context%}
 
 <h2>{{ file['view']['fn'] }}</h2>
 <div class="top_download">
@@ -25,7 +24,7 @@
             <tbody>
                 <tr>
                     <th>{{_("name")}}:</th>
-                    <td><a href="{{ url_search(query=file['view']['nfn']) }}">{{ file['view']['nfn'] }}</a></td>
+                    <td><a href="{{ {'query':file['view']['nfn']}|url_search(args) }}">{{ file['view']['nfn'] }}</a></td>
                 </tr>
                 {% for metadata,value in file['view']['md'].items() %}
                 <tr>

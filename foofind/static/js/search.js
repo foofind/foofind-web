@@ -11,6 +11,10 @@ var busqueda_programada=espera=0;
 var hash=checked=false;
 var current_search_page = 0;
 
+String.prototype.endsWith = function(suffix) {
+    return this.indexOf(suffix, this.length-suffix.length)!==-1;
+}
+
 function link_lookup(parent){
     // busqueda de enlaces de downloader (data-downloader)
     if($("body").data("downloader_text"))
@@ -218,13 +222,15 @@ function search(paginacion)
             if(respuesta["files_ids"].length || pagina>=respuesta_total_found || pagina>=MAX_RESULTS)
                 cargando=rotar(cargando,false);
 
+
             var respdata;
+            var respfiles = $(respuesta["files"]).filter("li");
             for(var resp in respuesta["files_ids"]) //añadir resultado si no estaba ya antes
             {
                 if(!results.find('>li>div>h3>a[data-id="'+respuesta["files_ids"][resp]+'"]').length) //evitar repetidos
                 {
                     devueltos++;
-                    respdata = $(respuesta["files"][resp]).appendTo(results);
+                    respdata = $(respfiles[resp]).appendTo(results);
 
                     //revisa los enlaces
                     link_lookup(respdata);

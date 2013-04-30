@@ -1,10 +1,6 @@
 if(window != top)
     top.location.href = location.href;
 
-String.prototype.endsWith = function(suffix) {
-    return this.indexOf(suffix, this.length-suffix.length)!==-1;
-}
-
 window.lang=window.location.pathname.substr(3,1)=="/"?window.location.pathname.substr(0,4):"/en/";
 window.filtros={};
 

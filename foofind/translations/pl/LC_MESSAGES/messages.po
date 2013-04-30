@@ -1,4 +1,4 @@
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
@@ -14,4 +14,166 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 msgid "about"
-msgstr "Wszystko o"
+msgstr "O stronie"
+
+msgid "new_toolbar"
+msgstr "Sprawdź nasz nowy toolbar"
+
+msgid "click_here"
+msgstr "kliknij tutaj!"
+
+msgid "your_email"
+msgstr "Twój email:"
+
+msgid "password"
+msgstr "Hasło:"
+
+msgid "submit"
+msgstr "Wyślij"
+
+msgid "ok"
+msgstr "ok"
+
+msgid "legal_info"
+msgstr "polityka prywatności"
+
+msgid "go_home"
+msgstr "Wróć do wyszukiwarki"
+
+msgid "error_500_message"
+msgstr "Nieznany error"
+
+msgid "error_404_message"
+msgstr "Nie ma takiej strony"
+
+msgid "error_404_description"
+msgstr ""
+"Serwer nie odpowiada, odśwież stronę lub skontaktuj się z administratorami."
+
+msgid "error_410_message"
+msgstr "Strona niedostępna"
+
+msgid "error_410_description"
+msgstr ""
+"Za długi czas oczekiwania na połączenie z serwerem, spróbuj za chwilę "
+"wykonać tę czynność."
+
+msgid "error_502_message"
+msgstr "Serwer przeciążony lub nie odpowiada"
+
+msgid "error_502_description"
+msgstr "Nie masz dostępu do tej strony."
+
+msgid "error_503_message"
+msgstr "Serwis niedostępny."
+
+msgid "error_503_description"
+msgstr "URL chwilowo niedostępny. Spróbuj ponownie za chwilę."
+
+msgid "servers_status"
+msgstr "Sprawdź status serwera."
+
+msgid "error_mail_send"
+msgstr ""
+"Wystąpił błąd podczas wysyłania wiadomości, spróbuj ponownie za chwilę."
+
+msgid "required_empty"
+msgstr "To pole nie może być puste!"
+
+msgid "no_valid_email"
+msgstr ""
+"Podałeś swój email w złym formacie, przykład prawidłowego adresu:\r\n"
+"user@example.com"
+
+msgid "no_valid_url"
+msgstr "Niedostępny URL"
+
+msgid "contact"
+msgstr "Kontakt"
+
+msgid "technology"
+msgstr "Technologia"
+
+msgid "legal"
+msgstr "Legalność"
+
+msgid "tos"
+msgstr "Regulamin"
+
+msgid "privacy"
+msgstr "Polityka prywatności"
+
+msgid "complaint"
+msgstr "Zgłoś link"
+
+msgid "source_code"
+msgstr "Programiści"
+
+msgid "files_indexed"
+msgstr "Dodane pliki"
+
+msgid "last_indexed_files"
+msgstr "Ostatnio dodane pliki"
+
+msgid "index_comunity"
+msgstr "Jesteś częścią naszej społeczności."
+
+msgid "index_first"
+msgstr "Sprawdź newsy"
+
+msgid "index_suggestion"
+msgstr "Jeszcze jakieś sugestie?"
+
+msgid "all"
+msgstr "Wszystko"
+
+msgid "direct_download"
+msgstr "Bezpośrednie pobieranie"
+
+msgid "direct_downloads"
+msgstr "Bezpośrednie linki do pobrania pliku"
+
+msgid "other_streamings"
+msgstr "Inne streamy"
+
+msgid "other_direct_downloads"
+msgstr "Inne bezpośrednie linki"
+
+msgid "some_streamings"
+msgstr "Więcej streamów"
+
+msgid "some_downloads"
+msgstr "Więcej bezpośrednich linków"
+
+msgid "others"
+msgstr "Inne"
+
+msgid "unknown"
+msgstr "Unkown"
+
+msgid "audio"
+msgstr "Muzyka"
+
+msgid "video"
+msgstr "Filmy"
+
+msgid "image"
+msgstr "Obrazy"
+
+msgid "document"
+msgstr "Dokumenty"
+
+msgid "software"
+msgstr "Programy"
+
+msgid "archive"
+msgstr "Archiwa"
+
+msgid "no_results_for"
+msgstr "Nie ma rezultatów dla"
+
+msgid "previous"
+msgstr "Poprzednie"
+
+msgid "next"
+msgstr "Następne"

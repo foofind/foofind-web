@@ -32,6 +32,7 @@ from foofind.utils import expanded_instance, fileurl2mid, mid2hex, hex2mid, url2
 from foofind.utils.translations import unfix_lang_values
 from foofind.utils.fooprint import ManagedSelect
 from foofind.utils.flaskutils import send_gridfs_file
+from foofind.utils.downloader import get_file_metadata
 from foofind.services import *
 from foofind.forms.admin import *
 from foofind.utils.pogit import pomanager
@@ -115,7 +116,7 @@ class DeployTask(object):
                     lockfile=self.lockfile,
                     config=self.config)
             except BaseException as e:
-                logging.exception("Error dentro del DeployThread.", extra={"DeployTask":self})
+                logging.error("Error dentro del DeployThread.", extra={"DeployTask":self})
             self.stderr.flush()
             self.stdout.flush()
             self.callback()
@@ -139,7 +140,7 @@ class DeployTask(object):
             try:
                 os.remove(self._lockfile)
             except BaseException as e:
-                logging.exception("Error forzando la liberación de locks.")
+                logging.error("Error forzando la liberación de locks.")
                 raise e
 
     def __init__(self, memcache_prefix):
@@ -557,6 +558,19 @@ def locks():
         list_modes=("new","old","all"),
         page=page)
 
+def lock_file_id_and_filename_from_url(url):
+    '''
+    Usada por el blueprint de bloqueo de ficheros para extraer el id de fichero
+    en hexadecimal y el nombre de fichero a partir de una url.
+
+    @type url: basestring
+    @param url: url de fichero
+
+    @rtype tupla (str, str)
+    @return id en hexadecimal y nombre de fichero
+    '''
+    return (mid2hex(fileurl2mid(url)), urllib2.unquote(url.split("/")[-1]).rsplit(".",1)[0])
+
 @admin.route('/<lang>/admin/locks/<complaint_id>', methods=("GET","POST"))
 @admin.route('/<lang>/admin/lockfiles', methods=("GET","POST"))
 @admin_required
@@ -591,10 +605,7 @@ def lock_file(complaint_id=None, url_file_ids=None):
                     ]
             elif searchform.mode.data == "url":
                 filenames.update(
-                    (
-                        mid2hex(fileurl2mid(i)),
-                        urllib2.unquote(i.split("/")[-1]).rsplit(".",1)[0]
-                        )
+                    lock_file_id_and_filename_from_url(i)
                     for i in identifiers
                     if i.startswith("http") and len(i.split("//")[1].split("/")) > 3
                     )
@@ -619,7 +630,7 @@ def lock_file(complaint_id=None, url_file_ids=None):
                 sphinx_block = []
                 sphinx_unblock = []
                 for fileid, server in fileids.iteritems():
-                    (sphinx_block if block and not unblock else sphinx_unblock).append((fileid, int(server), filenames[fileid] if fileid in filenames else None))
+                    (sphinx_block if block and not unblock else sphinx_unblock).append((fileid, server, filenames[fileid] if fileid in filenames else None))
                     req = {"_id":fileid, "bl": int(block and not unblock)}
                     if server: req["s"] = int(server) # si recibo el servidor, lo uso por eficiencia
                     try:
@@ -674,8 +685,6 @@ def lock_file(complaint_id=None, url_file_ids=None):
         files_data[fileid] = data or {}
         if not "bl" in files_data[fileid] or files_data[fileid]["bl"] == 0: unblocked += 1
         else: blocked += 1
-
-
 
     return render_template('admin/lock_file.html',
         page_title=_('admin_locks_fileinfo'),
@@ -890,7 +899,8 @@ def deploy():
     '''
     page = request.args.get("page", 0, int)
     mode = request.args.get("show", "deploy", str)
-    if not mode in ("deploy","script","publish","recover"): mode = "deploy"
+    if not mode in ("deploy", "script", "publish", "recover", "downloader"):
+        mode = "deploy"
     form = DeployForm(request.form)
     dls = None
 
@@ -937,6 +947,11 @@ def deploy():
             # Botón de borrar caché de stdout y stderr de deploy
             deployTask.clean_stdout_data()
             deployTask.clean_stderr_data()
+        elif form.downloader_upload.data:
+            # Subir archivos a la carpeta downloads
+            for k, f in request.files.iteritems():
+                if f.filename and hasattr(form, k): # Verify this file comes from our form
+                    f.save(os.path.join(env.downloads, secure_filename(f.filename)))
         elif not deployTask.busy:
             config = None
             do_task = True
@@ -953,8 +968,10 @@ def deploy():
                 "commit-deploy" if form.commit.data else
                 "confirm-deploy" if form.confirm.data else
                 "publish" if form.publish.data else
-                "script" if form.script.data else None
+                "script" if form.script.data else
+                "distribute-downloader" if form.downloader_submit.data else None
                 )
+            task_has_mode = not task in ("publish", "script", "distribute-downloader")
             if task == "publish":
                 path = form.publish_mode.data
                 message = form.publish_message.data.strip()
@@ -987,22 +1004,26 @@ def deploy():
                 if not config["hosts"]:
                     flash("admin_deploy_no_hosts","error")
                     do_task = False
-
+            elif task == "distribute-downloader":
+                config = {"servers":"all"}
             if task and do_task:
                 flash("admin_deploy_in_progress", "message in_progress_message")
                 force_busy = True
-                deployTask.run(
-                    task,
-                    None if task in ("publish","script") else form.mode.data,
-                    config)
+                deployTask.run(task, form.mode.data if task_has_mode else None, config)
             elif task is None:
                 abort(502)
         return redirect(url_for("admin.deploy", page=page, show=mode))
+
+    fmd = ()
+    if mode == "downloader":
+        stp = len(fabfile.env.downloads) + 1
+        fmd = {path[stp:]: get_file_metadata(path) for path in fabfile.list_downloader_files()}
 
     return render_template('admin/deploy.html',
         page_title=_('admin_deploy'),
         title=admin_title('admin_deploy'),
         backups=deploy_backups(),
+        file_metadata=fmd,
         show=mode,
         form=form,
         page=page,

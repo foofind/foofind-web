@@ -14,6 +14,7 @@ $green:#87D3CB;
 $fuente:Arial,Verdana,Helvetica,sans-serif;
 /* importaciones */
 @import "icons.css";
+
 /*funciones generales*/
 /* lapiz que se pone en todos los inputs */
 @mixin pencil($status,$size:24,$color:transparent)
@@ -46,10 +47,11 @@ $fuente:Arial,Verdana,Helvetica,sans-serif;
 /* para poner un icono */
 @mixin icon($icon:101,$status:0,$size:50,$color:transparent,$span:0,$span_selector:>span,$active:1,$status1:1,$status2:2,$status3:3,$status4:4,$img:false)
 {
-    @if $img{@include background_cached(../img/$img.png, $color)}
+    @if $img{@include background_cached("img/#{$img}.png", $color)}
     @else
     {
-        @include background_cached(../img/icons$size.png, $color)
+
+        @include background_cached("img/icons#{$size}.png", $color);
         @if $status>0{@include sprite($icon,$status,$size)}
         @else if $status<0{@include states($icon,$size,$span,$active,$span_selector,$status1,$status2,$status3,$status4)}
     }
@@ -105,7 +107,7 @@ label
     margin-top:10px;font-size:1.1em;display:block;
     span{color:#DB006E}
 }
-a{color:#cd0069;&[rel="external"]{padding-right:15px;background:url(../img/external.png) no-repeat right center}}
+a{color:#cd0069;&[rel="external"]{padding-right:15px;background: image-url("img/external.png") no-repeat right center}}
 img{border:0;vertical-align:middle}
 p{padding-bottom:1em}
 em{font-weight:bold;font-style:normal}
@@ -313,7 +315,7 @@ section#home
                 &:hover>a,&:focus>a,&.hover>a{@include pencil(3,32,$darkwhite);left:7px}
                 >span
                 {
-                    width:234px;overflow:hidden;display:inline-block;vertical-align:top;background:$darkwhite url(../img/home/flecha_desplegar.png) no-repeat 200px 17px;border-radius:5px;
+                    width:234px;overflow:hidden;display:inline-block;vertical-align:top;background:$darkwhite image-url("img/home/flecha_desplegar.png") no-repeat 200px 17px;border-radius:5px;
                     #type{background:transparent;width:255px;height:35px;border-left:1px solid $gray;font-size:1.8em;margin:7px 0 0 -2px;padding:5px 0 0 50px}
                 }
                 #q{font-size:2em;color:$magenta;background:$darkwhite;width:458px;height:35px;padding:4px 10px 4px 40px;margin:5px 0;border-right:1px solid $gray;border-radius:0;box-shadow:0 0 0}
@@ -328,7 +330,7 @@ section#home
     }
     #extra
     {
-        background:url(../img/home/fondo.png) repeat-x;border-top:1px solid #DDD;position:absolute;z-index:0;bottom:55px;left:0;right:0;
+        background:image-url("img/home/fondo.png") repeat-x;border-top:1px solid #DDD;position:absolute;z-index:0;bottom:55px;left:0;right:0;
         #live
         {
             padding:15px;width:900px;height:165px;overflow:hidden;margin:0 auto;text-align:left;
@@ -373,18 +375,18 @@ section#page
         input[type="text"]:not(#captcha),textarea{width:400px}
         >a
         {
-            width:30px;height:50px;display:block;margin:130px 15px 0;background:url(../img/pages/flecha.png);
+            width:30px;height:50px;display:block;margin:130px 15px 0;background:image-url("img/pages/flecha.png");
             &:first-of-type{float:left}
             &:last-of-type{float:right;background-position:30px 0}
         }
         >span{float:right;font-size:1.8em;font-weight:bold;margin-top:10px}
         h1{text-transform:lowercase;color:#000;font-size:2em}
         >div{font-size:1.2em;color:$darkergray;border-radius:20px;margin-bottom:-65px;padding:55px 70px 115px;background:no-repeat right bottom transparent}
-        &#about>div{background-image:url(../img/pages/about.png);padding-bottom:225px;padding-right:250px}
-        &#contact>div{background-image:url(../img/pages/contact.png);label:last-child{margin-right:150px}}
+        &#about>div{background-image:image-url("img/pages/about.png");padding-bottom:225px;padding-right:250px}
+        &#contact>div{background-image:image-url("img/pages/contact.png");label:last-child{margin-right:150px}}
         &#jobs
         {
-            >div{background-image:url(../img/pages/jobs.png);padding-bottom:170px;label:last-child{margin-right:100px}}
+            >div{background-image:image-url("img/pages/jobs.png");padding-bottom:170px;label:last-child{margin-right:100px}}
             #joboffer
             {
                 margin-left:5px;margin-bottom:10px
@@ -393,10 +395,10 @@ section#page
                 li{margin-left:20px}
             }
         }
-        &#submitlink>div{background-image:url(../img/pages/submitlink.png);padding-bottom:75px;label:last-child{margin-right:130px}}
+        &#submitlink>div{background-image:image-url("img/pages/submitlink.png");padding-bottom:75px;label:last-child{margin-right:130px}}
         &#translate
         {
-            >div{background:url(../img/pages/translate.png) no-repeat left bottom;padding-bottom:280px}
+            >div{background:image-url("img/pages/translate.png") no-repeat left bottom;padding-bottom:280px}
             label{float:left;margin-right:10px}
             form{margin-left:90px}
             form[method="post"]
@@ -416,10 +418,10 @@ section#page
             option{height:1.2em}
             #searchempty{font-size:2.2em;font-weight:bold;position:fixed;width:145px;left:250px;z-index:1;text-decoration:none;text-align:center;outline:none}
         }
-        &#complaint>div{background-image:url(../img/pages/complaint.png);padding-right:0;label:last-child{margin-right:290px}}
-        &#legal>div{background-image:url(../img/pages/legal.png);padding-right:325px;padding-bottom:110px}
-        &#tos>div{background-image:url(../img/pages/tos.png);padding-bottom:190px}
-        &#privacy>div{background-image:url(../img/pages/privacy.png);padding-bottom:250px}
+        &#complaint>div{background-image:image-url("img/pages/complaint.png");padding-right:0;label:last-child{margin-right:290px}}
+        &#legal>div{background-image:image-url("img/pages/legal.png");padding-right:325px;padding-bottom:110px}
+        &#tos>div{background-image:image-url("img/pages/tos.png");padding-bottom:190px}
+        &#privacy>div{background-image:image-url("img/pages/privacy.png");padding-bottom:250px}
     }
 }
 /* busqueda */
@@ -450,7 +452,7 @@ section#files
         {
             margin-bottom:20px;
             @for $i from 1 through 5{&:nth-child($i){@include states("00"+($i+1),50,$active:3,$status4_color:#FFF)}}
-            &:nth-child(6){background:url(../img/search/no_image.png);border-radius:6px;margin-left:10px}
+            &:nth-child(6){background:image-url("img/search/no_image.png");border-radius:6px;margin-left:10px}
         }
         #src
         {
@@ -596,7 +598,7 @@ section#files
         #download_button
         {
             /* corrige fallo en webkit al scrollear con algunos embeds abiertos */
-            background:url("../img/pixel.gif") #E2E2DA;background-attachment:fixed;
+            background:image-url("img/pixel.gif") #E2E2DA;background-attachment:fixed;
             top:0;float:none;text-align:left;min-height:150px;
             >span
             {
@@ -613,7 +615,7 @@ section#files
             iframe,embed{display:block;margin:0 auto;border:0}
             >a{margin:20px 0 25px;width:230px;font-size:1.35em;vertical-align:middle;span{@include icon(322,1,16);float:right}}
             em{display:inline-block;font-variant:small-caps}
-            div{float:right;width:190px;max-height:315px;min-height:175px;padding:20px;overflow:hidden;text-align:center;span{background:url("../img/search/no_image.png");display:block;height:175px;border:1px solid $lightgray}}
+            div{float:right;width:190px;max-height:315px;min-height:175px;padding:20px;overflow:hidden;text-align:center;span{background:image-url("img/search/no_image.png");display:block;height:175px;border:1px solid $lightgray}}
             img{max-width:190px}
             h4{width:290px;margin-left:20px;padding:5px 10px;background:$darkerwhite;color:$gray}
         }
@@ -700,7 +702,7 @@ section#files
     }
     #more
     {
-        display:none;height:38px;background:url(../img/mas_resultados.png) no-repeat 12px 0;margin-left:160px;
+        display:none;height:38px;background:image-url("img/mas_resultados.png") no-repeat 12px 0;margin-left:160px;
         &:hover{background-position:12px -47px;border:none}
     }
     #filters
@@ -808,7 +810,7 @@ section#files
                 }
                 .thumblink
                 {
-                    background:url(../img/search/no_image.png);position:relative;float:right;width:100px;height:75px;margin-top:-5px;margin-left:5px;overflow:hidden;
+                    background:image-url("img/search/no_image.png");position:relative;float:right;width:100px;height:75px;margin-top:-5px;margin-left:5px;overflow:hidden;
                     >img{min-width:100px;max-width:150px;min-height:75px;max-height:120px}
                     >span
                     {
@@ -866,8 +868,8 @@ section#user
 {
     .oauth{width:89px;height:21px;display:inline-block;margin:5px}
     .oauth span{display:none}
-    .oauth.tw{background:url(../img/users/oauth.png)}
-    .oauth.fb{background:url(../img/users/oauth.png) -89px 0 no-repeat}
+    .oauth.tw{background:image-url("img/users/oauth.png")}
+    .oauth.fb{background:image-url("img/users/oauth.png") -89px 0 no-repeat}
     input[type="submit"],section#page input[type="submit"]{margin:10px 0;width:auto}
     fieldset{margin-bottom:10px}
 }
@@ -961,7 +963,7 @@ section#user
 /* dialog downloader */
 #dialog.downloader{
     header{
-        background:$darkerwhite url(../img/dialog_logo.png) left top no-repeat;
+        background:$darkerwhite image-url("img/dialog_logo.png") left top no-repeat;
         padding-left:58px;
     }
     .button{

@@ -22,7 +22,7 @@ def register_filters(app):
     '''
     app.jinja_env.filters['numberformat'] = number_format_filter
     app.jinja_env.filters['numbersizeformat'] = number_size_format_filter
-    app.jinja_env.filters['search_params'] = search_params_filter
+    app.jinja_env.filters['url_search'] = url_search_filter
     app.jinja_env.filters['format_timedelta'] = format_timedelta_filter
     app.jinja_env.filters['url_lang'] = url_lang_filter
     app.jinja_env.filters['urlencode'] = urlencode_filter
@@ -30,7 +30,6 @@ def register_filters(app):
     app.jinja_env.filters['file_embed_link'] = file_embed_link
     app.jinja_env.filters['numberfriendly'] = number_friendly_filter
     app.jinja_env.filters['pprint'] = pformat
-    app.jinja_env.filters['top_filters_src'] = top_filters_src
     app.jinja_env.filters['numeric'] = numeric_filter
     app.jinja_env.filters['markdown'] = markdown_filter
     app.jinja_env.filters['emarkdown'] = escaped_markdown_filter
@@ -98,48 +97,68 @@ def number_format_filter(number):
         logging.exception(e)
         return ""
 
-def search_params_filter(new_params, delete_params=[], args=None, extra_sources=[]):
+def url_search_filter(new_params, args=None, delete_params=[]):
     '''
     Devuelve los parametros para generar una URL de busqueda
     '''
-    if not args:
-        args = request.args
 
-    srcs=FILTERS["src"].copy().keys()+extra_sources
-    types=FILTERS["type"]
-    query = u(new_params["query"] if "query" in new_params else args["q"] if "q" in args else "").replace(" ","_")
-    p={"query":query, "filters":{}}
+    # filtros actuales sin parametros eliminados
+    filters = {key:value for key, value in args.iteritems() if key not in delete_params} if "all" not in delete_params else {"q":args["q"]} if "q" in args else {}
 
+    # añade paramentros nuevos
+    if "query" in new_params:
+        filters["q"] = u(new_params["query"])
 
+    if 'src' in new_params:
+        active_srcs = g.active_srcs
+        new_src = new_params["src"]
 
+        ''' se genera el nuevo enlace teniendo en cuenta los origenes activos por tipo de origen
+         - hacer click en un tipo de origen lo activan o desactivan completamente
+         - hacer click en un origen lo activa o desactiva, teniendo en cuenta si el tipo de origen estaba activado
+           o si toca activar todo el tipo
+         - tiene en cuenta solo los origenes visibles en el filtro
+        '''
 
+        # streaming
+        has_streaming, toggle_streaming = "streaming" in active_srcs, "streaming" == new_src
+        streamings = [] if has_streaming and toggle_streaming else ["streaming"] if toggle_streaming else [value for value in g.visible_sources_streaming if (value==new_src)^(value in active_srcs)]
+        if streamings==g.visible_sources_streaming: streamings = ["streaming"] # activa todo el tipo de origen
 
-    for param in ('src','type','size','page','alt'): #se recorren todos los parametros para guardarlos en orden
-        if param in new_params: #añadir el parametro si es necesario
-            if param=='src' or param=='type': #parametros concatenables
-                if param in args: #recorre parametros en orden, añadiendo los de args y el nuevo valor se quita o se añade segun este en args
-                    params = [value for value in (srcs if param=='src' else types) if (value==new_params[param])^(value in args[param])]
-                    if params:
-                        p["filters"][param] = params
-                else:
-                    p["filters"][param] = [new_params[param]]
-            else: #parametros no concatenables
-                p["filters"][param] = new_params[param]
-        #mantener el parametro si ya estaba
-        elif "all" not in delete_params and param not in delete_params and param in args:
-            p["filters"][param] = args[param]
+        # download
+        has_download, toggle_download = "download" in active_srcs, "download" == new_src
+        downloads = [] if has_download and toggle_download else ["download"] if toggle_download else [value for value in g.visible_sources_download if (value==new_src)^(value in active_srcs)]
+        if downloads==g.visible_sources_download: downloads = ["download"] # activa todo el tipo de origen
 
-    if "type" in p["filters"] and p["filters"]["type"]==types: #si estan todos los tipos activados es como no tener ninguno
-        del p["filters"]["type"]
-    elif "src" in p["filters"] and p["filters"]["src"]==FILTERS["src"].keys(): #idem con los srcs
-        del p["filters"]["src"]
+        # p2p
+        has_p2p, toggle_p2p = "p2p" in active_srcs, "p2p" == new_src
+        p2ps = [] if has_p2p and toggle_p2p else ["p2p"] if toggle_p2p else [value for value in g.sources_p2p if (value==new_src)^(value in active_srcs)]
+        if p2ps==g.sources_p2p: p2ps = ["p2p"] # activa todo el tipo de origen
 
-    if p["filters"]: #unir los filtros
-        p["filters"]="/".join(param+":"+(",".join(value) if param in ["type", "src", "size"] else value) for param, value in p["filters"].iteritems())
-    else: #necesario para no devolver lista vacia
-        del p["filters"]
+        filters["src"] = streamings + downloads + p2ps
+    if 'type' in new_params:
+        filters["type"] = [value for value in FILTERS["type"] if (value==new_params["type"])^(value in filters["type"])] if "type" in filters else [new_params["type"]]
+    if 'size' in new_params:
+        filters["size"] = new_params["size"]
 
-    return p
+    # si estan todos los tipos activados en type o src es como no tener ninguno
+    if "type" in filters and (not filters["type"] or all(atype in filters["type"] for atype in FILTERS["type"])):
+        del filters["type"]
+    if "src" in filters and (not filters["src"] or all(src in filters["src"] for src in FILTERS["src"].iterkeys())):
+        del filters["src"]
+
+    # separa query
+    if "q" in filters:
+        query = filters["q"].replace(" ","_") if filters["q"] else u""
+        del filters["q"]
+    else:
+        query = u""
+
+    # genera url de salida
+    if filters:
+        return g.search_url + query + "/" + "/".join(param+":"+",".join(filters[param]) for param in ["type", "src", "size"] if param in filters)
+    else:
+        return g.search_url + query
 
 def querystring_params_filter(params):
     '''
@@ -199,23 +218,5 @@ def number_friendly_filter(number):
 def seoize_filter(text, separator, is_url, max_length=None):
     return seoize_text(text, separator, is_url, max_length)
 
-def top_filters_src(values):
-    '''
-    Genera la lista de origenes a mostrar en la parte de arriba de la busqueda
-    '''
-    sources_names=dict((v,k) for k,v in g.sources_names.items()) #intercambiar clave y valor
-    #obtener todos los sources
-    all_sources=set()
-    for value in values:
-        if value in sources_names:
-            all_sources.add(sources_names[value])
-        elif value==_("other_streamings"):
-            all_sources.add(_("other_streamings"))
-        elif value==_("other_direct_downloads"):
-            all_sources.add(_("other_direct_downloads"))
-    #obtener los que hay de cada tipo
-    streaming=list(all_sources&set(g.sources_streaming+[_("other_streamings")])) or (["Streaming"] if "Streaming" in values else [])
-    download=list(all_sources&set(g.sources_download+[_("other_direct_downloads")])) or ([_("direct_downloads")] if _("direct_downloads") in values else [])
-    p2p=list(all_sources&set(g.sources_p2p)) or (["P2P"] if "P2P" in values else [])
-    #devolverlos concatenados
-    return " - ".join(([_("some_streamings")] if len(streaming)>2 else streaming)+([_("some_downloads")] if len(download)>2 else download)+p2p)
+
+

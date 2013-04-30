@@ -99,6 +99,7 @@ def create_app(config=None, debug=False):
 
     # Registra valores/funciones para plantillas
     app.jinja_env.globals["u"] = u
+    app.jinja_env.auto_reload = debug
 
     # Oauth
     init_oauth(app)
@@ -152,7 +153,8 @@ def create_app(config=None, debug=False):
         if app.url_map.is_endpoint_expecting(endpoint, 'lang'):
             values['lang'] = g.lang
 
-    pull_lang_code_languages = OrderedDict((code, (localedata.load(code)["languages"], code in app.config["BETA_LANGS"])) for code in app.config["ALL_LANGS"])
+    all_langs = app.config["ALL_LANGS"]
+    pull_lang_code_languages = OrderedDict((code, (localedata.load(code)["languages"], code in app.config["BETA_LANGS"])) for code in all_langs)
     @app.url_value_preprocessor
     def pull_lang_code(endpoint, values):
         '''
@@ -164,7 +166,7 @@ def create_app(config=None, debug=False):
             g.url_lang = values.pop('lang', None)
 
         # si esta lista de idiomas permitidos
-        if g.url_lang and g.url_lang in app.config["ALL_LANGS"]:
+        if g.url_lang and g.url_lang in all_langs:
             g.lang = g.url_lang
         # si el usuario esta logueado y tiene establecido el idioma se asigna ese
         elif "user" in session and "lang" in session["user"]:
@@ -175,14 +177,14 @@ def create_app(config=None, debug=False):
         else:
             accept = request.accept_languages.values()
             # si viene, se coge el que mas convenga dependiendo del que tenga establecido en su navegador o el idioma por defecto
-            locale = Locale.negotiate((option.replace("-","_") for option in accept), app.config["ALL_LANGS"]) if accept else None
+            locale = Locale.negotiate((option.replace("-","_") for option in accept), all_langs) if accept else None
 
             if locale:
                 g.lang = locale.language
             else:
                 g.lang = app.config["LANGS"][0] # valor por defecto si todo falla
 
-        if g.lang not in app.config["ALL_LANGS"]:
+        if g.lang not in all_langs:
             logging.warn("Wrong language choosen.")
             g.lang = app.config["LANGS"][0]
 
@@ -278,7 +280,7 @@ def create_app(config=None, debug=False):
         check_rate_limit(g.search_bot)
 
         # si el idioma de la URL es inválido, devuelve página no encontrada
-        if g.url_lang and not g.url_lang in app.config["ALL_LANGS"]:
+        if g.url_lang and not g.url_lang in all_langs:
             abort(404)
 
         # si no es el idioma alternativo, lo añade por si no se encuentra el mensaje
@@ -289,7 +291,7 @@ def create_app(config=None, debug=False):
         if request.args.get("setlang",None):
             session["lang"]=g.lang
             # si el idioma esta entre los permitidos y el usuario esta logueado se actualiza en la base de datos
-            if g.lang in app.config["ALL_LANGS"] and current_user.is_authenticated():
+            if g.lang in all_langs and current_user.is_authenticated():
                 current_user.set_lang(g.lang)
                 usersdb.update_user({"_id":current_user.id,"lang":g.lang})
 
@@ -334,7 +336,8 @@ def create_app(config=None, debug=False):
 def init_g():
     # argumentos de busqueda por defecto
     g.args = {}
-    g.extra_sources=[]
+    g.active_types = {}
+    g.active_srcs = {}
 
     # caracteristicas del cliente
     g.full_browser=is_full_browser()
@@ -348,7 +351,8 @@ def init_g():
         app_static_prefix = current_app.static_url_path
     else:
         app_static_prefix = current_app.config["STATIC_PREFIX"] or current_app.static_url_path
-    g.static_prefix = current_app.assets.url = app_static_prefix
+    g.static_prefix = app_static_prefix
+    current_app.assets.url = app_static_prefix + "/"
 
     g.autocomplete_disabled = "false" if current_app.config["SERVICE_TAMING_ACTIVE"] else "true"
 

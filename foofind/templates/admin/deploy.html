@@ -29,10 +29,18 @@
         <a href="{{url_for('admin.deploy', show='recover', size=page_size)}}">{{_('admin_deploy_failrecovery')}}</a>
         {%- endif -%}
     </li>
+    <li>
+        {%- if show == "downloader" -%}
+        <span>{{_('admin_deploy_downloader')}}</span>
+        {%- else -%}
+        <a href="{{url_for('admin.deploy', show='downloader', size=page_size)}}">{{_('admin_deploy_downloader')}}</a>
+        {%- endif -%}
+    </li>
 </ul>
 {%- endblock %}
 {% block page -%}
-<form method="post" {#action="{{ url_for('admin.deploy', show=show, size=page_size ) }}"#} data-confirmation_message="{{_('admin_deploy_confirmation', action='__action__', target='__target__')|forceescape}}">
+<form method="post" data-confirmation_message="{{_('admin_deploy_confirmation', action='__action__', target='__target__')|forceescape}}"
+{%- if show == "downloader" %} enctype="multipart/form-data"{% endif %} >
 {{ render_field() }}
 {% if show == "deploy" %}
 <h3 class="list">{{_('admin_deploy_phase_deploy')}}</h3>
@@ -94,6 +102,29 @@
     </dd>
     {%- endfor -%}
 </dl>
+{% elif show == "downloader" %}
+<h3 class="list">{{_('admin_deploy_downloader_upload')}}</h3>
+<dl class="list">
+    <dt>{{ form.downloader_file1.label }}</dt>
+    <dd>{{ form.downloader_file1}}</dd>
+    <dt>{{ form.downloader_file2.label }}</dt>
+    <dd>{{ form.downloader_file2}}</dd>
+    <dt>{{ form.downloader_file3.label }}</dt>
+    <dd>{{ form.downloader_file3}}</dd>
+    <dt>{{ form.downloader_file4.label }}</dt>
+    <dd>{{ form.downloader_file4}}</dd>
+    <dt>{{ form.downloader_file5.label }}</dt>
+    <dd>{{ form.downloader_file5}}</dd>
+    <dt>{{ form.downloader_file6.label }}</dt>
+    <dd>{{ form.downloader_file6}}</dd>
+</dl>
+{{- form.downloader_upload(class="list") -}}
+<h3 class="list">{{_('admin_deploy_downloader')}}</h3>
+<dl class="list">
+    <dt></dt>
+    <dd class="pre">{{file_metadata|pprint(4, 4)}}</dd>
+</dl>
+{{- form.downloader_submit(class="list") if deploy_available else form.downloader_submit(class="list", disabled="disabled") -}}
 {% endif %}
 <h3 class="list">{{_('admin_deploy_debug')}}</h3>
 <dl class="list">
@@ -102,6 +133,6 @@
     <dt>stderr</dt>
     <dd><pre id="stderr">{{stderr}}</pre></dd>
 </dl>
-{{- form.clean_log(class="list",**({"data-noconfirm":"ok"})) -}}
+{{- form.clean_log(class="list", **({"data-noconfirm":"ok"})) -}}
 </form>
 {%- endblock %}

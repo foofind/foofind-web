@@ -1,0 +1,76 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: 1\n"
+"Report-Msgid-Bugs-To: ismael@mp2p.net\n"
+"POT-Creation-Date: 2011-12-09 11:49+0100\n"
+"PO-Revision-Date: 2011-12-09 11:49+0100\n"
+"Last-Translator: Foofind <hola@foofind.com>\n"
+"Language-Team: ar <hola@foofind.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Foofind's pogit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgid "new_toolbar"
+msgstr "جرب شريط الأدوات"
+
+msgid "click_here"
+msgstr "اضغط هنا!"
+
+msgid "your_email"
+msgstr "البريد الإلكتروني"
+
+msgid "password"
+msgstr "كلمة السر"
+
+msgid "submit"
+msgstr "ارسل"
+
+msgid "ok"
+msgstr "تم"
+
+msgid "help_us"
+msgstr "ساعدنا!"
+
+msgid "legal_info"
+msgstr "معلومات القانونية"
+
+msgid "go_home"
+msgstr "العودة الى محرك البحث"
+
+msgid "error_500_message"
+msgstr "حدث خطأ ما"
+
+msgid "error_500_description"
+msgstr "هناك شيء غريب, المتخصصون لدينا يتحققوا من هذا الأمر."
+
+msgid "error_404_message"
+msgstr "لم يتم العثور على الصفحة"
+
+msgid "error_404_description"
+msgstr ""
+"لم يتم العثور على عنوان  URL. الرجاء التأكد من كتابة عنوان URL بشكل صحيح، ان"
+" لم ينجح, يرجى اعلام المسؤولين على شبكة الأنترنت."
+
+msgid "error_410_message"
+msgstr "الصفحة غير موجودة"
+
+msgid "error_410_description"
+msgstr "عنوان URL غير موجود ولن يكون موجود في المستقبل"
+
+msgid "error_502_message"
+msgstr "الخادم سيء"
+
+msgid "error_502_description"
+msgstr "لا يمكن الوصول للخدمة بسبب الخادم."
+
+msgid "error_503_message"
+msgstr "الخدمة غير متوفرة"
+
+msgid "error_503_description"
+msgstr "URL المطلوب غير متاح مؤقتا. يرجى المحاولة مرة أخرى في وقت لاحق."
+
+msgid "servers_status"
+msgstr "افحص الخادم"

@@ -159,6 +159,15 @@ class DeployForm(Form):
     clean_log = SubmitField(_("admin_deploy_clean_log"), default="clean_log")
     remove_lock = SubmitField(_("admin_deploy_remove_lock"), default="remove_lock")
 
+    downloader_file1 = FileField(_("admin_downloads_file"))
+    downloader_file2 = FileField(_("admin_downloads_file"))
+    downloader_file3 = FileField(_("admin_downloads_file"))
+    downloader_file4 = FileField(_("admin_downloads_file"))
+    downloader_file5 = FileField(_("admin_downloads_file"))
+    downloader_file6 = FileField(_("admin_downloads_file"))
+    downloader_upload = SubmitField(_("admin_deploy_downloader_upload"), default="confirm")
+    downloader_submit = SubmitField(_("admin_deploy_downloader_distribute"), default="confirm")
+
 class DownloadForm(Form):
     old_version = HiddenField()
     version = TextField(_("admin_downloads_version"))

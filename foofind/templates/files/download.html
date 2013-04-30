@@ -1,16 +1,15 @@
-{% from "files/macros.html" import print_share,url_search with context %}
+{% from "files/macros.html" import print_share with context %}
 {% from "helpers.html" import render_field,login_required %}
 {% set lang = g.lang %}
-{% set url_search_cache = url_search(query="___") %}
 {%- macro print_filepaths(paths, limit) %}
     <ul class="filepaths">
         {%- for path, info in (paths.items() | sort) %}
             <li>
                 {% if path[0] == "/" %}
-                    <a href="{{ url_search_cache|replace('___', path[1:]|seoize('_', True))}}">{{ path[1:] }}</a>
+                    <a href="{{ {'query':path[1:]|seoize('_', True)}|url_search(args) }}">{{ path[1:] }}</a>
                     {{ print_filepaths(info, False) }}
                 {% else %}
-                    <span>{{ info | numbersizeformat(lang) }}</span><a href="{{ url_search_cache|replace('___', path|seoize('_', True)) }}" title="{{ path }}">{{ path }}</a>
+                    <span>{{ info | numbersizeformat(lang) }}</span><a href="{{ {'query':path|seoize('_', True)}|url_search(args) }}" title="{{ path }}">{{ path }}</a>
                 {% endif %}
             </li>
         {%- endfor %}
@@ -103,7 +102,7 @@
     <section id="metadata">
         <dl>
             <dt>{{_("name")}}</dt>
-            <dd><a href="{{ url_search(query=file['view']['nfn']|seoize("_",True))}}">{{ file['view']['nfn'] }}</a></dd>
+            <dd><a href="{{ {'query':file['view']['nfn']|seoize("_",True)}|url_search(args) }}">{{ file['view']['nfn'] }}</a></dd>
             {% if 'z' in file['file'] and file['file']['z'] %}
             <dt>{{_("size")}}</dt>
             <dd>{{ file['file']['z']|numbersizeformat }}</dd>
@@ -114,12 +113,12 @@
                 {%-if metadata in file['view']['searches'] %}
                     {%-if file['view']['searches'][metadata] == [] %}
                         {% for avalue in value.split(",")[:50] %}
-                            <a href="{{ url_search(query=avalue|seoize("_",True))}}">{{ avalue|trim }}</a>{{", " if not loop.last}}
+                            <a href="{{ {'query':avalue|seoize("_",True)}|url_search(args) }}">{{ avalue|trim }}</a>{{", " if not loop.last}}
                         {% endfor %}
                     {%-elif file['view']['searches'][metadata] == {} %}
                         {{print_filepaths(value, file['file']['md']['torrent:partial_filepaths'] if 'torrent:partial_filepaths' in file['file']['md'] else False)}}
                     {%-else %}
-                        <a href="{{ url_search(query=file['view']['searches'][metadata])}}">{{ (value|string)[:2000].replace("\n","<br />") | safe }}</a>
+                        <a href="{{ {'query':file['view']['searches'][metadata]}|url_search(args) }}">{{ (value|string)[:2000].replace("\n","<br />") | safe }}</a>
                     {%-endif %}
                 {%-else %}
                     {{ (value|string)[:2000].replace("\n","<br />") | safe }}

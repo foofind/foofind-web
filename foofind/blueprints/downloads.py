@@ -3,7 +3,7 @@
     Soporte para Foofind download manager
 """
 
-from flask import g, render_template, request, abort, current_app, make_response
+from flask import g, render_template, request, abort, current_app, make_response, jsonify, url_for
 from foofind.utils.fooprint import Fooprint
 from foofind.utils.flaskutils import send_gridfs_file
 from foofind.services import *

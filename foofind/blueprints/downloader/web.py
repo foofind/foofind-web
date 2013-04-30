@@ -32,16 +32,17 @@ def index():
     downloader_files = current_app.config["DOWNLOADER_FILES"]
 
     installer_metadata = get_file_metadata(downloader_files["installer.exe"])
+    setup_metadata = get_file_metadata(downloader_files["setup.exe"])
     source_metadata = get_file_metadata(downloader_files["source.zip"])
 
     properties = {
-        "available": bool(installer_metadata),
+        "available": installer_metadata and setup_metadata,
         "source_available": bool(source_metadata)
         }
 
     try:
         if properties["available"]:
-            properties["version_code"] = installer_metadata["version"]
+            properties["version_code"] = setup_metadata["version"]
             properties["length"] = installer_metadata["size"]
             properties["filename"] = "installer.exe"
     except KeyError:
@@ -49,7 +50,7 @@ def index():
 
     try:
         if properties["source_available"]:
-            properties["source_length"] = installer_metadata["size"]
+            properties["source_length"] = source_metadata["size"]
             properties["source_filename"] = "source.zip"
     except KeyError:
         properties["source_available"] = False

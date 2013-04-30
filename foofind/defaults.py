@@ -7,9 +7,11 @@ SECRET_KEY = "supersecret"
 
 APPLICATION_ID = "default"
 
+
 JOBS_EMAIL = ""
 CONTACT_EMAIL = ""
 DEFAULT_MAIL_SENDER = "noreply@foofind.com"
+MAIL_DEFAULT_SENDER = "noreply@foofind.com"
 
 MAIL_SERVER = "mail.foofind.com"
 MAIL_PORT = 25

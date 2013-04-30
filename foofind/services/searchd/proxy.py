@@ -11,6 +11,7 @@ import json, zlib
 
 from foofind.utils import mid2hex, hex2bin, logging
 from foofind.utils.event import EventManager
+from foofind.utils.splitter import slugify
 from foofind.services.extensions import cache
 from search import full_id_struct, part_id_struct, get_src, escape_string
 from sphinx_pool import SphinxClientPool
@@ -371,7 +372,6 @@ class SearchProxy:
 
                 servers = self.servers.keys() if update["server"]=="*" else [update["server"]]
                 shuffle(servers)
-
                 not_found_values = update["values"].copy()
 
                 for server in servers:
@@ -467,7 +467,7 @@ class SearchProxy:
         shuffle(servers)
 
         if file_name:
-            query = escape_string(file_name)
+            query = escape_string(" ".join(slugify(file_name).split(" ")[:4]))
         else:
             query = ""
 
@@ -480,6 +480,7 @@ class SearchProxy:
                 # busca el registro con el id pedido
                 bin_file_id = file_id.binary
                 uri1, uri2, uri3 = full_id_struct.unpack(bin_file_id)
+                client.SetMaxQueryTime(150)
                 client.SetFilter('uri1', [uri1])
                 client.SetFilter('uri2', [uri2])
                 client.SetFilter('uri3', [uri3])

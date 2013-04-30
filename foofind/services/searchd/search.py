@@ -35,7 +35,7 @@ def fix_sphinx_result(word):
     return u(SPHINX_WRONG_RANGE.sub(fixer, word))
 
 class Search(object):
-    def __init__(self, proxy, query, filters={}, order=None, request_mode=REQUEST_MODE_PER_GROUPS, query_time=None, extra_wait_time=500, max_query_time=None):
+    def __init__(self, proxy, query, filters={}, order=None, request_mode=REQUEST_MODE_PER_GROUPS, query_time=None, extra_wait_time=500):
         self.request_mode = request_mode
         self.access = Lock()
         self.usable = Event()
@@ -43,7 +43,6 @@ class Search(object):
         self.proxy = proxy
         self.query_time = query_time or proxy.config["SERVICE_SPHINX_MAX_QUERY_TIME"]
         self.extra_wait_time = extra_wait_time
-        self.max_query_time = max_query_time
         self.search_max_retries = proxy.config["SERVICE_SPHINX_SEARCH_MAX_RETRIES"]
         self.stats = None
         self.computable = True
@@ -377,13 +376,6 @@ class Search(object):
         if not any_not_not_part:
             self.computable = False
 
-    def _get_wait_time(self, multiplier, search_query=True, search_filters=True):
-        wait_time = int(self.query_time*(1 + log(max(1, self.query_state["rt"] if search_query and self.query_state          else 0, self.filters_state["rt"] if search_filters and self.filters_state else 0))*multiplier))
-        if self.max_query_time:
-            return min(wait_time, self.max_query_time)
-        else:
-            return wait_time
-
     def search(self, async=False, just_usable=False):
         # avisa que estas busqueda es usable
         if self.filters_state and self.filters_state["c"]:
@@ -415,7 +407,7 @@ class Search(object):
 
         if search_query or search_filters:
             # tiempo de espera incremental logaritmicamente con los reintentos (elige el tiempo máximo de espera)
-            wait_time = self._get_wait_time(3, search_query, search_filters)
+            wait_time = self.query_time
 
             asearch = {"q":self.query, "f":self.filters, "rm":self.request_mode, "mt":wait_time, "rf":self.order[0], "sr":self.order[1]}
 
@@ -451,14 +443,14 @@ class Search(object):
 
             # espera el tiempo de sphinx mas medio segundo de extra
             # cuando hay dos busquedas en algun servidor (con y sin filtros) se espera el doble
-            max_wait_time = (wait_time*2 if any((s["st"] and s["sf"]) for s in allsearches["s"].itervalues()) else wait_time)+self.extra_wait_time
+            num_waits = 2 if any((s["st"] and s["sf"]) for s in allsearches["s"].itervalues()) else 1
 
             # si la busqueda es asyncrona o sólo se requieren resultados usables, no bloquea
             if async or (just_usable and self.usable.is_set()):
-                self.proxy.async_process_results(allsearches, self.store_files_timeout, [max_wait_time, 1000])
+                self.proxy.async_process_results(allsearches, self.store_files_timeout, [wait_time*num_waits+self.extra_wait_time])
             else:
                 # si no llegan todos los resultados espera otro segundo más, por si hubiera habido problemas en la respuesta
-                self.store_files(allsearches, max_wait_time, self.store_files_timeout, [1000])
+                self.store_files(allsearches, wait_time, self.store_files_timeout, [wait_time]*(num_waits-1) + [self.extra_wait_time])
 
         return self
 
@@ -690,7 +682,7 @@ class Search(object):
         if self.locked_until:
             self.stats["w"] = -1
         elif searches:
-            wait_time = self._get_wait_time(3, False, True)
+            wait_time = self.query_time
 
             if self.request_mode==REQUEST_MODE_PER_GROUPS:
                 allsearches = {"s":{server: {"l":(0, 10, 1000, 2000000), "rm":self.request_mode, "st":False, "sf":False, "q":self.query, "f":self.filters, "mt":wait_time, "g":subgroups, "rf":self.order[0], "sr":self.order[1]} for server, subgroups in searches.iteritems()}}
@@ -757,6 +749,7 @@ class Search(object):
 
         for server, asearch, sphinx_results, messages in self.proxy.browse_results(allsearches, timeout, fallback, fallback_timeouts):
             self.access.acquire(True)
+
             # permite manejar igual resultados de querys simples o de multiquerys
             if not sphinx_results:
                 logging.error("Error in search thread:'%s'"%messages[1])

@@ -88,12 +88,18 @@ msgstr ""
 msgid "required_empty"
 msgstr "Este necesară o valoare și nu poate fi gol"
 
+msgid "non_alphabetic_digits"
+msgstr "%(value)s conține caractere care sunt non alfabetice și non numerice"
+
 msgid "no_valid_email"
 msgstr ""
 "Aceasta nu este o adresă de email validă cu formatul: utilizator@exemplu.com"
 
 msgid "no_valid_url"
 msgstr "URL invalid"
+
+msgid "field_length"
+msgstr "Acest câmp trebuie să aibă de la%(min)s până la %(max)s caractere"
 
 msgid "about"
 msgstr "Despre"
@@ -215,8 +221,16 @@ msgstr "alte categorii"
 msgid "not_allow_browse_results"
 msgstr "Foofind nu arată rezultate dincolo de pagina 100."
 
+msgid "no_type_count"
+msgstr ""
+"Nu am găsit rezultate pentru căutarea ta în %(search)s, dar există "
+"aproximativ %(results)d rezultate pentru căutarea ta în %(category)s."
+
 msgid "go_to_file"
 msgstr "Mergi la fişierul"
+
+msgid "did_you_mean"
+msgstr "Te referi la %(text)s?"
 
 msgid "play"
 msgstr "Rulează"
@@ -304,6 +318,10 @@ msgstr "Leechs"
 
 msgid "height"
 msgstr "Înălțime"
+
+msgid "first_files"
+msgstr ""
+"Arată primele %(value)s fișiere. Descărca fișierul pentru a vedea tot."
 
 msgid "width"
 msgstr "Lățime"
@@ -453,7 +471,7 @@ msgid "all_sources"
 msgstr "toate sursele"
 
 msgid "share"
-msgstr ""
+msgstr "Partajează cu %(site)s"
 
 msgid "share_download"
 msgstr "Partajează"
@@ -517,6 +535,15 @@ msgstr "fişier"
 
 msgid "download_links"
 msgstr "Arată link-urile descărcate"
+
+msgid "add_favorite"
+msgstr "Adaugă %(type)s la favorite"
+
+msgid "delete_favorite"
+msgstr "Șterge %(type)s din favorite"
+
+msgid "favorite"
+msgstr "%(type)s adăugat la favorite"
 
 msgid "more_info"
 msgstr "mai multe informaţii"
@@ -646,6 +673,9 @@ msgstr "Membru din:"
 msgid "location"
 msgstr "Locația:"
 
+msgid "last_comments"
+msgstr "Ultimele %(comments)d comentarii:"
+
 msgid "delete_account"
 msgstr "Șterge contul Foofind"
 
@@ -745,6 +775,14 @@ msgstr "Te rugăm să te autentifici pentru a comenta"
 msgid "submit_registration"
 msgstr "Înregistrează-te"
 
+msgid "technical_problems"
+msgstr "Ne pare rău, dar avem probleme tehnice cu %(service)s."
+
+msgid "allow_access_account"
+msgstr ""
+"Ar trebui să permiți accesul Foofind la contul tău %(account)s pentru a "
+"utiliza această funcție."
+
 msgid "submit_login"
 msgstr "Autentificare"
 
@@ -763,6 +801,11 @@ msgstr "Formular de reclamaţie link"
 msgid "complaints_ignored"
 msgstr "Plângerile făcut prin acest formular vor fi ignorate."
 
+msgid "link_removal"
+msgstr ""
+"Notă: Dacă soliciți o eliminare a unui link, trebuie să utilizezi "
+"%(report_form)s."
+
 msgid "your_message"
 msgstr "Mesajul tău:"
 
@@ -774,6 +817,24 @@ msgstr "Evaluare captcha este greșită"
 
 msgid "message_sent"
 msgstr "Mesajul a fost trimis cu succes!"
+
+msgid "no_valid_hostname"
+msgstr ""
+"%(hostname)s nu este un hostname valid pentru adresa de email %(value)s"
+
+msgid "local_network"
+msgstr ""
+"%(value)s pare a fi o adresă de rețea locală, iar adresele de rețele locale "
+"nu sunt permise"
+
+msgid "no_dns_hostname"
+msgstr ""
+"%(value)s nu se potrivește cu structura așteptată pentru un hostname DNS"
+
+msgid "no_tld_known"
+msgstr ""
+"%(value)s pare a fi un hostname DNS, dar nu poate compara cu TLD-ul din "
+"lista cunoscută"
 
 msgid "your_name"
 msgstr "Prenumele:"
@@ -799,6 +860,9 @@ msgstr "Motivul reclamației:"
 msgid "accept_terms"
 msgstr ""
 "Te rugăm să accepți condiţiile de utilizare și politica de confidențialitate"
+
+msgid "accept_tos"
+msgstr "Am citit și accept %(tos)s și %(privacy)s."
 
 msgid "not_foofind_page"
 msgstr "Link-ul nu poate fi o pagină Foofind"
@@ -828,8 +892,25 @@ msgstr ""
 "\r\n"
 "Foofind este o creație a lui Pablo Soto, designer de tehnologie P2P, dezvoltată în Madrid, Spania, prin Foofind Labs S.L. în asociere cu tehnologiile MP2P."
 
+msgid "footer"
+msgstr "Site-ul %(cc)s este sub licență. %(code)s este sub licența %(gpl)s."
+
 msgid "under_maintenance"
 msgstr "Foofind este în întreținere. Te rugăm să revii mai târziu."
+
+msgid "technology_text"
+msgstr ""
+"Echipa Foofind dezvoltă în special codul sursă al proiectului, dar de asemenea muncim foarte mult şi cu comunitatea soft-urilor gratuite.\r\n"
+"Fără toate aceste proiecte incredibile, Foofind nu ar fi posibil. Multe mulțumiri! ;-)\r\n"
+"Twisted: Twisted este un motor event-driven networking scris în Python și sub licența open-source, licență MIT.\r\n"
+"Scrapy: Scrapy este un screen scraping de nivel înalt şi web crawling framework, folosit pentru a investiga site-uri web și pentru a extrage date structurate din paginile lor. Poate fi folosit într-o gamă largă de scopuri, de la mining pentru monitorizarea până la testarea automată.\r\n"
+"Flask: Flask este un microframework pentru Python bazat pe Werkzeug, Jinja 2 și are licenţă BSD.\r\n"
+"MongoDB: MongoDB (de la \"humongous\") este un scalabil, de înaltă performanță, open source NoSQL database.\r\n"
+"Sentry: Sentry este un autentificator în timp real și o platformă de agregare. Este specializat în monitorizarea erorilor și extragerea tuturor informațiilor necesare pentru a face o bun post-mortem, fără nicio complicație în buclă de feedback standard a utilizatorului.\r\n"
+"Sfinxul: Sfinxul este un open source de căutare în server a textului integral, destinat să crească performanța, relevanța (cu alte cuvinte calitate de căutare), și simplitatea de înțelegere. Este scris în C++ și funcționează pe Linux (RedHat, Ubuntu, etc), Windows, MacOS, Solaris, FreeBSD, și încă alte câteva sisteme.\r\n"
+"jQuery: jQuery este o librărie JavaScript rapidă, mică, și bogată. Face ca în documentele HTML parcurgerea şi manipularea, manipularea de evenimente, animație, și Ajax mult mai simplă, cu un API ușor de utilizat, care funcționează într-o multitudine de browsere. Cu o combinație de versatilitate și extensibilitate, jQuery a schimbat modul în care milioane de oameni scriu JavaScript.\r\n"
+"jQuery UI: jQuery UI este un set întrețineri pentru interfața de interacțiuni cu utilizatorul, efecte, widget-uri și teme de construcție pe partea înaltă a JavaScript jQuery Library. Fie că realizați aplicații web extrem de interactive sau pur și simplu aveți nevoie să adăugați un selector de date pentru un control de formular, jQuery UI este alegerea perfectă.\r\n"
+"Social Network Icon Pack: Social Network Icon Pack de la Komodo Media, Rogie King este licențiată sub Creative Commons Attribution-Share Alike 3.0 Unported License."
 
 msgid "link_not_exist"
 msgstr "Acest link nu există sau a fost șters."
@@ -864,17 +945,25 @@ msgstr "aici"
 msgid "other"
 msgstr "Altele"
 
+msgid "translation_beta"
+msgstr ""
+"Această traducere de limbaj este în faza de testare. Dacă găsiți o ceva "
+"lipsă în traducere sau ceva greșit, te rugăm să raportezi %(here)s."
+
 msgid "embed_foofind_button"
 msgstr "Vezi în foofind"
 
 msgid "copy_to_clipboard_shortcut"
-msgstr "Foloseşte CTRL + C pentru a copia în clipboard"
+msgstr "Foloseşte CTRL+C pentru a copia în clipboard"
 
 msgid "opensearch_description"
 msgstr "Caută folosind Foofind"
 
 msgid "foodownloader_overview"
 msgstr "Prezentare"
+
+msgid "foodownloader_powered"
+msgstr "Realizat de [%(name)s] (%(link)s)"
 
 msgid "foodownloader_overview_text"
 msgstr ""
@@ -945,3 +1034,7 @@ msgstr ""
 "Descarcă Foofind Download Manager pentru a obține acest fișier chiar acum.\r\n"
 "\r\n"
 "Soft-ul nostru îți permite să descarci torrente mai rapid și mai ușor decât oricând - absolut gratuit! Dacă ai deja un client de torrent, fă clic pe \"Nu, mulțumesc\"."
+
+msgid "downloader_update_message"
+msgstr ""
+"O nouă versiune %(appname)s (%(version)s) este gata pentru a fi instalată."

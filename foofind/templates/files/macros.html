@@ -1,6 +1,3 @@
-{%- macro url_search(delete_params=[],catch_kwargs=true) -%}
-    {{url_for('files.search',**kwargs|search_params(['page','alt']+delete_params,args,extra_sources))}}
-{%- endmacro -%}
 {%- macro print_source(source_data,url="") %}
     <div class="download_source">
         <input type="text" readonly="readonly" value="{% if url=='' %}{{ source_data['urls'][0] }}{% else %}{{url}}{% endif %}" class="no" />

@@ -13,8 +13,8 @@ class Searchd:
     def init_app(self, app, filesdb, entitiesdb, profiler):
         self.proxy = SearchProxy(app.config, filesdb, entitiesdb, profiler)
 
-    def search(self, query, filters={}, order=None, request_mode=REQUEST_MODE_PER_GROUPS, query_time=None, extra_wait_time=500, max_query_time=None, async=False, just_usable=False):
-        s = Search(self.proxy, query, filters, order, request_mode, query_time, extra_wait_time, max_query_time)
+    def search(self, query, filters={}, order=None, request_mode=REQUEST_MODE_PER_GROUPS, query_time=None, extra_wait_time=500, async=False, just_usable=False):
+        s = Search(self.proxy, query, filters, order, request_mode, query_time, extra_wait_time)
         return s.search(async, just_usable)
 
     def get_search_info(self, query, filters={}, order=None, request_mode=REQUEST_MODE_PER_GROUPS):

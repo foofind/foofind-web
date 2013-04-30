@@ -13,12 +13,13 @@ from struct import pack, unpack
 from collections import OrderedDict
 from copy import deepcopy
 from base64 import b64encode, b64decode
+import newrelic.agent
 
 from foofind.blueprints.files.fill_data import secure_fill_data, get_file_metadata, init_data, choose_filename
 from foofind.blueprints.files.helpers import *
 from foofind.services import *
 from foofind.forms.files import SearchForm, CommentForm
-from foofind.utils import url2mid, mid2bin, mid2hex, mid2url, bin2hex, u, canonical_url, logging
+from foofind.utils import url2mid, mid2bin, mid2hex, mid2url, bin2hex, u, canonical_url, logging, is_valid_url_fileid
 from foofind.utils.content_types import *
 from foofind.utils.splitter import split_phrase
 from foofind.utils.pagination import Pagination
@@ -56,7 +57,8 @@ def file_var():
     if request.args.get("error",None)=="error":
         abort(404)
 
-    return {"zone":"files","search_form":SearchForm(request.args),"args":g.args,"extra_sources":g.extra_sources,"share":share}
+    return {"zone":"files","search_form":SearchForm(request.args),"share":share,"args":g.args,"active_types":g.active_types, "active_srcs":g.active_srcs}
+
 
 @unit.observe
 @files.route('/<lang>/search') #para soportar las URL antiguas
@@ -68,9 +70,16 @@ def search(query=None,filters=None,file_id=None,file_name=None):
     '''
     Gestiona las URL de busqueda de archivos
     '''
+
     canonical_query=query #la busqueda canonica es la misma por defecto
     search_bot = g.search_bot
     full_browser = g.full_browser
+
+    # si tiene download, cuenta como pagina de download
+    if file_id:
+        newrelic.agent.set_transaction_name("foofind.blueprints.files:download" + ("" if full_browser else "_static"))
+    else:
+        newrelic.agent.set_transaction_name("foofind.blueprints.files:search" + ("" if full_browser else "_static"))
 
     url_with_get_params=False
     if "_escaped_fragment_" in request.args: #si la URL tiene que ser una "captura de pantalla" de una ajax se redirige a la normal
@@ -90,30 +99,67 @@ def search(query=None,filters=None,file_id=None,file_name=None):
     if url_with_get_params or has_changed: #redirecciona si viene una url con get o si url2filters ha cambiado los parametros y no se mandan filtros si es un bot
         return redirect(url_for(".search", query=query.replace(" ","_"), filters=filters2url(dict_filters) if not search_bot else None, file_id=file_id),301 if search_bot else 302)
 
+    # obtiene parametros de busqueda de la url
+    prepare_args(query, dict_filters)
+
     static_download=download_file(file_id,file_name if file_name is not None else query) #obtener el download si se puede
     if "error" in static_download and static_download["error"][0]==301: #si es una redireccion de un id antiguo directamente se devuelve
         return static_download["html"]
 
-    prepare_args(query, dict_filters)
-    #añadir todos los sources a FILTERS
-    filters_with_all_src=deepcopy(FILTERS)
-    filters_with_all_src["src"].update(g.sources_names)
     #filtros encima de resultados de busqueda
-    top_filters=OrderedDict([("type",[]),("src",[]),("size",[])])
-    for name,values in dict_filters.iteritems():
-        if name!="q":
-            for value in values:
-                if name=="type":
-                    top_filters[name].append(_(value))
-                elif name=="src" and value in filters_with_all_src["src"]:
-                    top_filters[name].append(_(filters_with_all_src["src"][value]))
-                elif name=="size":
-                    top_filters[name]=[int(values[0]),int(values[1]),filters_with_all_src["size"][1],filters_with_all_src["size"][2]]
+    top_filters={"type":[], "src":[], "size":[]}
+    available_space = 4
+    if "type" in dict_filters:
+        top_filters["type"] = types = [_(value) for value in dict_filters["type"]]
+        available_space -= len(types)
+    if "size" in dict_filters:
+        values = dict_filters["size"]
+        top_filters["size"]=sizes=[int(values[0]),int(values[1]),FILTERS["size"][1],FILTERS["size"][2]]
+        available_space -= (1 if sizes[0]>0 else 0) + (1 if sizes[1]<50 else 0)
 
-    if query is None: #en la pagina de download se intentan obtener palabras para buscar
-        query=download_search(static_download["file_data"] if static_download and static_download["file_data"] else None,file_name, "foofind")
-        if query:
-            query.replace(":","")
+    if "src" in dict_filters:
+        values = dict_filters["src"]
+        sources_names = g.sources_names
+        filters = []
+
+        p2p_filters = []
+        if "p2p" in values:
+            p2p_filters = ["P2P"]
+        else:
+            p2p_filters = [sources_names[src] for src in g.sources_p2p if src in values]
+        available_space -= len(p2p_filters)
+
+        if "streaming" in values:
+            filters.append("Streaming")
+            available_space -= 1
+        else:
+            streaming = [sources_names[src] for src in g.visible_sources_streaming if src in values]
+            streaming_len = len(streaming)
+            if streaming_len>max(2,available_space):
+                filters.append(_("some_streamings"))
+                available_space -= 1
+            elif streaming:
+                available_space -= streaming_len
+                filters.extend(streaming)
+        if "download" in values:
+            filters.append(_("direct_downloads"))
+        else:
+            downloads = [sources_names[src] for src in g.visible_sources_download if src in values]
+            downloads_len = len(downloads)
+            if downloads_len>max(2,available_space):
+                filters.append(_("some_downloads"))
+                available_space -= 1
+            elif downloads:
+                available_space -= downloads_len
+                filters.extend(downloads)
+
+        if p2p_filters:
+            filters.extend(p2p_filters)
+
+        top_filters["src"] = filters
+
+    if query is None: # si no ha recibido query de la URL la coge de la que haya obtenido del download
+        query = g.args.get("q", None)
     else:
         #titulo y descripción de la página para la busqueda
         g.title = query+(" - "+", ".join(top_filters["type"]) if top_filters["type"] else "")+" - "+g.title
@@ -127,21 +173,21 @@ def search(query=None,filters=None,file_id=None,file_name=None):
         abort(static_download["error"][0])
     elif not full_browser: #busqueda estatica para browsers "incompletos"
         wait_time = 400 if dict_filters else 800 if file_id is None else 400
-        async_time = (wait_time*2 if dict_filters else wait_time) + 300
-        results=search_files(query, dict_filters, 50, 50, static_download, query_time=wait_time, extra_wait_time=300, async=async_time, max_extra_searches=1 if search_bot else 4)
+        async_time = (wait_time*2 if dict_filters else wait_time) + 200
+        results=search_files(query, dict_filters, 50, 50, static_download, query_time=wait_time, extra_wait_time=200, async=async_time, max_extra_searches=1 if search_bot else 4)
         # cambia la busqueda canonica
         canonical_query = results["canonical_query"]
         if search_bot:
             # si la busqueda devuelve resultados pero mongo no los da, tambien cuenta como "not results".
             searchd.log_bot_event(search_bot, (results["total_found"]>0 or results["sure"]) and not (len(results["files"])==0 and results["total_found"]>0 ))
 
-        static_results=results["files"]
+        static_results=results["files"], False
         total_found=results["total_found"]
         sure = True
     elif query is not None and static_download["file_data"] is not None: #si es busqueda con download se pone el primero el id que venga
-        static_results=[render_template('files/file.html',file=static_download["file_data"],scroll_start=True)]
+        static_results=[static_download["file_data"]], True
     else:
-        static_results=[]
+        static_results=[], False
 
 
     #calcular el numero de sources que estan activados
@@ -191,7 +237,8 @@ def search(query=None,filters=None,file_id=None,file_name=None):
         search_info=render_template('files/results_number.html',sure=sure,results={"total_found":total_found,"time":0},search=query),
         sources_count=sources_count,
         top_filters=top_filters,
-        static_results=static_results,
+        files = static_results[0],
+        scroll_start = static_results[1],
         static_download=static_download,
         full_browser=full_browser,
         query=query,
@@ -227,9 +274,12 @@ def searcha():
 
     dict_filters, has_changed = url2filters(filters)
     prepare_args(query, dict_filters)
-    return jsonify(search_files(query, dict_filters, min_results=request.args.get("min_results",0), last_items=last_items or [], extra_wait_time=400))
 
-def search_files(query,filters,min_results=0,max_results=10,download=None,last_items=[],query_time=None,extra_wait_time=500,max_query_time=None, async=False, max_extra_searches=4):
+    search_results = search_files(query, dict_filters, min_results=request.args.get("min_results",0), last_items=last_items or [], extra_wait_time=300)
+    search_results["files"] = render_template('files/file.html',files=search_results["files"])
+    return jsonify(search_results)
+
+def search_files(query,filters,min_results=0,max_results=10,download=None,last_items=[],query_time=None,extra_wait_time=500, async=False, max_extra_searches=4):
     '''
     Realiza una búsqueda de archivos
     '''
@@ -239,7 +289,8 @@ def search_files(query,filters,min_results=0,max_results=10,download=None,last_i
     # obtener los resultados
     profiler_data={}
     profiler.checkpoint(profiler_data,opening=["sphinx"])
-    s = searchd.search({"type":"text", "text":query}, filters=filters, query_time=query_time, extra_wait_time=extra_wait_time, max_query_time=max_query_time, just_usable=bool(async))
+
+    s = searchd.search({"type":"text", "text":query}, filters=filters, query_time=query_time, extra_wait_time=extra_wait_time, just_usable=bool(async))
 
     if async:
         s.usable.wait(async/1000.)
@@ -328,13 +379,10 @@ def search_files(query,filters,min_results=0,max_results=10,download=None,last_i
     profiler.checkpoint(profiler_data,closing=["visited"])
 
     profiler.save_data(profiler_data)
-    #añadir todos los sources a FILTERS
-    filters_with_all_src=deepcopy(FILTERS)
-    filters_with_all_src["src"].update(g.sources_names)
 
     return {
         "files_ids":[f["file"]["id"] for f in files],
-        "files":[render_template('files/file.html',file=f) for f in files],
+        "files":files,
         "result_number":render_template('files/results_number.html',results=result,search=query,sure=stats["s"]),
         "total_found":result["total_found"],
         "page":sum(stats["li"]),
@@ -350,8 +398,8 @@ def download_search(file_data, file_text, fallback):
     '''
     search_texts=[]
     if file_data:
-        mds = file_data['view']['md']
-        for key in ['artist', 'series', 'album', 'title']:
+        mds = file_data['file']['md']
+        for key in ['audio:artist', 'audio:album', 'video:series', 'video:title', 'image:title', 'audio:title','application:name', 'application:title', 'book:title', 'torrent:title']:
             if key in mds and isinstance(mds[key], basestring) and len(mds[key])>1:
                 search_texts.append((u(mds[key]), False))
 
@@ -366,13 +414,16 @@ def download_search(file_data, file_text, fallback):
 
     best_candidate = None
     best_points = 10000
-    for search_text, is_filename in search_texts:
+    for main_position, (search_text, is_filename) in enumerate(search_texts):
         phrases = split_phrase(search_text, is_filename)
 
-        for phrase in phrases:
+        for inner_position, phrase in enumerate(phrases):
             candidate = [part for part in phrase.split(" ") if part.strip()]
 
-            candidate_points = abs(3-len(candidate))+len(candidate)/10.+sum(0.9 for word in candidate if len(word)<2)
+            count = sum(1 for word in candidate if len(word)>1)
+            is_numeric = len(candidate)==1 and candidate[0].isdecimal()
+            candidate_points = main_position+inner_position+(50 if count==0 else 5 if count==1 and is_numeric else 20 if count>15 else 0)
+
             if candidate_points<best_points:
                 best_points = candidate_points
                 best_candidate = candidate
@@ -392,23 +443,27 @@ def download_file(file_id,file_name=None):
     error=(None,"") #guarda el id y el texto de un error
     file_data=None
     if file_id is not None: #si viene un id se comprueba que sea correcto
-        try: #intentar convertir el id que viene de la url a uno interno
-            file_id=url2mid(file_id)
-        except (bson.objectid.InvalidId, TypeError) as e:
-            try: #comprueba si se trate de un ID antiguo
-                possible_file_id = filesdb.get_newid(file_id)
-                if possible_file_id is None:
-                    logging.warn("Identificadores numericos antiguos sin resolver: %s."%e, extra={"fileid":file_id})
-                    error=(404,"link_not_exist")
-                else:
-                    logging.warn("Identificadores numericos antiguos encontrados: %s."%e, extra={"fileid":file_id})
-                    return {"html": redirect(url_for(".download", file_id=mid2url(possible_file_id), file_name=file_name), 301),"error":(301,"")}
 
-            except filesdb.BogusMongoException as e:
-                logging.exception(e)
-                error=(503,"")
+        if is_valid_url_fileid(file_id):
+            try: #intentar convertir el id que viene de la url a uno interno
+                file_id=url2mid(file_id)
+            except (bson.objectid.InvalidId, TypeError) as e:
+                try: #comprueba si se trate de un ID antiguo
+                    possible_file_id = filesdb.get_newid(file_id)
+                    if possible_file_id is None:
+                        logging.warn("Identificadores numericos antiguos sin resolver: %s."%e, extra={"fileid":file_id})
+                        error=(404,"link_not_exist")
+                    else:
+                        logging.warn("Identificadores numericos antiguos encontrados: %s."%e, extra={"fileid":file_id})
+                        return {"html": redirect(url_for(".download", file_id=mid2url(possible_file_id), file_name=file_name), 301),"error":(301,"")}
 
-            file_id=None
+                except filesdb.BogusMongoException as e:
+                    logging.exception(e)
+                    error=(503,"")
+
+                file_id=None
+        else:
+            abort(404)
 
         if file_id:
             try:
@@ -464,6 +519,12 @@ def download_file(file_id,file_name=None):
         if "cs" in file_data["file"]:
             comments=[(i,usersdb.find_userid(comment["_id"].split("_")[0]),comment,comment_votes(file_id,comment)) for i,comment in enumerate(usersdb.get_file_comments(file_id,g.lang),1)]
 
+        # en la pagina de download se intentan obtener palabras para buscar si no las hay
+        if g.args.get("q", None) is None:
+            query = download_search(file_data, file_name, "foofind")
+            if query:
+                g.args["q"] = query.replace(":","")
+
         return {
             "html":render_template('files/download.html',file=file_data,vote={"k":0} if vote is None else vote,favorite=favorite,form=form,comments=comments),
             "play":file_data["view"]["play"] if "play" in file_data["view"] else "",
@@ -485,6 +546,8 @@ def downloada():
     '''
     Responde las peticiones de download por ajax
     '''
+    prepare_args()
+
     file_id=request.form.get("id",None)
     file_name=request.form.get("name",None)
     static_download=download_file(file_id,file_name)

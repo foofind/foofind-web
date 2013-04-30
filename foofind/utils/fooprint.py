@@ -6,6 +6,7 @@ from functools import wraps
 from random import randint
 from time import time
 from foofind.utils import u, pyon, VALUE_UNSET
+import newrelic.agent
 
 from . import logging
 
@@ -410,7 +411,9 @@ class Fooprint(Blueprint):
             if endpoint in self.decorators and len(self.decorators[endpoint].alternatives) == 1:
                 # Si sólo hay una alternativa, nos saltamos el decorated_view
                 fnc = self.decorators[endpoint].alternatives.values()[0]
+            fnc = newrelic.agent.transaction_name()(fnc)
             fnc._fooprint = self
+
             return app.add_url_rule(rule, endpoint, fnc, **options)
         self.record(record)
 

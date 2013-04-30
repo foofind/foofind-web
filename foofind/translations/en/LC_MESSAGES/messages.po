@@ -1451,7 +1451,19 @@ msgid "admin_deploy_manual_restart"
 msgstr "For stability reasons this deploy won't restart any web server"
 
 msgid "admin_deploy_debug"
-msgstr "Información de debug"
+msgstr "Debug info"
+
+msgid "admin_deploy_downloader_upload"
+msgstr "Downloader files upload"
+
+msgid "admin_deploy_downloader"
+msgstr "Downloader deploy"
+
+msgid "admin_deploy_downloader_upload"
+msgstr "Upload downloader files"
+
+msgid "admin_deploy_downloader_distribute"
+msgstr "Distribute downloader files"
 
 msgid "admin_locks_search_mode"
 msgstr "Search by"

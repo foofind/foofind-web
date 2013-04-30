@@ -39,21 +39,21 @@ class FeedbackStore(object):
         '''
         Guarda los enlaces enviados
         '''
-        self.feedback_conn.feedback.links.save({"links":data["links"],"ip":sha256(data["ip"]).hexdigest(),"created": datetime.utcnow()})
+        self.feedback_conn.feedback.links.insert({"links":data["links"],"ip":sha256(data["ip"]).hexdigest(),"created": datetime.utcnow()})
         self.feedback_conn.end_request()
 
     def notify_indir(self, file_id, server=None):
         '''
         Guarda un id de fichero en la tabla de errores de indir
         '''
-        self.feedback_conn.feedback.notify_indir.save({"_id":file_id,"s":server})
+        self.feedback_conn.feedback.notify_indir.insert({"_id":file_id,"s":server})
         self.feedback_conn.end_request()
 
     def notify_source_error(self, file_id, server):
         '''
         Guarda un id de fichero, y servidor, en la tabla de errores de source
         '''
-        self.feedback_conn.feedback.notify_source.save({"_id":file_id,"s":server})
+        self.feedback_conn.feedback.notify_source.insert({"_id":file_id,"s":server})
         self.feedback_conn.end_request()
 
     def visited_links(self,links):

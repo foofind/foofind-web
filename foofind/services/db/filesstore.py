@@ -88,7 +88,6 @@ class BongoContext(object):
 
             return True
 
-
 class Bongo(object):
     '''
     Clase para gestionar conexiones a Mongos que funcionan rematadamente mal.
@@ -226,7 +225,7 @@ class FilesStore(object):
         self.max_pool_size = 0
         self.server_conn = None
         self.servers_conn = {}
-        self.current_server = None
+        self.current_server = -1
 
     def init_app(self, app):
         '''
@@ -248,16 +247,16 @@ class FilesStore(object):
         Configura las conexiones a las bases de datos indicadas en la tabla server de la bd principal.
         Puede ser llamada para actualizar las conexiones si se actualiza la tabla server.
         '''
-        for bongo in self.servers_conn.itervalues():
-            bongo.reconnect()
-        for server in self.server_conn.foofind.server.find().sort([("lt",-1)]):
-            sid = str(int(server["_id"]))
+        '''for bongo in self.servers_conn.itervalues():
+            bongo.reconnect()'''
+        for server in self.server_conn.foofind.server.find():
+            server_id = int(server["_id"])
+            sid = str(server_id)
             if not sid in self.servers_conn:
-                self.servers_conn[sid] = Bongo(server, self.max_pool_size, self.get_files_timeout, self.max_autoreconnects)
+                self.servers_conn[sid] = pymongo.MongoReplicaSetClient(host=server["ip"], port=server["p"], replicaSet=server["rs"], max_pool_size=self.max_pool_size, socketTimeoutMS=self.get_files_timeout*1000, read_preference=pymongo.read_preferences.ReadPreference.SECONDARY_PREFERRED)
+            if self.current_server < server_id:
+                self.current_server = server_id
         self.server_conn.end_request()
-        self.current_server = max(
-            self.servers_conn.itervalues(),
-            key=lambda x: x.info["lt"] if "lt" in x.info else datetime.min)
 
     def _get_server_files(self, async, sid, ids, bl):
         '''
@@ -273,17 +272,14 @@ class FilesStore(object):
         @type ids: list
         @param ids: lista de ids a obener
         '''
-        with self.servers_conn[sid].context as context:
-            profiler_key = "mongo%s%s"%(sid, "m" if context.is_master else "s")
-            data = tuple(
-                context.conn.foofind.foo.find(
-                    {"_id": {"$in": ids}}
-                    if bl is None else
-                    {"_id": {"$in": ids},"bl":bl}))
-            context.conn.end_request()
-            for doc in data:
-                doc["s"] = sid
-            async.return_value(data)
+        data = tuple(
+            self.servers_conn[sid].foofind.foo.find(
+                {"_id": {"$in": ids}}
+                if bl is None else
+                {"_id": {"$in": ids},"bl":bl}))
+        for doc in data:
+            doc["s"] = sid
+        async.return_value(data)
 
     def get_files(self, ids, servers_known = False, bl = 0):
         '''
@@ -362,14 +358,12 @@ class FilesStore(object):
                 fid = ind["t"]
             self.server_conn.end_request()
 
-        with self.servers_conn[sid].context as context:
-            profiler_key = "mongo%s%s"%(sid, "m" if context.is_master else "s")
-            data = context.conn.foofind.foo.find_one(
-                {"_id":fid} if bl is None else
-                {"_id":fid,"bl":bl})
-            context.conn.end_request()
-            if data: data["s"] = sid
-            return data
+        data = self.servers_conn[sid].foofind.foo.find_one(
+            {"_id":fid} if bl is None else
+            {"_id":fid,"bl":bl})
+        if data:
+            data["s"] = sid
+        return data
 
     def get_newid(self, oldid):
         '''
@@ -386,11 +380,10 @@ class FilesStore(object):
         elif isinstance(oldid, basestring):
             if not oldid.isdigit():
                 return None
-        with self.servers_conn["1"].context as context:
-            doc = context.conn.foofind.foo.find_one({"i":int(oldid)})
-            context.conn.end_request()
-            if doc:
-                return doc["_id"]
+
+        doc = self.servers_conn["1"].foofind.foo.find_one({"i":int(oldid)})
+        if doc:
+            return doc["_id"]
         return None
 
     def update_file(self, data, remove=None, direct_connection=False, update_sphinx=True):
@@ -436,14 +429,8 @@ class FilesStore(object):
             if i in update["$set"]:
                 del update["$set"][i]
 
-        if direct_connection:
-            # TODO: update cache
-            with self.servers_conn[server].contextmaster as context:
-                context.conn.foofind.foo.update({"_id":fid}, update)
-                context.conn.end_request()
-        else:
-            #TODO(felipe): implementar usando el EventManager
-            raise NotImplemented("No se ha implementado una forma eficiente de actualizar un foo")
+        # TODO: update cache
+        self.servers_conn[server].foofind.foo.update({"_id":fid}, update)
 
     def count_files(self):
         '''
@@ -458,14 +445,11 @@ class FilesStore(object):
         '''
         Obtiene los últimos ficheros del último mongo
         '''
-        with self.current_server.context as context:
-            data = tuple( context.conn.foofind.foo.find({"bl":0})
-                .sort([("$natural",-1)])
-                .skip(offset)
-                .limit(n) )
-            context.conn.end_request()
-            return data
-        return ()
+        data = tuple( self.servers_conn[str(self.current_server)].foofind.foo.find({"bl":0})
+            .sort([("$natural",-1)])
+            .skip(offset)
+            .limit(n) )
+        return data
 
     def _get_last_files_indir_offset(self):
         '''
@@ -481,11 +465,9 @@ class FilesStore(object):
         '''
         Obtiene el timestamp de la última sincronización del último mongo
         '''
-        with self.current_server.context as context:
-            data = context.conn.local.sources.find_one({"source":"main"}) # Workaround de bug de pymongo
-            context.conn.end_request()
-            if data and "syncedTo" in data:
-                return data["syncedTo"].time
+        data = self.servers_conn[str(self.current_server)].local.sources.find_one({"source":"main"}) # Workaround de bug de pymongo
+        if data and "syncedTo" in data:
+            return data["syncedTo"].time
         return 0
 
     # Desfase de 8 ficheros por cada segundo, hasta un max de 200

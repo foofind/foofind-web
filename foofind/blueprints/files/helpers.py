@@ -3,12 +3,12 @@
     Funciones auxiliares
 '''
 from cgi import escape
-from flask import request, g, Markup
+from flask import request, g, Markup, url_for
 from foofind.services import *
 from foofind.utils import mid2hex, multipartition, logging
 from foofind.utils.content_types import *
 from foofind.utils.splitter import SEPPER, slugify
-
+from flask.ext.babel import gettext as _
 
 __all__=(
     "FILTERS","DatabaseError","FileNotExist","FileRemoved","FileFoofindRemoved","FileUnknownBlock","FileNoSources",
@@ -175,39 +175,69 @@ def fetch_global_data():
     g.sources = {int(s["_id"]):s for s in filesdb.get_sources(blocked=None)}
     g.image_servers = filesdb.get_image_servers()
 
-def prepare_args(query, filters):
-    args = filters.copy()
-    args["q"] = query
+def prepare_args(query=None, filters=None):
 
-    g.args=args
+    if query:
+        args = filters.copy()
+        args["q"] = query
+        g.args=args
+    else:
+        g.args = args = {}
 
     #sources que se pueden elegir
     fetch_global_data()
 
     sources_streaming, sources_download, sources_p2p = searchd.get_sources_stats()
 
-    g.sources_names = {}
-    g.sources_streaming = []
+    g_sources_names = {}
+    g_sources_streaming = []
     for src in sources_streaming:
         notld_src = src.split(".",1)[0].lower()
-        g.sources_streaming.append(notld_src)
-        g.sources_names[notld_src] = src
-    g.sources_names["other-streamings"] = "other_streamings"
+        g_sources_streaming.append(notld_src)
+        g_sources_names[notld_src] = src
+    g_sources_names["other-streamings"] = _("other_streamings")
 
-    g.sources_download = []
+    g_sources_download = []
     for src in sources_download:
         notld_src = src.split(".",1)[0].lower()
-        g.sources_download.append(notld_src)
-        g.sources_names[notld_src] = src
-    g.sources_names["other-downloads"] = "other_direct_downloads"
+        g_sources_download.append(notld_src)
+        g_sources_names[notld_src] = src
+    g_sources_names["other-downloads"] = _("other_direct_downloads")
 
-    g.sources_p2p = []
+    g_sources_p2p = []
     for src in sources_p2p:
         notld_src = src.lower()
-        g.sources_p2p.append(notld_src)
-        g.sources_names[notld_src] = src
+        g_sources_p2p.append(notld_src)
+        g_sources_names[notld_src] = src
 
-    g.extra_sources=g.sources_streaming+g.sources_download+g.sources_p2p
+    g.sources_names = g_sources_names
+    g.sources_streaming = g_sources_streaming
+    g.sources_download = g_sources_download
+    g.sources_p2p = g_sources_p2p
+
+    g.visible_sources_streaming = visible_sources_streaming = g_sources_streaming[:8]+["other-streamings"]
+    g.visible_sources_download = visible_sources_download = g_sources_download[:8]+["other-downloads"]
+
+    g_active_srcs = set(args["src"]) if "src" in args else set()
+    if "streaming" in g_active_srcs:
+        g_active_srcs.update(set(visible_sources_streaming))
+    elif any(src in visible_sources_streaming for src in g_active_srcs):
+        g_active_srcs.add("streaming")
+
+    if "download" in g_active_srcs:
+        g_active_srcs.update(set(visible_sources_download))
+    elif any(src in visible_sources_download for src in g_active_srcs):
+        g_active_srcs.add("download")
+
+    if "p2p" in g_active_srcs:
+        g_active_srcs.update(set(g_sources_p2p))
+    elif any(src in g_sources_p2p for src in g_active_srcs):
+        g_active_srcs.add("p2p")
+
+    g.active_srcs = g_active_srcs
+    g.active_types = set(args["type"]) if "type" in args else set()
+
+    g.search_url = url_for('files.search', query="")
 
 def get_files(ids, sphinx_search=None):
     '''

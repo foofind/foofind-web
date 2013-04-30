@@ -313,6 +313,10 @@ def fileurl2mid(url):
     idpart = urlparse(url.replace("#!", "")).path.split("/download/")[1].split("/", 1)[0]
     return url2mid(unquote(idpart))
 
+VALID_ID=re.compile("^[A-Za-z0-9!-]{16}$")
+def is_valid_url_fileid(url):
+    return VALID_ID.match(url) or url.isdigit()
+
 def lang_path(lang, base_path, ext="po"):
     '''
     Devuelve la ruta de la traducción del idioma pedido o None si no existe

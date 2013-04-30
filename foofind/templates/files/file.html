@@ -1,5 +1,4 @@
-{% from "files/macros.html" import url_search with context %}
-{% set source_data=file['view']['sources'][file['view']['sources']|first] %}
+{%- for file in files %}{%- set source_data=file['view']['sources'][file['view']['sources']|first] %}
 <li class="{{ file['view']['file_type'] }}"{% if scroll_start %} data-scroll-start="0"{% endif %}>
     <div>
         <div class="thumblink" title="{{_(source_data['source'])|capitalize}}"{% if file['view']['play'] and file['view']['play'][0] %} data-play="{{ file['view']['play'][0] }},{{ file['view']['play'][1] }}"{% endif %}>
@@ -43,7 +42,7 @@
         {% set metadata=['series','season','episode','genre','album','artist','title'] %}
         {% for meta in metadata if meta in file['view']['md'] %}
             <li>
-                <a href="{{ url_search(query=file['view']['searches'][meta])}}" title="{{_(meta)|capitalize }}: {{ file['view']['md'][meta] }}">
+                <a href="{{ {'query':file['view']['searches'][meta]}|url_search(args) }}" title="{{_(meta)|capitalize }}: {{ file['view']['md'][meta] }}">
                     {%- if meta in ['season','episode'] %}{{_(meta)}} {% endif -%}{{ file['view']['mdh'][meta]|safe }}
                 </a>
             </li>
@@ -68,4 +67,4 @@
             <li>{% if comments %}<a href="#coments" title="Comentar este archivo"><span></span>{{ comments|count }}</a>{% endif %}</li>
         </ul>
     </div>
-</li>
+</li>{%- endfor %}

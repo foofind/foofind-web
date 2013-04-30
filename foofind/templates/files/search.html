@@ -1,21 +1,8 @@
 {% extends "files/base.html" %}
-{%- macro searched(param,value="",more_values=[],parent="") %}
-    {%- if param in args %}
-        {% set params=args[param] %}
-    {%- else -%}
-        {% set params=[] %}
-    {% endif -%}
-    {%- if (value=="" and param not in args) or value in args[param] or (parent!="" and parent in params) %} class="active"
-    {%- else -%}
-        {% set active=false -%}
-        {% for more in more_values if not active and param in args and more in params -%}
-            {% set active=true %} class="active"
-        {%- endfor -%}
-    {% endif -%}
-{% endmacro -%}
-{% macro checkbox(value,parent,text="") -%}
-    <li title="{{_(g.sources_names[value])}}"{{ searched('src',value,parent=parent) }}>
-        <a href="{{url_search(src=value)}}" data-filter="{{ value }}">{%- if text %}{{ text }}{%- else -%}{{ value }}{% endif -%}</a>
+{% from "helpers.html" import flash%}
+{% macro checkbox(value,text="") -%}
+    <li title="{{_(g.sources_names[value])}}"{{ ' class="active"'|safe if value in active_srcs }}>
+        <a href="{{ {'src':value}|url_search(args)}}" data-filter="{{ value }}">{{ text or value }}</a>
     </li>
 {%- endmacro %}
 {% block head %}
@@ -52,26 +39,26 @@
         <section>
             <aside>
                 <dl>
-                    <dt>{{_('what')|lower}}<a href="{{url_search(delete_params=['type'])}}" data-filter="type" title="{{_('all')}}">{{_('all')|lower}}</a></dt>
+                    <dt>{{_('what')|lower}}<a href="{{ {}|url_search(args, delete_params=['type'])}}" data-filter="type" title="{{_('all')}}">{{_('all')|lower}}</a></dt>
                     <dd id="type">
                         <ul>
-                            <li{{ searched('type','audio') }}><a href="{{url_search(type='audio')}}" data-filter="audio" title="{{_('audio')}}: mp3, ogg, aac, wma, wav, amr, flac, oga...">{{_('audio')}}</a></li>
-                            <li{{ searched('type','video') }}><a href="{{url_search(type='video')}}" data-filter="video" title="{{_('video')}}: avi, flv, mkv, mp4, wmv, mpg, mov, webm, 3gp, rmvb, vob...">{{_('video')}}</a></li>
-                            <li{{ searched('type','image') }}><a href="{{url_search(type='image')}}" data-filter="image" title="{{_('image')}}: jpg, png, gif, bmp, tiff, psd, xcf...">{{_('image')}}</a></li>
-                            <li{{ searched('type','document') }}><a href="{{url_search(type='document')}}" data-filter="document" title="{{_('document')}}: pdf, epub, doc, xls, ppt, odf, txt...">{{_('document')}}</a></li>
-                            <li{{ searched('type','software') }}><a href="{{url_search(type='software')}}" data-filter="software" title="{{_('software')}}: exe, msi, apk, sys, iso, nrg...">{{_('software')}}</a></li>
+                            <li{{ " class='active'" if 'audio' in active_types }}><a href="{{ {'type':'audio'}|url_search(args) }}" data-filter="audio" title="{{_('audio')}}: mp3, ogg, aac, wma, wav, amr, flac, oga...">{{_('audio')}}</a></li>
+                            <li{{ " class='active'" if 'video' in active_types }}><a href="{{ {'type':'video'}|url_search(args) }}" data-filter="video" title="{{_('video')}}: avi, flv, mkv, mp4, wmv, mpg, mov, webm, 3gp, rmvb, vob...">{{_('video')}}</a></li>
+                            <li{{ " class='active'" if 'image' in active_types }}><a href="{{ {'type':'image'}|url_search(args) }}" data-filter="image" title="{{_('image')}}: jpg, png, gif, bmp, tiff, psd, xcf...">{{_('image')}}</a></li>
+                            <li{{ " class='active'" if 'document' in active_types }}><a href="{{ {'type':'document'}|url_search(args) }}" data-filter="document" title="{{_('document')}}: pdf, epub, doc, xls, ppt, odf, txt...">{{_('document')}}</a></li>
+                            <li{{ " class='active'" if 'software' in active_types }}><a href="{{ {'type':'software'}|url_search(args) }}" data-filter="software" title="{{_('software')}}: exe, msi, apk, sys, iso, nrg...">{{_('software')}}</a></li>
                             <li><a></a></li>
                         </ul>
                     </dd>
-                    <dt>{{_('where')|lower}}<a href="{{url_search(delete_params=['src'])}}" data-filter="src" title="{{_('all')}}">{{_('all')|lower}}</a></dt>
+                    <dt>{{_('where')|lower}}<a href="{{ {}|url_search(args, delete_params=['src'])}}" data-filter="src" title="{{_('all')}}">{{_('all')|lower}}</a></dt>
                     <dd id="src">
                         {% set params=args["src"] if "src" in args else [] %}
                         <ul>
-                            <li{{ searched('src','streaming',g.sources_streaming) }}>
-                                <a href="{{url_search(src='streaming')}}" data-filter="streaming" title="Streaming">Streaming</a>
+                            <li{{ " class='active'" if "streaming" in active_srcs }}>
+                                <a href="{{ {'src':'streaming'}|url_search(args) }}" data-filter="streaming" title="Streaming">Streaming</a>
                                 <ul class="{% if not params %}inactive{% elif 'other-streamings' in params %}inactive_{{ sources_count['streaming']-(g.sources_streaming|length-9) }}{% else %}inactive_{{ sources_count['streaming'] }}{% endif %}">
-                                    {%- for source in g.sources_streaming[:8] %}{{ checkbox(source,"streaming") }}{% endfor %}
-                                    {{ checkbox("other-streamings","streaming",_("others")+" ("+(g.sources_streaming|length-8)|string+")") }}
+                                    {%- for source in g.sources_streaming[:8] %}{{ checkbox(source) }}{% endfor %}
+                                    {{ checkbox("other-streamings",_("others")+" ("+(g.sources_streaming|length-8)|string+")") }}
                                     <li><button>{{_("update")}}</button></li>
                                 </ul>
                                 <span class="more">+
@@ -82,11 +69,11 @@
                                 {{ g.sources_streaming|length-2 }} {{_("sources")}}</span>
                                 {% endif %}
                             </li>
-                            <li{{ searched('src','download',g.sources_download) }}>
-                                <a href="{{url_search(src='download')}}" data-filter="download" title="{{_('direct_downloads')}}">{{_('direct_downloads')}}</a>
+                            <li{{ " class='active'" if "download" in active_srcs }}>
+                                <a href="{{ {'src':'download'}|url_search(args) }}" data-filter="download" title="{{_('direct_downloads')}}">{{_('direct_downloads')}}</a>
                                 <ul class="{% if not params %}inactive{% elif 'other-downloads' in params %}inactive_{{ sources_count['download']-(g.sources_download|length-9) }}{% else %}inactive_{{ sources_count['download'] }}{% endif %}">
-                                    {% for source in g.sources_download[:8] %}{{ checkbox(source,"download") }}{% endfor %}
-                                    {{ checkbox("other-downloads","download",_("others")+" ("+(g.sources_download|length-8)|string+")") }}
+                                    {% for source in g.sources_download[:8] %}{{ checkbox(source) }}{% endfor %}
+                                    {{ checkbox("other-downloads",_("others")+" ("+(g.sources_download|length-8)|string+")") }}
                                     <li><button>{{_("update")}}</button></li>
                                 </ul>
                                 <span class="more">+
@@ -97,10 +84,10 @@
                                 {{ g.sources_download|length-2 }} {{_("sources")}}</span>
                                 {% endif %}
                             </li>
-                            <li{{ searched('src','p2p',g.sources_p2p) }}>
-                                <a href="{{url_search(src='p2p')}}" data-filter="p2p" title="P2P">P2P</a>
+                            <li{{ " class='active'" if "p2p" in active_srcs }}>
+                                <a href="{{ {'src':'p2p'}|url_search(args) }}" data-filter="p2p" title="P2P">P2P</a>
                                 <ul class="{% if not params %}inactive{% else %}inactive_{{ sources_count['p2p'] }}{% endif %}">
-                                    {% for source in g.sources_p2p %}{{ checkbox(source,"p2p") }}{% endfor %}
+                                    {% for source in g.sources_p2p %}{{ checkbox(source) }}{% endfor %}
                                     <li><button>actualizar</button></li>
                                 </ul>
                                 <span class="more"></span>
@@ -108,7 +95,7 @@
                             </li>
                         </ul>
                     </dd>
-                    <dt>{{_('size')|lower}}<a href="{{url_search(delete_params=['size'])}}" data-filter="size" title="{{_('all')}}">{{_('all')|lower}}</a></dt>
+                    <dt>{{_('size')|lower}}<a href="{{ {}|url_search(args,delete_params=['size'])}}" data-filter="size" title="{{_('all')}}">{{_('all')|lower}}</a></dt>
                     <dd id="size">
                         <div></div>
                         <span>{{_('minimun')}}</span><span>{{_('maximun')}}</span>
@@ -117,35 +104,31 @@
             </aside>
             {% if args|length>1 %}
             <div id="filters">
-                <a href="{{ url_search(delete_params=['all']) }}" class="close"></a>
+                <a href="{{ {}|url_search(args, delete_params=['all']) }}" class="close"></a>
                 <ul>
-                    {%- for name,value in top_filters.iteritems() if value -%}
-                    <li title="{% if name=='type' %}{{_('what')}}{% elif name=='src' %}{{_('where')}} {{ value|join(' - ') }}{% else %}{{_('size')}}{% endif %}">
-                    {%- if name=="size" %}
-                        {% if value[0]>0 and value[1]==50 %}
-                            {{_(value[3])}} <em>{{(2**value[0])|numbersizeformat}}</em>
-                        {% elif value[0]==0 and value[1]<50 %}
-                            {{_(value[2])}} <em>{{(2**value[1])|numbersizeformat}}</em>
+                    {% set type_filters = top_filters["type"] %}
+                    {% set src_filters = top_filters["src"] %}
+                    {% set size_filters = top_filters["size"] %}
+
+                    {%- if type_filters %}
+                    <li title="{{_('what')}}">{{ type_filters|join(" - ") }}</li>
+                    {% endif %}
+
+                    {%- if src_filters %}
+                    <li title="{{_('where')}}">{{ src_filters|join(" - ") }}</li>
+                    {% endif %}
+
+                    {%- if size_filters %}
+                    <li title="{{_('size')}}">
+                        {% if size_filters[0]>0 and size_filters[1]==50 %}
+                            {{_(size_filters[3])}} <em>{{(2**size_filters[0])|numbersizeformat}}</em>
+                        {% elif size_filters[0]==0 and size_filters[1]<50 %}
+                            {{_(size_filters[2])}} <em>{{(2**size_filters[1])|numbersizeformat}}</em>
                         {% else %}
-                            {{_(value[3])}} <em>{{(2**value[0])|numbersizeformat}}</em> / {{_(value[2])}} <em>{{(2**value[1])|numbersizeformat}}</em>
+                            {{_(size_filters[3])}} <em>{{(2**size_filters[0])|numbersizeformat}}</em> / {{_(size_filters[2])}} <em>{{(2**size_filters[1])|numbersizeformat}}</em>
                         {% endif %}
-                    {% elif name=="src" %}
-                        {%- if value|length>4 %}
-                            {{ value|top_filters_src }}
-                        {%- elif value|length>2 %}
-                            {% if ("type" in top_filters and top_filters["type"]|length>2) or ("size" in top_filters and top_filters["size"][4]) or ("type" in top_filters and "size" in top_filters) %}
-                                {{ value|top_filters_src }}
-                            {% else %}
-                                {{ value|join(" - ") }}
-                            {% endif -%}
-                        {% else %}
-                            {{ value|join(" - ") }}
-                        {% endif -%}
-                    {% else %}
-                        {{ value|join(" - ") }}
-                    {% endif -%}
                     </li>
-                    {%- endfor -%}
+                    {% endif %}
                 </ul>
             </div>
             {% endif %}
@@ -156,11 +139,7 @@
                     <img alt="loading" src="{{ g.static_prefix }}/img/search/cargando.png" />
                 </li>
             {% endif %}
-            {% if static_results %}
-                {% for result in static_results %}
-                    {{ result }}
-                {% endfor %}
-            {% endif %}
+            {% include "files/file.html" with context %}
             </ul>
             <a href="#" id="more"></a>
         </section>
