@@ -7,7 +7,7 @@ import polib
 import re
 import random
 from flask import Blueprint, g, render_template, request, flash, current_app, redirect, url_for, abort
-from flask.ext.babel import gettext as _
+from flask.ext.babelex import gettext as _
 from wtforms import Form,FieldList,TextField,TextAreaField,SubmitField
 from babel import localedata
 from functools import cmp_to_key
@@ -140,7 +140,7 @@ def complaint(file_id=None,file_name=None):
                 if data:
                     form.urlreported.data=url_for("files.download",file_id=file_id,file_name=file_name,_external=True).replace("%21","!")
                     form.linkreported.data=data["src"].itervalues().next()["url"]
-            except filesdb.BogusMongoException as e:
+            except BaseException as e:
                 logging.exception(e)
         elif form.validate():
             pagesdb.create_complaint(dict([("ip",request.remote_addr)]+[(field.name,field.data) for field in form]))

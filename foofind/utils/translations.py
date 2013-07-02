@@ -4,7 +4,7 @@
 '''
 import re, random
 from foofind.translations.samples_values import samples
-from flask.ext.babel import gettext as _
+from flask.ext.babelex import gettext as _
 
 _strarg = re.compile('(%\(([^\)]+)\)([s|d]))')
 def fix_lang_values(entry, sample=False):

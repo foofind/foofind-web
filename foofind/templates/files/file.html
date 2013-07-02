@@ -39,11 +39,11 @@
             </a>
         </h3>
         <ul class="metadata">
-        {% set metadata=['series','season','episode','genre','album','artist','title'] %}
+        {% set metadata=['series','season','episode','album','artist','title'] %}
         {% for meta in metadata if meta in file['view']['md'] %}
             <li>
                 <a href="{{ {'query':file['view']['searches'][meta]}|url_search(args) }}" title="{{_(meta)|capitalize }}: {{ file['view']['md'][meta] }}">
-                    {%- if meta in ['season','episode'] %}{{_(meta)}} {% endif -%}{{ file['view']['mdh'][meta]|safe }}
+                    {%- if meta in ['season','episode'] %}{{_(meta)}} {% endif -%}{{ file['view']['mdh'][meta]|safe if meta in file['view']['mdh'] else file['view']['md'][meta]}}
                 </a>
             </li>
         {% endfor %}

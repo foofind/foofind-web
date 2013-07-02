@@ -6,7 +6,7 @@ import os.path
 from foofind.services.extensions import cache
 
 from flask import Blueprint, render_template, g, current_app, request, send_file
-from flask.ext.babel import gettext as _
+from flask.ext.babelex import gettext as _
 
 from foofind.utils.downloader import get_file_metadata
 
@@ -26,7 +26,7 @@ def robots():
         )
 
 @web.route('/')
-@web.route('/<lang>/')
+@web.route('/<lang>')
 @cache.cached(60)
 def index():
     downloader_files = current_app.config["DOWNLOADER_FILES"]
@@ -63,7 +63,7 @@ def index():
         style_alternative = request.args.get("a", 2, int)
         )
 
-@web.route("/<lang>/success")
+@web.route("/success")
 @cache.cached()
 def foodownloader_success():
     return render_template(

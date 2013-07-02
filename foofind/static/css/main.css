@@ -431,7 +431,7 @@ section#files
     .message{width:750px;text-align:center}
     aside
     {
-        position:absolute;left:0;height:100%;width:160px;margin-right:10px;box-shadow:-3px 5px 5px $lightestgray inset;
+        position:absolute;left:0;height:100%;min-height:722px;width:160px;margin-right:10px;box-shadow:-3px 5px 5px $lightestgray inset;
         a{outline:none}
         dt
         {
@@ -717,7 +717,7 @@ section#files
     }
     #results
     {
-        min-height:722px;width:630px;margin:0;overflow:hidden;padding-bottom:60px;
+        width:630px;margin:0;overflow:hidden;padding-bottom:60px;
         >li
         {
             margin:0 5px;position:relative;cursor:pointer;background:transparent;border-bottom:1px solid $lightestgray;

@@ -8,7 +8,7 @@ from math import sqrt, log, exp
 from time import time
 from hashlib import md5
 from collections import defaultdict
-import re, json
+import re, msgpack
 
 from foofind.utils.splitter import split_file, SEPPER
 from foofind.utils.content_types import *
@@ -295,7 +295,7 @@ class Search(object):
             self.query_key = u"L"+md5(query["user"]+"."+query["list"]).hexdigest()
             self.query = {"y":query_type, "i": "idx_lists", "ids": (query["user"]<<32, query["user"]<<32 | 0xFFFFFFFF)}
         elif query_type=="text":
-            self.query_key = u"Q"+md5(json.dumps(query_parts)+"".join("|"+str(part) if part else "|" for part in order_repr)).hexdigest()
+            self.query_key = u"Q"+md5(msgpack.dumps(query_parts)+"".join("|"+str(part) if part else "|" for part in order_repr)).hexdigest()
             self.query = {"y":query_type, "i": "idx_files", "p": query_parts}
 
         self.query_state, self.filters_state, self.locked_until, self.blocked_ids = proxy.get_search_state(self.query_key, self.filters)

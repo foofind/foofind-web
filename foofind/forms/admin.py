@@ -8,8 +8,7 @@ from flask.ext.wtf import SubmitField, SelectMultipleField, CheckboxInput,\
                            SelectField, TextField, BooleanField, IntegerField,\
                            FileField,\
                            html_params as whtml_params,HTMLString
-from flask.ext.babel import lazy_gettext as _
-from flask.ext.babel import gettext
+from flask.ext.babelex import lazy_gettext as _, gettext
 
 from .fields import HTMLString, fix_param_name, html_params
 

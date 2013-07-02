@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from flask import render_template, flash, current_app
-from flask.ext.babel import gettext as _
-from flask.ext.babel import Babel
+from flask.ext.babelex import gettext as _, Babel
 from flask.ext.login import LoginManager
 from flask.ext.mail import Mail, Message
 from flask.ext.seasurf import SeaSurf

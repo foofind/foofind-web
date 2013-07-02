@@ -11,7 +11,7 @@ import threading
 from urlparse import urlparse
 from werkzeug import url_unquote
 from flask import Blueprint, render_template, redirect, url_for, g, make_response, current_app, request, send_from_directory, abort, get_flashed_messages, session
-from flask.ext.babel import get_translations, gettext as _
+from flask.ext.babelex import gettext as _
 from flask.ext.login import current_user
 from flask.ext.seasurf import SeaSurf
 from urlparse import urlparse
@@ -35,18 +35,14 @@ def gensitemap(server, urlformat):
     @return tupla con la url y su fecha de modificación, o None si no se puede
             obtener la url.
     '''
-    subdomain = server["ip"].split(".")[0]
-    serverno = int(subdomain[6:])
-    url = urlformat % serverno
+    url = urlformat % int(server["_id"])
     domain = urlparse(url)[1]
     con = httplib.HTTPConnection(domain)
     con.request("HEAD", url)
-    response =  con.getresponse()
+    response = con.getresponse()
 
     if response.status == 200:
-        mtime = time.mktime(time.strptime(
-           response.getheader("last-Modified"),
-            "%a, %d %b %Y %H:%M:%S %Z"))
+        mtime = time.mktime(time.strptime(response.getheader("last-Modified"), "%a, %d %b %Y %H:%M:%S %Z"))
         return (url, datetime.datetime.fromtimestamp(mtime))
 
     return None
@@ -58,7 +54,12 @@ def favicon():
 
 @index.route('/robots.txt')
 def robots():
-    return send_from_directory(os.path.join(current_app.root_path, 'static'), 'robots.txt')
+    response = send_from_directory(os.path.join(current_app.root_path, 'static'), 'robots.txt')
+
+    # añade el sitemap en el dominio correspondiente, si hay
+    if g.domain in current_app.config["FILES_SITEMAP_URL"]:
+        response.data += "\nSitemap: http://"+g.domain+"/sitemap.xml"
+    return response
 
 @index.route('/BingSiteAuth.xml')
 def bing():
@@ -78,22 +79,23 @@ def yandex():
     )
 @index.route('/sitemap.xml')
 def sitemap():
-    urlformat = current_app.config["FILES_SITEMAP_URL"]
-    servers = filesdb.get_servers()
+    urlformat = current_app.config["FILES_SITEMAP_URL"].get(g.domain, None)
     rules = []
-    threads = [
-        threading.Thread(
-            target = lambda x: rules.append( gensitemap(x, urlformat ) ),
-            args = ( server, ) )
-        for server in servers ]
-    for t in threads:
-        t.start()
-    for t in threads:
-        if t.is_alive():
-            t.join()
-    if None in rules:
-        rules.remove(None)
-        logging.error("Hay sitemaps no disponibles", extra=(servers, rules))
+    if urlformat:
+        servers = filesdb.get_servers()
+        threads = [
+            threading.Thread(
+                target = lambda x: rules.append( gensitemap(x, urlformat ) ),
+                args = ( server, ) )
+            for server in servers ]
+        for t in threads:
+            t.start()
+        for t in threads:
+            if t.is_alive():
+                t.join()
+        if None in rules:
+            rules = [rule for rule in rules if rule!=None]
+            logging.error("Hay sitemaps no disponibles", extra={"servers":servers, "rules":rules})
     return render_template('sitemap.xml', rules=rules)
 
 @index.route('/<lang>/opensearch.xml')
@@ -106,14 +108,14 @@ def opensearch():
 @index.route('/<lang>')
 @cache.cached(
     timeout=50,
-    key_prefix=lambda: "view/index_%s" % g.lang,
+    key_prefix=lambda: "view/index_%s_%s" % (g.lang, g.domain),
     unless=lambda: current_user.is_authenticated() or bool(get_flashed_messages())
     )
 def home():
     '''
     Renderiza la portada.
     '''
-    return render_template('index.html',form=SearchForm(),lang=current_app.config["ALL_LANGS_COMPLETE"][g.lang],zone="home")
+    return render_template('index.html',form=SearchForm(),zone="home")
 
 @index.route("/status")
 def status():

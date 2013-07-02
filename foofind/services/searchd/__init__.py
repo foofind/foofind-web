@@ -8,7 +8,7 @@ class Searchd:
     Demonio de busquedas para la aplicacion Flask.
     '''
     def __init__(self):
-        pass
+        self.service = False
 
     def init_app(self, app, filesdb, entitiesdb, profiler):
         self.proxy = SearchProxy(app.config, filesdb, entitiesdb, profiler)

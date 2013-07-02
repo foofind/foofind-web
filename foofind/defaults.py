@@ -2,11 +2,15 @@
 """
     Configuraciones por defecto para la aplicación.
 """
+from foofind.utils.content_types import CONTENTS
 
 SECRET_KEY = "supersecret"
 
 APPLICATION_ID = "default"
 
+SPHINX_REDIS_SERVER = ("redis.foofind.com", 6379)
+SPHINX_CLIENT_REQUESTS_CACHE_SIZE = 10000
+SPHINX_CLIENT_REQUESTS_CACHE_TIMEOUT = 60
 
 JOBS_EMAIL = ""
 CONTACT_EMAIL = ""
@@ -21,13 +25,16 @@ MAIL_USERNAME = ""
 MAIL_PASSWORD = ""
 
 DATA_SOURCE_SERVER = "mongodb://mongo.foofind.com:27017"
+DATA_SOURCE_SERVER_RS = "db"
 DATA_SOURCE_USER = "mongodb://mongo.foofind.com:27017"
 DATA_SOURCE_FEEDBACK = "mongodb://mongo.foofind.com:27017"
 DATA_SOURCE_ENTITIES = "mongodb://mongo.foofind.com:27017"
 DATA_SOURCE_DOWNLADS = "mongodb://mongo.foofind.com:27017"
 DATA_SOURCE_MAX_POOL_SIZE = 50
 DATA_SOURCE_FOO_THREADS = 30
+
 GET_FILES_TIMEOUT = 1
+GET_FILES_POOL_SIZE = 30
 AUTORECONNECT_FOO_INTERVAL = 300
 
 SERVICE_SPHINX = "sphinx.foofind.com"
@@ -40,8 +47,10 @@ SERVICE_SPHINX_SEARCH_MAX_RETRIES = 5
 SERVICE_SPHINX_WORKERS_PER_SERVER = 3
 SERVICE_SPHINX_CLIENT_RECYCLE = 1000
 SERVICE_SEARCH_MAINTENANCE_INTERVAL = 1
-SERVICE_SEARCH_PROFILE_INTERVAL = 60*5
+SERVICE_SEARCH_PROFILE_INTERVAL = 60
 SERVICE_SPHINX_DISABLE_QUERY_SEARCH = False
+
+SEARCH_CONTENT_TYPE_WEIGHTS = {ct:1 for ct in CONTENTS.iterkeys()}
 
 SERVERS_REFRESH_INTERVAL = 60*60 # actualiza servidores cada hora
 
@@ -148,4 +157,4 @@ ADMIN_LANG_FOLDER = "foofind/translations"
 ADMIN_GIT_AUTHOR = "admin"
 ADMIN_GIT_EMAIL = "admin@foofind.com"
 
-FILES_SITEMAP_URL = "http://sitemap.foofind.is/%s/sitemap_index1.xml.gz"
+FILES_SITEMAP_URL = {}

@@ -7,7 +7,7 @@ import os.path
 from foofind.services.extensions import cache
 
 from flask import Blueprint, current_app, request, jsonify, url_for, abort, send_file, g
-from flask.ext.babel import gettext as _
+from flask.ext.babelex import gettext as _
 
 from foofind.utils.downloader import downloader_url, is_downloader_useragent, get_file_metadata
 

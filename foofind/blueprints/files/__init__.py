@@ -2,11 +2,10 @@
 """
     Controladores de las páginas de búsqueda y de fichero.
 """
-import urllib, json, unicodedata, random, sys, bson
+import urllib, json, unicodedata, random, sys, bson, time
 from flask import request, render_template, g, current_app, jsonify, flash, redirect, url_for, abort, Markup
 from flask.ext.login import login_required, current_user
-from flask.ext.babel import gettext as _
-from flaskext.babel import format_datetime
+from flask.ext.babelex import gettext as _, format_datetime
 from datetime import datetime
 from timelib import strtotime
 from struct import pack, unpack
@@ -60,6 +59,18 @@ def file_var():
     return {"zone":"files","search_form":SearchForm(request.args),"share":share,"args":g.args,"active_types":g.active_types, "active_srcs":g.active_srcs}
 
 
+@files.route('/<lang>/search_info/<query>')
+@files.route('/<lang>/search_info/<query>/<path:filters>/')
+def search_info(query, filters=None):
+    query = query.replace("_"," ")
+    dict_filters, has_changed = url2filters(filters)
+
+    if searchd.service:
+        return jsonify(searchd.get_search_info(query, filters=filters))
+    else:
+        info = searchd.get_search_info({"type":"text", "text":query}, dict_filters)
+        return jsonify({"stats":[{"-":info["query"]}, {"-":info["filters"]}, {"-":info["temp"]}, {"-":info["locked"]}]})
+
 @unit.observe
 @files.route('/<lang>/search') #para soportar las URL antiguas
 @files.route('/<lang>/search/<query>')
@@ -70,7 +81,6 @@ def search(query=None,filters=None,file_id=None,file_name=None):
     '''
     Gestiona las URL de busqueda de archivos
     '''
-
     canonical_query=query #la busqueda canonica es la misma por defecto
     search_bot = g.search_bot
     full_browser = g.full_browser
@@ -184,11 +194,14 @@ def search(query=None,filters=None,file_id=None,file_name=None):
         static_results=results["files"], False
         total_found=results["total_found"]
         sure = True
-    elif query is not None and static_download["file_data"] is not None: #si es busqueda con download se pone el primero el id que venga
-        static_results=[static_download["file_data"]], True
     else:
-        static_results=[], False
+        # empieza la busqueda en la primera peticion
+        if searchd.service: searchd.search(query, filters=dict_filters, start=True, group=True, no_group=False)
 
+        if query is not None and static_download["file_data"] is not None: #si es busqueda con download se pone el primero el id que venga
+            static_results=[static_download["file_data"]], True
+        else:
+            static_results=[], False
 
     #calcular el numero de sources que estan activados
     sources_count={"streaming":0,"download":0,"p2p":0}
@@ -234,7 +247,7 @@ def search(query=None,filters=None,file_id=None,file_name=None):
         canonical=url_for('.search',lang='en',query=canonical_query)
 
     return render_template('files/search.html',
-        search_info=render_template('files/results_number.html',sure=sure,results={"total_found":total_found,"time":0},search=query),
+        search_info=render_template('files/results_number.html',sure=sure,total_found=total_found,search=query),
         sources_count=sources_count,
         top_filters=top_filters,
         files = static_results[0],
@@ -279,7 +292,7 @@ def searcha():
     search_results["files"] = render_template('files/file.html',files=search_results["files"])
     return jsonify(search_results)
 
-def search_files(query,filters,min_results=0,max_results=10,download=None,last_items=[],query_time=None,extra_wait_time=500, async=False, max_extra_searches=4):
+def search_files(query,filters,min_results=0,max_results=30,download=None,last_items=[],query_time=None,extra_wait_time=500, async=False, max_extra_searches=4, non_group=False, order=None, weight_processor=None, tree_visitor=None):
     '''
     Realiza una búsqueda de archivos
     '''
@@ -290,12 +303,16 @@ def search_files(query,filters,min_results=0,max_results=10,download=None,last_i
     profiler_data={}
     profiler.checkpoint(profiler_data,opening=["sphinx"])
 
-    s = searchd.search({"type":"text", "text":query}, filters=filters, query_time=query_time, extra_wait_time=extra_wait_time, just_usable=bool(async))
+    if searchd.service:
+        s = searchd.search(query, filters=filters, start=not bool(last_items), group=True, no_group=False, order=order)
+        ids = [(bin2hex(fileid), server, sphinxid, weight, sg) for (fileid, server, sphinxid, weight, sg) in s.get_results((1.4, 0.1), last_items=last_items, min_results=min_results, max_results=max_results, extra_browse=0 if max_results>30 else None, weight_processor=weight_processor, tree_visitor=tree_visitor)]
+    else:
+        s = searchd.search({"type":"text", "text":query}, filters=filters, query_time=query_time, extra_wait_time=extra_wait_time, just_usable=bool(async))
 
-    if async:
-        s.usable.wait(async/1000.)
+        if async:
+            s.usable.wait(async/1000.)
 
-    ids = list(s.get_results(last_items=last_items, min_results=min_results, max_results=max_results, max_extra_searches=max_extra_searches))
+        ids = list(s.get_results(last_items=last_items, min_results=min_results, max_results=max_results, max_extra_searches=max_extra_searches))
     stats = s.get_stats()
 
     profiler.checkpoint(profiler_data,opening=["entities"], closing=["sphinx"])
@@ -335,6 +352,11 @@ def search_files(query,filters,min_results=0,max_results=10,download=None,last_i
             afile = files_dict[fid]
             afile["search"] = search_result
             files.append(afile)
+
+    if len(ids)>=result["total_found"]:
+        total_found = len(files)
+    else:
+        total_found = max(result["total_found"], len(files))
 
     # completa la descripcion de la pagina
     if files:
@@ -383,13 +405,14 @@ def search_files(query,filters,min_results=0,max_results=10,download=None,last_i
     return {
         "files_ids":[f["file"]["id"] for f in files],
         "files":files,
-        "result_number":render_template('files/results_number.html',results=result,search=query,sure=stats["s"]),
-        "total_found":result["total_found"],
+        "result_number":render_template('files/results_number.html',results=result,search=query,sure=stats["s"], total_found=total_found),
+        "total_found":total_found,
         "page":sum(stats["li"]),
         "last_items":b64encode(pack("%dh"%len(stats["li"]), *stats["li"]), "-_"),
         "sure":stats["s"],
         "wait":stats["w"],
-        "canonical_query": stats["ct"]
+        "canonical_query": stats["ct"],
+        "end": stats["end"]
     }
 
 def download_search(file_data, file_text, fallback):
@@ -443,7 +466,6 @@ def download_file(file_id,file_name=None):
     error=(None,"") #guarda el id y el texto de un error
     file_data=None
     if file_id is not None: #si viene un id se comprueba que sea correcto
-
         if is_valid_url_fileid(file_id):
             try: #intentar convertir el id que viene de la url a uno interno
                 file_id=url2mid(file_id)
@@ -457,7 +479,7 @@ def download_file(file_id,file_name=None):
                         logging.warn("Identificadores numericos antiguos encontrados: %s."%e, extra={"fileid":file_id})
                         return {"html": redirect(url_for(".download", file_id=mid2url(possible_file_id), file_name=file_name), 301),"error":(301,"")}
 
-                except filesdb.BogusMongoException as e:
+                except BaseException as e:
                     logging.exception(e)
                     error=(503,"")
 

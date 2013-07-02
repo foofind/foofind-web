@@ -31,8 +31,14 @@ msgstr "发送"
 msgid "required_empty"
 msgstr "评价是必需的 不能为空"
 
+msgid "ok"
+msgstr "确定"
+
 msgid "help_us"
 msgstr "帮助我们"
+
+msgid "legal_info"
+msgstr "法律信息"
 
 msgid "go_home"
 msgstr "返回搜索引擎"
@@ -52,17 +58,29 @@ msgstr "页面不可用"
 msgid "error_410_description"
 msgstr "请求的页面当前不可用，以后也不再用"
 
+msgid "error_502_message"
+msgstr "网关错误"
+
+msgid "error_502_description"
+msgstr "由于网关错误无法访问"
+
 msgid "error_503_message"
 msgstr "无法提供服务"
 
 msgid "error_503_description"
 msgstr "请求的地址当前不可用，请稍后重试。"
 
+msgid "servers_status"
+msgstr "检查服务器状态"
+
 msgid "error_mail_send"
 msgstr "向指定地址发送信息时发生错误。请更换一个或稍后重试。"
 
 msgid "about"
 msgstr "关于"
+
+msgid "no_valid_email"
+msgstr "这不是一个有效的电子邮件地址，正确格式为：user@example.com"
 
 msgid "no_valid_url"
 msgstr "不是有效的地址"
@@ -123,6 +141,12 @@ msgstr "其他流媒体"
 
 msgid "other_direct_downloads"
 msgstr "其他重定向下载"
+
+msgid "some_streamings"
+msgstr "一些串流"
+
+msgid "some_downloads"
+msgstr "一些直接下载"
 
 msgid "others"
 msgstr "其他"
@@ -316,6 +340,9 @@ msgstr "版本"
 msgid "name"
 msgstr "名字"
 
+msgid "channels"
+msgstr "声道"
+
 msgid "description"
 msgstr "描写类型"
 
@@ -364,6 +391,9 @@ msgstr "标签"
 msgid "license"
 msgstr "许可证"
 
+msgid "created_by"
+msgstr "创建者"
+
 msgid "private_file"
 msgstr "私人文件"
 
@@ -385,11 +415,32 @@ msgstr "日期"
 msgid "trackers"
 msgstr "音轨"
 
+msgid "director"
+msgstr "导演"
+
+msgid "writer"
+msgstr "作者"
+
+msgid "starring"
+msgstr "主演"
+
+msgid "producer"
+msgstr "制片人"
+
+msgid "released"
+msgstr "发行"
+
 msgid "hash"
 msgstr "HASH"
 
 msgid "visualizations"
 msgstr "可视化"
+
+msgid "all_sources"
+msgstr "所有来源"
+
+msgid "share"
+msgstr "分享%(site)s"
 
 msgid "share_download"
 msgstr "分享"
@@ -409,8 +460,20 @@ msgstr "新窗口打开链接"
 msgid "close"
 msgstr "关闭"
 
+msgid "download_source"
+msgstr "从%(source)s下载"
+
 msgid "share_this"
 msgstr "分享"
+
+msgid "watch_source"
+msgstr "观看%(source)s"
+
+msgid "listen"
+msgstr "听"
+
+msgid "listen_source"
+msgstr "听%(source)s"
 
 msgid "share_facebook"
 msgstr "在Facebook上分享"
@@ -494,7 +557,7 @@ msgid "insert_your_password"
 msgstr "输入密码"
 
 msgid "fill_sing_up_form"
-msgstr "填好这张表格成为Foofind注册会员:"
+msgstr "填好这张表格成为Foofind注册会员："
 
 msgid "nickname"
 msgstr "昵称"
@@ -545,7 +608,7 @@ msgid "your_location"
 msgstr "你的位置"
 
 msgid "new_password"
-msgstr "找回密码:(否则,可留空不填)"
+msgstr "找回密码：（否则，可留空不填）"
 
 msgid "save_profile"
 msgstr "保存资料"
@@ -569,7 +632,7 @@ msgid "passwords_not_match"
 msgstr "密码错误"
 
 msgid "sure_delete_account"
-msgstr "你确定要删除你的Foofind帐户吗?"
+msgstr "你确定要删除你的Foofind帐户吗？"
 
 msgid "yes"
 msgstr "是的"
@@ -838,6 +901,26 @@ msgstr "感谢下载！"
 
 msgid "foodownloader_thanks_message"
 msgstr "感谢安装Foofing Download Manager！"
+
+msgid "foodownloader_download_coming_soon"
+msgstr "抱歉：尚未提供适用于您的操作系统。"
+
+msgid "foodownloader_dialog_title"
+msgstr "嘿！你需要一个Torrent客户端下载此文件"
+
+msgid "foodownloader_dialog_yes"
+msgstr "是的，下载用Foofind Download Manager下载"
+
+msgid "foodownloader_dialog_no"
+msgstr "不，谢谢我已经有一个Torrent客户端"
+
+msgid "foodownloader_dialog_text"
+msgstr ""
+"现在下载安装Foofind Download Manager来得到这个文件。\r\n"
+"我们的软件让你下载的种子更快，比以往任何时候都更容易 - 完全免费！如果你已经有了一个Torrent客户端，点击“不，谢谢”。"
+
+msgid "downloader_update_message"
+msgstr "新版本的%(appname)s (%(version)s)，准备安装。你想升级吗？"
 
 msgid "here"
 msgstr "里报告"

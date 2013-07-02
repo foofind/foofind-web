@@ -17,7 +17,8 @@ class MultiAsync(object):
     '''
         Clase que implementa la ejecución de la misma tarea en paralelo
     '''
-    def _target_wrapper(self, f, args):
+    def _target_wrapper(self, params):
+        f, args = params
         foofind.globals.ThreadingStack.register_child(self._parent_id)
         try:
             f(self, *args)
@@ -26,7 +27,7 @@ class MultiAsync(object):
         foofind.globals.ThreadingStack.unregister_child()
 
 
-    def __init__(self, target, elems, maxsize):
+    def __init__(self, thread_pool, target, elems, maxsize):
         '''
             Inicializa la clase con la función target a ejecutar y la lista
             de tuplas a pasar como parametro a la función
@@ -35,8 +36,7 @@ class MultiAsync(object):
         self.nelems = len(elems)
         self.values = Queue(maxsize)
         self._parent_id = foofind.globals.ThreadingStack.get_parent_id()
-        for args in elems:
-            threading.Thread(target=self._target_wrapper, args=(target, args)).start()
+        thread_pool.map_async(self._target_wrapper, [(target, args) for args in elems])
 
     def return_value(self, values):
         '''

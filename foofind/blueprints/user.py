@@ -8,7 +8,7 @@ import re
 from hashlib import md5
 from urllib import unquote
 from flask import Blueprint, request, render_template, redirect, flash, url_for, session, abort, current_app, g, jsonify
-from flask.ext.babel import gettext as _
+from flask.ext.babelex import gettext as _
 from flask.ext.login import login_required, login_user, logout_user, current_user
 from flask.ext.oauth import OAuth
 

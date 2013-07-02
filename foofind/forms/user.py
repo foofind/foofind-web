@@ -3,7 +3,7 @@
     Formularios para manejo de datos de usuarios.
 """
 from flask.ext.wtf import Form,BooleanField,PasswordField,TextField,SubmitField,ValidationError,EqualTo, Optional, RecaptchaField
-from flask.ext.babel import lazy_gettext as _
+from flask.ext.babelex import lazy_gettext as _
 from foofind.forms.validators import require, email, length, number_letter
 
 class LoginForm(Form):

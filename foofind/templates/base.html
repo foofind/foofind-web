@@ -58,11 +58,18 @@
                     <div id="social">
                         <div id="fb-root"></div>
                         <div class="fb-like" data-href="https://www.facebook.com/foofind" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false"></div>
-                        {#<a href="https://twitter.com/foofind" class="twitter-follow-button" data-show-count="false" data-lang="{{ g.lang }}">Seguir a @foofind</a>#}
-                        <div class="g-plusone" data-size="medium" data-href="http://foofind.is"></div>
+                        <div class="g-plusone" data-size="medium" data-href="http://{{g.domain}}"></div>
                         <script>
-                            (function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id))return;js=d.createElement(s);js.id=id;js.src="//connect.facebook.net/es_ES/all.js#xfbml=1";fjs.parentNode.insertBefore(js,fjs)}(document,'script','facebook-jssdk'));
-                            {#!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");#}
+                          (function(d){
+                             var js, id = 'facebook-jssdk';
+                             if (d.getElementById(id)) return;
+                             js = d.createElement('script');
+                             js.id = id;
+                             js.async = true;
+                             js.src = "//connect.facebook.net/{{ g.full_lang }}/all.js#xfbml=1&status=0";
+                             d.getElementsByTagName('head')[0].appendChild(js);
+                           }(document));
+
                             window.___gcfg={lang:'{{ g.lang }}'};(function(){var po=document.createElement('script');po.type='text/javascript';po.async=true;po.src='https://apis.google.com/js/plusone.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(po, s)})();
                         </script>
                     </div>

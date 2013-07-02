@@ -4,8 +4,7 @@
 '''
 import urllib, re
 from flask import g, Markup
-from flask.ext.babel import gettext as _
-from collections import defaultdict
+from flask.ext.babelex import gettext as _
 from urlparse import urlparse
 from itertools import izip_longest, chain
 
@@ -24,7 +23,7 @@ def init_data(file_data, ntts=[]):
     Inicializa el diccionario de datos del archivo
     '''
     file_data["id"]=mid2url(file_data['_id'])
-    file_data['name']=file_data['src'][mid2hex(file_data["_id"])]['url']
+    file_data['name']=file_data['src'].itervalues().next()['url']
 
     file_se = file_data["se"] if "se" in file_data else None
     ntt = ntts[int(float(file_se["_id"]))] if file_se and "_id" in file_se and file_se["_id"] in ntts else None
@@ -148,7 +147,7 @@ def build_source_links(f):
             return url_parts[i-1]+'.'+url_parts[i];
 
     f['view']['action']='download'
-    f['view']['sources']=defaultdict(dict)
+    f['view']['sources']={}
     max_weight=0
     icon=""
     url_pattern=url_pattern_generated=False
@@ -247,7 +246,10 @@ def build_source_links(f):
         else:
             continue
 
-        view_source = f['view']['sources'][source]
+        if source in f['view']['sources']:
+            view_source = f['view']['sources'][source]
+        else:
+            view_source = f['view']['sources'][source] = {}
         view_source.update(source_data)
 
         if 'downloader' in view_source:
@@ -508,7 +510,7 @@ def format_metadata(f,text_cache, search_text_shown=False):
 
             if file_type in ("audio", "video", "image"):
                 view_md.update((meta, file_md[meta]) for meta in ("genre", "track", "artist", "author", "colors") if meta in file_md)
-                view_searches.update((meta, seoize_text(file_md[meta], "_", False)) for meta in ("genre", "artist", "author") if meta in file_md)
+                view_searches.update((meta, seoize_text(file_md[meta], "_", False)) for meta in ("artist", "author") if meta in file_md)
         except BaseException as e:
             logging.warn(e)
 
@@ -623,12 +625,13 @@ def format_metadata(f,text_cache, search_text_shown=False):
 
                 view_md[metadata]=value
 
-                # resaltar contenidos que coinciden con la busqueda
-                view_mdh[metadata]=highlight(text,value) if text and len(text)<100 else value
+                # resaltar contenidos que coinciden con la busqueda, para textos no muy largos
+                if len(value)<500:
+                    view_mdh[metadata]=highlight(text,value) if text and len(text)<100 else value
             elif isinstance(value, float): #no hay ningun metadato tipo float
-                view_md[metadata]=view_mdh[metadata]=str(int(value))
+                view_md[metadata]=str(int(value))
             else:
-                view_md[metadata]=view_mdh[metadata]=value
+                view_md[metadata]=value
     # TODO: mostrar metadatos con palabras buscadas si no aparecen en lo mostrado
 
 def embed_info(f):
@@ -640,53 +643,56 @@ def embed_info(f):
     embed_code = None
     for src_id, src_data in f["file"]["src"].iteritems():
         source_id = src_data["t"]
-        source_data = g.sources[source_id]
-        if source_data.get("embed_active", False) and "embed" in source_data:
-            try:
-                embed_code = source_data["embed"]
 
-                # comprueba si el content type se puede embeber
-                embed_cts = source_data["embed_cts"] if "embed_cts" in source_data else DEFAULT_EMBED_CTS
-                if not f["view"]["ct"] in embed_cts: continue
+        source_data = g.sources.get(source_id, None)
+        if not (source_data and source_data.get("embed_active", False) and "embed" in source_data):
+            continue
 
-                embed_groups = ()
-                # url directamente desde los sources
-                if "source_id" in f["view"] and f["view"]["source_id"]:
-                    embed_groups = {"id": f["view"]["source_id"]}
-                elif "url_embed_regexp" in source_data and source_data["url_embed_regexp"]:
-                    # comprueba si la url puede ser utilizada para embeber
-                    embed_url = src_data["url"]
-                    regexp = source_data["url_embed_regexp"]
-                    embed_match = cache.regexp(regexp).match(embed_url)
-                    if embed_match is None:
+        try:
+            embed_code = source_data["embed"]
+
+            # comprueba si el content type se puede embeber
+            embed_cts = source_data["embed_cts"] if "embed_cts" in source_data else DEFAULT_EMBED_CTS
+            if not f["view"]["ct"] in embed_cts: continue
+
+            embed_groups = ()
+            # url directamente desde los sources
+            if "source_id" in f["view"] and f["view"]["source_id"]:
+                embed_groups = {"id": f["view"]["source_id"]}
+            elif "url_embed_regexp" in source_data and source_data["url_embed_regexp"]:
+                # comprueba si la url puede ser utilizada para embeber
+                embed_url = src_data["url"]
+                regexp = source_data["url_embed_regexp"]
+                embed_match = cache.regexp(regexp).match(embed_url)
+                if embed_match is None:
+                    continue
+                embed_groups = embed_match.groupdict()
+
+            if "%s" in embed_code and "id" in embed_groups: # Modo simple, %s intercambiado por el id
+                embed_code = embed_code % (
+                    # Workaround para embeds con varios %s
+                    # no se hace replace para permitir escapes ('\%s')
+                    (embed_groups["id"],) * embed_code.count("%s")
+                    )
+            else:
+                # Modo completo, %(variable)s intercambiado por grupos con nombre
+                replace_dict = dict(f["file"]["md"])
+                replace_dict["width"] = embed_width
+                replace_dict["height"] = embed_height
+                replace_dict.update(embed_groups)
+                try:
+                    embed_code = embed_code % replace_dict
+                except KeyError as e:
+                    # No logeamos los errores por falta de metadatos 'special'
+                    if all(i.startswith("special:") for i in e.args):
                         continue
-                    embed_groups = embed_match.groupdict()
-
-                if "%s" in embed_code and "id" in embed_groups: # Modo simple, %s intercambiado por el id
-                    embed_code = embed_code % (
-                        # Workaround para embeds con varios %s
-                        # no se hace replace para permitir escapes ('\%s')
-                        (embed_groups["id"],) * embed_code.count("%s")
-                        )
-                else:
-                    # Modo completo, %(variable)s intercambiado por grupos con nombre
-                    replace_dict = dict(f["file"]["md"])
-                    replace_dict["width"] = embed_width
-                    replace_dict["height"] = embed_height
-                    replace_dict.update(embed_groups)
-                    try:
-                        embed_code = embed_code % replace_dict
-                    except KeyError as e:
-                        # No logeamos los errores por falta de metadatos 'special'
-                        if all(i.startswith("special:") for i in e.args):
-                            continue
-                        raise e
-            except BaseException as e:
-                logging.exception(e)
-                continue
-            f["view"]["embed"] = embed_code
-            f["view"]["play"]  = (source_data.get("embed_disabled", ""), source_data.get("embed_enabled", ""))
-            break
+                    raise e
+        except BaseException as e:
+            logging.exception(e)
+            continue
+        f["view"]["embed"] = embed_code
+        f["view"]["play"]  = (source_data.get("embed_disabled", ""), source_data.get("embed_enabled", ""))
+        break
 
 def fill_data(file_data, text=None, ntts={}):
     '''
@@ -743,7 +749,7 @@ def get_file_metadata(file_id, file_name=None):
     '''
     try:
         data = filesdb.get_file(file_id, bl = None)
-    except filesdb.BogusMongoException as e:
+    except BaseException as e:
         logging.exception(e)
         raise DatabaseError
 
@@ -755,7 +761,7 @@ def get_file_metadata(file_id, file_name=None):
             try:
                 data = filesdb.get_file(file_id, sid = sid, bl = None)
                 feedbackdb.notify_indir(file_id, sid)
-            except filesdb.BogusMongoException as e:
+            except BaseException as e:
                 logging.exception(e)
                 raise DatabaseError
 

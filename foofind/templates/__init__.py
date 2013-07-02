@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from flask import g, request, url_for
-from flask.ext.babel import gettext as _
+from flask.ext.babelex import gettext as _
 from babel.numbers import get_decimal_symbol, get_group_symbol
-from math import log
+from math import log, ceil
 from datetime import datetime,timedelta
 from foofind.utils.htmlcompress import HTMLCompress
 from foofind.utils import u, fixurl, logging
@@ -67,21 +67,25 @@ def number_size_format_filter(size, lang=None):
         decimal_sep, group_sep = format_cache[lang] = (get_decimal_symbol(lang), get_group_symbol(lang))
 
     try:
-        size = log(float(size),1024)
-        number = 1024**(size-int(size))
-        fix=0
-        if number>1000: #para que los tamaños entre 1000 y 1024 pasen a la unidad siguiente
-            number/=1024
-            fix=1
+        if size<1000: # no aplica para los bytes
+            return str(size)+" B"
+        else:
+            size = log(float(size),1024)
+            number = 1024**(size-int(size))
 
-        # parte decimal
-        dec_part = int((number-int(number))*100)
-        dec_part = "" if dec_part==0 else decimal_sep+"0"+str(dec_part) if dec_part<10 else decimal_sep+str(dec_part)
+            fix=0
+            if number>=1000: #para que los tamaños entre 1000 y 1024 pasen a la unidad siguiente
+                number/=1024
+                fix=1
 
-        # genera salida
-        return ''.join(
-            reversed([c + group_sep if i != 0 and i % 3 == 0 else c for i, c in enumerate(reversed(str(int(number))))])
-        ) + dec_part + (" B"," KiB"," MiB"," GiB"," TiB")[int(size)+fix]
+            # parte decimal
+            dec_part = int((number-int(number))*100)
+            dec_part = "" if dec_part==0 else decimal_sep+"0"+str(dec_part) if dec_part<10 else decimal_sep+str(dec_part)
+
+            # genera salida
+            return ''.join(
+                reversed([c + group_sep if i != 0 and i % 3 == 0 else c for i, c in enumerate(reversed(str(int(number))))])
+            ) + dec_part + (" KiB"," MiB"," GiB"," TiB")[int(size)-1+fix]
     except BaseException as e:
         logging.exception(e)
         return ""
@@ -156,9 +160,9 @@ def url_search_filter(new_params, args=None, delete_params=[]):
 
     # genera url de salida
     if filters:
-        return g.search_url + query + "/" + "/".join(param+":"+",".join(filters[param]) for param in ["type", "src", "size"] if param in filters)
+        return g.search_url + quote_plus(query.encode('utf8')) + "/" + "/".join(param+":"+",".join(filters[param]) for param in ["type", "src", "size"] if param in filters)
     else:
-        return g.search_url + query
+        return g.search_url + quote_plus(query.encode('utf8'))
 
 def querystring_params_filter(params):
     '''

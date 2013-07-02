@@ -8,7 +8,7 @@ from unicodedata import normalize
 
 NONSEPPER = frozenset(unichr(i) for i in xrange(0x10000) if unichr(i) not in SEPPER)
 
-seoize_table = {c:"".join(c2 for c2 in normalize('NFKD', c) if c2 in NONSEPPER)
+seoize_table = {c:normalize('NFKC', u"".join(c2 for c2 in normalize('NFKD', c) if c2 in NONSEPPER))
                     for c in NONSEPPER}
 seoize_table = {ord(c):to for c, to in seoize_table.iteritems() if to and to!=c}
 

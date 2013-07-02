@@ -10,12 +10,14 @@
 
 flask
 
+markupsafe>=0.18
+
 python-memcached
 
 flask-assets==0.8
 cssutils
 
-flask-babel
+flask-babelex
 
 flask-wtf==0.8
 
@@ -69,3 +71,8 @@ newrelic>=1.11
 hachoir-parser
 hachoir-metadata
 hachoir-core
+
+msgpack-python
+
+# cliente nuevo searchd
+redis

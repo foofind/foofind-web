@@ -876,7 +876,7 @@ $(function()
     link_lookup($("#results"));
     link_lookup($("#download"));
 
-    search();
+    load_more_results(false);
     track_pageview();
 });
 

@@ -10,7 +10,7 @@
             {{ render_field(form.email) }}
             {{ render_field(form.phonenumber) }}
             {{ render_field(form.linkreported) }}
-            {{ render_field(form.urlreported,placeholder="http://foofind.is/"+g.lang+"/download/") }}
+            {{ render_field(form.urlreported,placeholder="http://"+g.domain+"/"+g.lang+"/download/") }}
             {{ render_field(form.reason) }}
             {{ render_field(form.message,cols="35", rows="4") }}
             {{ render_field(form.captcha) }}

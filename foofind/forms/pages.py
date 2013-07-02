@@ -5,7 +5,7 @@
 import re
 from flask import request
 from flask.ext.wtf import Form, BooleanField, PasswordField, TextField, TextAreaField, SelectField, FileField, FieldList, SubmitField, ValidationError, Regexp, RecaptchaField
-from flask.ext.babel import lazy_gettext as _
+from flask.ext.babelex import lazy_gettext as _
 from urlparse import urlparse
 
 from foofind.forms.validators import require, email, url

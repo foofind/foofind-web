@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from flask import get_flashed_messages
-from flask.ext.babel import get_translations, gettext as _
+from flask.ext.babelex import gettext as _
 from werkzeug.exceptions import HTTPException, abort, HTTP_STATUS_CODES
 class TooManyRequests(HTTPException):
     """*429* `Too Many Requests `

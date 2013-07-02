@@ -29,8 +29,8 @@ def api_v1():
     try:
         if method == "getSearch":
             query = request.args["q"]
-            s = searchd.search({"type":"text", "text":query}, request.args, max_query_time=1000)
-            ids = list(s.get_results(last_items=[], min_results=100, max_results=100))
+            s = searchd.search(query, request.args, start=True, group=True, no_group=True)
+            ids = list(s.get_results((1.4, 0.1), last_items=[], min_results=100, max_results=100, extra_browse=0))
             stats = s.get_stats()
             results = enumerate(filter(None, [secure_fill_data(f,text=query) for f in filesdb.get_files(ids,True)]))
             success = True
@@ -53,8 +53,8 @@ def api_v2():
     result = None
     if method == "search":
         query = request.args["q"]
-        s = searchd.search({"type":"text", "text":query}, request.args, max_query_time=1000)
-        ids = list(s.get_results(last_items=[], min_results=100, max_results=100))
+        s = searchd.search(query, request.args, start=True, group=True, no_group=True)
+        ids = list(s.get_results((1.4, 0.1), last_items=[], min_results=100, max_results=100, extra_browse=0))
         stats = s.get_stats()
         result = [{
             "size": f["file"]["z"] if "z" in f["file"] else 0,

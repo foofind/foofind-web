@@ -474,5 +474,3 @@ Disallow: /
 # http://www.webreaper.net/
 User-agent: WebReaper
 Disallow: /
-
-Sitemap: http://foofind.is/sitemap.xml

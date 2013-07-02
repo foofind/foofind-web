@@ -20,7 +20,7 @@ from flask import Blueprint, jsonify, render_template, request, redirect, url_fo
 from werkzeug import secure_filename
 from werkzeug.datastructures import MultiDict
 
-from flask.ext.babel import gettext as _
+from flask.ext.babelex import gettext as _
 from flask.ext.login import current_user
 from wtforms import BooleanField, TextField, TextAreaField, HiddenField
 from functools import wraps
@@ -721,8 +721,7 @@ def getserver(fileid, filename=None):
         if sid:
             try:
                 data = filesdb.get_file(mfileid, sid = sid, bl = None)
-
-            except filesdb.BogusMongoException as e:
+            except BaseException as e:
                 logging.exception(e)
                 flash(e, "error")
         else:
@@ -951,7 +950,7 @@ def deploy():
             # Subir archivos a la carpeta downloads
             for k, f in request.files.iteritems():
                 if f.filename and hasattr(form, k): # Verify this file comes from our form
-                    f.save(os.path.join(env.downloads, secure_filename(f.filename)))
+                    fabfile.save_downloader_file(secure_filename(f.filename), f.stream)
         elif not deployTask.busy:
             config = None
             do_task = True

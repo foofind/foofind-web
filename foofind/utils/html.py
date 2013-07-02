@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from jinja2._markupsafe._constants import HTML_ENTITIES
+from markupsafe._constants import HTML_ENTITIES
 import re
 
 HTML_SEPS = re.compile("([<>&])")

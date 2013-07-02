@@ -3,7 +3,7 @@
     Formularios para manejo de datos de usuarios.
 """
 from flask.ext.wtf import Required, Email, Length, URL, ValidationError
-from flask.ext.babel import lazy_gettext as _
+from flask.ext.babelex import lazy_gettext as _
 from functools import partial
 import re
 

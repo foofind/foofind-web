@@ -8,7 +8,7 @@ from foofind.services import *
 from foofind.utils import mid2hex, multipartition, logging
 from foofind.utils.content_types import *
 from foofind.utils.splitter import SEPPER, slugify
-from flask.ext.babel import gettext as _
+from flask.ext.babelex import gettext as _
 
 __all__=(
     "FILTERS","DatabaseError","FileNotExist","FileRemoved","FileFoofindRemoved","FileUnknownBlock","FileNoSources",

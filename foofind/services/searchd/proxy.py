@@ -7,7 +7,7 @@ from hashlib import md5
 from time import time
 from random import shuffle
 from math import sqrt, log
-import json, zlib
+import msgpack, zlib
 
 from foofind.utils import mid2hex, hex2bin, logging
 from foofind.utils.event import EventManager
@@ -131,7 +131,7 @@ class SearchProxy:
         self.pendings_processor.timeout(timeout, call, hargs)
 
     def get_search_state(self, querykey, filters):
-        filterskey = md5(json.dumps(filters)).hexdigest()
+        filterskey = md5(msgpack.dumps(filters)).hexdigest()
 
         # claves a obtener del cache
         query_cache_key = "search_t%s"%querykey
@@ -143,8 +143,8 @@ class SearchProxy:
         cache_data = cache.cache.get_many(query_cache_key, filters_cache_key, lock_cache_key, block_files_cache_key)
 
         # extrae informacion de los valores obtenidos
-        query_state = json.loads(zlib.decompress(cache_data[0])) if cache_data[0] else {}
-        filters_state = json.loads(zlib.decompress(cache_data[1])) if query_state and cache_data[1] else {}
+        query_state = msgpack.loads(zlib.decompress(cache_data[0]), encoding="utf-8") if cache_data[0] else {}
+        filters_state = msgpack.loads(zlib.decompress(cache_data[1]), encoding="utf-8") if query_state and cache_data[1] else {}
         locked_until = cache_data[2] if cache_data[2] and cache_data[2]>time() else False
 
         block_files_from_cache = [block_file.split(",") for block_file in cache_data[3].split(";")] if cache_data[3] else []
@@ -152,12 +152,12 @@ class SearchProxy:
         return (query_state, filters_state, locked_until, block_files_from_cache)
 
     def get_lock_state(self, querykey, filters):
-        filterskey = md5(json.dumps(filters)).hexdigest()
+        filterskey = md5(msgpack.dumps(filters)).hexdigest()
         locked_until = cache.get("search_l%s_%s"%(querykey, filterskey))
         return locked_until if locked_until and locked_until<time() else False
 
     def get_blocked_files_state(self, querykey, filters):
-        filterskey = md5(json.dumps(filters)).hexdigest()
+        filterskey = md5(msgpack.dumps(filters)).hexdigest()
         block_files_cache_key = "search_b%s_%s"%(querykey, filterskey)
         cache_data = cache.cache.get(block_files_cache_key)
         block_files_from_cache = [block_file.split(",") for block_file in cache_data.split(";")] if cache_data else []
@@ -166,17 +166,19 @@ class SearchProxy:
     def save_search_state(self, querykey, filters, query_state, filters_state, locking_time=None, blocked_ids=None):
 
         # guarda valores en cache
-        filterskey = md5(json.dumps(filters)).hexdigest()
+        filterskey = md5(msgpack.dumps(filters)).hexdigest()
 
+        search_state = zlib.compress(msgpack.dumps(query_state))
         if filters_state:
-            filters_state = zlib.compress(json.dumps(filters_state))
+            filters_state = zlib.compress(msgpack.dumps(filters_state))
 
         # borra ids bloqueados
         if blocked_ids:
             block_files_cache_key = "search_b%s_%s"%(querykey, filterskey)
             cache.delete(block_files_cache_key) # TO-DO: podría borrar ids nuevos a bloquear que no han sido bloqueados
 
-        cache.cache.set_many({"search_t%s"%querykey: zlib.compress(json.dumps(query_state)), "search_f%s_%s"%(querykey, filterskey): filters_state}, timeout=0)
+
+        cache.cache.set_many({"search_t%s"%querykey: search_state, "search_f%s_%s"%(querykey, filterskey): filters_state}, timeout=0)
 
         # procesa bloqueo separadamente
         if locking_time==False: # borrar bloqueo
@@ -188,7 +190,7 @@ class SearchProxy:
         return None # este valor debe ignorarse, no se sabe la fecha de fin de bloqueo
 
     def set_lock_state(self, querykey, filters, locking_time):
-        filterskey = md5(json.dumps(filters)).hexdigest()
+        filterskey = md5(msgpack.dumps(filters)).hexdigest()
         locked_until = time()+locking_time*0.001
         cache.set("search_l%s_%s"%(querykey, filterskey), locked_until, timeout = locking_time*0.001)
         return locked_until
@@ -455,7 +457,7 @@ class SearchProxy:
 
         # encola en cache la eliminación de ficheros
         if block and query_key and filters:
-            filterskey = md5(json.dumps(filters)).hexdigest()
+            filterskey = md5(msgpack.dumps(filters)).hexdigest()
             block_files_cache_key = ("search_b%s_%s"%(query_key, filterskey)).encode("utf-8")
             new_ids_to_block = ";".join("%s,%s,%s"%(server, file_id, sg) for sphinx_id, server, filename, file_id, sg in ids).encode("utf-8")
 

@@ -6,15 +6,16 @@ import foofind.globals
 import os, os.path, defaults
 
 from collections import OrderedDict
-from flask import Flask, g, request, session, render_template, redirect, abort, url_for, make_response, current_app
+from flask import Flask, g, request, session, render_template, redirect, abort, url_for, make_response, current_app, _request_ctx_stack
 from flask.ext.assets import Environment, Bundle
-from flask.ext.babel import get_translations, gettext as _
+from flask.ext.babelex import get_domain, gettext as _
 from flask.ext.login import current_user
 from babel import support, localedata, Locale
 from raven.contrib.flask import Sentry
 from webassets.filter import register_filter
 from hashlib import md5
 
+from foofind.services import *
 from foofind.user import User
 from foofind.blueprints.index import index
 from foofind.blueprints.page import page
@@ -23,7 +24,6 @@ from foofind.blueprints.files import files
 from foofind.blueprints.api import api
 from foofind.blueprints.downloads import downloads, track_downloader_info
 from foofind.blueprints.labs import add_labs, init_labs
-from foofind.services import *
 from foofind.templates import register_filters
 from foofind.utils.webassets_filters import JsSlimmer, CssSlimmer
 from foofind.utils import u, logging
@@ -148,18 +148,19 @@ def create_app(config=None, debug=False):
         '''
         if 'lang' in values or not g.lang:
             return
-        #if endpoint in app.view_functions and hasattr(app.view_functions[endpoint], "_fooprint"):
+        #if endpoint in current_app.view_functions and hasattr(current_app.view_functions[endpoint], "_fooprint"):
         #    return
-        if app.url_map.is_endpoint_expecting(endpoint, 'lang'):
+        if current_app.url_map.is_endpoint_expecting(endpoint, 'lang'):
             values['lang'] = g.lang
 
-    all_langs = app.config["ALL_LANGS"]
-    pull_lang_code_languages = OrderedDict((code, (localedata.load(code)["languages"], code in app.config["BETA_LANGS"])) for code in all_langs)
     @app.url_value_preprocessor
     def pull_lang_code(endpoint, values):
         '''
         Carga el código de idioma en la variable global.
         '''
+
+        all_langs = current_app.config["ALL_LANGS"]
+
         # obtiene el idioma de la URL
         g.url_lang = None
         if values is not None:
@@ -186,11 +187,11 @@ def create_app(config=None, debug=False):
 
         if g.lang not in all_langs:
             logging.warn("Wrong language choosen.")
-            g.lang = app.config["LANGS"][0]
+            g.lang = current_app.config["LANGS"][0]
 
         # se carga la lista de idiomas como se dice en cada idioma
-        g.languages = pull_lang_code_languages
-        g.beta_lang = g.lang in app.config["BETA_LANGS"]
+        g.languages = OrderedDict((code, (localedata.load(code)["languages"], code in current_app.config["BETA_LANGS"])) for code in all_langs)
+        g.beta_lang = g.lang in current_app.config["BETA_LANGS"]
 
     # Traducciones
     babel.init_app(app)
@@ -253,9 +254,6 @@ def create_app(config=None, debug=False):
     # guarda registro de downloader
     eventmanager.interval(app.config["CONFIG_UPDATE_INTERVAL"], track_downloader_info)
 
-    # Carga la traducción alternativa
-    fallback_lang = support.Translations.load(os.path.join(app.root_path, 'translations'), ["en"])
-
     # Unittesting
     unit.init_app(app)
 
@@ -264,11 +262,10 @@ def create_app(config=None, debug=False):
 
     if app.config["UNITTEST_INTERVAL"]:
         eventmanager.timeout(20, unit.run_tests)
-        #eventmanager.interval(app.config["UNITTEST_INTERVAL"], unit.run_tests)
+        #eventmanager.interval(current_app.config["UNITTEST_INTERVAL"], unit.run_tests)
 
     @app.before_request
     def before_request():
-
         # No preprocesamos la peticiones a static
         if request.path.startswith("/static"):
             return
@@ -280,12 +277,13 @@ def create_app(config=None, debug=False):
         check_rate_limit(g.search_bot)
 
         # si el idioma de la URL es inválido, devuelve página no encontrada
+        all_langs = current_app.config["ALL_LANGS"]
         if g.url_lang and not g.url_lang in all_langs:
             abort(404)
 
-        # si no es el idioma alternativo, lo añade por si no se encuentra el mensaje
+        # añade idioma por defecto si no hay traducción de algún mensaje en el idioma actual
         if g.lang!="en":
-            get_translations().add_fallback(fallback_lang)
+            add_translation_fallback("en")
 
         # si hay que cambiar el idioma
         if request.args.get("setlang",None):
@@ -301,7 +299,7 @@ def create_app(config=None, debug=False):
         descr = _("about_text")
         g.page_description = descr[:descr.find("<br")]
 
-        g.foodownloader = app.config["FOODOWNLOADER"] and (request.user_agent.platform == "windows")
+        g.foodownloader = current_app.config["FOODOWNLOADER"] and (request.user_agent.platform == "windows")
 
         # ignora peticiones sin blueprint
         if request.blueprint is None and request.path.endswith("/"):
@@ -315,11 +313,10 @@ def create_app(config=None, debug=False):
 
     @app.after_request
     def after_request(response):
-        if request.user_agent.browser == "msie": response.headers["X-UA-Compatible"] = "IE-edge"
+        if request.user_agent.browser == "msie": response.headers["X-UA-Compatible"] = "IE=edge"
         return response
 
     # Páginas de error
-
     @allerrors(app, 400, 401, 403, 404, 405, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 429, 500, 501, 502, 503)
     def all_errors(e):
         error_code, error_title, error_description = get_error_code_information(e)
@@ -357,9 +354,22 @@ def init_g():
     g.autocomplete_disabled = "false" if current_app.config["SERVICE_TAMING_ACTIVE"] else "true"
 
     # dominio de la web
-    g.domain = "foofind.is"
+    g.domain = "foofind.is" if request.url_root.rstrip("/").endswith(".is") else "foofind.com"
 
     # informacion de la página por defecto
     g.title = g.domain
     g.keywords = set()
     g.page_description = g.title
+
+    g.full_lang = current_app.config["ALL_LANGS_COMPLETE"][g.lang]
+
+def add_translation_fallback(locale):
+    domain = get_domain()
+    translations = domain.get_translations()
+    if not translations._fallback:
+        ctx = _request_ctx_stack.top
+        cache = domain.get_translations_cache(ctx)
+        dirname = domain.get_translations_path(ctx)
+
+        translations.add_fallback(support.Translations.load(dirname, locale))
+        cache[str(g.lang)] = translations

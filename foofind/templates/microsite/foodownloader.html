@@ -126,12 +126,12 @@
     {% endif %}
     <ul class="links">
         {%- if standalone_microsite -%}
-        <li><a href="http://foofind.is/{{g.lang}}/about">{{_('about')}}</a></li>
-        <li><a href="http://foofind.is/{{g.lang}}/legal">{{_('legal')}}</a></li>
+        <li><a href="http://{{g.domain}}/{{g.lang}}/about">{{_('about')}}</a></li>
+        <li><a href="http://{{g.domain}}/{{g.lang}}/legal">{{_('legal')}}</a></li>
         {%- if g.lang == "es" -%}
-        <li><a href="http://foofind.is/{{g.lang}}/jobs">Trabaja con nosotros</a></li>
+        <li><a href="http://{{g.domain}}/{{g.lang}}/jobs">Trabaja con nosotros</a></li>
         {%- endif -%}
-        <li><a href="http://foofind.is/{{g.lang}}/lastfiles">{{_("last_indexed_files")}}</a></li>
+        <li><a href="http://{{g.domain}}/{{g.lang}}/lastfiles">{{_("last_indexed_files")}}</a></li>
         {%- else -%}
         <li><a href="{{ url_for('page.show',pname='about') }}">{{_('about')}}</a></li>
         <li><a href="{{ url_for('page.show',pname='legal') }}">{{_('legal')}}</a></li>

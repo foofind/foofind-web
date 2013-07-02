@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import request, session, current_app
 from flask.ext.wtf import ValidationError
-from flask.ext.babel import lazy_gettext as _
+from flask.ext.babelex import lazy_gettext as _
 from wtforms.fields import Field
 from foofind.forms.validators import require
 from foofind.services import cache
