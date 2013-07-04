@@ -40,6 +40,7 @@ class FilesStore(object):
         self.max_pool_size = app.config["DATA_SOURCE_MAX_POOL_SIZE"]
         self.get_files_timeout = app.config["GET_FILES_TIMEOUT"]
         self.max_autoreconnects = app.config["MAX_AUTORECONNECTIONS"]
+        self.secondary_acceptable_latency_ms = app.config["SECONDARY_ACCEPTABLE_LATENCY_MS"]
 
         self.thread_pool_size = app.config["GET_FILES_POOL_SIZE"]
         self.thread_pool = None
@@ -58,7 +59,7 @@ class FilesStore(object):
             server_id = int(server["_id"])
             sid = str(server_id)
             if not sid in self.servers_conn:
-                self.servers_conn[sid] = pymongo.MongoReplicaSetClient(hosts_or_uri="%s:%d,%s:%d"%(server["ip"], int(server["p"]), server["rip"], int(server["rp"])), replicaSet=server["rs"], max_pool_size=self.max_pool_size, socketTimeoutMS=self.get_files_timeout*1000, read_preference=pymongo.read_preferences.ReadPreference.SECONDARY_PREFERRED)
+                self.servers_conn[sid] = pymongo.MongoReplicaSetClient(hosts_or_uri="%s:%d,%s:%d"%(server["ip"], int(server["p"]), server["rip"], int(server["rp"])), replicaSet=server["rs"], max_pool_size=self.max_pool_size, socketTimeoutMS=self.get_files_timeout*1000, read_preference=pymongo.read_preferences.ReadPreference.SECONDARY_PREFERRED, secondary_acceptable_latency_ms=self.secondary_acceptable_latency_ms)
             if self.current_server < server_id:
                 self.current_server = server_id
 
