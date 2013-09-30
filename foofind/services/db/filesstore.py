@@ -45,7 +45,7 @@ class FilesStore(object):
         self.thread_pool_size = app.config["GET_FILES_POOL_SIZE"]
         self.thread_pool = None
 
-        self.server_conn = pymongo.MongoReplicaSetClient(hosts_or_uri=app.config["DATA_SOURCE_SERVER"], replicaSet=app.config["DATA_SOURCE_SERVER_RS"], max_pool_size=self.max_pool_size, socketTimeoutMS=self.get_files_timeout*1000, read_preference=pymongo.read_preferences.ReadPreference.SECONDARY_PREFERRED)
+        self.server_conn = pymongo.MongoReplicaSetClient(hosts_or_uri=app.config["DATA_SOURCE_SERVER"], replicaSet=app.config["DATA_SOURCE_SERVER_RS"], max_pool_size=self.max_pool_size, socketTimeoutMS=self.get_files_timeout*1000, read_preference=pymongo.read_preferences.ReadPreference.SECONDARY_PREFERRED, secondary_acceptable_latency_ms=self.secondary_acceptable_latency_ms)
 
         global profiler
         profiler = foofind.services.profiler

@@ -132,6 +132,7 @@ class OriginForm(Form):
 
 class DeployForm(Form):
     mode = SelectField(_("admin_deploy_mode"), default="staging")
+    branch = TextField(_("admin_deploy_branch"), default="master")
     deploy = SubmitField(_("admin_deploy_deploy"), default="deploy")
     deploy_rollback = SubmitField(_("admin_deploy_deploy_rollback"), default="deploy-rollback")
     clean_local = SubmitField(_("admin_deploy_clean_local"), default="clean_local")

@@ -368,8 +368,8 @@ def add_translation_fallback(locale):
     translations = domain.get_translations()
     if not translations._fallback:
         ctx = _request_ctx_stack.top
-        cache = domain.get_translations_cache(ctx)
+        trans_cache = domain.get_translations_cache(ctx)
         dirname = domain.get_translations_path(ctx)
 
         translations.add_fallback(support.Translations.load(dirname, locale))
-        cache[str(g.lang)] = translations
+        trans_cache[str(g.lang)] = translations

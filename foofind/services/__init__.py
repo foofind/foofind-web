@@ -4,10 +4,7 @@
 """
 # activacion de la nueva busqueda por variable de entorno
 from os import environ
-if "NEW_SEARCH" in environ:
-    from foofind.services.search import Searchd
-else:
-    from foofind.services.searchd import Searchd
+from foofind.services.search import Searchd
 
 from foofind.services.db.filesstore import FilesStore
 from foofind.services.db.pagesstore import PagesStore

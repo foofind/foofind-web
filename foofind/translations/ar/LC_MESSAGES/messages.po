@@ -74,3 +74,393 @@ msgstr "URL المطلوب غير متاح مؤقتا. يرجى المحاولة
 
 msgid "servers_status"
 msgstr "افحص الخادم"
+
+msgid "about"
+msgstr "حول"
+
+msgid "contact"
+msgstr "الاتصال"
+
+msgid "technology"
+msgstr "التكنواوجيا"
+
+msgid "legal"
+msgstr "القانون"
+
+msgid "privacy"
+msgstr "سياسة الخصوصية"
+
+msgid "complaint"
+msgstr "التبليغ عن رابط"
+
+msgid "index_change"
+msgstr "فو فاين قد تغيرت"
+
+msgid "index_first"
+msgstr "كن الاول في حصولك على اهم الاخبار"
+
+msgid "index_suggestion"
+msgstr "هل لديك اقتراح؟"
+
+msgid "all"
+msgstr "كل"
+
+msgid "direct_download"
+msgstr "تنزيل مباشر"
+
+msgid "direct_downloads"
+msgstr "تنزيلات مباشرة"
+
+msgid "other_direct_downloads"
+msgstr "وصلات تنزيل اخرى"
+
+msgid "some_downloads"
+msgstr "بعض التنزيلات المباشرة"
+
+msgid "others"
+msgstr "اخرى"
+
+msgid "unknown"
+msgstr "غير معروف"
+
+msgid "audio"
+msgstr "صوتيات"
+
+msgid "video"
+msgstr "فيديو"
+
+msgid "image"
+msgstr "صور"
+
+msgid "document"
+msgstr "مستندات"
+
+msgid "software"
+msgstr "برامج"
+
+msgid "no_results_for"
+msgstr "لا توجد نتائج"
+
+msgid "write_something"
+msgstr "مرحبا! اكتب شيئا"
+
+msgid "next"
+msgstr "بعد"
+
+msgid "sources"
+msgstr "مصادر"
+
+msgid "results_for"
+msgstr "نتائج حول"
+
+msgid "go_to_file"
+msgstr "اذهب الى ملف"
+
+msgid "play"
+msgstr "إلعب"
+
+msgid "what"
+msgstr "ماذا"
+
+msgid "where"
+msgstr "أين"
+
+msgid "update"
+msgstr "ترقية"
+
+msgid "minimun"
+msgstr "اقل"
+
+msgid "maximun"
+msgstr "اكثر"
+
+msgid "all_sizes"
+msgstr "جميع الاحجام"
+
+msgid "smaller_than"
+msgstr "اصغر من"
+
+msgid "larger_than"
+msgstr "اكبر من"
+
+msgid "all_qualities"
+msgstr "جميع الجودات"
+
+msgid "or_better"
+msgstr "او افضل"
+
+msgid "all_years"
+msgstr "جميع السنوات"
+
+msgid "before"
+msgstr "قبل"
+
+msgid "last_year"
+msgstr "السنة الماضية"
+
+msgid "author"
+msgstr "اخرى"
+
+msgid "pages"
+msgstr "صفحات"
+
+msgid "album"
+msgstr "ألبوم"
+
+msgid "seconds"
+msgstr "ثواني"
+
+msgid "minutes"
+msgstr "دقائق"
+
+msgid "source"
+msgstr "مصادر"
+
+msgid "quality"
+msgstr "الجودة"
+
+msgid "series"
+msgstr "الجزء"
+
+msgid "episode"
+msgstr "الحلقة"
+
+msgid "season"
+msgstr "الموسم"
+
+msgid "num_pages"
+msgstr "لا توجد صفحات"
+
+msgid "include_results_from"
+msgstr "تتظمن النتائج من"
+
+msgid "size"
+msgstr "الحجم"
+
+msgid "name"
+msgstr "الاسم"
+
+msgid "description"
+msgstr "الوصف"
+
+msgid "files"
+msgstr "الملفات"
+
+msgid "channels"
+msgstr "القنوات"
+
+msgid "year"
+msgstr "السنة"
+
+msgid "years"
+msgstr "السنوات"
+
+msgid "month"
+msgstr "الشهر"
+
+msgid "months"
+msgstr "الشهور"
+
+msgid "day"
+msgstr "يوم"
+
+msgid "days"
+msgstr "الايام"
+
+msgid "hour"
+msgstr "ساعة"
+
+msgid "hours"
+msgstr "ساعات"
+
+msgid "minute"
+msgstr "دقيقة"
+
+msgid "second"
+msgstr "ثانية"
+
+msgid "license"
+msgstr "رخصة"
+
+msgid "private_file"
+msgstr "ملف خاص"
+
+msgid "publisher"
+msgstr "عام"
+
+msgid "comments"
+msgstr "تعليقات"
+
+msgid "created_by"
+msgstr "أنشئ من قبل"
+
+msgid "language"
+msgstr "اللغة"
+
+msgid "date"
+msgstr "التارخ"
+
+msgid "hash"
+msgstr "سكوت"
+
+msgid "writer"
+msgstr "كاتب"
+
+msgid "loading"
+msgstr "تحميل"
+
+msgid "all_sources"
+msgstr "جميع المصادر"
+
+msgid "share_download"
+msgstr "مشاركة"
+
+msgid "share_search"
+msgstr "شارك هذا البحث"
+
+msgid "share_this"
+msgstr "شارك بهذا"
+
+msgid "send_by_email"
+msgstr "ارسل بريد إلكتروني"
+
+msgid "download"
+msgstr "تنزيل"
+
+msgid "download_source"
+msgstr ""
+
+msgid "watch"
+msgstr "شاهد"
+
+msgid "watch_source"
+msgstr ""
+
+msgid "listen"
+msgstr "استمع"
+
+msgid "listen_source"
+msgstr ""
+
+msgid "since"
+msgstr ""
+
+msgid "post_comment"
+msgstr "انشر تعليقا"
+
+msgid "add_comment"
+msgstr "اضف تعليقا"
+
+msgid "from"
+msgstr "من"
+
+msgid "i_like_it"
+msgstr "انا احبه"
+
+msgid "booo"
+msgstr "واووو"
+
+msgid "comment_published_succesfully"
+msgstr "تم النشر بنجاح"
+
+msgid "file"
+msgstr "ملف"
+
+msgid "hello"
+msgstr "مرحبا"
+
+msgid "login"
+msgstr "ادخل"
+
+msgid "new_user"
+msgstr "مستخدم جديد"
+
+msgid "or"
+msgstr "او"
+
+msgid "register"
+msgstr "تسجيل"
+
+msgid "if_new_user"
+msgstr "اذا كنت مشتركا جديدا الرجاء"
+
+msgid "register_here"
+msgstr "التسجيل هنا"
+
+msgid "choose_nickname"
+msgstr "اختر اسما"
+
+msgid "user_login"
+msgstr "اسم المستخدم"
+
+msgid "remember_me"
+msgstr "ذكرني"
+
+msgid "your_location"
+msgstr "الموقع"
+
+msgid "save_profile"
+msgstr "حفظ الملف"
+
+msgid "forgot"
+msgstr "نسيت"
+
+msgid "your_password?"
+msgstr "الرقم السري"
+
+msgid "yes"
+msgstr "نعم"
+
+msgid "no"
+msgstr "لا"
+
+msgid "profile"
+msgstr "الملف الشخصي"
+
+msgid "last_comments"
+msgstr ""
+
+msgid "location"
+msgstr "الموقع"
+
+msgid "forgot_password"
+msgstr "هل نسيت الرقم السري؟"
+
+msgid "welcome"
+msgstr "مرحبا"
+
+msgid "confirm_email"
+msgstr "تأكيد البريد الالكتروني"
+
+msgid "foofind_team"
+msgstr "فريق الدعم"
+
+msgid "send"
+msgstr "ارسل"
+
+msgid "submit_search"
+msgstr "البحث"
+
+msgid "your_message"
+msgstr "رسالتك"
+
+msgid "your_name"
+msgstr "الاسم"
+
+msgid "your_surname"
+msgstr "اسم العائلة"
+
+msgid "your_company"
+msgstr "الشركة"
+
+msgid "your_phone"
+msgstr "رقم الهاتف"
+
+msgid "translate"
+msgstr "الترجمة"
+
+msgid "choose_language"
+msgstr "اختر اللغة"
+
+msgid "here"
+msgstr "هنا"

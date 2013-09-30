@@ -28,7 +28,6 @@ from collections import OrderedDict, defaultdict
 
 import deploy.fabfile as fabfile
 import foofind.utils.pyon as pyon
-from foofind.utils import expanded_instance, fileurl2mid, mid2hex, hex2mid, url2mid, u, mid2url, logging
 from foofind.utils.translations import unfix_lang_values
 from foofind.utils.fooprint import ManagedSelect
 from foofind.utils.flaskutils import send_gridfs_file
@@ -36,6 +35,7 @@ from foofind.utils.downloader import get_file_metadata
 from foofind.services import *
 from foofind.forms.admin import *
 from foofind.utils.pogit import pomanager
+from foofind.utils import expanded_instance, fileurl2mid, mid2hex, hex2mid, url2mid, u, mid2url, logging
 
 
 class DeployTask(object):
@@ -86,7 +86,10 @@ class DeployTask(object):
             cache.cache.set(self._memid, "")
 
         def get_data(self):
-            return u"".join(self._tmp) or u(cache.cache.get(self._memid) or u"")
+            try:
+                return u"".join(self._tmp) or u(cache.cache.get(self._memid) or u"")
+            except:
+                return u""
 
     class DeployThread(multiprocessing.Process):
         '''
@@ -147,6 +150,7 @@ class DeployTask(object):
         self._syncmanager = multiprocessing.Manager()
         self._lock = self._syncmanager.Lock()
         self._lastmode = "%slastmode" % memcache_prefix
+        self._lastbranch = "%slastbranch" % memcache_prefix
         self._memid = "%sbusy" % memcache_prefix
         self._stdout = self.MemcachedBuffer("%sstdout" % memcache_prefix, self._syncmanager)
         self._stderr = self.MemcachedBuffer("%sstderr" % memcache_prefix, self._syncmanager)
@@ -166,6 +170,18 @@ class DeployTask(object):
         if self.busy:
             return self._ownlastmode
         return cache.cache.get(self._lastmode)
+
+    _ownlastbranch = None
+    def get_last_branch(self):
+        '''
+        Obtiene el último branch con el que ha sido llamado
+
+        @rtype str
+        @return cadena del último modo
+        '''
+        if self.busy:
+            return self._ownlastbranch
+        return cache.cache.get(self._lastbranch)
 
     def get_stdout_data(self):
         '''
@@ -227,6 +243,11 @@ class DeployTask(object):
         if mode:
             self._ownlastmode = mode
             cache.cache.set(self._lastmode, mode)
+
+        branch = config.get("branch", None) if config else None
+        if branch:
+            self._ownlastbranch = branch
+            cache.cache.set(self._lastbranch, branch)
 
         self.DeployThread(
             action,
@@ -291,10 +312,11 @@ def admin_required(fn):
 
     @wraps(fn)
     def decorated_view(*args, **kwargs):
-        if not current_user.is_authenticated():
-            return current_app.login_manager.unauthorized()
-        elif current_user.type != 1:
-            abort(403)
+        if hasattr(current_app, "login_manager"):
+            if not current_user.is_authenticated():
+                return current_app.login_manager.unauthorized()
+            elif current_user.type != 1:
+                abort(403)
         return fn(*args, **kwargs)
     return decorated_view
 
@@ -569,7 +591,10 @@ def lock_file_id_and_filename_from_url(url):
     @rtype tupla (str, str)
     @return id en hexadecimal y nombre de fichero
     '''
-    return (mid2hex(fileurl2mid(url)), urllib2.unquote(url.split("/")[-1]).rsplit(".",1)[0])
+    if url.startswith("http") and len(url.split("//")[1].split("/")) > 3:
+        return (mid2hex(fileurl2mid(url)), urllib2.unquote(url.split("/")[-1]).rsplit(".",1)[0])
+    else:
+        return None
 
 @admin.route('/<lang>/admin/locks/<complaint_id>', methods=("GET","POST"))
 @admin.route('/<lang>/admin/lockfiles', methods=("GET","POST"))
@@ -604,11 +629,13 @@ def lock_file(complaint_id=None, url_file_ids=None):
                         and (len(i)*6)%8 == 0
                     ]
             elif searchform.mode.data == "url":
-                filenames.update(
-                    lock_file_id_and_filename_from_url(i)
-                    for i in identifiers
-                    if i.startswith("http") and len(i.split("//")[1].split("/")) > 3
-                    )
+                for i in identifiers:
+                    try:
+                        data = lock_file_id_and_filename_from_url(i)
+                        if data:
+                            filenames[data[0]] = data[1]
+                    except:
+                        pass
                 fileids = filenames.keys()
             if fileids:
                 permalink = url_for('admin.lock_file',
@@ -911,6 +938,10 @@ def deploy():
         lastmode = deployTask.get_last_mode()
         if request.method == "GET" and lastmode:
             form.mode.data = lastmode
+
+        lastbranch = deployTask.get_last_branch()
+        if request.method == "GET" and lastbranch:
+            form.branch.data = lastbranch
     elif mode == "publish":
         form.publish_mode.choices = deploy_backups_datetimes()
     elif mode == "script":
@@ -1005,6 +1036,9 @@ def deploy():
                     do_task = False
             elif task == "distribute-downloader":
                 config = {"servers":"all"}
+            elif task == "deploy":
+                config = {"branch":form.branch.data}
+
             if task and do_task:
                 flash("admin_deploy_in_progress", "message in_progress_message")
                 force_busy = True

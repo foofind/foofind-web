@@ -22,8 +22,10 @@ class PagesStore(object):
         '''
         self.max_pool_size = app.config["DATA_SOURCE_MAX_POOL_SIZE"]
 
-        # Inicia conexiones
-        self.pages_conn = pymongo.Connection(app.config["DATA_SOURCE_USER"], slave_okay=True, max_pool_size=self.max_pool_size)
+        # soporte para ReplicaSet
+        self.options = {"replicaSet": app.config["DATA_SOURCE_USER_RS"], "read_preference":pymongo.read_preferences.ReadPreference.SECONDARY_PREFERRED, "secondary_acceptable_latency_ms":app.config.get("SECONDARY_ACCEPTABLE_LATENCY_MS",15)} if "DATA_SOURCE_USER_RS" in app.config else {"slave_okay":True}
+
+        self.pages_conn = pymongo.MongoClient(app.config["DATA_SOURCE_USER"], max_pool_size=self.max_pool_size, **self.options)
 
     def create_complaint(self,data):
         '''

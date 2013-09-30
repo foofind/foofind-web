@@ -1,0 +1,182 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: 1\n"
+"Report-Msgid-Bugs-To: ismael@mp2p.net\n"
+"POT-Creation-Date: 2011-12-09 11:49+0100\n"
+"PO-Revision-Date: 2011-12-09 11:49+0100\n"
+"Last-Translator: Foofind <hola@foofind.com>\n"
+"Language-Team: th <hola@foofind.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Foofind's pogit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgid "click_here"
+msgstr "คลิกที่นี่"
+
+msgid "password"
+msgstr "รหัสผ่าน"
+
+msgid "ok"
+msgstr "ตกลง"
+
+msgid "error_404_message"
+msgstr "ไม่พบหน้าที่ต้องการ"
+
+msgid "error_410_message"
+msgstr "หน้านี้ไม่สามารถใช้งานได้"
+
+msgid "video"
+msgstr "วีดีโอ"
+
+msgid "image"
+msgstr "รูปภาพ"
+
+msgid "software"
+msgstr "ซอฟต์เเวร์"
+
+msgid "previous"
+msgstr "ก่อนหน้า"
+
+msgid "next"
+msgstr "ต่อไป"
+
+msgid "play"
+msgstr "เล่น"
+
+msgid "all_sizes"
+msgstr "ทุกขนาด"
+
+msgid "smaller_than"
+msgstr "เล็กกว่า"
+
+msgid "larger_than"
+msgstr "ใหญ่กว่า"
+
+msgid "seeds"
+msgstr "กำลังส่ง"
+
+msgid "leechs"
+msgstr "กำลังรับ"
+
+msgid "height"
+msgstr "สูง"
+
+msgid "width"
+msgstr "กว้าง"
+
+msgid "size"
+msgstr "ขนาด"
+
+msgid "colors"
+msgstr "สี"
+
+msgid "name"
+msgstr "ชื่อ"
+
+msgid "year"
+msgstr "ปี"
+
+msgid "month"
+msgstr "เดือน"
+
+msgid "day"
+msgstr "วัน"
+
+msgid "hour"
+msgstr "ชั่วโมง"
+
+msgid "minute"
+msgstr "นาที"
+
+msgid "second"
+msgstr "วินาที"
+
+msgid "language"
+msgstr "ภาษา"
+
+msgid "download"
+msgstr "ดาวน์โหลด"
+
+msgid "listen"
+msgstr "ฟัง"
+
+msgid "i_like_it"
+msgstr "ชอบ"
+
+msgid "booo"
+msgstr "ไม่ชอบ"
+
+msgid "download_links"
+msgstr "เเสดง ลิงก์ ดาวโหลด"
+
+msgid "nickname"
+msgstr "ชื่อเล่น"
+
+msgid "hello"
+msgstr "สวัสดี"
+
+msgid "logout"
+msgstr "ออกจากระบบ"
+
+msgid "login"
+msgstr "เข้าสู่ระบบ"
+
+msgid "register"
+msgstr "สมัคใช้งาน"
+
+msgid "register_here"
+msgstr "สมัคใช้งานที่นี่"
+
+msgid "your_location"
+msgstr "ที่อยู่ของคุณ"
+
+msgid "email_taken"
+msgstr "อีเมล นี้ถูกใช้เเล้ว โปรดลอง อีเมลอื่น"
+
+msgid "forgot"
+msgstr "ลืม"
+
+msgid "your_password?"
+msgstr "รหัส ผ่าน"
+
+msgid "account_deleted"
+msgstr "เเอคเคาท์ ถูกลบ เรียบร้อย เเล้ว"
+
+msgid "welcome"
+msgstr "ยินดีต้อนรับ"
+
+msgid "finish_register"
+msgstr "โปรด คลิกลิงก์ นี้ เพื่อยืนยันการ สมัคใช้งาน"
+
+msgid "confirm_email"
+msgstr "ยืนยัน อีเมล"
+
+msgid "login_vote"
+msgstr "เข้าสู่ระบบ เพื่อโหวต"
+
+msgid "login_comment"
+msgstr "เข้าสู่ระบบ เพื่อโหวต"
+
+msgid "submit_search"
+msgstr "ค้นหา"
+
+msgid "insert_characters"
+msgstr "ใส่รหัส ภาพที่เห็นให้ถูกต้อง"
+
+msgid "captcha_wrong"
+msgstr "รหัสภาพไม่ถูกต้อง"
+
+msgid "link_not_exist"
+msgstr "ลิ้งก์นี้ไม่มีอยู่ หรือ ถูกลบเเล้ว"
+
+msgid "translate"
+msgstr "แปลภาษา"
+
+msgid "translate_to_your_language"
+msgstr "ช่วยเรา แปลภาษา ของคุณ"
+
+msgid "choose_language"
+msgstr "เลือก ภาษา"

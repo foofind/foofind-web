@@ -31,7 +31,11 @@ class ConfigStore(object):
             }
         self._appid = app.config["APPLICATION_ID"]
         self.max_pool_size = app.config["DATA_SOURCE_MAX_POOL_SIZE"]
-        self.config_conn = pymongo.Connection(app.config["DATA_SOURCE_CONFIG"], slave_okay=True, max_pool_size=self.max_pool_size)
+
+        # soporte para ReplicaSet
+        self.options = {"replicaSet": app.config["DATA_SOURCE_CONFIG_RS"], "read_preference":pymongo.read_preferences.ReadPreference.SECONDARY_PREFERRED, "secondary_acceptable_latency_ms":app.config.get("SECONDARY_ACCEPTABLE_LATENCY_MS",15)} if "DATA_SOURCE_CONFIG_RS" in app.config else {"slave_okay":True}
+
+        self.config_conn = pymongo.MongoClient(app.config["DATA_SOURCE_CONFIG"], max_pool_size=self.max_pool_size, **self.options)
 
         check_capped_collections(self.config_conn.config, self._capped)
 
@@ -111,10 +115,6 @@ class ConfigStore(object):
                        configuración de la aplicación que deberá procesar la
                        operación. Por defecto es "*" (todas).
 
-        @type once: bool
-        @param once: Si la acción sólo debe ser realizada una vez en total,
-                     útile para operaciones de memcache o base de datos.
-                     Por defecto es False.
         '''
         now = time.time()
         self.config_conn.config.actions.save({"actionid":actionid, "target":target, "lt":now})
@@ -161,7 +161,6 @@ class ConfigStore(object):
                 fnc, unique, args, kwargs = self._action_handlers[actionid]
                 fnc(*args, **kwargs)
         # Tareas a realizar en todas las instancias
-        query["once"] = False
         del query["actionid"]
 
         try:
@@ -175,6 +174,8 @@ class ConfigStore(object):
             self._actions_lt = last
         except pymongo.errors.AutoReconnect as e:
             logging.exception("Can't access to config database.")
+        except BaseException as e:
+            logging.exception("Error running action.")
         finally:
             self.config_conn.end_request()
 

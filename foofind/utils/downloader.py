@@ -54,4 +54,7 @@ def get_file_metadata(path):
             rdata["size"] = 0
         except BaseException as e:
             logging.exception(e)
+        finally:
+            if parser and parser.stream and parser.stream._input and not parser.stream._input.closed:
+                parser.stream._input.close()
     return rdata

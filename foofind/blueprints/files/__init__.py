@@ -65,11 +65,7 @@ def search_info(query, filters=None):
     query = query.replace("_"," ")
     dict_filters, has_changed = url2filters(filters)
 
-    if searchd.service:
-        return jsonify(searchd.get_search_info(query, filters=filters))
-    else:
-        info = searchd.get_search_info({"type":"text", "text":query}, dict_filters)
-        return jsonify({"stats":[{"-":info["query"]}, {"-":info["filters"]}, {"-":info["temp"]}, {"-":info["locked"]}]})
+    return jsonify(searchd.get_search_info(query, filters=filters))
 
 @unit.observe
 @files.route('/<lang>/search') #para soportar las URL antiguas
@@ -196,7 +192,7 @@ def search(query=None,filters=None,file_id=None,file_name=None):
         sure = True
     else:
         # empieza la busqueda en la primera peticion
-        if searchd.service: searchd.search(query, filters=dict_filters, start=True, group=True, no_group=False)
+        searchd.search(query, filters=dict_filters, start=True, group=True, no_group=False)
 
         if query is not None and static_download["file_data"] is not None: #si es busqueda con download se pone el primero el id que venga
             static_results=[static_download["file_data"]], True
@@ -303,16 +299,9 @@ def search_files(query,filters,min_results=0,max_results=30,download=None,last_i
     profiler_data={}
     profiler.checkpoint(profiler_data,opening=["sphinx"])
 
-    if searchd.service:
-        s = searchd.search(query, filters=filters, start=not bool(last_items), group=True, no_group=False, order=order)
-        ids = [(bin2hex(fileid), server, sphinxid, weight, sg) for (fileid, server, sphinxid, weight, sg) in s.get_results((1.4, 0.1), last_items=last_items, min_results=min_results, max_results=max_results, extra_browse=0 if max_results>30 else None, weight_processor=weight_processor, tree_visitor=tree_visitor)]
-    else:
-        s = searchd.search({"type":"text", "text":query}, filters=filters, query_time=query_time, extra_wait_time=extra_wait_time, just_usable=bool(async))
+    s = searchd.search(query, filters=filters, start=not bool(last_items), group=True, no_group=False, order=order)
+    ids = [(bin2hex(fileid), server, sphinxid, weight, sg) for (fileid, server, sphinxid, weight, sg) in s.get_results((1.4, 0.1), last_items=last_items, min_results=min_results, max_results=max_results, extra_browse=0 if max_results>30 else None, weight_processor=weight_processor, tree_visitor=tree_visitor)]
 
-        if async:
-            s.usable.wait(async/1000.)
-
-        ids = list(s.get_results(last_items=last_items, min_results=min_results, max_results=max_results, max_extra_searches=max_extra_searches))
     stats = s.get_stats()
 
     profiler.checkpoint(profiler_data,opening=["entities"], closing=["sphinx"])

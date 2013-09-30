@@ -20,7 +20,7 @@ msgid "click_here"
 msgstr "clic aici!"
 
 msgid "your_email"
-msgstr "Adresa ta de email:"
+msgstr ""
 
 msgid "password"
 msgstr "Parolă:"

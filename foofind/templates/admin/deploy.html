@@ -47,6 +47,8 @@
 <dl class="deploy_buttons list">
     <dt>{{ form.mode.label }}</dt>
     <dd>{{ form.mode }}</dd>
+    <dt>{{ form.branch.label }}</dt>
+    <dd>{{ form.branch }}</dd>
     <dt>{{ _("admin_deploy_phase_deploy") }}</dt>
     <dd>{{ form.deploy if deploy_available else form.deploy(disabled="disabled") }}{{ form.deploy_rollback if deploy_available else form.deploy_rollback(disabled="disabled") }}</dd>
     <dt>{{ _("admin_deploy_phase_confirm") }}</dt>

@@ -207,6 +207,11 @@ EXTENSION_CONFICENCE.update((i, CONTENT_UNKNOWN_THRESHOLD) for i in TOP_LEVEL_DO
 EXTENSION_IMPORTANCE_POSITION = 0.75
 # Tipos dados por palabras clave en el nombre
 FILENAME_KEYWORDS = {
+    ct.CONTENT_IMAGE: {
+        "photo": 0.1,
+        "photos": 0.2,
+        "wallpapers": 0.2,
+        },
     ct.CONTENT_AUDIO: {
         "audio": 0.5,
         "kbps": 0.75,
@@ -470,25 +475,33 @@ TAG_EXTENSIONS = {
         },
     }
 
-TAG_CONTENT_TYPE = {u"movie":ct.CONTENT_VIDEO,
-                    u"series":ct.CONTENT_VIDEO,
-                    u"documentary":ct.CONTENT_VIDEO,
-                    u"anime":ct.CONTENT_VIDEO,
-                    u"porn":ct.CONTENT_VIDEO,
-                    u"hd":ct.CONTENT_VIDEO,
-                    u"ebook":ct.CONTENT_DOCUMENT,
-                    u"software":ct.CONTENT_APPLICATION,
-                    u"linux":ct.CONTENT_APPLICATION,
-                    u"mac":ct.CONTENT_APPLICATION,
-                    u"windows":ct.CONTENT_APPLICATION,
-                    u"android":ct.CONTENT_APPLICATION,
-                    u"game":ct.CONTENT_APPLICATION,
-                    u"gamecube":ct.CONTENT_APPLICATION,
-                    u"music":ct.CONTENT_AUDIO,
-                    u"full_album":ct.CONTENT_AUDIO,
-                    u"karaoke":ct.CONTENT_AUDIO,
-                    u"mobile":ct.CONTENT_APPLICATION
-                    }
+TORRENT_CATEGORY_TAG = {
+        u"adult": u"porn",
+        u"movies": u"movie",
+}
+TAG_CONTENT_TYPE = {
+        u"movie": ct.CONTENT_VIDEO,
+        u"series": ct.CONTENT_VIDEO,
+        u"documentary": ct.CONTENT_VIDEO,
+        u"ebook": ct.CONTENT_DOCUMENT,
+        u"software": ct.CONTENT_APPLICATION,
+        u"linux": ct.CONTENT_APPLICATION,
+        u"mac": ct.CONTENT_APPLICATION,
+        u"windows": ct.CONTENT_APPLICATION,
+        u"android": ct.CONTENT_APPLICATION,
+        u"game": ct.CONTENT_APPLICATION,
+        u"gamecube": ct.CONTENT_APPLICATION,
+        u"music": ct.CONTENT_AUDIO,
+        u"full_album": ct.CONTENT_AUDIO,
+        u"karaoke": ct.CONTENT_AUDIO,
+        u"mobile": ct.CONTENT_APPLICATION
+    }
+
+TAG_CONTENT_TYPE_GUESS = {
+        u"porn": {ct.CONTENT_VIDEO:0.7, ct.CONTENT_BOOK:0.1, ct.CONTENT_IMAGE:0.4},
+        u"hd": {ct.CONTENT_VIDEO:0.7, ct.CONTENT_IMAGE:0.4},
+        u"anime": {ct.CONTENT_VIDEO:0.9, ct.CONTENT_BOOK:0.1},
+    }
 
 # Tags vinculados a tipos concretos
 _tag_restrictions = [
@@ -516,6 +529,13 @@ _tag_restrictions.extend(
     # Asociación inversa de tags y content types
     (ctype, tag)
     for tag, ctype in TAG_CONTENT_TYPE.iteritems()
+    )
+
+_tag_restrictions.extend(
+    # Asociación inversa de tags y content types multiples
+    (ctype, tag)
+    for tag, ctypes in TAG_CONTENT_TYPE_GUESS.iteritems()
+        for ctype in ctypes
     )
 
 _tag_restrictions.sort()
@@ -621,12 +641,13 @@ ALL_FORMATS = set(aformat
                     for aset in FORMAT_SET.itervalues()
                         for aformat, format_desc in aset)
 
-
 ALL_TAGS = set(tag
                 for aset in itertools.chain(REVERSE_TAG_KEYWORDS.itervalues(), REVERSE_TAG_METADATA.itervalues(),
                                             REVERSE_TAG_EXTENSIONS.itervalues())
                     for tag in aset)
+
 ALL_TAGS.update(TAG_CONTENT_TYPE.iterkeys())
+ALL_TAGS.update(TAG_CONTENT_TYPE_GUESS.iterkeys())
 
 _scores_empty = [0.0] * len(CONTENT_TYPE_SET)
 _depths_empty = [sys.maxint] * len(CONTENT_TYPE_SET)
@@ -804,11 +825,11 @@ def restrict_content_type(scores, tags=(), fformats=(), ctype=None):
         for sctype, value in enumerate(scores):
             if value > 0:
                 if sctype in REVERSE_CONTENT_TYPE_ASSIMILATION:
-                    destiny, multiplier, tags = REVERSE_CONTENT_TYPE_ASSIMILATION[sctype]
+                    destiny, multiplier, ntags = REVERSE_CONTENT_TYPE_ASSIMILATION[sctype]
                     scores[destiny] += value * multiplier
                     scores[sctype] = 0
-                    if tags and value > CONTENT_UNKNOWN_THRESHOLD:
-                        tags.update(tags)
+                    if ntags and value > CONTENT_UNKNOWN_THRESHOLD:
+                        tags.update(ntags)
                 elif not sctype in CONTENT_TYPE_SUBSET:
                     scores[sctype] = 0
         # Selección del mejor tipo de contenido, su fiabilidad, y los tags permitidos para él
@@ -846,6 +867,9 @@ def guess_doc_content_type(doc, sources=None):
     @return tupla con id de tipo de contenido (int), lista de tags, y formato
             (como tupla de formato o None)
     '''
+    # Set de tags
+    tags = set()
+
     # Set de orígenes del fichero
     sourceids = {int(src["t"]) for src in doc["src"].itervalues() if "t" in src} if "src" in doc else {}
     # Los ficheros deben de tener sources (de dónde salen los nombres y la configuración por orígen)
@@ -869,29 +893,6 @@ def guess_doc_content_type(doc, sources=None):
     else:
         filepaths = ()
 
-    # Tags por metadatos
-    tags = set() # Set de tags
-    torrent_tags_scores = None # content type segun tags del torrent
-
-    if "md" in doc:
-        # tags provenientes de torrents
-        try:
-            torrent_tags = u(doc["md"]["torrent:special_tags"]).split(",") if "torrent:special_tags" in doc["md"] else \
-                       u(doc["md"]["torrent:category"]).lower().split(",") if "torrent:category" in doc["md"] else None
-            if torrent_tags:
-                tags.update(tag for tag in torrent_tags if tag in TAG_CONTENT_TYPE)
-                torrent_tags_cts = frozenset(TAG_CONTENT_TYPE[tag] for tag in tags)
-                if len(torrent_tags_cts)==1:
-                    torrent_tags_scores=_scores_empty[:]
-                    torrent_tags_scores[iter(torrent_tags_cts).next()]=1.0
-        except:
-            pass
-
-        tags.update(
-            tag
-            for mdkey in doc["md"].iterkeys() if mdkey in REVERSE_TAG_METADATA
-                for tag, cond in REVERSE_TAG_METADATA[mdkey].iteritems() if cond is True or callable(cond) and cond(doc)
-            )
     # Tags por urls
     if "src" in doc:
         for d in doc["src"].itervalues():
@@ -932,10 +933,12 @@ def guess_doc_content_type(doc, sources=None):
     if filepaths:
         scores, ntags, fileformats = analyze_filenames(filepaths, filesizes, analyze_extensions=has_extensions)
         tags.update(ntags)
+
     # Si no se han sacado fileformats y scores de los nombres de fichero
     if fileformats is None:
         fileformats =  _formats_initial.copy()
         scores = _scores_initial[:]
+
     # Tipo de contenido por urls
     if "src" in doc:
         for d in doc["src"].itervalues():
@@ -961,4 +964,31 @@ def guess_doc_content_type(doc, sources=None):
             PRIORITY_CT / len(sourceids)
             )
 
-    return restrict_content_type(torrent_tags_scores or scores, tags, fileformats)
+    # Tags por metadatos
+
+    if "md" in doc:
+        # tags provenientes de torrents
+        if "torrent:special_tags" in doc["md"]:
+            torrent_tags = [tag.strip() for tag in u(doc["md"]["torrent:special_tags"]).split(",") if tag and tag.strip()]
+        elif "torrent:category" in doc["md"]:
+            torrent_tags = [tag.strip() for tag in u(doc["md"]["torrent:category"]).lower().replace("/",",").split(",") if tag]
+            torrent_tags = [TORRENT_CATEGORY_TAG[tag] if tag in TORRENT_CATEGORY_TAG else tag for tag in torrent_tags if tag]
+        else:
+            torrent_tags = None
+
+        if torrent_tags:
+            tags.update(tag for tag in torrent_tags if tag in ALL_TAGS)
+
+            for tag in tags:
+                if tag in TAG_CONTENT_TYPE:
+                    scores[TAG_CONTENT_TYPE[tag]] += 1.0
+                elif tag in TAG_CONTENT_TYPE_GUESS:
+                    for tct, w in TAG_CONTENT_TYPE_GUESS[tag].iteritems():
+                        scores[tct] += w
+
+        tags.update(
+            tag
+            for mdkey in doc["md"].iterkeys() if mdkey in REVERSE_TAG_METADATA
+                for tag, cond in REVERSE_TAG_METADATA[mdkey].iteritems() if cond is True or callable(cond) and cond(doc)
+            )
+    return restrict_content_type(scores, tags, fileformats)

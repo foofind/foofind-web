@@ -1,4 +1,4 @@
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
@@ -16,6 +16,12 @@ msgstr ""
 msgid "your_email"
 msgstr "La tua e-mail:"
 
+msgid "new_toolbar"
+msgstr "Prova la nostra nuova toolbar"
+
+msgid "click_here"
+msgstr "clicca quì !"
+
 msgid "password"
 msgstr "Password:"
 
@@ -24,6 +30,56 @@ msgstr "Manda"
 
 msgid "required_empty"
 msgstr "Il campo è obbligatorio e non può essere lasciato vuoto"
+
+msgid "ok"
+msgstr "ok"
+
+msgid "help_us"
+msgstr "aiutaci !"
+
+msgid "legal_info"
+msgstr "informazioni legali"
+
+msgid "go_home"
+msgstr "Torna indietro all' engine di ricerca"
+
+msgid "error_500_message"
+msgstr "C' è stato un errore :("
+
+msgid "error_500_description"
+msgstr ""
+"Quì c' è qualcosa di strano, i nostri specialisti stanno investigando su "
+"quest' attività paranormale."
+
+msgid "error_404_message"
+msgstr "Pagina non trovata"
+
+msgid "error_404_description"
+msgstr ""
+"L' URL richiesto non è stato individuato. Per favore controlla di aver "
+"scritto l' URL correttamente, se lo è, per favore notifica gli "
+"amministratori web."
+
+msgid "error_410_message"
+msgstr "Pagina non disponibile"
+
+msgid "error_410_description"
+msgstr ""
+"L' URL richiesta non è più disponibile e non lo sarà mai più in futuro."
+
+msgid "error_502_message"
+msgstr "Errore di Gateway."
+
+msgid "error_502_description"
+msgstr "Impossibile accedere al servizio a causa di un gateway errato."
+
+msgid "error_503_message"
+msgstr "Servizio Non disponibile."
+
+msgid "error_503_description"
+msgstr ""
+"L' URL richiesto non è temporaneamente raggiungibile. Per favore riprova più"
+" tardi."
 
 msgid "about"
 msgstr "Tutto su"
@@ -551,11 +607,9 @@ msgstr "Il sito è sotto licenza %(cc)s. %(code)s sotto licenza %(gpl)s."
 
 msgid "about_text"
 msgstr ""
-"Foofind è un motore di ricerca universale. Noi di Foofind lavoriamo alla "
-"creazione di software che scansiona ogni rete p2p e incicizza ogni file. In "
-"questa maniera, intendiamo fornire la più grande raccolta di link "
-"possibile.<br /><br />Foofind è stato creato da Pablo Soto, p2p designer, "
-"sviluppato a Madrid, Spagna da M2P2P Technologies."
+"Foofind è un motore di ricerca universale. Noi di Foofind lavoriamo alla creazione di software che scansiona ogni rete p2p e incicizza ogni file. In questa maniera, intendiamo fornire la più grande raccolta di link possibile.\r\n"
+"\r\n"
+"Foofind è stato creato da Pablo Soto, p2p designer, sviluppato a Madrid, Spagna da MP2P Technologies."
 
 msgid "under_maintenance"
 msgstr "Foofind è attualmente in fase di manutenzione. Torna più tardi."
@@ -571,11 +625,9 @@ msgstr "Aiutaci a tradurre Foofind nella tua lingua"
 
 msgid "translate_description"
 msgstr ""
-"Foofind attualmente è disponibile in poche lingue, ma puoi aiutarci a "
-"tradurle nella tua lingua. Basta che scegli la tua lingua dalla seguente "
-"lista e riempi i campi con il testo tradotto. Non c'è bisogno che completi "
-"tutti i campi, qualsiasi aiuto sarà apprezzato.<br/><br/>Se la tua lingua "
-"non è nella lista, contattaci per aggiungerla."
+"Foofind attualmente è disponibile in poche lingue, ma puoi aiutarci a tradurle nella tua lingua. Basta che scegli la tua lingua dalla seguente lista e riempi i campi con il testo tradotto. Non c'è bisogno che completi tutti i campi, qualsiasi aiuto sarà apprezzato.\r\n"
+"\r\n"
+"Se la tua lingua non è nella lista, contattaci per aggiungerla."
 
 msgid "choose_language"
 msgstr "Scegli lingua"

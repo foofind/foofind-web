@@ -96,7 +96,7 @@ def choose_filename(f,text_cache=None):
     f['view']['url'] = mid2url(hex2mid(f['file']['_id']))
     f['view']['fnid'] = chosen
     if chosen:
-        filename = fns[chosen]['n'] if "torrent:name" not in f["file"]["md"] else f["file"]["md"]["torrent:name"]
+        filename = fns[chosen]['n']
         ext = fns[chosen]['x']
     else: #uses filename from src
         filename = ""
@@ -119,7 +119,6 @@ def choose_filename(f,text_cache=None):
 
     nfilename = seoize_text(filename, " ",True, 0)
     f['view']['nfn'] = nfilename
-
     # añade el nombre del fichero como palabra clave
     g.keywords.update(set(keyword for keyword in nfilename.split(" ") if len(keyword)>1))
 
@@ -150,7 +149,6 @@ def build_source_links(f):
     f['view']['sources']={}
     max_weight=0
     icon=""
-    url_pattern=url_pattern_generated=False
 
     # agrupación de origenes
     source_groups = {}
@@ -161,7 +159,7 @@ def build_source_links(f):
         if not src.get('bl',None) in (0, None):
             continue
 
-        downloader=join=False
+        url_pattern=downloader=join=False
         count=0
         part=url=""
         source_data=g.sources[src["t"]] if "t" in src and src["t"] in g.sources else None
@@ -202,7 +200,6 @@ def build_source_links(f):
                 trackers = f['file']['md']['torrent:trackers']
                 if isinstance(trackers, basestring):
                     part += unicode("".join('&tr='+urllib.quote_plus(tr) for tr in u(trackers).encode("UTF-8").split(" ")), "UTF-8")
-
         elif "t" in source_data["g"]:
             downloader=True
             link_weight=0.8
@@ -280,9 +277,8 @@ def build_source_links(f):
             if url_pattern:
                 view_source['urls']=[source_data["url_pattern"]%url]
                 f['view']['source_id']=url
-                url_pattern=False
-                url_pattern_generated=True
-            elif not url_pattern_generated:
+                view_source["pattern_used"]=True
+            elif not "pattern_used" in view_source:
                 view_source['urls'].append(url)
 
             if source_data["d"]!="eD2k":
@@ -300,7 +296,7 @@ def build_source_links(f):
     if icon!="web":
         for src,info in f['view']['sources'].items():
             if info['join']:
-                f['view']['sources'][src]['urls'].append("magnet:?dn="+f['view']['pfn']+("&xl="+str(f['file']['z']) if 'z' in f['file'] else "")+"&"+"&".join(info['parts']))
+                f['view']['sources'][src]['urls'].append("magnet:?"+"&".join(info['parts'])+"&dn="+f['view']['pfn']+("&xl="+str(f['file']['z']) if 'z' in f['file'] else ""))
             elif not 'urls' in info:
                 del(f['view']['sources'][src])
 
