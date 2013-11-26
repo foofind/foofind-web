@@ -27,9 +27,10 @@ MAIL_PASSWORD = ""
 DATA_SOURCE_SERVER = "mongodb://mongo.foofind.com:27017"
 DATA_SOURCE_SERVER_RS = "db"
 DATA_SOURCE_USER = "mongodb://mongo.foofind.com:27017"
+DATA_SOURCE_PAGES = "mongodb://mongo.foofind.com:27017"
 DATA_SOURCE_FEEDBACK = "mongodb://mongo.foofind.com:27017"
 DATA_SOURCE_ENTITIES = "mongodb://mongo.foofind.com:27017"
-DATA_SOURCE_DOWNLADS = "mongodb://mongo.foofind.com:27017"
+DATA_SOURCE_DOWNLOADS = "mongodb://mongo.foofind.com:27017"
 DATA_SOURCE_MAX_POOL_SIZE = 50
 DATA_SOURCE_FOO_THREADS = 30
 

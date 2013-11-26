@@ -67,7 +67,7 @@ def number_size_format_filter(size, lang=None):
         decimal_sep, group_sep = format_cache[lang] = (get_decimal_symbol(lang), get_group_symbol(lang))
 
     try:
-        if size<1000: # no aplica para los bytes
+        if float(size)<1000: # no aplica para los bytes
             return str(size)+" B"
         else:
             size = log(float(size),1024)

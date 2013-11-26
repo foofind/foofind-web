@@ -11,31 +11,37 @@ class EntitiesStore(object):
         '''
         Inicialización de la clase.
         '''
-        self.max_pool_size = 0
         self.entities_conn = None
         self.enabled = False
 
     def init_app(self, app):
         '''
-        Inicializa la clase con la configuración de la aplicación.
+        Apply entities database access configuration.
 
-        @param app: Aplicación de Flask.
+        @param app: Flask application.
         '''
-        self.max_pool_size = app.config["DATA_SOURCE_MAX_POOL_SIZE"]
-        self.entities_url = app.config["DATA_SOURCE_ENTITIES"]
-        self.connect()
+        if app.config["DATA_SOURCE_ENTITIES"]:
+            try:
+                if "DATA_SOURCE_ENTITIES_RS" in app.config:
+                    self.entities_conn = pymongo.MongoReplicaSetClient(app.config["DATA_SOURCE_ENTITIES"],
+                                                                    max_pool_size=app.config["DATA_SOURCE_MAX_POOL_SIZE"],
+                                                                    replicaSet = app.config["DATA_SOURCE_ENTITIES_RS"],
+                                                                    read_preference = pymongo.read_preferences.ReadPreference.SECONDARY_PREFERRED,
+                                                                    tag_sets = app.config.get("DATA_SOURCE_ENTITIES_RS_TAG_SETS",[{}]),
+                                                                    secondary_acceptable_latency_ms = app.config.get("SECONDARY_ACCEPTABLE_LATENCY_MS", 15))
+                else:
+                    self.entities_conn = pymongo.MongoClient(app.config["DATA_SOURCE_ENTITIES"], max_pool_size=app.config["DATA_SOURCE_MAX_POOL_SIZE"], slave_okay=True)
+                self.enabled = True
+            except BaseException as e:
+                logging.warn("Can't connect to entities database. Entities disabled.")
 
-    def connect(self):
-        # no intenta conectar si ya está conectado
-        if self.enabled:
-            return
-
-        # Inicia conexiones
-        try:
-            self.entities_conn = pymongo.Connection(self.entities_url, slave_okay=True, max_pool_size=self.max_pool_size)
+    def share_connections(self, entities_conn=None):
+        '''
+        Allows to share data source connections with other modules.
+        '''
+        if entities_conn:
+            self.entities_conn = entities_conn
             self.enabled = True
-        except BaseException as e:
-            logging.warn("Can't connect to entities database. Entities disabled.")
 
     @cache.memoize(timeout=60*60)
     def get_entity(self, entity_id):

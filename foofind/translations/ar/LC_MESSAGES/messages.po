@@ -78,38 +78,70 @@ msgstr "افحص الخادم"
 msgid "about"
 msgstr "حول"
 
+msgid "error_mail_send"
+msgstr ""
+"حدث خطأ أثناء إرسال الرسالة إلى العنوان المحدد. الرجاء اختيار اسم آخر، أو "
+"حاول مرة أخرى لاحقاً."
+
+msgid "required_empty"
+msgstr "القيمة مطلوبة ولا يمكن أن يكون فارغاً"
+
+msgid "no_valid_email"
+msgstr "هذا ليس عنوان بريد إلكتروني صالح مع التنسيق: user@example.com"
+
+msgid "no_valid_url"
+msgstr "عنوان URL غير صالح"
+
 msgid "contact"
-msgstr "الاتصال"
+msgstr "جهة الاتصال"
 
 msgid "technology"
-msgstr "التكنواوجيا"
+msgstr "التكنولوجيا"
 
 msgid "legal"
-msgstr "القانون"
+msgstr "القانونية"
 
 msgid "privacy"
 msgstr "سياسة الخصوصية"
 
+msgid "tos"
+msgstr "شروط الاستخدام"
+
 msgid "complaint"
-msgstr "التبليغ عن رابط"
+msgstr "وصلة التقرير"
 
 msgid "index_change"
-msgstr "فو فاين قد تغيرت"
+msgstr "تم التغير"
+
+msgid "source_code"
+msgstr "كود المصدر"
+
+msgid "files_indexed"
+msgstr "ملفات مفهرسة"
+
+msgid "last_indexed_files"
+msgstr "آخر الملفات المفهرسة"
+
+msgid "i_want_that_file"
+msgstr "اريد هذا الملف"
 
 msgid "index_first"
-msgstr "كن الاول في حصولك على اهم الاخبار"
+msgstr "كن الأول من الحصول على جميع الأخبار والمشاركة"
+
+msgid "index_comunity"
+msgstr "تصبح جزءا من مجتمعنا."
 
 msgid "index_suggestion"
-msgstr "هل لديك اقتراح؟"
+msgstr "أي اقتراحات؟"
 
 msgid "all"
 msgstr "كل"
 
 msgid "direct_download"
-msgstr "تنزيل مباشر"
+msgstr "التحميل المباشر"
 
 msgid "direct_downloads"
-msgstr "تنزيلات مباشرة"
+msgstr "تحميلات مباشرة"
 
 msgid "other_direct_downloads"
 msgstr "وصلات تنزيل اخرى"

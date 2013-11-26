@@ -15,12 +15,15 @@ class Searchd:
         self.service = True
 
     def init_app(self, app, filesdb, entitiesdb, profiler):
-        self.sphinx.init_app(app)
-        self.proxy = SearchProxy(app.config, filesdb, entitiesdb, profiler, self.sphinx)
-        self.sphinx.start_client(self.proxy.servers.keys())
+        try:
+            self.sphinx.init_app(app)
+            self.proxy = SearchProxy(app.config, filesdb, entitiesdb, profiler, self.sphinx)
+            self.sphinx.start_client(self.proxy.servers.keys())
+        except BaseException as e:
+            logging.exception("Error on search deamon initialization.")
 
-    def search(self, text, filters={}, start=True, group=True, no_group=False, limits=None, order=None):
-        return Search(self.proxy, text, filters, start, group, no_group, limits, order)
+    def search(self, text, filters={}, start=True, group=True, no_group=False, limits=None, order=None, dynamic_tags=None):
+        return Search(self.proxy, text, filters, start, group, no_group, limits, order, dynamic_tags)
 
     def get_search_info(self, text, filters={}, group=True, no_group=False, limits=None, order=None):
         return Search(self.proxy, text, filters, False, group, no_group, limits, order).get_search_info()
@@ -36,3 +39,6 @@ class Searchd:
 
     def log_bot_event(self, bot, result):
         self.proxy.log_bot_event(bot, result)
+
+    def get_redis_connection(self):
+        return self.sphinx.redis_conn

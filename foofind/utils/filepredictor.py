@@ -89,7 +89,7 @@ CONTENT_TYPE_ASSIMILATION = {
         ct.CONTENT_PRESENTATION: (1, {"presentation"}),
         },
     ct.CONTENT_APPLICATION: {
-        ct.CONTENT_ROM: (0.5, {"rom", "game"}),
+        ct.CONTENT_ROM: (0.2, {"rom", "game"}),
         },
     ct.CONTENT_UNKNOWN: {
         ct.CONTENT_ARCHIVE: (0.5, {}),
@@ -196,14 +196,14 @@ TOP_LEVEL_DOMAINS = {
 
 # Confianza del tipo dado por extensión
 EXTENSION_CONFIDENCE_DEFAULT = 0.5
-EXTENSION_CONFICENCE = {
+EXTENSION_CONFIDENCE = {
     # Ambiguous
     "swf": 0.25, "ogg": 0.25,
     # Bad
     "nfo":0, "s":0,
     }
 # Extensiones ambiguas por ser también dominios de primer nivel
-EXTENSION_CONFICENCE.update((i, CONTENT_UNKNOWN_THRESHOLD) for i in TOP_LEVEL_DOMAINS)
+EXTENSION_CONFIDENCE.update((i, CONTENT_UNKNOWN_THRESHOLD) for i in TOP_LEVEL_DOMAINS)
 EXTENSION_IMPORTANCE_POSITION = 0.75
 # Tipos dados por palabras clave en el nombre
 FILENAME_KEYWORDS = {
@@ -477,6 +477,8 @@ TAG_EXTENSIONS = {
 
 TORRENT_CATEGORY_TAG = {
         u"adult": u"porn",
+        u"xxx": u"porn",
+        u"asian": u"porn",
         u"movies": u"movie",
 }
 TAG_CONTENT_TYPE = {
@@ -696,6 +698,7 @@ def analyze_filenames(filenames, filesizes, skip_ct=False, analyze_extensions=Tr
             depth = path.count("/") + 2
         else:
             depth = 1
+
         # Análisis de extensiones
         if analyze_extensions and "." in fn:
             # Al menos un punto para poder analizar extensiones
@@ -733,7 +736,7 @@ def analyze_filenames(filenames, filesizes, skip_ct=False, analyze_extensions=Tr
                 for ext in exts:
                     for extype in ct.EXTENSIONS[ext]:
                         if extype not in EXTENSION_BLACKLIST_CT:
-                            file_scores[extype] += EXTENSION_CONFICENCE.get(ext, EXTENSION_CONFIDENCE_DEFAULT) * counts * extweight
+                            file_scores[extype] += EXTENSION_CONFIDENCE.get(ext, EXTENSION_CONFIDENCE_DEFAULT) * counts * extweight
                             extweight *= EXTENSION_IMPORTANCE_POSITION
 
         # Análisis de nombre de fichero
@@ -828,12 +831,13 @@ def restrict_content_type(scores, tags=(), fformats=(), ctype=None):
                     destiny, multiplier, ntags = REVERSE_CONTENT_TYPE_ASSIMILATION[sctype]
                     scores[destiny] += value * multiplier
                     scores[sctype] = 0
-                    if ntags and value > CONTENT_UNKNOWN_THRESHOLD:
-                        tags.update(ntags)
                 elif not sctype in CONTENT_TYPE_SUBSET:
                     scores[sctype] = 0
         # Selección del mejor tipo de contenido, su fiabilidad, y los tags permitidos para él
         ctype = max(_content_type_xrange, key=scores.__getitem__)
+        ntags = REVERSE_CONTENT_TYPE_ASSIMILATION[ctype][2] if ctype in REVERSE_CONTENT_TYPE_ASSIMILATION else None
+        if ntags:
+            tags.update(ntags)
 
     # Selección de formato
     if len(fformats) > 1: # fformats incluye el formato None por defecto
@@ -947,12 +951,14 @@ def guess_doc_content_type(doc, sources=None):
                 if dsid in SOURCE_CT_URL:
                     ctid, ctw = SOURCE_CT_URL[dsid](d["url"])
                     scores[ctid] += ctw
+
     # Puntuaciones por metadatos
     if "md" in doc:
         for mdkey in doc["md"].iterkeys():
             prefix = mdkey.split(":", 1)[0]
             if prefix in METADATA_PREFIX:
                 scores[METADATA_PREFIX[prefix]] += METADATA_PREFIX_WEIGHT
+
     # Suma del tipo de contenido dado del mongo
     if "ct" in doc:
         doc_ct = int(doc["ct"])
@@ -965,16 +971,15 @@ def guess_doc_content_type(doc, sources=None):
             )
 
     # Tags por metadatos
-
     if "md" in doc:
         # tags provenientes de torrents
+        torrent_tags = []
         if "torrent:special_tags" in doc["md"]:
             torrent_tags = [tag.strip() for tag in u(doc["md"]["torrent:special_tags"]).split(",") if tag and tag.strip()]
-        elif "torrent:category" in doc["md"]:
-            torrent_tags = [tag.strip() for tag in u(doc["md"]["torrent:category"]).lower().replace("/",",").split(",") if tag]
-            torrent_tags = [TORRENT_CATEGORY_TAG[tag] if tag in TORRENT_CATEGORY_TAG else tag for tag in torrent_tags if tag]
-        else:
-            torrent_tags = None
+
+        if "torrent:category" in doc["md"]:
+            torrent_category = [tag.strip() for tag in u(doc["md"]["torrent:category"]).lower().replace("/",",").split(",") if tag]
+            torrent_tags.extend(TORRENT_CATEGORY_TAG[tag] if tag in TORRENT_CATEGORY_TAG else tag for tag in torrent_category if tag)
 
         if torrent_tags:
             tags.update(tag for tag in torrent_tags if tag in ALL_TAGS)

@@ -14,8 +14,8 @@
     <link href="{{ g.static_prefix }}/css/iphone_ipad.css" rel="stylesheet" type="text/css" />
     {% endif -%}
     {%- if alternate %}
-        {% for alternate in alternate -%}
-        <link rel="alternate" href="{{ alternate }}" />
+        {% for alt in alternate -%}
+        <link rel="alternate" href="{{ alt }}" />
         {% endfor -%}
     {% endif -%}
     {%- if canonical -%}

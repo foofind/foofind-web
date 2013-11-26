@@ -227,6 +227,9 @@ def create_app(config=None, debug=False):
     entitiesdb.init_app(app)
     downloadsdb.init_app(app)
 
+    for service_name, params in app.config["DATA_SOURCE_SHARING"].iteritems():
+        eval(service_name).share_connections(**{key:eval(value) for key, value in params.iteritems()})
+
     # Servicio de búsqueda
     @app.before_first_request
     def init_process():
@@ -245,7 +248,6 @@ def create_app(config=None, debug=False):
     # Refresco de conexiones
     eventmanager.once(filesdb.load_servers_conn)
     eventmanager.interval(app.config["FOOCONN_UPDATE_INTERVAL"], filesdb.load_servers_conn)
-    eventmanager.interval(app.config["FOOCONN_UPDATE_INTERVAL"], entitiesdb.connect)
 
     # Refresco de configuración
     eventmanager.once(configdb.pull)

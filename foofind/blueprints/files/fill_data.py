@@ -443,6 +443,10 @@ def format_metadata(f,text_cache, search_text_shown=False):
         except BaseException as e:
             logging.warn(e)
 
+        # thumbnail
+        if "thumbnail" in file_md:
+            f["view"]["thumbnail"] = file_md["thumbnail"]
+
         #metadatos que tienen otros nombres
         try:
             view_md.update(("tags", file_md[meta]) for meta in ("keywords", "tags", "tag") if meta in file_md)
@@ -762,12 +766,15 @@ def get_file_metadata(file_id, file_name=None):
                 raise DatabaseError
 
     if data:
-        if "bl" in data and not data["bl"] in (0, None):
-            if data["bl"] == 1: raise FileFoofindRemoved
-            elif data["bl"] == 3: raise FileRemoved
+        bl = data.get("bl",None)
+        if bl and isinstance(bl, (str, unicode)) and bl.isdigit():
+            bl = int(bl)
+        if bl:
+            if bl == 1: raise FileFoofindRemoved
+            elif bl == 3: raise FileRemoved
             logging.warn(
-                "File with an unknown 'bl' value found: %d" % data["bl"],
-                extra=data)
+                "File with an unknown 'bl' value found: %s" % repr(bl),
+                    extra=data)
             raise FileUnknownBlock
 
         file_se = data["se"] if "se" in data else None

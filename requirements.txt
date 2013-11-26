@@ -8,14 +8,16 @@
 #   Líneas que comiencen con # o sean vacías serán ignoradas.
 #
 
-flask
+flask==0.10.1
+Werkzeug==0.9.4
 
 markupsafe>=0.18
 
 python-memcached
 
 flask-assets==0.8
-cssutils
+cssutils==0.9.10
+
 
 flask-babelex
 
@@ -48,7 +50,7 @@ fabric
 raven==2.0.10
 blinker==1.2
 
-webassets>=0.8
+webassets==0.8
 slimmer
 
 pyquery

@@ -19,19 +19,31 @@ class FeedbackStore(object):
         '''
         Inicialización de la clase.
         '''
-        self.max_pool_size = 0
         self.feedback_conn = None
 
     def init_app(self, app):
         '''
-        Inicializa la clase con la configuración de la aplicación.
+        Apply users database access configuration.
+
+        @param app: Flask application.
         '''
-        self.max_pool_size = app.config["DATA_SOURCE_MAX_POOL_SIZE"]
+        if app.config["DATA_SOURCE_FEEDBACK"]:
+            self.feedback_conn = pymongo.MongoClient(app.config["DATA_SOURCE_FEEDBACK"], max_pool_size=app.config["DATA_SOURCE_MAX_POOL_SIZE"], slave_okay=True)
 
-        # Inicia conexiones
-        self.feedback_conn = pymongo.Connection(app.config["DATA_SOURCE_FEEDBACK"], slave_okay=True, max_pool_size=self.max_pool_size)
+            self.init_feedback_conn()
 
-        # Crea las colecciones capadas si no existen
+    def share_connections(self, feedback_conn=None):
+        '''
+        Allows to share data source connections with other modules.
+        '''
+        if feedback_conn:
+            self.feedback_conn = feedback_conn
+            self.init_feedback_conn()
+
+    def init_feedback_conn(self):
+        '''
+        Inits feedback database before its first use.
+        '''
         check_capped_collections(self.feedback_conn.feedback, self._capped)
         self.feedback_conn.end_request()
 

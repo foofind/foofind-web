@@ -45,7 +45,10 @@ class FilesStore(object):
         self.thread_pool_size = app.config["GET_FILES_POOL_SIZE"]
         self.thread_pool = None
 
-        self.server_conn = pymongo.MongoReplicaSetClient(hosts_or_uri=app.config["DATA_SOURCE_SERVER"], replicaSet=app.config["DATA_SOURCE_SERVER_RS"], max_pool_size=self.max_pool_size, socketTimeoutMS=self.get_files_timeout*1000, read_preference=pymongo.read_preferences.ReadPreference.SECONDARY_PREFERRED, secondary_acceptable_latency_ms=self.secondary_acceptable_latency_ms)
+        self.replica_set = app.config["DATA_SOURCE_SERVER_RS"]
+        self.replica_set_tag_sets = app.config.get("DATA_SOURCE_SERVER_RS_TAG_SETS",[{}])
+
+        self.server_conn = pymongo.MongoReplicaSetClient(hosts_or_uri=app.config["DATA_SOURCE_SERVER"], replicaSet=self.replica_set, max_pool_size=self.max_pool_size, socketTimeoutMS=self.get_files_timeout*1000, read_preference=pymongo.read_preferences.ReadPreference.SECONDARY_PREFERRED, secondary_acceptable_latency_ms=self.secondary_acceptable_latency_ms, tag_sets = self.replica_set_tag_sets)
 
         global profiler
         profiler = foofind.services.profiler
@@ -59,10 +62,9 @@ class FilesStore(object):
             server_id = int(server["_id"])
             sid = str(server_id)
             if not sid in self.servers_conn:
-                self.servers_conn[sid] = pymongo.MongoReplicaSetClient(hosts_or_uri="%s:%d,%s:%d"%(server["ip"], int(server["p"]), server["rip"], int(server["rp"])), replicaSet=server["rs"], max_pool_size=self.max_pool_size, socketTimeoutMS=self.get_files_timeout*1000, read_preference=pymongo.read_preferences.ReadPreference.SECONDARY_PREFERRED, secondary_acceptable_latency_ms=self.secondary_acceptable_latency_ms)
+                self.servers_conn[sid] = self.server_conn if self.replica_set==server["rs"] else pymongo.MongoReplicaSetClient(hosts_or_uri="%s:%d,%s:%d"%(server["ip"], int(server["p"]), server["rip"], int(server["rp"])), replicaSet=server["rs"], max_pool_size=self.max_pool_size, socketTimeoutMS=self.get_files_timeout*1000, read_preference=pymongo.read_preferences.ReadPreference.SECONDARY_PREFERRED, secondary_acceptable_latency_ms=self.secondary_acceptable_latency_ms)
             if self.current_server < server_id:
                 self.current_server = server_id
-
 
     def _get_server_files(self, params):
         '''

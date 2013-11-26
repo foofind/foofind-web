@@ -110,22 +110,25 @@ msgid "files_indexed"
 msgstr "文件目录"
 
 msgid "last_indexed_files"
-msgstr "最后索引的文件"
+msgstr "大家最近在找"
 
 msgid "i_want_that_file"
-msgstr "我。想知道。这个。文件。"
+msgstr "我要。这个。文件"
 
 msgid "all"
 msgstr "所有"
 
 msgid "index_change"
-msgstr "foofind 已变更"
+msgstr "foofind 一直在进步"
 
 msgid "index_comunity"
-msgstr "成为我们社区的一员"
+msgstr "成为我们的一分子"
+
+msgid "index_first"
+msgstr "争取优先获得信息并积极参与"
 
 msgid "index_suggestion"
-msgstr "还有任何意见？"
+msgstr "请留下您的宝贵意见或建议"
 
 msgid "direct_downloads"
 msgstr "直接下载"
@@ -173,7 +176,7 @@ msgid "no_results_for"
 msgstr "没有结果"
 
 msgid "write_something"
-msgstr "你好！欢迎留言"
+msgstr "您好！欢迎留言"
 
 msgid "previous"
 msgstr "上一个"
@@ -668,7 +671,7 @@ msgid "forgot_password"
 msgstr "忘记密码？"
 
 msgid "wrong_email_password"
-msgstr "错误的电子邮件或密码 重新输入"
+msgstr "电子邮件地址错误或密码错误，请重新输入"
 
 msgid "welcome"
 msgstr "欢迎"
@@ -683,7 +686,7 @@ msgid "confirm_email"
 msgstr "确认你的电子邮件"
 
 msgid "check_inbox_email_finish"
-msgstr "检查你的收件箱完成注册"
+msgstr "请检查你的收件箱以完成注册"
 
 msgid "foofind_team"
 msgstr "Foofind团队"
@@ -701,7 +704,7 @@ msgid "login_here"
 msgstr "登录"
 
 msgid "enter_email"
-msgstr "输入你的电邮地址 将发送一封邮件恢复你的访问"
+msgstr "输入你的电子邮件地址 我们将发送一封邮件以恢复你的帐号"
 
 msgid "send"
 msgstr "发送"
@@ -728,19 +731,19 @@ msgid "email_same_register"
 msgstr "电子邮件地址必须和你登记的相同"
 
 msgid "email_not_database"
-msgstr "电子邮件不存在 再试一次"
+msgstr "电子邮件地址不存在 请再试一次"
 
 msgid "check_inbox_email_restore"
-msgstr "检查你的收件箱 找回你的Foofind密码"
+msgstr "请检查您的收件箱以找回密码"
 
 msgid "restore_access"
-msgstr "找回你的Foofind密码"
+msgstr "找回密码"
 
 msgid "restore_account"
 msgstr "或许你想要恢复您的Foofind访问 点击这个链接来恢复您的Foofind帐户:"
 
 msgid "ignore_message"
-msgstr "否则不理睬这个信息"
+msgstr "否则忽视此信息"
 
 msgid "login_vote"
 msgstr "投票"
@@ -887,6 +890,9 @@ msgstr ""
 msgid "foodownloader_sharing"
 msgstr "下载并且分享软件"
 
+msgid "foodownloader_safety"
+msgstr "安全提取你的文件"
+
 msgid "foodownloader_download"
 msgstr "免费下载"
 
@@ -923,10 +929,10 @@ msgid "downloader_update_message"
 msgstr "新版本的%(appname)s (%(version)s)，准备安装。你想升级吗？"
 
 msgid "here"
-msgstr "里报告"
+msgstr "这里"
 
 msgid "translation_beta"
-msgstr "这个语言翻译在测试阶段。如果你发现缺失或是错误的翻译,请在这%(here)s。"
+msgstr "此语言尚在测试阶段，如果您发现错译或漏译，请在%(here)s提交。"
 
 msgid "other"
 msgstr "其他"

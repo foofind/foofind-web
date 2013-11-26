@@ -38,7 +38,7 @@ def ngram_separator(x):
     return x if x in NGRAM_CHARS else False
 
 class Search(object):
-    def __init__(self, proxy, original_text, filters={}, start=True, group=True, no_group=False, limits=None, order=None):
+    def __init__(self, proxy, original_text, filters={}, start=True, group=True, no_group=False, limits=None, order=None, dynamic_tags=None):
         self.proxy = proxy
         self.stats = None
         self.computable = True
@@ -99,6 +99,7 @@ class Search(object):
 
                     # mira si se trata de un tag
                     if mode and words_count==1:
+                        tags_prefix = FILTER_PREFIX_TAGS
                         if first_word in ALL_TAGS:
                             tag_word = first_word
                         else:
@@ -106,8 +107,18 @@ class Search(object):
                             if not tag_word in ALL_TAGS:
                                 tag_word = None
 
+                        # si no es un tag, mira si está en los tags dinámicos
+                        if not guess_mode and not tag_word and dynamic_tags:
+                            tags_prefix = FILTER_PREFIX_DYNAMIC_TAGS
+                            if first_word in dynamic_tags:
+                                tag_word = first_word
+                            else:
+                                tag_word = first_word[:-1] if first_word.endswith("s") else first_word+"s"
+                                if not tag_word in dynamic_tags:
+                                    tag_word = None
+
                         if tag_word:
-                            current_filter = FILTER_PREFIX_TAGS.lower()+tag_word
+                            current_filter = tags_prefix.lower()+tag_word
                             if current_filter in seen_filters: # no procesa dos veces el mismo filtro
                                 mode = guess_mode # procesa como texto esta palabra
                             else:
@@ -427,6 +438,9 @@ class Search(object):
             self.stats = Sphinx.EMPTY_STATS
             self.stats["s"] = self.stats["end"] = self.stats["total_sure"] = True
             return []
+
+    def get_group_count(self, mask):
+        return self.proxy.sphinx.get_group_count(self.query, mask)
 
     def get_search_info(self):
         if self.computable:

@@ -41,25 +41,41 @@ class UsersStore(object):
         '''
         Inicialización de la clase.
         '''
-        self.max_pool_size = 0
         self.users_conn = None
 
     def init_app(self, app):
         '''
-        Inicializa la clase con la configuración de la aplicación.
+        Apply users database access configuration.
 
-        @param app: Aplicación de Flask.
+        @param app: Flask application.
         '''
-        self.max_pool_size = app.config["DATA_SOURCE_MAX_POOL_SIZE"]
+        if app.config["DATA_SOURCE_USER"]:
+            if "DATA_SOURCE_USER_RS" in app.config:
+                self.user_conn = pymongo.MongoReplicaSetClient(app.config["DATA_SOURCE_USER"],
+                                                                max_pool_size=app.config["DATA_SOURCE_MAX_POOL_SIZE"],
+                                                                replicaSet = app.config["DATA_SOURCE_USER_RS"],
+                                                                read_preference = pymongo.read_preferences.ReadPreference.SECONDARY_PREFERRED,
+                                                                tag_sets = app.config.get("DATA_SOURCE_USER_RS_TAG_SETS",[{}]),
+                                                                secondary_acceptable_latency_ms = app.config.get("SECONDARY_ACCEPTABLE_LATENCY_MS", 15))
+            else:
+                self.user_conn = pymongo.MongoClient(app.config["DATA_SOURCE_USER"], max_pool_size=app.config["DATA_SOURCE_MAX_POOL_SIZE"], slave_okay=True)
 
-        # soporte para ReplicaSet
-        self.options = {"replicaSet": app.config["DATA_SOURCE_USER_RS"], "read_preference":pymongo.read_preferences.ReadPreference.SECONDARY_PREFERRED, "secondary_acceptable_latency_ms":app.config.get("SECONDARY_ACCEPTABLE_LATENCY_MS",15)} if "DATA_SOURCE_USER_RS" in app.config else {"slave_okay":True}
+            self.init_user_conn()
 
-        # Inicia conexiones
-        self.user_conn = pymongo.MongoClient(app.config["DATA_SOURCE_USER"], max_pool_size=self.max_pool_size, **self.options)
+    def share_connections(self, user_conn=None):
+        '''
+        Allows to share data source connections with other modules.
+        '''
+        if user_conn:
+            self.user_conn = user_conn
+            self.init_user_conn()
 
-        # Comprueba índices
+    def init_user_conn(self):
+        '''
+        Inits users database before its first use.
+        '''
         check_collection_indexes(self.user_conn.users, self._indexes)
+        self.user_conn.end_request()
 
     def remove_userid(self, userid):
         '''
@@ -69,6 +85,7 @@ class UsersStore(object):
         @param userid: identificador del usuario
         '''
         self.user_conn.users.users.remove({"_id":userid_parse(userid)})
+        self.user_conn.end_request()
 
     def create_user(self,data):
         '''

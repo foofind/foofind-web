@@ -54,11 +54,11 @@ def favicon():
 
 @index.route('/robots.txt')
 def robots():
-    response = send_from_directory(os.path.join(current_app.root_path, 'static'), 'robots.txt')
+    full_filename = os.path.join(os.path.join(current_app.root_path, 'static'), 'robots.txt')
 
-    # añade el sitemap en el dominio correspondiente, si hay
-    if g.domain in current_app.config["FILES_SITEMAP_URL"]:
-        response.data += "\nSitemap: http://"+g.domain+"/sitemap.xml"
+    with open(full_filename) as input_file:
+        response = make_response(input_file.read() + "\nSitemap: http://"+g.domain+"/sitemap.xml")
+        response.mimetype='text/plain'
     return response
 
 @index.route('/BingSiteAuth.xml')

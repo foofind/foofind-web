@@ -24,24 +24,49 @@ class ConfigStore(object):
         self._alternatives_skip = set()
 
     def init_app(self, app):
+        '''
+        Apply config database access configuration.
+
+        @param app: Flask application.
+        '''
         self._views = {
             endpoint: view_fnc
             for endpoint, view_fnc in app.view_functions.iteritems()
             if isinstance(view_fnc, DecoratedView) and isinstance(view_fnc.select, ManagedSelect)
             }
         self._appid = app.config["APPLICATION_ID"]
-        self.max_pool_size = app.config["DATA_SOURCE_MAX_POOL_SIZE"]
 
-        # soporte para ReplicaSet
-        self.options = {"replicaSet": app.config["DATA_SOURCE_CONFIG_RS"], "read_preference":pymongo.read_preferences.ReadPreference.SECONDARY_PREFERRED, "secondary_acceptable_latency_ms":app.config.get("SECONDARY_ACCEPTABLE_LATENCY_MS",15)} if "DATA_SOURCE_CONFIG_RS" in app.config else {"slave_okay":True}
+        if app.config["DATA_SOURCE_CONFIG"]:
+            if "DATA_SOURCE_CONFIG_RS" in app.config:
+                self.config_conn = pymongo.MongoReplicaSetClient(app.config["DATA_SOURCE_CONFIG"],
+                                                                max_pool_size=app.config["DATA_SOURCE_MAX_POOL_SIZE"],
+                                                                replicaSet = app.config["DATA_SOURCE_CONFIG_RS"],
+                                                                read_preference = pymongo.read_preferences.ReadPreference.SECONDARY_PREFERRED,
+                                                                tag_sets = app.config.get("DATA_SOURCE_CONFIG_RS_TAG_SETS",[{}]),
+                                                                secondary_acceptable_latency_ms = app.config.get("SECONDARY_ACCEPTABLE_LATENCY_MS", 15))
+            else:
+                self.config_conn = pymongo.MongoClient(app.config["DATA_SOURCE_CONFIG"], max_pool_size=app.config["DATA_SOURCE_MAX_POOL_SIZE"], slave_okay=True)
 
-        self.config_conn = pymongo.MongoClient(app.config["DATA_SOURCE_CONFIG"], max_pool_size=self.max_pool_size, **self.options)
+            self.init_config_conn()
 
+    def share_connections(self, config_conn=None):
+        '''
+        Allows to share data source connections with other modules.
+        '''
+        if config_conn:
+            self.config_conn = config_conn
+            self.init_config_conn()
+
+    def init_config_conn(self):
+        '''
+        Allows to share data source connections with other modules.
+        '''
         check_capped_collections(self.config_conn.config, self._capped)
 
         # Guardamos el timestamp de la última tarea enviada para ignorar
         for i in self.config_conn.config.actions.find().sort("lt", -1).limit(1):
             self._actions_lt = i["lt"]
+
         # Registramos este perfil de aplicación
         self.config_conn.config.profiles.save({"_id": self._appid, "lt": time.time()})
         self.config_conn.end_request()

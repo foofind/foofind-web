@@ -1,4 +1,4 @@
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
@@ -16,6 +16,9 @@ msgstr ""
 msgid "your_email"
 msgstr "Zure eposta:"
 
+msgid "click_here"
+msgstr "Klikatu hemen!"
+
 msgid "password"
 msgstr "Pasahitza:"
 
@@ -24,6 +27,9 @@ msgstr "Bidali"
 
 msgid "required_empty"
 msgstr "Eremu hau ezin da hutsik utzi"
+
+msgid "ok"
+msgstr "ados"
 
 msgid "help_us"
 msgstr "Kolaboratu foofind-ekin!"
@@ -423,6 +429,12 @@ msgstr "Itxi"
 
 msgid "share_this"
 msgstr "Esteka hau elkarbanatu:"
+
+msgid "listen"
+msgstr "Entzun"
+
+msgid "listen_source"
+msgstr "Entzun %(source)sen"
 
 msgid "share_facebook"
 msgstr "facebook-en elkarbanatu"
