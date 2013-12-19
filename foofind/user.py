@@ -60,7 +60,9 @@ class UserBase(object):
         if user_changed: # Los datos de usuario han cambiado
             data["session_id"] = cls.generate_session_id()
             data["session_ip"] = md5(request.remote_addr or "127.0.0.1").hexdigest()
-            session["user"] = data # Cuardamos en sesión
+            session["user"] = data # Guardamos en sesión
+            if "_id" in data:
+                del session["user"]["_id"]
 
         a = AnonymousUser(data) if anonymous else User(userid, data)
 

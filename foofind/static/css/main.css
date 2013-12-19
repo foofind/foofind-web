@@ -17,40 +17,45 @@ $fuente:Arial,Verdana,Helvetica,sans-serif;
 
 /*funciones generales*/
 /* lapiz que se pone en todos los inputs */
-@mixin pencil($status,$size:24,$color:transparent)
+@mixin pencil($status,$size:24,$color:'transparent')
 {
     @if $status==1{@include icon(307,$status,$size,$color);margin-right:-28px;position:relative;top:5px;left:5px;float:left}
     @else{@include sprite(307,$status,$size)}
 }
 /* establece todos los estados posibles que puede tener un icono */
-@mixin states($icon,$size:50,$span:0,$active:1,$span_selector:>span,$status1:1,$status2:2,$status3:3,$status4:4,$status5:5,$status1_color:$darkergray,$status2_color:$magenta,$status3_color:#000,$status4_color:#000)
+@mixin states($icon,$size:50,$span:0,$active:1,$span_selector:'>span',$status1:1,$status2:2,$status3:3,$status4:4,$status5:5,$status1_color:$darkergray,$status2_color:$magenta,$status3_color:#000,$status4_color:#000)
 {
-    //por defecto se le aplican los estados al propio span, sino es al primer span que tenga como hijo y sino todo al
-    @if $span==0{$parent:&;$selector:&}
-    @else if $span==1{$parent:&;$selector:$span_selector}
-    @else{$parent:&;$selector:$span_selector}
-
-    //si se ha cambiado algun estado se cambia tambien el color que tiene asociado
-    @for $i from 1 through 4{@if $i!=$status#{$i}{$status#{$i}_color:$status#{$status#{$i}}_color}}
-
-    $parent{color:$status1_color;$selector{@include sprite($icon,$status1,$size)}}
-    $parent:hover{color:$status2_color;$selector{@include sprite($icon,$status2,$size)}}
-    $parent:focus{opacity:.7}
-    @if $active==1 or $active==3 //active normal o igual al hover
-    {
-        $parent.active{color:$status3_color;$selector{@include sprite($icon,$status3,$size)}}
-        $parent:active{color:$status4_color;$selector{@include sprite($icon,$status4,$size)}}
-        @if $active==3{$parent.active:hover{color:$status2_color;@include sprite($icon,$status5,$size)}} //hover del active
+    $selector: $span_selector;
+    /*por defecto se le aplican los estados al propio span, sino es al primer span que tenga como hijo y sino todo al*/
+    @if $span==0 {
+        $selector: '&';
     }
-    @else if $active==2{$parent.active,$parent:active{color:$status2_color;$selector{@include sprite($icon,$status2,$size)}}}
+
+    /* si se ha cambiado algun estado se cambia tambien el color que tiene asociado */
+    @for $i from 1 through 4 {
+        $temp: $status#{$i};
+        @if $i!=$temp {
+            $status#{$i}_color: $status#{$temp}_color;
+        }
+    }
+
+    &{color:$status1_color;#{$selector}{@include sprite($icon,$status1,$size)}}
+    &:hover{color:$status2_color;#{$selector}{@include sprite($icon,$status2,$size)}}
+    &:focus{opacity:.7}
+    @if $active==1 or $active==3 /* active normal o igual al hover */
+    {
+        &.active{color:$status3_color;#{$selector}{@include sprite($icon,$status3,$size)}}
+        &:active{color:$status4_color;#{$selector}{@include sprite($icon,$status4,$size)}}
+        @if $active==3{&.active:hover{color:$status2_color;@include sprite($icon,$status5,$size)}} /* hover del active */
+    }
+    @else if $active==2{&.active,&:active{color:$status2_color;#{$selector}{@include sprite($icon,$status2,$size)}}}
 }
 /* para poner un icono */
-@mixin icon($icon:101,$status:0,$size:50,$color:transparent,$span:0,$span_selector:>span,$active:1,$status1:1,$status2:2,$status3:3,$status4:4,$img:false)
+@mixin icon($icon:101,$status:0,$size:50,$color:'transparent',$span:0,$span_selector:'>span',$active:1,$status1:1,$status2:2,$status3:3,$status4:4,$img:false)
 {
     @if $img{@include background_cached("img/#{$img}.png", $color)}
     @else
     {
-
         @include background_cached("img/icons#{$size}.png", $color);
         @if $status>0{@include sprite($icon,$status,$size)}
         @else if $status<0{@include states($icon,$size,$span,$active,$span_selector,$status1,$status2,$status3,$status4)}
@@ -64,15 +69,15 @@ $fuente:Arial,Verdana,Helvetica,sans-serif;
 /* coloca un icono */
 @mixin sprite($icon,$status:0,$size:50)
 {
-    @if $status==1{$status=A}
-    @else if $status==2{$status=B}
-    @else if $status==3{$status=C}
-    @else if $status==4{$status=D}
-    @else if $status==5{$status=E}
-    @else if $status==11{$status=AA}
-    @else if $status==12{$status=BB}
-    @else if $status==13{$status=CC}
-    @else if $status==14{$status=DD}
+    @if $status==1{$status:'A'}
+    @else if $status==2{$status:'B'}
+    @else if $status==3{$status:'C'}
+    @else if $status==4{$status:'D'}
+    @else if $status==5{$status:'E'}
+    @else if $status==11{$status:'AA'}
+    @else if $status==12{$status:'BB'}
+    @else if $status==13{$status:'CC'}
+    @else if $status==14{$status:'DD'}
     @include icon-#{$size}px-#{$icon}-#{$status};
 }
 /* propiedades necesarias para hacer un text-overflow:ellipsis */
@@ -246,8 +251,8 @@ h3{font-size:1.3em}
 #type-button{font-size:2em}
 .ui-widget{font-family:$fuente}
 .ui-widget-content{background:none}
-.ui-state-default .ui-icon{background:none} //quitar la flecha
-// quitar la barra de scroll y colocar menu
+.ui-state-default .ui-icon{background:none} /* quitar la flecha */
+/* quitar la barra de scroll y colocar menu */
 .ui-selectmenu-menu ul{overflow:hidden;margin:2px 0px;padding:9px 17px 8px 4px;background:$darkwhite;border:1px solid $lightgray;box-shadow:0px 0px 5px $gray}
 .ui-selectmenu-menu li.type_img,.ui-selectmenu{width:200px;height:50px;left:-5px;background:none;border:none;border-radius:0;outline:none;text-transform:lowercase;color:#000;font-weight:normal}
 .ui-selectmenu-menu li.ui-selectmenu-hasIcon a, .ui-selectmenu-hasIcon .ui-selectmenu-status{padding:0 0 0 50px;width:100%}
@@ -444,7 +449,7 @@ section#files
             margin-bottom:20px;
             >ul>li
             {
-                @include icon($size:50);font-size:.5em;text-align:center;text-transform:uppercase;width:42px;height:42px;margin:0 0 0 8px;
+                @include icon($size:50);font-size:.5em;font-size-adjust:0.45;text-align:center;text-transform:uppercase;width:42px;height:42px;margin:0 0 0 8px;
                 >a{position:relative;top:-7px;display:inline-block;float:left;width:42px;height:50px;padding-right:6px;text-decoration:none;text-align:center;color:$darkergray}
             }
         }
@@ -496,7 +501,7 @@ section#files
                     &:nth-child(2){>a{top:-15px}&:hover ul{margin-top:-62px}}
                     &:nth-child(3):hover ul{height:50px;margin-top:-18px}
                     ul,strong,>span{float:right;width:85px;padding-left:8px}
-                    >span{width:86px;height:10px;font-size:1.3em;color:$darkergray;background:#FFF}
+                    >span{width:86px;height:10px;font-size:1.3em;font-size-adjust:0.5;color:$darkergray;background:#FFF}
                     strong{background:#FFF;height:32px;font-size:1.8em;font-weight:bold;span{color:$green}}
                     ul
                     {
@@ -514,7 +519,7 @@ section#files
                         &.deactive{height:42px;&+.more,&+.more+strong{display:none}}
                         li
                         {
-                            display:none;height:10px;font-size:1.3em;
+                            display:none;height:10px;font-size:1.3em;font-size-adjust:0.5;
                             &:last-child{display:none}
                             &.active{display:block}
                             a{@include ellipsis(90,inline-block);vertical-align:middle;text-decoration:none;color:$darkergray;&:hover{color:$magenta}}

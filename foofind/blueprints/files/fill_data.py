@@ -165,7 +165,8 @@ def build_source_links(f):
         source_data=g.sources[src["t"]] if "t" in src and src["t"] in g.sources else None
         if source_data is None: #si no existe el origen del archivo
             logging.error("El fichero contiene un origen inexistente en la tabla \"sources\": %s" % src["t"], extra={"file":f})
-            feedbackdb.notify_source_error(f['file']["_id"], f['file']["s"])
+            if feedbackdb.initialized:
+                feedbackdb.notify_source_error(f['file']["_id"], f['file']["s"])
             continue
         elif "crbl" in source_data and int(source_data["crbl"])==1: #si el origen esta bloqueado
             continue
@@ -760,7 +761,8 @@ def get_file_metadata(file_id, file_name=None):
         if sid:
             try:
                 data = filesdb.get_file(file_id, sid = sid, bl = None)
-                feedbackdb.notify_indir(file_id, sid)
+                if feedbackdb.initialized:
+                    feedbackdb.notify_indir(file_id, sid)
             except BaseException as e:
                 logging.exception(e)
                 raise DatabaseError

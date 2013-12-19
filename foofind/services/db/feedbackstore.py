@@ -20,6 +20,7 @@ class FeedbackStore(object):
         Inicialización de la clase.
         '''
         self.feedback_conn = None
+        self.initialized = False
 
     def init_app(self, app):
         '''
@@ -46,6 +47,7 @@ class FeedbackStore(object):
         '''
         check_capped_collections(self.feedback_conn.feedback, self._capped)
         self.feedback_conn.end_request()
+        self.initialized = True
 
     def create_links(self,data):
         '''
