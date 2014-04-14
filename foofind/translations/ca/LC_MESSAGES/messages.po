@@ -1,4 +1,4 @@
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
@@ -44,7 +44,7 @@ msgid "go_home"
 msgstr "Torna al cercador"
 
 msgid "error_500_message"
-msgstr "Ha ocorregut un error"
+msgstr "S'ha produït un error"
 
 msgid "error_500_description"
 msgstr ""
@@ -64,10 +64,10 @@ msgstr "Pàgina no disponible"
 
 msgid "error_410_description"
 msgstr ""
-"La pàgina demanada ja no és disponible ni tampoc no ho serà en el futur"
+"La pàgina demanada ja no està disponible ni tampoc no ho serà en el futur"
 
 msgid "error_502_message"
-msgstr "Passarel ·la incorrecta"
+msgstr "Passarel·la incorrecta"
 
 msgid "error_502_description"
 msgstr "S'ha mirat d'accedir al servei web amb una ubicació incorrecta."
@@ -78,6 +78,9 @@ msgstr "Servei no disponible"
 msgid "error_503_description"
 msgstr ""
 "L'URL requerit no es troba disponible temporalment. Proveu-ho més tard."
+
+msgid "servers_status"
+msgstr "Comprova l'estat del servidor"
 
 msgid "error_mail_send"
 msgstr ""
@@ -345,7 +348,7 @@ msgid "quality"
 msgstr "Qualitat"
 
 msgid "num_pages"
-msgstr "Nombre de pàgines"
+msgstr "Número de pàgines"
 
 msgid "series"
 msgstr "Sèries"
@@ -528,7 +531,7 @@ msgid "your_comments"
 msgstr "Els vostres comentaris"
 
 msgid "since"
-msgstr "fa since s "
+msgstr "fa %(since)s"
 
 msgid "post_comment"
 msgstr "Envia un comentari"
@@ -591,7 +594,7 @@ msgid "insert_your_password"
 msgstr "Torneu a escriure la contrasenya (sí, un altre cop):"
 
 msgid "fill_sing_up_form"
-msgstr "Ompliu aquest formulari per ser usuari registrat de Foofind:"
+msgstr "Ompliu aquest formulari per a ser usuari registrat de Foofind:"
 
 msgid "nickname"
 msgstr "Àlies:"
@@ -769,7 +772,7 @@ msgstr ""
 
 msgid "email_not_database"
 msgstr ""
-"L'adreça de correu introduida no és a la nostra base de dades. Proveu-ho de "
+"L'adreça de correu introduïda no és a la nostra base de dades. Proveu-ho de "
 "nou."
 
 msgid "check_inbox_email_restore"
@@ -962,84 +965,93 @@ msgstr "La vostra traducció ha estat enviada. Gràcies per la vostra ajuda!"
 msgid "embed_foofind_button"
 msgstr "Veure a foofind"
 
-msgid "foodownloader_powered"
+msgid "downloader_powered"
 msgstr "Proposat per [%(name)s](%(link)s)"
 
-msgid "foodownloader_overview"
+msgid "downloader_overview"
 msgstr "Visió de conjunt"
 
-msgid "foodownloader_overview_text"
+msgid "A fast client for the Torrent P2P network"
+msgstr "és un client ràpid per la xarxa Torrent P2P"
+
+msgid "downloader_overview_text"
 msgstr ""
-"**Foofind Download Manager** és un client ràpid per la xarxa **Torrent** P2P.\r\n"
-"\r\n"
 "Foofind Download Manager és dissenyat per ser molt fàcil d'usar, intuïtiu i segur. Pot pausar, reprendre i trobar les vostres descàrregues amb més facilitat que mai, feu un cop d'ull a algunes de les seues característiques:\r\n"
 "\r\n"
 "* Client Rock torrent sòlid.\r\n"
 "* Interfície simplificada.\r\n"
 "* DHT, extensions de protocol UPnP i uTorrent."
 
-msgid "foodownloader_sharing"
+msgid "downloader_sharing"
 msgstr "Descarregueu i compartiu arxius"
 
-msgid "foodownloader_sharing_text"
+msgid "downloader_sharing_text"
 msgstr ""
 "Ara, amb **Foofind Download Manager podeu descarregar més ràpid que mai. Gràcies a la xarxa **torrent**, la solució més ràpida P2P que ha existit mai, les descàrregues volaran.\r\n"
 "\r\n"
 "Proveu-ho! ** El futur de la descàrrega és només a un clic de distància."
 
-msgid "foodownloader_safety"
+msgid "downloader_safety"
 msgstr "Obtingueu els vostres fitxers de forma segura"
 
-msgid "foodownloader_safety_text"
+msgid "downloader_safety_text"
 msgstr ""
 "Ens prenem la seguretat molt seriosament. **Foofind Download Manager** utilitza la biblioteca libtorrent guardonada que farà que la vostra experiència de descàrrega sigui totalment segura.\r\n"
 "\r\n"
 "Us recomanem d'utilitzar un antivirus, podríeu descarregar programari maliciós de fonts no fiables.\r\n"
 
-msgid "foodownloader_download"
+msgid "downloader_download"
 msgstr "Descàrrega gratuïta"
 
-msgid "foodownloader_download_source"
+msgid "downloader_download_source"
 msgstr "Descarregueu el codi font"
 
-msgid "foodownloader_meta_description"
+msgid "downloader_meta_description"
 msgstr ""
 "Foofind Download Manager és una eina de descàrrega de torrents simple i "
 "fàcil d'usar"
 
-msgid "foodownloader_thanks"
+msgid "downloader_thanks"
 msgstr "Bona descàrrega"
 
-msgid "foodownloader_thanks_message"
+msgid "downloader_thanks_message"
 msgstr ""
 "Gràcies per instal·lar Download Manager Foofind, esperem que us agradi."
 
-msgid "foodownloader_download_coming_soon"
+msgid "downloader_download_coming_soon"
 msgstr "Encara no és disponible per al vostre sistema operatiu."
 
-msgid "foodownloader_dialog_title"
+msgid "downloader_update_message"
+msgstr ""
+"Hi ha una nova versió de %(appname)s (%(version)s) llesta per a ser instalada.\r\n"
+"Voleu actualitzar-la?"
+
+msgid "downloader_dialog_title"
 msgstr ""
 "Ei!\r\n"
 "\r\n"
 "Us cal un client de torrent per a descarregar aquest arxiu"
 
-msgid "foodownloader_dialog_yes"
+msgid "downloader_dialog_yes"
 msgstr ""
 "Sí, descarregueu\r\n"
 "\r\n"
 "Foofind Download Manager"
 
-msgid "foodownloader_dialog_no"
+msgid "downloader_dialog_no"
 msgstr ""
 "No, gràcies\r\n"
 "\r\n"
-"Ja tinc un client de torrent"
+"Només porta'm a la descàrrega."
 
-msgid "foodownloader_dialog_text"
+msgid "downloader_dialog_noagain"
+msgstr "Ja tinc un client de torrents. Si us plau no em pregunti de nou."
+
+msgid "downloader_dialog_text"
 msgstr ""
 "Descarregueu-vos Foofind Download Manager per a descarregar aquests fitxer en un tres i no res.\r\n"
 "\r\n"
-"El nostre programari us permet de descarregar torrents més ràpid i més fàcil que mai - totalment gratis! Si ja teniu un client de Torrent, feu clic a \"No, gràcies\"."
+"El nostre programari us permet de descarregar torrents més ràpid i més fàcil que mai - totalment gratis!"
 
 msgid "embed_download_button"
 msgstr "Descàrrega"
@@ -1051,7 +1063,7 @@ msgid "translate_at_least_one"
 msgstr "Entreu un mínim d'una frase abans d'enviar."
 
 msgid "here"
-msgstr "ací"
+msgstr "aquí"
 
 msgid "translation_beta"
 msgstr ""

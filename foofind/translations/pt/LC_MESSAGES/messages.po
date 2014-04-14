@@ -16,6 +16,12 @@ msgstr ""
 msgid "your_email"
 msgstr "Seu email:"
 
+msgid "new_toolbar"
+msgstr "Experimente nossa nova barra de ferramentas"
+
+msgid "click_here"
+msgstr "Clique aqui!"
+
 msgid "password"
 msgstr "Senha"
 
@@ -26,16 +32,33 @@ msgid "required_empty"
 msgstr "O valor é necessário e não pode ser nulo"
 
 msgid "ok"
-msgstr "aceitar"
+msgstr "Aceitar"
 
 msgid "help_us"
-msgstr "Colabora com foofind!"
+msgstr "Colabore com foofind!"
+
+msgid "legal_info"
+msgstr "Informações legais"
+
+msgid "go_home"
+msgstr "Voltar para a ferramenta de busca"
 
 msgid "error_500_message"
 msgstr "Um erro aconteceu"
 
+msgid "error_500_description"
+msgstr ""
+"Há algo estranho, nossos especialistas estão investigando essa atividade "
+"paranormal."
+
 msgid "error_404_message"
 msgstr "Página não encontrada"
+
+msgid "error_404_description"
+msgstr ""
+"A URL requisitada não foi encontrada. Por favor verifique se a url foi "
+"digitada corretamente, se sim, por favor notifique os administradores da "
+"rede."
 
 msgid "error_410_message"
 msgstr "Página não disponível"
@@ -51,8 +74,28 @@ msgstr ""
 "A URL solicitada está temporariamente indisponível. Por favor tente "
 "novamente mais tarde."
 
+msgid "servers_status"
+msgstr "Verifique o andamento dos servidores"
+
+msgid "error_mail_send"
+msgstr ""
+"Há um erro ao enviar mensagem para o endereço especificado. Por favor "
+"escolha outro ou tente novamente mais tarde."
+
+msgid "non_alphabetic_digits"
+msgstr ""
+
 msgid "about"
 msgstr "Sobre"
+
+msgid "no_valid_email"
+msgstr "Esse não é um email válido com o formato: usuario@exemplo.com"
+
+msgid "field_length"
+msgstr "Esse campo deve conter %(min)s para ____[2] caracteres"
+
+msgid "no_valid_url"
+msgstr "URL não válida"
 
 msgid "contact"
 msgstr "Fale conosco"
@@ -84,6 +127,9 @@ msgstr "Eu. Quero. Aquele. Arquivo."
 msgid "all"
 msgstr "Tudo"
 
+msgid "index_change"
+msgstr "foofind está escolhendo"
+
 msgid "index_comunity"
 msgstr "Faça parte da nossa comunidade."
 
@@ -96,8 +142,23 @@ msgstr "Alguma sugestão?"
 msgid "direct_downloads"
 msgstr "Downloads diretos"
 
+msgid "direct_download"
+msgstr "download direto"
+
 msgid "audio"
 msgstr "Áudio"
+
+msgid "other_streamings"
+msgstr "Outros transmissores"
+
+msgid "other_direct_downloads"
+msgstr "Outros downloads diretos"
+
+msgid "some_streamings"
+msgstr "Alguns transmissores"
+
+msgid "some_downloads"
+msgstr "Alguns downloads diretos"
 
 msgid "others"
 msgstr "Outros"
@@ -138,14 +199,49 @@ msgstr "fontes"
 msgid "of_about"
 msgstr "aproximadamente"
 
+msgid "approximately"
+msgstr "Aproximadamente"
+
 msgid "results_for"
 msgstr "resultados para"
 
 msgid "not_allow_browse_results"
 msgstr "Foofind não permite pesquisar resultados depois da página 100."
 
+msgid "other_categories"
+msgstr "outras categorias"
+
+msgid "no_type_count"
+msgstr ""
+"Nenhum resultado foi encontrado em sua busca sobre %(search)s, mas há sobre "
+"%(results)d resultados para sua busca em ____[3]"
+
 msgid "how_to_download"
 msgstr "Como baixar?"
+
+msgid "did_you_mean"
+msgstr ""
+
+msgid "go_to_file"
+msgstr "Ir para arquivo"
+
+msgid "play"
+msgstr "Tocar"
+
+msgid "what"
+msgstr "Oque?"
+
+msgid "where"
+msgstr "Onde?"
+
+msgid "update"
+msgstr "atualizacão"
+
+msgid "minimun"
+msgstr "min"
+
+msgid "maximun"
+msgstr "máx"
 
 msgid "download_explanation"
 msgstr ""
@@ -209,6 +305,13 @@ msgstr "bitrate"
 msgid "genre"
 msgstr "gênero"
 
+msgid "seeds"
+msgstr "sementes"
+
+msgid "first_files"
+msgstr ""
+"Exibindo primeiro %(value)s arquivos. Baixe o arquivo para visualizar todos."
+
 msgid "seconds"
 msgstr "segundos"
 
@@ -220,6 +323,15 @@ msgstr "fonte"
 
 msgid "height"
 msgstr "altura"
+
+msgid "series"
+msgstr "Séries"
+
+msgid "episode"
+msgstr "Episódio"
+
+msgid "season"
+msgstr "Temporada"
 
 msgid "width"
 msgstr "largura"
@@ -251,6 +363,9 @@ msgstr "Versão"
 msgid "name"
 msgstr "Nome"
 
+msgid "channels"
+msgstr "Canais"
+
 msgid "description"
 msgstr "Descrição"
 
@@ -281,6 +396,21 @@ msgstr "dias"
 msgid "hour"
 msgstr "hora"
 
+msgid "tags"
+msgstr "Etiquetas"
+
+msgid "license"
+msgstr "Licensa"
+
+msgid "private_file"
+msgstr "Arquivo privado"
+
+msgid "composer"
+msgstr "Compositor"
+
+msgid "publisher"
+msgstr "Publicador"
+
 msgid "comments"
 msgstr "Comentários"
 
@@ -293,14 +423,29 @@ msgstr "Idioma"
 msgid "date"
 msgstr "Data"
 
+msgid "trackers"
+msgstr "Faixas"
+
+msgid "visualizations"
+msgstr "Visualizações"
+
+msgid "codec"
+msgstr "Codec"
+
 msgid "director"
 msgstr "Diretor"
 
 msgid "writer"
 msgstr "Escritor"
 
+msgid "starring"
+msgstr "Estrelando"
+
 msgid "producer"
 msgstr "Produtor"
+
+msgid "released"
+msgstr "Lançado"
 
 msgid "hours"
 msgstr "horas"
@@ -311,8 +456,14 @@ msgstr "minuto"
 msgid "all_sources"
 msgstr "todas as fontes"
 
+msgid "share"
+msgstr "Compartilhar em %(site)s"
+
 msgid "share_download"
 msgstr "Compartilhar"
+
+msgid "share_search"
+msgstr "Compartilhar essa busca"
 
 msgid "second"
 msgstr "segundo"
@@ -326,11 +477,20 @@ msgstr "abrir link numa nova aba"
 msgid "close"
 msgstr "Fechar"
 
+msgid "download_source"
+msgstr "Baixar de %(source)s"
+
 msgid "share_this"
 msgstr "Compartilhe"
 
+msgid "watch_source"
+msgstr "Assista em %(source)s"
+
 msgid "listen"
 msgstr "Ouça"
+
+msgid "listen_source"
+msgstr ""
 
 msgid "share_facebook"
 msgstr "Compartilhe no Facebook"
@@ -355,6 +515,18 @@ msgstr " since s atr s"
 
 msgid "post_comment"
 msgstr "Comentar"
+
+msgid "file"
+msgstr "arquivo"
+
+msgid "add_favorite"
+msgstr ""
+
+msgid "delete_favorite"
+msgstr "Deletar %(type)s dos favoritos"
+
+msgid "favorite"
+msgstr ""
 
 msgid "more_info"
 msgstr "mais"
@@ -689,7 +861,7 @@ msgstr ""
 msgid "opensearch_description"
 msgstr "Pesquise usando o Foofind"
 
-msgid "foodownloader_safety"
+msgid "downloader_safety"
 msgstr "Obtenha seus arquivos de maneira segura"
 
 msgid "choose_language"

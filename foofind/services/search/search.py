@@ -348,7 +348,8 @@ class Search(object):
             last_part_type = part_type
         text = " ".join(text_query_parts).encode("utf-8")
 
-        self.query = self.proxy.sphinx.build_query(text, self.filters, self.limits, self.grouping, self.order)
+        self.text = text
+        self.query = self.proxy.sphinx.build_query(self.text, self.filters, self.limits, self.grouping, self.order)
 
         if start and self.computable:
             self.proxy.sphinx.start_search(self.query)
@@ -429,9 +430,16 @@ class Search(object):
         if not any_not_not_part:
             self.computable = False
 
-    def get_results(self, timeouts, last_items=[], skip=None, min_results=5, max_results=10, hard_limit=10000, extra_browse=None, weight_processor=None, tree_visitor=None):
+    def get_results(self, timeouts, last_items=[], skip=None, min_results=5, max_results=10, hard_limit=10000, extra_browse=None, weight_processor=None, tree_visitor=None, restart_if_skip=False):
         if self.computable:
             results, self.stats = self.proxy.sphinx.get_results(self.query, timeouts, last_items, skip, min_results, max_results, hard_limit, extra_browse, weight_processor, tree_visitor)
+
+            # no search results available for this search, if has skipped and user wants to, start search with grouping information included
+            if skip and restart_if_skip and self.stats == Sphinx.EMPTY_STATS:
+                self.query = self.proxy.sphinx.build_query(self.text, self.filters, self.limits, (True, True), self.order)
+                self.proxy.sphinx.start_search(self.query)
+                results, self.stats = self.proxy.sphinx.get_results(self.query, timeouts, last_items, skip, min_results, max_results, hard_limit, extra_browse, weight_processor, tree_visitor)
+
             self._generate_canonical_query()
             return results
         else:

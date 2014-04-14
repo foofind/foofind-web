@@ -1434,14 +1434,111 @@ msgstr "Código de versión erróneo"
 msgid "opensearch_description"
 msgstr "Buscar usando Foofind"
 
-msgid "foodownloader_dialog_title"
+msgid "downloader_overview"
+msgstr "Overview"
+
+msgid "downloader_overview_text"
+msgstr ""
+"Foofind Download Manager ha sido diseñado para ser muy fácil de usar, intuitivo y seguro. Puedes administrar tus descargas más fácilmente que nunca. Estas son algunas de sus características:\r\n"
+"\r\n"
+"*    Cliente de torrents robusto.\r\n"
+"*    Interfaz simplificada.\r\n"
+"*    Soporte para protocolos DHT, uPnP y extensiones de uTorrent.\r\n"
+
+msgid "downloader_sharing"
+msgstr "Descarga y comparte archivos"
+
+msgid "downloader_sharing_text"
+msgstr ""
+"Ahora, con **Foofind Download Manager** puedes descargar a mayor velocidad que nunca. Gracias a la red **torrent**, la solución P2P más rápida jamás desarrollada, tus descargas serán instantáneas.\r\n"
+"\r\n"
+"¡Pruebalo! **El futuro de las descargas a sólo un clic.**"
+
+msgid "downloader_safety"
+msgstr "Descarga con seguridad"
+
+msgid "downloader_safety_text"
+msgstr ""
+"Nos tomamos muy en serio la seguridad. **Foofind Download Manager** utiliza la renombrada librería libtorrent, que hará que tu experiencia de descarga sea fiable y segura.\r\n"
+"\r\n"
+"De todas formas, te recomendamos que utilices un antivirus, que podría ayudarte a evitar descargar archivos maliciosos de origenes desconocidas."
+
+msgid "downloader_its_free"
+msgstr "Totalmente **GRATIS**!"
+
+msgid "downloader_download_source"
+msgstr "Descargar código"
+
+msgid "downloader_meta_description"
+msgstr "Foofind Download Manager es un cliente de torrents simple y fácil de usar"
+
+msgid "Happy downloading!"
+msgstr "¡Felices descargas!"
+
+msgid "Thanks for installing Foofind Download Manager, we hope you enjoy it."
+msgstr "Gracias por instalar Foofind Download Manager, esperamos que lo disfrutes."
+
+msgid "back to %(home)s"
+msgstr "volver a %(home)s"
+
+msgid "downloader_download_coming_soon"
+msgstr "Lo sentimos, no está disponible aún para tu sistema operativo."
+
+msgid "downloader_dialog_title"
+msgstr "Necesitas un cliente de torrents para descargar este archivo"
+
+msgid "downloader_dialog_yes"
+msgstr ""
+"Si, descargar\n\n"
+"Foofind Download Manager"
+
+msgid "downloader_dialog_no"
+msgstr ""
+"No, gracias\n\n"
+"Solamente llévame a la descarga"
+
+msgid "downloader_dialog_noagain"
+msgstr "Ya tengo un cliente de torrents, por favor no me lo vuelvas a preguntar."
+
+msgid "downloader_dialog_text"
+msgstr ""
+"Descarga Foofind Download Manager para obtener este fichero. \r\n"
+"\r\n"
+"Nuestro software te permitirá descargar torrents más rápido y fácil que nunca, ¡de forma absolutamente gratuita!"
+
+msgid "downloader_dialog_title"
 msgstr "Foofind Download Manager disponible"
 
-msgid "foodownloader_dialog_text"
-msgstr "%(domain)s te ofrece la oportunidad de realizar esta descarga de manera fácil, cómoda y rápida, de forma totalmente gratuita."
+msgid "A fast client for the Torrent P2P network"
+msgstr "Cliente rápido de la red P2P torrent"
+
+msgid "safe_downloader_share_responsibly"
+msgstr "**COMPARTE DE FORMA RESPONSABLE**: El uso de Foofind Downloader Manager para subir o descargar materiales con derechos de autor sin permiso o autorización de sus titulares puede ser ilegal y podrá someterle a usted (o al abonado del PSI) a responsabilidades y penalizaciones civiles y/o criminales. Existe un número significativo de titulares de derechos de autor que han autorizado el intercambio de sus contenidos para fines no comerciales, como algunos contenidos con formato de licencia de Creative Commons. Además, hay contenidos disponibles de dominio público y no protegidos por derechos de autor. La mayoría de las canciones que están a la venta NO están actualmente autorizadas para su redistribución gratuita, sino que requieren una compra o una licencia aparte."
+
+msgid "follow us"
+msgstr "síguenos"
+msgid "suggestions"
+msgstr "sugerencias"
+
+msgid "Or get %(more)s!"
+msgstr "¡O ver %(more)s!"
+
+msgid "more info"
+msgstr "más información"
+
+msgid "Very easy to use"
+msgstr "Muy fácil de usar"
+msgid "Intuitive"
+msgstr "Intuitivo"
+msgid "Safe"
+msgstr "Seguro"
+
 
 # Downloader
 msgid "downloader_update_message"
 msgstr ""
 "Una nueva versión %(appname)s (%(version)s) está lista para instalar.\n"
 "¿Quieres actualizar?"
+
+msgid "download using Foofind Download Manager"
+msgstr "descargar usando Foofind Download Manager"

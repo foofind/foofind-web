@@ -12,15 +12,15 @@ from foofind.services.db.usersstore import UsersStore
 from foofind.services.db.feedbackstore import FeedbackStore
 from foofind.services.db.configstore import ConfigStore
 from foofind.services.db.entitiesstore import EntitiesStore
-from foofind.services.db.downloadstore import DownloadStore
 from foofind.services.db.pluginstore import PluginStore
 from foofind.utils.profiler import Profiler
 from foofind.utils.event import EventManager
 from foofind.utils.taming import TamingClient
+from .ip_ranges import IPRanges
 from extensions import *
 
-__all__=['filesdb', 'usersdb', 'pagesdb', 'feedbackdb', 'configdb', 'entitiesdb',
-                'taming', 'eventmanager', 'profiler', 'searchd', 'downloadsdb', 'plugindb']
+__all__=['filesdb', 'usersdb', 'pagesdb', 'feedbackdb', 'configdb', 'entitiesdb', 'spanish_ips',
+                'taming', 'eventmanager', 'profiler', 'searchd', 'plugindb', 'local_cache']
 
 __all__.extend(extensions.__all__)
 
@@ -30,9 +30,10 @@ pagesdb = PagesStore()
 feedbackdb = FeedbackStore()
 configdb = ConfigStore()
 entitiesdb = EntitiesStore()
-downloadsdb = DownloadStore()
 plugindb = PluginStore()
+spanish_ips = IPRanges()
 taming = TamingClient()
 eventmanager = EventManager()
 profiler = Profiler()
 searchd = Searchd()
+local_cache = {}

@@ -364,6 +364,7 @@ class Fooprint(Blueprint):
                 self._dup_on_startswith = {ds}
             else:
                 self._dup_on_startswith = set(ds)
+
         Blueprint.__init__(self, *args, **kwargs)
         self.decorators = {}
 

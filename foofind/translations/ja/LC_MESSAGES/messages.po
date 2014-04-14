@@ -16,20 +16,44 @@ msgstr ""
 msgid "password"
 msgstr "パスワード："
 
+msgid "new_toolbar"
+msgstr "最新のツールバーをお試しください"
+
+msgid "click_here"
+msgstr "ここをクリック！"
+
 msgid "your_email"
-msgstr "あなたのメール："
+msgstr "メールアドレス："
 
 msgid "about"
 msgstr "について"
 
 msgid "submit"
-msgstr "送る"
+msgstr "送信"
+
+msgid "ok"
+msgstr "OK"
+
+msgid "help_us"
+msgstr "ご協力ください"
 
 msgid "go_home"
-msgstr "サーチエンジンに戻る"
+msgstr "検索サイトに戻る"
+
+msgid "error_500_message"
+msgstr "エラーが起きました"
 
 msgid "error_404_message"
 msgstr "ページが見つかりません。"
+
+msgid "error_404_description"
+msgstr "リクエストされたURLは見つかりません。URLに誤りが無いか確認していただくか、ウェブサイトの管理者に報告してください。"
+
+msgid "error_410_message"
+msgstr "このページがご利用いただけません。"
+
+msgid "error_410_description"
+msgstr "リクエストされたURLは存在しません。"
 
 msgid "error_502_message"
 msgstr "間違いゲートウェイ。"
@@ -38,10 +62,16 @@ msgid "error_502_description"
 msgstr "ゲートウェイが間違いですからサービスにアクセスできません。"
 
 msgid "error_503_message"
-msgstr "サービスは利用できない"
+msgstr "サービスはご利用いただけません。"
+
+msgid "error_503_description"
+msgstr "リクエストされたURLは一時的にご利用いただけません。時間をおいてから再度お試しください。"
+
+msgid "servers_status"
+msgstr "サーバーの状態を確認してください。"
 
 msgid "no_valid_url"
-msgstr "URL がまちがいます"
+msgstr "URL が間違っています"
 
 msgid "contact"
 msgstr "お問い合わせ"
@@ -229,6 +259,9 @@ msgstr "日"
 
 msgid "hour"
 msgstr "時"
+
+msgid "tags"
+msgstr "タグ"
 
 msgid "hours"
 msgstr "時"

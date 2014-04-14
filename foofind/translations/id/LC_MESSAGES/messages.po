@@ -1,0 +1,61 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: 1\n"
+"Report-Msgid-Bugs-To: ismael@mp2p.net\n"
+"POT-Creation-Date: 2011-12-09 11:49+0100\n"
+"PO-Revision-Date: 2011-12-09 11:49+0100\n"
+"Last-Translator: Foofind <hola@foofind.com>\n"
+"Language-Team: id <hola@foofind.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Foofind's pogit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgid "new_toolbar"
+msgstr "Gunakan toolbar baru"
+
+msgid "click_here"
+msgstr "klik disini"
+
+msgid "your_email"
+msgstr "Email:"
+
+msgid "submit"
+msgstr "Kirim"
+
+msgid "help_us"
+msgstr "bantu kami"
+
+msgid "legal_info"
+msgstr "informasi resmi"
+
+msgid "go_home"
+msgstr "Kembali ke mesin pencarian"
+
+msgid "error_500_message"
+msgstr "telah terjadi kesalahan"
+
+msgid "error_404_message"
+msgstr "Halama tidak ditemukan"
+
+msgid "error_404_description"
+msgstr ""
+"Url tidak ditemukan. Cek ulang url yang anda masukan. Silakan hubungi web "
+"administrator."
+
+msgid "error_410_message"
+msgstr "Halaman tidak ada"
+
+msgid "error_410_description"
+msgstr "Url belum aktif dan silahkan kunjungi beberapa saat lagi"
+
+msgid "error_502_message"
+msgstr "gateway buruk"
+
+msgid "error_502_description"
+msgstr "service tidak dapat mengakses, kesalahan gateway "
+
+msgid "error_503_message"
+msgstr "servise tidak ada"

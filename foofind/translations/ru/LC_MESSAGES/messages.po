@@ -1,0 +1,1019 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: 1\n"
+"Report-Msgid-Bugs-To: ismael@mp2p.net\n"
+"POT-Creation-Date: 2011-12-09 11:49+0100\n"
+"PO-Revision-Date: 2011-12-09 11:49+0100\n"
+"Last-Translator: Foofind <hola@foofind.com>\n"
+"Language-Team: ru <hola@foofind.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Foofind's pogit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgid "new_toolbar"
+msgstr "Попробуйте наш новый тулбар"
+
+msgid "click_here"
+msgstr "нажмите здесь!"
+
+msgid "your_email"
+msgstr "Ваша электронная почта:"
+
+msgid "password"
+msgstr "Пароль:"
+
+msgid "submit"
+msgstr "Пришлите"
+
+msgid "ok"
+msgstr "ok"
+
+msgid "help_us"
+msgstr "помогите нам!"
+
+msgid "legal_info"
+msgstr "правовая информация"
+
+msgid "go_home"
+msgstr "Назад к поисковой системе"
+
+msgid "error_500_message"
+msgstr "Произошла ошибка"
+
+msgid "error_500_description"
+msgstr ""
+"Что-то пошло не так, наши специалисты уже расследуют это странное явление."
+
+msgid "error_404_message"
+msgstr "Страница не найдена"
+
+msgid "error_404_description"
+msgstr ""
+"Страница по этому адресу не найдена. Пожалуйста, проверьте, верно ли указан "
+"адрес, и, если да, обратитесь к администраторам сети."
+
+msgid "error_410_message"
+msgstr "Страница недоступна"
+
+msgid "error_410_description"
+msgstr "Страница по этому адресу более не будет доступна"
+
+msgid "error_502_message"
+msgstr "Неверная ссылка"
+
+msgid "error_502_description"
+msgstr "Невозможно получить доступ к сервису ввиду неверной ссылки."
+
+msgid "error_503_message"
+msgstr "Сервис недоступен"
+
+msgid "error_503_description"
+msgstr ""
+"Страница по этому адресу временно недоступна. Пожалуйста, зайдите позже."
+
+msgid "servers_status"
+msgstr "Проверка статуса серверов"
+
+msgid "error_mail_send"
+msgstr ""
+"В результате пересылки сообщения по указанному адресу произошла ошибка. "
+"Пожалуйста, выберите другой адрес или попробуйте позже."
+
+msgid "non_alphabetic_digits"
+msgstr "%(value)s содержит символы, не являющиеся ни буквами, ни цифрами"
+
+msgid "required_empty"
+msgstr "Это поле необходимо заполнить"
+
+msgid "no_valid_email"
+msgstr ""
+"Неверный адрес электронной почты\r\n"
+"Образец: user@example.com"
+
+msgid "field_length"
+msgstr "Здесь должно быть от %(min)s до %(max)s символов"
+
+msgid "no_valid_url"
+msgstr "Недопустимый адрес страницы"
+
+msgid "about"
+msgstr "О сайте"
+
+msgid "contact"
+msgstr "Контактная информация"
+
+msgid "technology"
+msgstr "Технологии"
+
+msgid "legal"
+msgstr "Правовая информация"
+
+msgid "tos"
+msgstr "Правила использования"
+
+msgid "privacy"
+msgstr "Политика конфиденциальности"
+
+msgid "complaint"
+msgstr "Пожаловаться на страницу"
+
+msgid "source_code"
+msgstr "Исходный код"
+
+msgid "files_indexed"
+msgstr "файлов проиндексировано"
+
+msgid "last_indexed_files"
+msgstr "Последние проиндексированные файлы"
+
+msgid "i_want_that_file"
+msgstr "Я. Хочу. Этот. Файл"
+
+msgid "index_change"
+msgstr "foofind меняется"
+
+msgid "index_comunity"
+msgstr "Станьте частью нашего сообщества."
+
+msgid "index_first"
+msgstr "Получайте все новости и участвуйте в наших акциях первыми."
+
+msgid "index_suggestion"
+msgstr "Есть предложения?"
+
+msgid "all"
+msgstr "Все"
+
+msgid "direct_download"
+msgstr "загрузка с сервера"
+
+msgid "direct_downloads"
+msgstr "Загрузки с сервера"
+
+msgid "other_streamings"
+msgstr "Другие потоки"
+
+msgid "other_direct_downloads"
+msgstr "Другие загрузки"
+
+msgid "some_streamings"
+msgstr "Некоторые потоки"
+
+msgid "some_downloads"
+msgstr "Некоторые загрузки"
+
+msgid "others"
+msgstr "Другие"
+
+msgid "unknown"
+msgstr "Неизвестные"
+
+msgid "audio"
+msgstr "Аудио"
+
+msgid "video"
+msgstr "Видео"
+
+msgid "image"
+msgstr "Изображения"
+
+msgid "document"
+msgstr "Документы"
+
+msgid "software"
+msgstr "Программы"
+
+msgid "archive"
+msgstr "Архив"
+
+msgid "no_results_for"
+msgstr "Ничего не найдено по запросу"
+
+msgid "write_something"
+msgstr "Давайте же! Напишите что-нибудь"
+
+msgid "previous"
+msgstr "Предыдущая"
+
+msgid "next"
+msgstr "Следующая"
+
+msgid "sources"
+msgstr "источники"
+
+msgid "approximately"
+msgstr "Примерно"
+
+msgid "of_about"
+msgstr "из около"
+
+msgid "results_for"
+msgstr "результаты по запросу"
+
+msgid "other_categories"
+msgstr "другие категории"
+
+msgid "play"
+msgstr "Запуск"
+
+msgid "no_type_count"
+msgstr ""
+"Ничего не найдено по вашему запросу в %(search)s, зато мы нашли около "
+"%(results)d результатов по этому запросу в %(category)s."
+
+msgid "not_allow_browse_results"
+msgstr "Foofind не показывает результаты дальше страницы 100."
+
+msgid "did_you_mean"
+msgstr "Может, вы имели в виду %(text)s?"
+
+msgid "go_to_file"
+msgstr "Перейдите к файлу"
+
+msgid "what"
+msgstr "Что?"
+
+msgid "where"
+msgstr "Где?"
+
+msgid "update"
+msgstr "обновление"
+
+msgid "minimun"
+msgstr "минимум"
+
+msgid "maximun"
+msgstr "максимум"
+
+msgid "all_sizes"
+msgstr "Любой размер"
+
+msgid "smaller_than"
+msgstr "Меньше чем"
+
+msgid "larger_than"
+msgstr "Больше чем"
+
+msgid "all_qualities"
+msgstr "Любое качество"
+
+msgid "or_better"
+msgstr "или лучше"
+
+msgid "all_years"
+msgstr "Любой год"
+
+msgid "before"
+msgstr "До"
+
+msgid "last_year"
+msgstr "Последний год"
+
+msgid "artist"
+msgstr "Исполнитель"
+
+msgid "title"
+msgstr "Название"
+
+msgid "author"
+msgstr "Автор"
+
+msgid "format"
+msgstr "Формат"
+
+msgid "pages"
+msgstr "Страницы"
+
+msgid "album"
+msgstr "Альбом"
+
+msgid "length"
+msgstr "Длина"
+
+msgid "bitrate"
+msgstr "Битрейт"
+
+msgid "genre"
+msgstr "Жанр"
+
+msgid "seconds"
+msgstr "Секунды"
+
+msgid "minutes"
+msgstr "Минуты"
+
+msgid "source"
+msgstr "Источник"
+
+msgid "seeds"
+msgstr "Отдающие"
+
+msgid "leechs"
+msgstr "Загружающие"
+
+msgid "first_files"
+msgstr "Показаны первые %(value)s файлов. Загрузите файл, чтобы увидеть все."
+
+msgid "height"
+msgstr "Высота"
+
+msgid "width"
+msgstr "Ширина"
+
+msgid "track"
+msgstr "Композиция"
+
+msgid "quality"
+msgstr "Качество"
+
+msgid "series"
+msgstr "Сериал"
+
+msgid "episode"
+msgstr "Серия"
+
+msgid "season"
+msgstr "Сезон"
+
+msgid "num_pages"
+msgstr "Число страниц"
+
+msgid "include_results_from"
+msgstr "Включить результаты от:"
+
+msgid "size"
+msgstr "Размер"
+
+msgid "unpacked_size"
+msgstr "Размер после извлечения"
+
+msgid "colors"
+msgstr "Цвета"
+
+msgid "version"
+msgstr "Версия"
+
+msgid "name"
+msgstr "Имя"
+
+msgid "description"
+msgstr "Описание"
+
+msgid "files"
+msgstr "Файлы"
+
+msgid "soundtype"
+msgstr "Звукотип"
+
+msgid "channels"
+msgstr "каналы"
+
+msgid "year"
+msgstr "год"
+
+msgid "years"
+msgstr "годы"
+
+msgid "month"
+msgstr "месяц"
+
+msgid "months"
+msgstr "месяцы"
+
+msgid "day"
+msgstr "день"
+
+msgid "days"
+msgstr "дни"
+
+msgid "hour"
+msgstr "час"
+
+msgid "hours"
+msgstr "часы"
+
+msgid "minute"
+msgstr "минута"
+
+msgid "second"
+msgstr "секунда"
+
+msgid "tags"
+msgstr "Метки"
+
+msgid "license"
+msgstr "Лицензия"
+
+msgid "private_file"
+msgstr "Приватный файл"
+
+msgid "composer"
+msgstr "Композитор"
+
+msgid "publisher"
+msgstr "Издатель"
+
+msgid "comments"
+msgstr "Комментарии"
+
+msgid "created_by"
+msgstr "Сделано"
+
+msgid "language"
+msgstr "Язык"
+
+msgid "date"
+msgstr "Дата"
+
+msgid "trackers"
+msgstr "Трекеры"
+
+msgid "hash"
+msgstr "Хеш"
+
+msgid "visualizations"
+msgstr "Визуализации"
+
+msgid "codec"
+msgstr "Кодек"
+
+msgid "encoding"
+msgstr "Шифрование"
+
+msgid "director"
+msgstr "Режиссер"
+
+msgid "writer"
+msgstr "Автор"
+
+msgid "starring"
+msgstr "В главных ролях"
+
+msgid "producer"
+msgstr "Продюсер"
+
+msgid "released"
+msgstr "Выход"
+
+msgid "loading"
+msgstr "Загрузка"
+
+msgid "close"
+msgstr "Закрыть"
+
+msgid "all_sources"
+msgstr "все источники"
+
+msgid "share"
+msgstr "Поделиться на %(site)s"
+
+msgid "share_download"
+msgstr "Поделиться"
+
+msgid "share_search"
+msgstr "Поделиться результатами поиска"
+
+msgid "share_this"
+msgstr "Поделиться этим:"
+
+msgid "send_by_email"
+msgstr "отправить электронной почтой"
+
+msgid "open_link_new_tab"
+msgstr "открыть в новой вкладке"
+
+msgid "download"
+msgstr "Загрузить"
+
+msgid "download_source"
+msgstr "Загрузить из %(source)s"
+
+msgid "watch"
+msgstr "Смотреть"
+
+msgid "watch_source"
+msgstr "Смотреть на %(source)s"
+
+msgid "listen"
+msgstr "Слушать"
+
+msgid "listen_source"
+msgstr "Слушать на %(source)s"
+
+msgid "since"
+msgstr "с %(since)s"
+
+msgid "post_comment"
+msgstr "Опубликовать комментарий"
+
+msgid "add_comment"
+msgstr "Добавить комментарий"
+
+msgid "from"
+msgstr "от"
+
+msgid "i_like_it"
+msgstr "Нравится!"
+
+msgid "booo"
+msgstr "Бу!"
+
+msgid "comment_published_succesfully"
+msgstr "Комментарий успешно опубликован."
+
+msgid "related_files"
+msgstr "Связанные файлы"
+
+msgid "file"
+msgstr "файл"
+
+msgid "add_favorite"
+msgstr "Добавить %(type)s в любимые"
+
+msgid "delete_favorite"
+msgstr "Удалить %(type)s из любимых"
+
+msgid "favorite"
+msgstr "%(type)s добавлено в любимые"
+
+msgid "download_links"
+msgstr "Показать ссылки для загрузки"
+
+msgid "more_info"
+msgstr "больше"
+
+msgid "less_info"
+msgstr "меньше"
+
+msgid "more_comments"
+msgstr "больше комментариев"
+
+msgid "less_comments"
+msgstr "меньше комментариев"
+
+msgid "login_required"
+msgstr ""
+"Вы должны авторизоваться на сайте, чтобы получить доступ к этой странице."
+
+msgid "user_profile"
+msgstr "Профиль пользователя"
+
+msgid "your_password"
+msgstr "Придумайте пароль:"
+
+msgid "insert_your_password"
+msgstr "Введите пароль (да, снова):"
+
+msgid "fill_sing_up_form"
+msgstr ""
+"Пожалуйста, заполните это поле, чтобы стать зарегистрированным пользователем"
+" Foofind:"
+
+msgid "nickname"
+msgstr "Ник:"
+
+msgid "edit_profile"
+msgstr "редактировать профиль"
+
+msgid "edit_your_profile"
+msgstr "Сделайте изменения в своем профиле"
+
+msgid "profile_edited_succesfully"
+msgstr "Изменения в вашем профиле успешно сделаны!"
+
+msgid "hello"
+msgstr "здравствуйте,"
+
+msgid "logout"
+msgstr "выйти"
+
+msgid "login"
+msgstr "войти"
+
+msgid "new_user"
+msgstr "новый пользователь"
+
+msgid "or"
+msgstr "или"
+
+msgid "register"
+msgstr "зарегистрироваться"
+
+msgid "if_new_user"
+msgstr "Если вы новый пользователь, пожалуйста,"
+
+msgid "register_here"
+msgstr "зарегистрируйтесь здесь"
+
+msgid "choose_nickname"
+msgstr "Выберите ник:"
+
+msgid "user_login"
+msgstr "Логин пользователя"
+
+msgid "remember_me"
+msgstr "Помнить меня"
+
+msgid "your_location"
+msgstr "Ваше местоположение:"
+
+msgid "new_password"
+msgstr "Измените пароль (если не желаете, оставьте это поле пустым):"
+
+msgid "save_profile"
+msgstr "Сохранить профиль"
+
+msgid "not_allowed_view_page"
+msgstr "У вас нет доступа к этой странице"
+
+msgid "username_taken"
+msgstr "Это имя занято. Пожалуйста, выберите другое."
+
+msgid "email_taken"
+msgstr ""
+"Адрес электронной почты, который вы ввели, уже используется. Пожалуйста, "
+"введите другой."
+
+msgid "forgot"
+msgstr "Забыли"
+
+msgid "your_password?"
+msgstr "ваш пароль?"
+
+msgid "passwords_not_match"
+msgstr "Пароли не совпадают."
+
+msgid "sure_delete_account"
+msgstr "Вы уверены, что хотите удалить свой аккаунт в Foofind?"
+
+msgid "yes"
+msgstr "Да"
+
+msgid "no"
+msgstr "Нет"
+
+msgid "account_deleted"
+msgstr "Ваш аккаунт удален."
+
+msgid "nice_to_hear_that"
+msgstr "Приятно слышать"
+
+msgid "profile"
+msgstr "профиль"
+
+msgid "username"
+msgstr "Ник:"
+
+msgid "member_since"
+msgstr "Пользователь с:"
+
+msgid "last_comments"
+msgstr "Последние %(comments)d комментариев:"
+
+msgid "location"
+msgstr "Местоположение:"
+
+msgid "delete_account"
+msgstr "Удалить свой аккаунт в Foofind"
+
+msgid "forgot_password"
+msgstr "Забыли свой пароль?"
+
+msgid "wrong_email_password"
+msgstr ""
+"Неверный адрес электронной почты или пароль; пожалуйста, попробуйте снова"
+
+msgid "welcome"
+msgstr "Добро пожаловать"
+
+msgid "finish_register"
+msgstr "Пожалуйста, нажмите на эту ссылку, чтобы завершить регистрацию:"
+
+msgid "token_not_exist"
+msgstr "Извините, такого токена не существует или он уже был использован"
+
+msgid "confirm_email"
+msgstr ", подтвердите свой адрес электронной почты"
+
+msgid "check_inbox_email_finish"
+msgstr ""
+"Проверьте — по адресу вашей электронной почты, возможно, уже пришло письмо, "
+"позволяющее завершить регистрацию"
+
+msgid "foofind_team"
+msgstr "Команда Foofind."
+
+msgid "user_not_exist"
+msgstr "Такого пользователя не существует"
+
+msgid "logged_in"
+msgstr "Вы авторизованы на сайте,"
+
+msgid "registered_user"
+msgstr "Если вы уже зарегистрированы на сайте, пожалуйста,"
+
+msgid "login_here"
+msgstr "войдите на сайт здесь"
+
+msgid "send"
+msgstr "Отослать"
+
+msgid "user_favorites"
+msgstr "Отмеченные файлы"
+
+msgid "user_searches"
+msgstr "Отмеченные поисковые запросы"
+
+msgid "user_fav_lists"
+msgstr "Списки файлов"
+
+msgid "user_fav_file_list_empty"
+msgstr "Нет файлов в списке"
+
+msgid "user_fav_search_list_empty"
+msgstr "Нет запросов в списке"
+
+msgid "user_fav_no_lists"
+msgstr "Не найдено ни одного пользовательского списка"
+
+msgid "enter_email"
+msgstr ""
+"Пожалуйста, укажите ваш адрес электронной почты. Вам придет письмо, "
+"позволяющее восстановить доступ."
+
+msgid "email_same_register"
+msgstr ""
+"Здесь должен быть тот адрес электронной почты, который вы использовали при "
+"регистрации."
+
+msgid "email_not_database"
+msgstr "Такого адреса нет в нашей базе данных. Попробуйте снова."
+
+msgid "check_inbox_email_restore"
+msgstr ""
+"Вам должно прийти письмо, позволяющее восстановить доступ. Проверьте ваш "
+"электронный ящик."
+
+msgid "restore_access"
+msgstr ", восстановить доступ к Foofind"
+
+msgid "restore_account"
+msgstr ""
+"Кто-то — наверняка вы — пытается восстановить ваш аккаунт в Foofind. Нажмите"
+" на ссылку, чтобы сделать это:"
+
+msgid "ignore_message"
+msgstr "Если это были не вы, проигнорируйте сообщение."
+
+msgid "login_vote"
+msgstr "Если вы хотите проголосовать, пожалуйста, авторизуйтесь на сайте"
+
+msgid "login_comment"
+msgstr ""
+"Если вы хотите оставить свой комментарий, пожалуйста, авторизуйтесь на сайте"
+
+msgid "technical_problems"
+msgstr "Извините, мы испытываем технические трудности с сервисом %(service)s."
+
+msgid "allow_access_account"
+msgstr ""
+"Чтобы использовать эту возможность, вы должны разрешить Foofind доступ к "
+"своему аккаунту в %(account)s."
+
+msgid "submit_registration"
+msgstr "Зарегистрироваться"
+
+msgid "submit_login"
+msgstr "Войти"
+
+msgid "submit_edit"
+msgstr "Сохранить профиль"
+
+msgid "submit_search"
+msgstr "Поиск"
+
+msgid "contact_form"
+msgstr "Форма для обратной связи"
+
+msgid "report_form"
+msgstr "форма для жалобы на страницу"
+
+msgid "link_removal"
+msgstr ""
+"Примечание: при намерении потребовать удаления страницы из поисковой выдачи "
+"вы должны воспользоваться %(report_form)s."
+
+msgid "complaints_ignored"
+msgstr "Жалобы, отправленные с помощью данной формы, игнорируются."
+
+msgid "your_message"
+msgstr "Ваше сообщение:"
+
+msgid "insert_characters"
+msgstr "Введите, пожалуйста, 5 изображенных символов:"
+
+msgid "captcha_wrong"
+msgstr "Вы ошиблись при вводе изображенных символов"
+
+msgid "no_valid_hostname"
+msgstr ""
+"%(hostname)s — неверное имя сервера для адреса электронной почты %(value)s"
+
+msgid "local_network"
+msgstr "Адреса локальной сети, которым определен %(value)s, не поддерживаются"
+
+msgid "no_dns_hostname"
+msgstr "%(value)s не соответствует ожидаемой структуре имени сервера"
+
+msgid "no_tld_known"
+msgstr ""
+"%(value)s выглядит как имя сервера, тем не менее, домен верхнего уровня в "
+"нем не входит в список известных"
+
+msgid "message_sent"
+msgstr "Сообщение успешно отправлено!"
+
+msgid "your_name"
+msgstr "Ваше имя:"
+
+msgid "your_surname"
+msgstr "Ваша фамилия:"
+
+msgid "your_company"
+msgstr "Название вашей компании:"
+
+msgid "your_phone"
+msgstr "Номер вашего телефона:"
+
+msgid "link_reviewed"
+msgstr "Пожалуйста, введите ссылку для обзора:"
+
+msgid "url_content"
+msgstr "Пожалуйста, введите ссылку с контентом:"
+
+msgid "reason_complaint"
+msgstr "Причина жалобы:"
+
+msgid "accept_tos"
+msgstr "Я прочел и принимаю %(tos)s и %(privacy)s. "
+
+msgid "accept_terms"
+msgstr ""
+"Пожалуйста, примите правила использования и политику конфиденциальности."
+
+msgid "not_foofind_page"
+msgstr "Ссылка не является Foofind-страницей"
+
+msgid "not_foofind_link"
+msgstr "Ссылка должна быть действительной страницей загрузки Foofind."
+
+msgid "include_reported_links"
+msgstr "Пожалуйста, добавьте ссылки в соответствующие поля формы."
+
+msgid "submit_links"
+msgstr "Подтвердить "
+
+msgid "include_link_per_line"
+msgstr ""
+"Пожалуйста, поместите одну http, ftp, ed2k или magnet-ссылку на строку.<br/>\r\n"
+"Она будет распознана автоматически и сразу же добавится в результаты поиска."
+
+msgid "link_sent"
+msgstr "Ссылки отправлены. Спасибо за помощь!"
+
+msgid "footer"
+msgstr "Сайт с лицензией %(cc)s. %(code)s с лицензией %(gpl)s."
+
+msgid "under_maintenance"
+msgstr "Foofind на техосмотре. Пожалуйста, вернитесь позднее."
+
+msgid "about_text"
+msgstr ""
+"Foofind - универсальный поисковой движок. Мы работаем над программой, "
+"которая шерстила бы каждую файлообменную сеть и индексировала каждый "
+"возможный файл. Таким образом мы хотели бы предложить наиболее полную "
+"коллекцию ссылок из когда либо-собранных.<br/><br/>Foofind  - разработка "
+"Пабло Сото, P2P-дизайнера. Разработано в Мадриде, Испания компанией Foofind "
+"Labs S.L. в сотрудничестве с MP2P Technologies."
+
+msgid "link_not_exist"
+msgstr "Ссылка удалена или не существует."
+
+msgid "error_link_removed"
+msgstr "Извините, но эта ссылка удалена из источника."
+
+msgid "translate"
+msgstr "Переведите"
+
+msgid "translate_to_your_language"
+msgstr "Помогите нам перевести Foofind на свой язык"
+
+msgid "choose_language"
+msgstr "Выберите язык"
+
+msgid "translate_description"
+msgstr ""
+"Foofind в настоящее время доступен на нескольких языках, но вы можете помочь в переводе сайта на собственный язык. Просто заполните недостающие поля или поля с неточным переводом на собственном языке. Вам необязательно заполнять их все и полностью, любая ваша помощь очень приветствуется.\r\n"
+"Если вашего языка нет в списке, пожалуйста, свяжитесь с нами."
+
+msgid "translation_sent"
+msgstr "Ваш перевод отправлен. Спасибо за помощь!"
+
+msgid "translate_at_least_one"
+msgstr "Пожалуйста, переведите что-нибудь перед отправкой."
+
+msgid "here"
+msgstr "здесь"
+
+msgid "translation_beta"
+msgstr ""
+"Этот язык тестируется. Если вы обнаружили неточный или неправильный перевод,"
+" пожалуйста, сообщите об этом %(here)s."
+
+msgid "other"
+msgstr "Другое"
+
+msgid "embed_foofind_button"
+msgstr "Смотреть в Foofind"
+
+msgid "copy_to_clipboard_shortcut"
+msgstr "Используй CTRL+C, чтобы скопировать в буфер обмена"
+
+msgid "opensearch_description"
+msgstr "Поиск с помощью Foofind "
+
+msgid "downloader_update_message"
+msgstr ""
+"Новая версия %(appname)s (%(version)s) уже готова к установке.\r\n"
+"Обновить?"
+
+msgid "downloader_powered"
+msgstr "По технологии [%(name)s](%(link)s)"
+
+msgid "downloader_overview"
+msgstr "Обзор"
+
+msgid "downloader_overview_text"
+msgstr ""
+"«Менеджер загрузок Foofind» специально создан очень легким в использовании, интуитивно понятным и безопасным в работе. Вы можете приостановить, возобновить и найти все ваши загрузки так легко, как никогда раньше. Оцените наши преимущества:\r\n"
+"\r\n"
+"* Надежный торрент-клиент.\r\n"
+"* Простой интерфейс.\r\n"
+"* Поддержка DHT, uPnP и uTorrent."
+
+msgid "downloader_sharing"
+msgstr "Загрузите и обменивайтесь файлами"
+
+msgid "downloader_sharing_text"
+msgstr ""
+"Теперь с **Менеджером загрузок Foofind** вы можете скачивать так быстро, как никогда раньше. \r\n"
+"Спасибо **торрент**-сети, самому быстрому решению P2P-передачи файлов в истории, ваши загрузки будут летать.\r\n"
+"\r\n"
+"Попробуйте! **Вы в одном клике от загрузок будущего**"
+
+msgid "downloader_safety"
+msgstr "Скачайте файлы безопасно"
+
+msgid "downloader_safety_text"
+msgstr ""
+"Мы очень серьезно относимся к безопасности **Менеджер загрузок Foofind** использует отмеченную наградами библиотеку libtorrent, которая обеспечивает безопасность и защищенность ваших загрузок.\r\n"
+"\r\n"
+"Мы настоятельно рекомендуем вам пользоваться антивирусом, так как вы можете скачать вредоносный программы из ненадежных источников"
+
+msgid "downloader_its_free"
+msgstr "Это асболютно **БЕСПЛАТНО**"
+
+msgid "downloader_download_source"
+msgstr "Скачать источник"
+
+msgid "downloader_meta_description"
+msgstr ""
+"«Менеджер загрузок Foofind» очень просто и легок в использовании в качестве "
+"торрент-клиента"
+
+msgid "downloader_download_coming_soon"
+msgstr "Извините: пока недоступно для вашей операционной системы."
+
+msgid "downloader_dialog_title"
+msgstr "Эй! Вам нужен торрент-клиент, чтобы скачать этот файл"
+
+msgid "downloader_dialog_yes"
+msgstr ""
+"Да, скачать\r\n"
+"\r\n"
+"Менеджер загрузок Foofind"
+
+msgid "downloader_dialog_no"
+msgstr "Нет, спасибоПросто скачать"
+
+msgid "downloader_dialog_noagain"
+msgstr "У меня уже есть торрент-клиент, не спрашивать больше."
+
+msgid "downloader_dialog_text"
+msgstr ""
+"Скачайте «Менеджер загрузок Foofind», чтобы скачать этот файл немедленно.\r\n"
+"\r\n"
+"Наше приложение позволит вам загружать торрент-файлы быстрее и как никогда легко - абсолютно бесплатно!"

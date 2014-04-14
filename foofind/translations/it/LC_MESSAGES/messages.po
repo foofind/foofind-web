@@ -20,7 +20,7 @@ msgid "new_toolbar"
 msgstr "Prova la nostra nuova toolbar"
 
 msgid "click_here"
-msgstr "clicca quì !"
+msgstr "clicca qui !"
 
 msgid "password"
 msgstr "Password:"
@@ -41,14 +41,14 @@ msgid "legal_info"
 msgstr "informazioni legali"
 
 msgid "go_home"
-msgstr "Torna indietro all' engine di ricerca"
+msgstr "Torna indietro al motore di ricerca"
 
 msgid "error_500_message"
 msgstr "C' è stato un errore :("
 
 msgid "error_500_description"
 msgstr ""
-"Quì c' è qualcosa di strano, i nostri specialisti stanno investigando su "
+"Qui c' è qualcosa di strano, i nostri specialisti stanno investigando su "
 "quest' attività paranormale."
 
 msgid "error_404_message"
@@ -81,14 +81,31 @@ msgstr ""
 "L' URL richiesto non è temporaneamente raggiungibile. Per favore riprova più"
 " tardi."
 
+msgid "servers_status"
+msgstr "controlla lo stato del server"
+
+msgid "error_mail_send"
+msgstr ""
+"C'è stato un errore inviando il messaggio all'indirizzo specificato. Per "
+"favore scegli un altro a prova più tardi"
+
 msgid "about"
 msgstr "Tutto su"
+
+msgid "no_valid_email"
+msgstr "Questo non è un indirizzo email valido col formato: user@example.com"
+
+msgid "no_valid_url"
+msgstr "URL non valido"
 
 msgid "contact"
 msgstr "Contatti"
 
 msgid "legal"
 msgstr "Legale"
+
+msgid "technology"
+msgstr "Tecnologia"
 
 msgid "tos"
 msgstr "Termini"

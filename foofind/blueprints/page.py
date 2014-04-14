@@ -40,11 +40,11 @@ def old_show(pname):
         return redirect(url_for("page.show",pname=pname),301)
 
 valid_pages = {
-    "about":["about_text","jobs","technology",1,4],
-    "technology":["technology_text","about","contact",2,4],
+    "about":["about_text","cookies","technology",1,5],
+    "technology":["technology_text","about","contact",2,5],
     "legal":["safe_legal","complaint","tos",1,4],
     "tos":["safe_tos","legal","privacy",2,4],
-    "privacy":["safe_privacy","tos","complaint",3,4]
+    "privacy":["safe_privacy","tos","cookies",3,4],
 }
 @page.route('/<lang>/<pname>')
 def show(pname):
@@ -69,6 +69,17 @@ def show(pname):
         pname=pname
     )
 
+@page.route('/<lang>/cookies')
+def cookies():
+    '''
+    Página para contenidos sin interacción.
+    '''
+    g.title+=u"Política de cookies"
+    return render_template(
+        'pages/cookies.html',
+        pname=u"Política de cookies",page_title=u"Política de cookies",pagination=["jobs","about",5,5]
+    )
+
 @page.route('/<lang>/jobs', methods=['GET', 'POST'])
 @nocache
 def jobs():
@@ -87,7 +98,7 @@ def jobs():
             return redirect(url_for('index.home'))
 
     g.title+="Ofertas de empleo"
-    return render_template('pages/jobs.html',page_title="Ofertas de empleo",pagination=["contact","about",4,4],form=form,pname="jobs")
+    return render_template('pages/jobs.html',page_title="Ofertas de empleo",pagination=["contact","cookies",4,5],form=form,pname="jobs")
 
 @page.route('/<lang>/contact', methods=['GET', 'POST'])
 @nocache
@@ -109,6 +120,7 @@ def contact():
         pname="contact"
     )
 
+
 @page.route('/<lang>/submitlink', methods=['GET', 'POST'])
 @nocache
 def submit_link():
@@ -123,6 +135,7 @@ def submit_link():
 
     g.title+=_("submit_links")
     return render_template('pages/submit_link.html',page_title=_("submit_links"),pagination=["translate","translate",1,2],form=form,pname="submitlink")
+
 
 @page.route('/<lang>/complaint', methods=['GET', 'POST'])
 @nocache

@@ -14,7 +14,7 @@
         {%- endfor %}
         {%- block assets_css -%}
             {%- assets "css_all" -%}
-                <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet" />
+                <link type="text/css" href="{{ ASSET_URL.rstrip(' \n.') }}" rel="stylesheet" />
             {%- endassets -%}
         {%- endblock -%}
         <script>
@@ -23,7 +23,7 @@
         </script>
         {%- block assets_js -%}
             {%- assets "js_all" -%}
-                <script src="{{ ASSET_URL }}"></script>
+                <script src="{{ ASSET_URL.rstrip(' \n.') }}"></script>
             {%- endassets -%}
         {%- endblock -%}
         <!--[if lt IE 9]>
@@ -33,23 +33,42 @@
         <!--[if lt IE 8]>
         {%- assets "css_ie7" %}<link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet" />{%- endassets %}
         <![endif]-->
-        {#<!--[if IE ]>
-        <script type="text/javascript" src="/static/js/PIE.js"></script>
-        <![endif]-->#}
         <script>
-            var _gaq=_gaq||[];_gaq.push(['_setAccount','UA-808946-19']);(function(){var ga=document.createElement('script');ga.type='text/javascript';ga.async=true;ga.src=('https:'==document.location.protocol?'https://ssl':'http://www')+'.google-analytics.com/ga.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(ga,s)})();
-            $(function(){$("#toolbar a").click(function(e){_gaq.push(['_trackEvent','Toolbar',$(this).data("source")]);e.preventDefault();setTimeout('document.location = "'+this.href+'"',100);})});
+            function init_cookies() {
+                if (window._gaq) return;
+                var _gaq=_gaq||[];_gaq.push(['_setAccount','UA-808946-19']);(function(){var ga=document.createElement('script');ga.type='text/javascript';ga.async=true;ga.src=('https:'==document.location.protocol?'https://ssl':'http://www')+'.google-analytics.com/ga.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(ga,s)})();
+                window._gaq = _gaq;
+                {%- block cookies %}trackGAPageview(location.pathname+location.hash);{%- block extra_cookies %}{%- endblock -%}{%- endblock -%}
+
+                (function(d){
+                 var js, id = 'facebook-jssdk';
+                 if (d.getElementById(id)) return;
+                 js = d.createElement('script');
+                 js.id = id;
+                 js.async = true;
+                 js.src = "//connect.facebook.net/{{ g.full_lang }}/all.js#xfbml=1&status=0";
+                 d.getElementsByTagName('head')[0].appendChild(js);
+               }(document));
+
+                window.___gcfg={lang:'{{ g.lang }}'};(function(){var po=document.createElement('script');po.type='text/javascript';po.async=true;po.src='https://apis.google.com/js/plusone.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(po, s)})();
+            }
+            function trackGAEvent(){if (!window._gaq) init_cookies(); var args_array = Array.prototype.slice.call(arguments,0);trackGA(['_trackEvent'].concat(args_array),['send','event'].concat(args_array));}
+            function trackGAPageview(){var args_array = Array.prototype.slice.call(arguments,0);trackGA(['_trackPageview'].concat(args_array),['send','pageview'].concat(args_array));}
+            function trackGA(params, new_params){if (window._gaq) {window._gaq.push(params)} }
         </script>
-        {%- block head %}<script>_gaq.push(['_trackPageview',location.pathname+location.hash]);</script>{%- endblock -%}
+        {%- block head %}{%- endblock -%}
     </head>
     <body
         {%- if body_class %} class="{{body_class}}"{% endif %}
-        {%- if g.foodownloader %}
-            data-downloader_title="{{_('foodownloader_dialog_title')|emarkdown}}"
-            data-downloader_text="{{_('foodownloader_dialog_text', domain=g.domain)|emarkdown}}"
-            data-downloader_href="{{url_for('downloads.foodownloader_microsite')|forceescape}}"
-            data-downloader_yes="{{_('foodownloader_dialog_yes', domain=g.domain)|emarkdown}}"
-            data-downloader_no="{{_('foodownloader_dialog_no', domain=g.domain)|emarkdown}}"
+            data-downloader_version="{{g.downloader_properties['version_code']}}"
+        {%- if g.downloader %}
+            data-downloader_title="{{_('downloader_dialog_title')|emarkdown}}"
+            data-downloader_text="{{_('downloader_dialog_text', domain=g.domain)|emarkdown}}"
+            data-downloader_more_info="<a href='{{url_for('downloader.index')}}'>{{_('more_info')|capitalize}}</a>"
+            data-downloader_href="{{url_for('downloader.download_proxy')|forceescape}}"
+            data-downloader_yes="{{_('downloader_dialog_yes', domain=g.domain)|emarkdown}}"
+            data-downloader_no="{{_('downloader_dialog_no', domain=g.domain)|emarkdown}}"
+            data-downloader_noagain="{{_('downloader_dialog_noagain', domain=g.domain)}}"
         {%- endif %}>
         <div id="dialog" data-dialog_ok="{{_('ok')|emarkdown}}" data-dialog_no="{{_('no')|emarkdown}}" data-dialog_yes="{{_('yes')|emarkdown}}"></div>
         <div id="container">
@@ -57,21 +76,8 @@
                 <section>
                     <div id="social">
                         <div id="fb-root"></div>
-                        <div class="fb-like" data-href="https://www.facebook.com/foofind" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false"></div>
+                        <div class="fb-like" data-href="https://www.facebook.com/foofind" data-send="false" data-layout="button_count" data-width="150" data-show-faces="false"></div>
                         <div class="g-plusone" data-size="medium" data-href="http://{{g.domain}}"></div>
-                        <script>
-                          (function(d){
-                             var js, id = 'facebook-jssdk';
-                             if (d.getElementById(id)) return;
-                             js = d.createElement('script');
-                             js.id = id;
-                             js.async = true;
-                             js.src = "//connect.facebook.net/{{ g.full_lang }}/all.js#xfbml=1&status=0";
-                             d.getElementsByTagName('head')[0].appendChild(js);
-                           }(document));
-
-                            window.___gcfg={lang:'{{ g.lang }}'};(function(){var po=document.createElement('script');po.type='text/javascript';po.async=true;po.src='https://apis.google.com/js/plusone.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(po, s)})();
-                        </script>
                     </div>
                     <p>{% block global_message %}{% endblock %}</p>
                     <div id="header_navigation"
@@ -91,7 +97,11 @@
                             {{ advice("beta_lang",_('translation_beta',here='<a href="%s?lang=%s" rel="nofollow">%s</a>'|safe % (url_for('page.translate'),g.lang,_('here')))) }}
                         {% endif %}
                     </div>
+                {%- if g.accept_cookies!="2" %}
+                {{ advice("cookies","Usamos cookies propias y de terceros. Si continua navegando consideramos que acepta nuestra <a href='" + url_for('page.cookies') + "'>política de cookies</a>.") }}
+                {%- endif %}
                 </section>
+
                 {%- block header %}{{ logo() }}{%- endblock %}
             </header>
             <section id="{{ zone }}">
@@ -106,7 +116,7 @@
                     <li><a href="{{ url_for('page.show',pname='jobs') }}">Trabaja con nosotros</a></li>
                     {%- endif -%}
                     <li><a href="{{ url_for('page.show',pname='lastfiles') }}">{{_("last_indexed_files")}}</a></li>
-                    <li><a href="{{ url_for('downloads.foodownloader_microsite') }}">Download Manager</a></li>
+                    <li><a href="{{ url_for('downloader.index') }}">Download Manager</a></li>
                 </ul>
                 <p>
                     {{_("footer",

@@ -45,13 +45,17 @@ window.modal_dialog = {
                     + '<button class="button dialog_yes">'
                         + this.element.data("dialog_yes")
                         + '</button>'
+                    + '<label class="dialog_check">'
+                        + '<input type="checkbox" name="check" value="1"/>'
+                        + this.element.data("dialog_check")
+                        + '</label>'
                 + '</footer></div></div>')
-            .click(function(){me.hide.apply(me);});
-        $(".outer", this.element)
             .click(function(event){
-                event.preventDefault();
-                event.stopPropagation();
-                });
+                if (event.target.id=="dialog") {
+                    me.hide.apply(me);
+                }
+            });
+
         $(".dialog_ok", this.element)
             .click(function(event){
                 me.hide.apply(me);
@@ -88,6 +92,7 @@ window.modal_dialog = {
         $(".dialog_ok", this.element).css("display", (simple?"auto":"none"));
         $(".dialog_yes", this.element).css("display", (simple?"none":"auto"));
         $(".dialog_no", this.element).css("display", (simple?"none":"auto"));
+        $(".dialog_check", this.element).css("display", (options.check?"auto":"none"));
 
         $("header", this.element).html(options.title||"").css("display", "auto");
         if(!options.title) $("header", this.element).css("display", "none");
@@ -97,6 +102,9 @@ window.modal_dialog = {
         $(".dialog_ok", this.element).html(options.ok||this.element.data("dialog_ok"));
         $(".dialog_yes", this.element).html(options.yes||this.element.data("dialog_yes"));
         $(".dialog_no", this.element).html(options.no||this.element.data("dialog_no"));
+        if (options.check) {
+            $(".dialog_check", this.element).html('<input type="checkbox" value="1"/>'+options.check);
+        }
 
         this.ok_callback = options.ok_callback||function(){};
         this.yes_callback = options.yes_callback||function(){};
@@ -126,29 +134,31 @@ window.downloader = {
         this.initialized = true;
         },
     disable:function(){
-        if(!this.skip){
+        if(!this.skip && $(".dialog_check input").prop('checked')){
             var expiration=new Date();
             expiration.setDate(expiration.getDate() + this.expiration_days);
             document.cookie = "skip_downloader=1; expires=" + expiration.toUTCString() + "; path=/";
             this.skip = true;
             }
         },
-    proxy:function(url, target){
+    proxy:function(url, target, source){
         var me=this, downloader=$("body").data("downloader_href");
-        _gaq.push(['_trackEvent', "FDM", "offer"]);
+        trackGAEvent("FDM", "offer", source);
         window.modal_dialog.show({
             mode: "downloader",
             title: $("body").data("downloader_title"),
-            text: $("body").data("downloader_text"),
+            text: $("body").data("downloader_text") + $("body").data("downloader_more_info"),
             yes: $("body").data("downloader_yes"),
             no: $("body").data("downloader_no"),
+            check: $("body").data("downloader_noagain"),
             yes_callback: function(){
-                _gaq.push(['_trackEvent', "FDM", "offer accepted"]);
+                trackGAEvent("FDM", "offer accepted");
+                trackGAEvent("FDM", "Download", "offer");
                 me.disable();
                 setTimeout(function(){window.location.href = downloader}, 100);
                 },
             no_callback: function(){
-                _gaq.push(['_trackEvent', "FDM", "offer rejected"]);
+                trackGAEvent("FDM", "offer rejected");
                 me.disable();
                 if(target=="_blank") window.open(url);
                 else setTimeout(function(){window.location.href = url}, 100);
@@ -161,13 +171,15 @@ window.downloader = {
             var me=this, url, target, cback=function(){document.location.href = url;};
             $("a", parent).each(function(i){
                 var elm=$(this), url=this.href, target=this.target;
-                if(elm.data("downloader")=="1")
+                if(elm.data("downloader")=="1") {
+                    var source = (elm.data("stats") || ";?;").split(";")[1];
                     elm.click(function(event){
                         if(me.skip) return;
                         event.stop_redirection = true; // Usado por link_stats
-                        me.proxy.apply(me, [url, target]);
+                        me.proxy.apply(me, [url, target, source]);
                         event.preventDefault();
                         });
+                    }
                 });
             }
         }
@@ -234,13 +246,32 @@ $(function()
     })
     //mostrar aviso idioma
     if(!document.cookie.match("langtest=0"))
-        $("#beta_lang").show(0);
+        $("#beta_lang").show();
+
+    var cookies_advice = $("#cookies");
+    window._gaq=false;
+    if (cookies_advice.length)
+    {
+        cookies_advice.show();
+    } else {
+        init_cookies();
+    }
+
     //ocultar cualquier aviso
     $(".advice button").click(function(e)
     {
         $(this).parent().slideUp();
-        if($(this).parent().attr("id")=="beta_lang") //para los avisos de idioma en beta se guarda la cookie para que no salga de nuevo
+        var advice_name = $(this).parent().attr("id");
+        if(advice_name=="beta_lang") {
+            //para los avisos de idioma en beta se guarda la cookie para que no salga de nuevo
             document.cookie="langtest=0";
+        } else if (advice_name=="cookies") {
+            //ley de cookies
+            var exdate=new Date();
+            exdate.setDate(exdate.getDate() + 3650);
+            document.cookie="ck=2; expires="+exdate.toUTCString()+"; path=/";
+            init_cookies();
+        }
     });
     //translate
     $("#translate #lang").change(function(){$("form:first").submit()});
@@ -275,6 +306,13 @@ $(function()
     {
         empties = controls.filter("[value='']");
         $("#searchempty").html(Math.round(10000-10000*empties.size()/controls.size())/100+'% &darr;');
+    });
+
+    $("a.downloader").click(function(e){
+        var url = this.href;
+        trackGAEvent('FDM', "Download", $(this).data("label"));
+        e.preventDefault();
+        setTimeout(function(){window.location.href = url}, 100);
     });
 });
 $(window).unload(function(){$(":input[disabled=disabled]").removeAttr("disabled")})

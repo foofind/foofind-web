@@ -1,4 +1,4 @@
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
@@ -16,6 +16,9 @@ msgstr ""
 msgid "your_email"
 msgstr "הדוא\"ל שלך"
 
+msgid "click_here"
+msgstr "לחץ כאן ! "
+
 msgid "password"
 msgstr "סיסמא"
 
@@ -24,6 +27,9 @@ msgstr "שלח"
 
 msgid "help_us"
 msgstr "עזור לנו!"
+
+msgid "ok"
+msgstr "אוקיי"
 
 msgid "legal_info"
 msgstr "מידע חוקי"

@@ -1179,75 +1179,6 @@ def servers():
         alternatives=server_list,
         page=page)
 
-@admin.route('/<lang>/admin/downloads', defaults={"filename":None}, methods=("GET","POST"))
-@admin.route('/<lang>/admin/downloads/<path:filename>', methods=("GET","POST"))
-@admin_required
-def downloads(filename=None):
-    '''
-    Gestión de servers
-    '''
-    page = request.args.get("page", 0, int)
-    grps = request.args.get("mode", "all", str)
-    mode = request.args.get("show", "current", str)
-
-    num_items = downloadsdb.count_files()
-    skip, limit, page, num_pages = pagination(num_items)
-    file_list = downloadsdb.list_files(skip, limit)
-
-    form = DownloadForm(request.form)
-
-    if filename:
-        form.filename.data = filename
-
-    file_data = None
-
-    if request.method == "POST":
-        if form.remove.data:
-            downloadsdb.remove_file(filename)
-            flash("admin_saved", "success")
-            return redirect(url_for("admin.downloads"))
-        else:
-            if form.filename.data and form.version.data:
-                old_version = (
-                    form.old_version.data or
-                    downloadsdb.get_last_version(form.filename.data) or
-                    ""
-                    )
-                if form.version.data:
-                    downloadsdb.store_file(
-                        secure_filename(form.filename.data),
-                        request.files["upfile"],
-                        request.files["upfile"].content_type
-                            or mimetypes.guess_type(form.filename.data)[0],
-                        form.version.data)
-                    flash("admin_saved", "success")
-                    return redirect(url_for("admin.downloads"))
-                else:
-                    flash("admin_version_error", "error")
-            else:
-                flash("admin_nochanges", "error")
-    elif not filename is None:
-        file_data = downloadsdb.get_file(filename)
-        form.old_version.data = file_data["version_code"]
-        form.version.data = file_data["version_code"]
-
-    return render_template('admin/downloads.html',
-        file_data=file_data,
-        page_title=_('admin_downloads'),
-        title=admin_title('admin_downloads'),
-        form=form,
-        num_pages=num_pages,
-        num_items=num_items,
-        downloads=file_list,
-        page=page)
-
-@admin.route('/<lang>/admin/download/<path:filename>', defaults={"version":None})
-@admin.route('/<lang>/admin/download/<version>/<path:filename>')
-@admin_required
-def download(version=None, filename=None):
-    f = downloadsdb.stream_file(filename, version)
-    return send_gridfs_file(f)
-
 # Parsers para diccionario de parsers (data_to_form, form_to_data [, data_to_json [, json_to_data]])
 db_types = {
     int : (
@@ -1678,7 +1609,7 @@ def db_remove(collection, document_id):
         )
 
 @admin.route("/<lang>/admin/actions", methods=("POST","GET"))
-def actions(actionid = None):
+def actions():
 
     form = ActionForm(request.form)
     form.target.choices = [(i,i) for i in configdb.get_current_profiles()]
@@ -1686,11 +1617,12 @@ def actions(actionid = None):
     actions = tuple(configdb.list_actions())
 
     form.submitlist.choices = [
-        (actionid, _('admin_actions_run'))
-        for actionid, fnc, unique, args, kwargs in actions
+        (aid, aid)
+        for aid, fnc, unique, args, kwargs in actions
         ]
 
     if request.method == "POST":
+        actionid = form.submitlist.data[0]
         flash(_("admin_actions_updated"))
         configdb.run_action(actionid)
         return redirect(url_for(".actions"))
@@ -1702,7 +1634,7 @@ def actions(actionid = None):
         interval = current_app.config.get("CONFIG_UPDATE_INTERVAL", -1),
         actions = [(
             submit,
-            actionid,
+            aid,
             "%s(%s)" % (
                 "%s.%s" % (
                     fnc.im_class().__class__.__name__ if hasattr(fnc.im_class(), "__class__") else fnc.im_class().__name__,
@@ -1714,7 +1646,7 @@ def actions(actionid = None):
                 ),
             inspect.getdoc(fnc).decode("utf-8"),
             unique
-            ) for (actionid, fnc, unique, args, kwargs), submit in itertools.izip(actions, iter(form.submitlist))]
+            ) for (aid, fnc, unique, args, kwargs), submit in itertools.izip(actions, iter(form.submitlist))]
         )
 
 

@@ -30,7 +30,6 @@ DATA_SOURCE_USER = "mongodb://mongo.foofind.com:27017"
 DATA_SOURCE_PAGES = "mongodb://mongo.foofind.com:27017"
 DATA_SOURCE_FEEDBACK = "mongodb://mongo.foofind.com:27017"
 DATA_SOURCE_ENTITIES = "mongodb://mongo.foofind.com:27017"
-DATA_SOURCE_DOWNLOADS = "mongodb://mongo.foofind.com:27017"
 DATA_SOURCE_MAX_POOL_SIZE = 50
 DATA_SOURCE_FOO_THREADS = 30
 
@@ -63,7 +62,7 @@ SERVICE_TAMING_SERVERS = (("taming.foofind.com",24642))
 SERVICE_TAMING_TIMEOUT = 1.0
 SERVICE_TAMING_ACTIVE = True
 
-FOODOWNLOADER = False
+DOWNLOADER = False
 DOWNLOADER_UA = ()
 
 CACHE_SEARCHES = True
@@ -79,7 +78,7 @@ STATIC_PREFIX = None
 REMOTE_MEMCACHED_SERVERS = ()
 
 # Extracted from http://www.monperrus.net/martin/list+of+robot+user+agents (CC-SA license)
-ROBOT_USER_AGENTS=["googlebot/","Googlebot-Mobile","Googlebot-Image","bingbot","slurp","java","wget","curl",
+ROBOT_USER_AGENTS=["googlebot/","Googlebot-Mobile","Googlebot-Image","bingbot","slurp","wget","curl",
                     "Commons-HttpClient","Python-urllib","libwww","httpunit","nutch","phpcrawl","msnbot",
                     "Adidxbot","blekkobot","teoma","ia_archiver","GingerCrawler","webmon ","httrack","webcrawler",
                     "FAST-WebCrawler","FAST Enterprise Crawler","convera","biglotron","grub.org",
@@ -133,8 +132,8 @@ OAUTH_FACEBOOK_CONSUMER_SECRET = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
 TRANSLATE_LANGS=['aa','ab','ae','af','ak','am','an','ar','as','av','ay','az','ba','be','bg','bh','bi','bm','bn','bo','br','bs','ca','ce','ch','co','cr','cs','cu','cv','cy','da','de','dv','dz','ee','el','en','eo','es','et','eu','fa','ff','fi','fj','fo','fr','fy','ga','gd','gl','gn','gu','gv','ha','he','hi','ho','hr','ht','hu','hy','hz','ia','id','ie','ig','ii','ik','io','is','it','iu','ja','jv','ka','kg','ki','kj','kk','kl','km','kn','ko','kr','ks','ku','kv','kw','ky','la','lb','lg','li','ln','lo','lt','lu','lv','mg','mh','mi','mk','ml','mn','mr','ms','mt','my','na','nb','nd','ne','ng','nl','nn','no','nr','nv','ny','oc','oj','om','or','os','pa','pi','pl','ps','pt','qu','rm','rn','ro','ru','rw','sa','sc','sd','se','sg','si','sk','sl','sm','sn','so','sq','sr','ss','st','su','sv','sw','ta','te','tg','th','ti','tk','tl','tn','to','tr','ts','tt','tw','ty','ug','uk','ur','uz','ve','vi','vo','wa','wo','xh','yi','yo','za','zh','zu']
 
-ALL_LANGS = ('en', 'es', 'fr', 'it', 'pt', 'de', 'tr', 'zh', 'ja', 'ko', 'ca', 'gl', 'eu', 'eo') # Orden usado en foof.in
-ALL_LANGS_COMPLETE = {'en':'en_GB', 'es':'es_ES', 'fr':'fr_FR', 'it':'it_IT', 'pt':'pt_PT', 'de':'de_DE', 'tr':'tr_TR', 'zh':'zh_CN', 'ja':'ja_JP', 'ko':'ko_KR', 'ca':'ca_ES', 'gl':'gl_ES', 'eu':'eu_ES', 'eo':'eo_EO'}
+ALL_LANGS = ('en', 'es', 'fr', 'it', 'pt', 'de', 'tr', 'zh', 'ja', 'ko', 'ca', 'gl', 'eu', 'eo', 'ar', 'fa', 'nl', 'pl', 'ro', 'ru', 'sr') # Orden usado en foof.in
+ALL_LANGS_COMPLETE = {'en':'en_GB', 'es':'es_ES', 'fr':'fr_FR', 'it':'it_IT', 'pt':'pt_PT', 'de':'de_DE', 'tr':'tr_TR', 'zh':'zh_CN', 'ja':'ja_JP', 'ko':'ko_KR', 'ca':'ca_ES', 'gl':'gl_ES', 'eu':'eu_ES', 'eo':'eo_EO', 'ar':'ar_SA','fa':'fa_IR', 'nl':'nl_NL', 'pl':'pl_PL', 'ro':'ro_RO', 'ru':'ru_RU', 'sr':'sr_SR'}
 LANGS = ('en', 'es')
 BETA_LANGS = [lang for lang in ALL_LANGS if lang not in LANGS]
 PRIVATE_MSGID_PREFIXES = ("safe_", "admin_", "newhome_")

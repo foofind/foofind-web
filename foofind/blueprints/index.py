@@ -106,11 +106,6 @@ def opensearch():
 
 @index.route('/')
 @index.route('/<lang>')
-@cache.cached(
-    timeout=50,
-    key_prefix=lambda: "view/index_%s_%s" % (g.lang, g.domain),
-    unless=lambda: current_user.is_authenticated() or bool(get_flashed_messages())
-    )
 def home():
     '''
     Renderiza la portada.

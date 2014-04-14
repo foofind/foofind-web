@@ -79,6 +79,9 @@ class SearchProxy:
         # recorre la información de cada servidor
         for server, server_stats in new_servers_stats.iteritems():
 
+            if not "rc" in server_stats:
+                continue
+
             # evita multiples accesos a mismas claves para el servidor
             server_rating_count = server_stats["rc"]
             server_rating_average = server_stats["ra"]
@@ -143,7 +146,7 @@ def _update_source_weights(sources, blocked_sources):
     results = {}
 
     # pesos para grupos de origenes
-    groups_weights = {"e":0.01, "g":0.005} # por grupos
+    groups_weights = {"e":0.01, "g":0.005, "t":2} # por grupos
 
     max_kbps = 1000
     max_second_delay = 120.0

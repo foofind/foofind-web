@@ -89,7 +89,7 @@ CONTENT_TYPE_ASSIMILATION = {
         ct.CONTENT_PRESENTATION: (1, {"presentation"}),
         },
     ct.CONTENT_APPLICATION: {
-        ct.CONTENT_ROM: (0.2, {"rom", "game"}),
+        ct.CONTENT_ROM: (0.3, {"rom", "game"}),
         },
     ct.CONTENT_UNKNOWN: {
         ct.CONTENT_ARCHIVE: (0.5, {}),
@@ -207,6 +207,9 @@ EXTENSION_CONFIDENCE.update((i, CONTENT_UNKNOWN_THRESHOLD) for i in TOP_LEVEL_DO
 EXTENSION_IMPORTANCE_POSITION = 0.75
 # Tipos dados por palabras clave en el nombre
 FILENAME_KEYWORDS = {
+    ct.CONTENT_APPLICATION: {
+        "hd": 0.1,
+        },
     ct.CONTENT_IMAGE: {
         "photo": 0.1,
         "photos": 0.2,
@@ -380,15 +383,20 @@ FORMAT_SET = {
 
 # Tags dados por palabras clave en el nombre
 TAG_KEYWORDS = {
+    ct.CONTENT_APPLICATION: {
+        "hd": {
+            "hd",
+            },
+        "game": {
+            "dlc", "game", "games"
+            }
+        },
     ct.CONTENT_VIDEO: {
         "hd": {
             word for word in FILENAME_KEYWORDS[ct.CONTENT_VIDEO]
             if any(word.startswith(subword) for subword in ("hd", "1080", "720", "bd", "br", "blueray"))
                or any(word.endswith(subword) for subword in ("hd",))
             },
-        "game": {
-            "dlc",
-            }
         },
     ct.CONTENT_AUDIO: {
         "full_album": {
@@ -480,6 +488,7 @@ TORRENT_CATEGORY_TAG = {
         u"xxx": u"porn",
         u"asian": u"porn",
         u"movies": u"movie",
+        u"tv": u"series",
 }
 TAG_CONTENT_TYPE = {
         u"movie": ct.CONTENT_VIDEO,
@@ -501,7 +510,7 @@ TAG_CONTENT_TYPE = {
 
 TAG_CONTENT_TYPE_GUESS = {
         u"porn": {ct.CONTENT_VIDEO:0.7, ct.CONTENT_BOOK:0.1, ct.CONTENT_IMAGE:0.4},
-        u"hd": {ct.CONTENT_VIDEO:0.7, ct.CONTENT_IMAGE:0.4},
+        u"hd": {ct.CONTENT_VIDEO:0.5, ct.CONTENT_IMAGE:0.3, ct.CONTENT_APPLICATION:0.3,},
         u"anime": {ct.CONTENT_VIDEO:0.9, ct.CONTENT_BOOK:0.1},
     }
 
@@ -767,10 +776,18 @@ def analyze_filenames(filenames, filesizes, skip_ct=False, analyze_extensions=Tr
 
         # Análisis de content type del fichero
         if not_skip_ct:
-            ict = max(_content_type_xrange, key=file_scores.__getitem__)
-            scores[ict] += float(filesizes_reverse.pop())/filesizes_sum if filesizes_reverse else 1
-            if lower_depths[ict] > depth:
-                lower_depths[ict] = depth
+            icts = sorted(_content_type_xrange, key=file_scores.__getitem__)
+            ict = max_ict = icts.pop()
+            if file_scores[max_ict]==0.: # unkown type
+                scores[ct.CONTENT_UNKNOWN] += float(filesizes_reverse.pop())/filesizes_sum if filesizes_reverse else 1
+            else:
+                while file_scores[ict]==file_scores[max_ict]:
+                    scores[ict] += float(filesizes_reverse.pop())/filesizes_sum if filesizes_reverse else 1
+
+                    if lower_depths[ict] > depth:
+                        lower_depths[ict] = depth
+
+                    ict = icts.pop()
 
     # Devolución sin scores
     if skip_ct:
@@ -996,4 +1013,5 @@ def guess_doc_content_type(doc, sources=None):
             for mdkey in doc["md"].iterkeys() if mdkey in REVERSE_TAG_METADATA
                 for tag, cond in REVERSE_TAG_METADATA[mdkey].iteritems() if cond is True or callable(cond) and cond(doc)
             )
+
     return restrict_content_type(scores, tags, fileformats)

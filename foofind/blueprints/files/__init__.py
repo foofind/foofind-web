@@ -299,7 +299,7 @@ def search_files(query,filters,min_results=0,max_results=30,download=None,last_i
     profiler_data={}
     profiler.checkpoint(profiler_data,opening=["sphinx"])
 
-    s = searchd.search(query, filters=filters, start=not bool(last_items), group=True, no_group=False, order=order)
+    s = searchd.search(query, filters=filters, start=not bool(last_items), group=True, no_group=non_group, order=order)
     ids = [(bin2hex(fileid), server, sphinxid, weight, sg) for (fileid, server, sphinxid, weight, sg) in s.get_results((1.4, 0.1), last_items=last_items, min_results=min_results, max_results=max_results, extra_browse=0 if max_results>30 else None, weight_processor=weight_processor, tree_visitor=tree_visitor)]
 
     stats = s.get_stats()

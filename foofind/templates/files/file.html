@@ -1,4 +1,4 @@
-{%- for file in files %}{%- set source_data=file['view']['sources'][file['view']['sources']|first] %}
+{%- for file in files %}{%- set source_data=file['view']['sources'][file['view']['source']] %}
 <li class="{{ file['view']['file_type'] }}"{% if scroll_start %} data-scroll-start="0"{% endif %}>
     <div>
         <div class="thumblink" title="{{_(source_data['source'])|capitalize}}"{% if file['view']['play'] and file['view']['play'][0] %} data-play="{{ file['view']['play'][0] }},{{ file['view']['play'][1] }}"{% endif %}>

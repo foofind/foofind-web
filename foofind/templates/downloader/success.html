@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{%- block header %}{%- endblock %}
+{%- block extra_cookies %}trackGAEvent('FDM', "Install");{%- endblock -%}
+{% block content %}
+    <div class="column c2 alpha">
+    <h1><img src="{{ g.static_prefix }}/img/logo.png" alt="File search engine - {{g.domain}}" title="{{g.domain}}" width="350" height="125" /></h1>
+    <p><span>download manager</span>{{_('A fast client for the Torrent P2P network')}}</p>
+    </div>
+
+    <div class="column alpha thanks">
+    <h2>{{_("Happy downloading!")}}</h2>
+    <p>{{_("Thanks for installing Foofind Download Manager, we hope you enjoy it.")}}</p>
+    <a href="{{ url_for('index.home',lang=none) }}">{{_("back to %(home)s", home=g.domain)}}</a>
+    </div>
+{% endblock %}
+

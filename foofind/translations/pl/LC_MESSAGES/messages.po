@@ -17,7 +17,7 @@ msgid "about"
 msgstr "O stronie"
 
 msgid "new_toolbar"
-msgstr "Sprawdź nasz nowy toolbar"
+msgstr "Sprawdź nasz nowy pasek narzędziowy"
 
 msgid "click_here"
 msgstr "kliknij tutaj!"
@@ -34,59 +34,74 @@ msgstr "Wyślij"
 msgid "ok"
 msgstr "ok"
 
+msgid "help_us"
+msgstr "wspomóż nas!"
+
 msgid "legal_info"
-msgstr "polityka prywatności"
+msgstr "informacje prawne"
 
 msgid "go_home"
 msgstr "Wróć do wyszukiwarki"
 
 msgid "error_500_message"
-msgstr "Nieznany error"
+msgstr "Wystąpił błąd"
+
+msgid "error_500_description"
+msgstr ""
+"Stało się coś dziwnego, nasi specjaliści prowadzą dochodzenie w tej sprawie"
 
 msgid "error_404_message"
-msgstr "Nie ma takiej strony"
+msgstr "Strona nie została odnaleziona"
 
 msgid "error_404_description"
 msgstr ""
-"Serwer nie odpowiada, odśwież stronę lub skontaktuj się z administratorami."
+"Adres URL nie został odnaleziony. Sprawdź, czy jest wpisany poprawnie, jeśli"
+" tak, skontaktuj się z administratorami strony."
 
 msgid "error_410_message"
 msgstr "Strona niedostępna"
 
 msgid "error_410_description"
 msgstr ""
-"Za długi czas oczekiwania na połączenie z serwerem, spróbuj za chwilę "
-"wykonać tę czynność."
+"Podany adres URL nie jest już dostępny i nie będzie dostępny w przyszłości"
 
 msgid "error_502_message"
-msgstr "Serwer przeciążony lub nie odpowiada"
+msgstr "Zła brama internetowa"
 
 msgid "error_502_description"
-msgstr "Nie masz dostępu do tej strony."
+msgstr "Brak dostępu do usługi z powodu złej bramy internetowej."
 
 msgid "error_503_message"
 msgstr "Serwis niedostępny."
 
 msgid "error_503_description"
-msgstr "URL chwilowo niedostępny. Spróbuj ponownie za chwilę."
+msgstr ""
+"Żądany adres URL jest chwilowo niedostępny. Spróbuj ponownie za chwilę."
 
 msgid "servers_status"
 msgstr "Sprawdź status serwera."
 
 msgid "error_mail_send"
 msgstr ""
-"Wystąpił błąd podczas wysyłania wiadomości, spróbuj ponownie za chwilę."
+"Wystąpił błąd podczas wysyłania wiadomości pod wybrany adres. Wybierz inny "
+"adres lub spróbuj ponownie za chwilę."
+
+msgid "non_alphabetic_digits"
+msgstr "%(value)s zawierają znaki, które nie są literami ani cyframi"
 
 msgid "required_empty"
-msgstr "To pole nie może być puste!"
+msgstr "Wartość jest wymagana i nie może być pusta"
 
 msgid "no_valid_email"
 msgstr ""
-"Podałeś swój email w złym formacie, przykład prawidłowego adresu:\r\n"
-"user@example.com"
+"Podany email nie jest zgodny z formatem:\r\n"
+"uzytkownik@przyklad.pl"
+
+msgid "field_length"
+msgstr "To pole wymaga od %(min)s do %(max)s znaków"
 
 msgid "no_valid_url"
-msgstr "Niedostępny URL"
+msgstr "Niepoprawny adres URL"
 
 msgid "contact"
 msgstr "Kontakt"
@@ -107,22 +122,29 @@ msgid "complaint"
 msgstr "Zgłoś link"
 
 msgid "source_code"
-msgstr "Programiści"
+msgstr "Kod źródłowy"
 
 msgid "files_indexed"
-msgstr "Dodane pliki"
+msgstr "pliki zindeksowane"
 
 msgid "last_indexed_files"
-msgstr "Ostatnio dodane pliki"
+msgstr "Ostatnio zaindeksowane pliki"
 
 msgid "index_comunity"
-msgstr "Jesteś częścią naszej społeczności."
+msgstr "Zostań częścią naszej społeczności."
+
+msgid "i_want_that_file"
+msgstr "Ja. Chcę. Ten. Plik"
+
+msgid "index_change"
+msgstr "foofind się zmienia"
 
 msgid "index_first"
-msgstr "Sprawdź newsy"
+msgstr ""
+"Przyłącz się, a będziesz pierwszym, który otrzyma wszystkie informacje."
 
 msgid "index_suggestion"
-msgstr "Jeszcze jakieś sugestie?"
+msgstr "Jakieś sugestie?"
 
 msgid "all"
 msgstr "Wszystko"
@@ -134,22 +156,22 @@ msgid "direct_downloads"
 msgstr "Bezpośrednie linki do pobrania pliku"
 
 msgid "other_streamings"
-msgstr "Inne streamy"
+msgstr "Inne strumienie"
 
 msgid "other_direct_downloads"
 msgstr "Inne bezpośrednie linki"
 
 msgid "some_streamings"
-msgstr "Więcej streamów"
+msgstr "Niektóre strumienie"
 
 msgid "some_downloads"
-msgstr "Więcej bezpośrednich linków"
+msgstr "Niektóre bezpośrednie linki"
 
 msgid "others"
 msgstr "Inne"
 
 msgid "unknown"
-msgstr "Unkown"
+msgstr "Nieznane"
 
 msgid "audio"
 msgstr "Muzyka"
@@ -170,10 +192,641 @@ msgid "archive"
 msgstr "Archiwa"
 
 msgid "no_results_for"
-msgstr "Nie ma rezultatów dla"
+msgstr "Nie ma wyników dla"
 
 msgid "previous"
 msgstr "Poprzednie"
 
+msgid "write_something"
+msgstr "Hej! Napisz coś"
+
 msgid "next"
 msgstr "Następne"
+
+msgid "sources"
+msgstr "źródła"
+
+msgid "other_categories"
+msgstr "inne kategorie"
+
+msgid "approximately"
+msgstr "W przybliżeniu"
+
+msgid "of_about"
+msgstr "około"
+
+msgid "results_for"
+msgstr "wyniki dla"
+
+msgid "what"
+msgstr "Co?"
+
+msgid "no_type_count"
+msgstr ""
+"Nie znaleziono wyników dla Twojego zapytania o %(search)s, ale jest około "
+"%(results)d wyników w %(category)s."
+
+msgid "not_allow_browse_results"
+msgstr "Foofind nie pokazuje wyników powyżej 100 strony."
+
+msgid "did_you_mean"
+msgstr "Czy chodziło Ci o %(text)s?"
+
+msgid "go_to_file"
+msgstr "Idź do pliku"
+
+msgid "play"
+msgstr "Odtwarzaj"
+
+msgid "where"
+msgstr "Gdzie?"
+
+msgid "minimun"
+msgstr "minimalnie"
+
+msgid "update"
+msgstr "uaktualnij"
+
+msgid "maximun"
+msgstr "maksymalnie"
+
+msgid "all_sizes"
+msgstr "Wszystkie rozmiary"
+
+msgid "smaller_than"
+msgstr "Mniejsze niż"
+
+msgid "larger_than"
+msgstr "Większe niż"
+
+msgid "before"
+msgstr "Przed"
+
+msgid "all_qualities"
+msgstr "Każda jakość"
+
+msgid "or_better"
+msgstr "lub lepsze"
+
+msgid "all_years"
+msgstr "Wszystkie lata"
+
+msgid "artist"
+msgstr "Artysta"
+
+msgid "last_year"
+msgstr "Ostatni rok"
+
+msgid "title"
+msgstr "Tytuł"
+
+msgid "author"
+msgstr "Autor"
+
+msgid "pages"
+msgstr "Strony"
+
+msgid "format"
+msgstr "Format"
+
+msgid "album"
+msgstr "Album"
+
+msgid "length"
+msgstr "Długość"
+
+msgid "seconds"
+msgstr "Sekund"
+
+msgid "genre"
+msgstr "Rodzaj"
+
+msgid "minutes"
+msgstr "Minut"
+
+msgid "source"
+msgstr "Źródło"
+
+msgid "quality"
+msgstr "Jakość"
+
+msgid "height"
+msgstr "Wysokość"
+
+msgid "width"
+msgstr "Szerokość"
+
+msgid "track"
+msgstr "Ścieżka"
+
+msgid "episode"
+msgstr "Epizod"
+
+msgid "series"
+msgstr "Seria"
+
+msgid "season"
+msgstr "Sezon"
+
+msgid "size"
+msgstr "Rozmiar"
+
+msgid "num_pages"
+msgstr "Liczba stron"
+
+msgid "include_results_from"
+msgstr "Zawiera wyniki z:"
+
+msgid "colors"
+msgstr "Kolory"
+
+msgid "unpacked_size"
+msgstr "Rozmiar po rozpakowaniu"
+
+msgid "version"
+msgstr "Wersja"
+
+msgid "description"
+msgstr "Opis"
+
+msgid "name"
+msgstr "Nazwa"
+
+msgid "files"
+msgstr "Pliki"
+
+msgid "channels"
+msgstr "kanałów"
+
+msgid "soundtype"
+msgstr "Rodzaj dźwięku"
+
+msgid "year"
+msgstr "rok"
+
+msgid "years"
+msgstr "lat"
+
+msgid "month"
+msgstr "miesiąc"
+
+msgid "months"
+msgstr "miesięcy"
+
+msgid "day"
+msgstr "dzień"
+
+msgid "days"
+msgstr "dni"
+
+msgid "hour"
+msgstr "godzina"
+
+msgid "hours"
+msgstr "godzin"
+
+msgid "minute"
+msgstr "minuta"
+
+msgid "second"
+msgstr "sekund"
+
+msgid "private_file"
+msgstr "Plik prywatny"
+
+msgid "tags"
+msgstr "Etykiety"
+
+msgid "license"
+msgstr "Licencja"
+
+msgid "composer"
+msgstr "Kompozytor"
+
+msgid "created_by"
+msgstr "Stworzone przez"
+
+msgid "publisher"
+msgstr "Wydawca"
+
+msgid "comments"
+msgstr "Komentarze"
+
+msgid "language"
+msgstr "Język"
+
+msgid "date"
+msgstr "Data"
+
+msgid "codec"
+msgstr "Kodek"
+
+msgid "visualizations"
+msgstr "Wizualizacje"
+
+msgid "director"
+msgstr "Reżyser"
+
+msgid "writer"
+msgstr "Pisarz/Autor"
+
+msgid "starring"
+msgstr "Obsada"
+
+msgid "producer"
+msgstr "Producent"
+
+msgid "all_sources"
+msgstr "wszystkie źródła"
+
+msgid "released"
+msgstr "Wydane"
+
+msgid "loading"
+msgstr "Wczytywanie"
+
+msgid "close"
+msgstr "Zamknij"
+
+msgid "edit_your_profile"
+msgstr "Edytuj swój profil"
+
+msgid "share"
+msgstr "Udostępnij na %(site)s"
+
+msgid "share_download"
+msgstr "Udostępnij"
+
+msgid "share_search"
+msgstr "Udostępnij to wyszukiwanie"
+
+msgid "share_this"
+msgstr "Udostępnij to:"
+
+msgid "send_by_email"
+msgstr "wyślij emailem"
+
+msgid "open_link_new_tab"
+msgstr "otwórz odnośnik w nowej karcie"
+
+msgid "download"
+msgstr "Pobierz"
+
+msgid "download_source"
+msgstr "Pobierz z %(source)s"
+
+msgid "watch"
+msgstr "Oglądaj"
+
+msgid "watch_source"
+msgstr "Oglądaj na %(source)s"
+
+msgid "listen"
+msgstr "Słuchaj"
+
+msgid "listen_source"
+msgstr "Słuchaj na %(source)s"
+
+msgid "since"
+msgstr "od %(since)s"
+
+msgid "post_comment"
+msgstr "Wyślij komentarz"
+
+msgid "add_comment"
+msgstr "Dodaj komentarz"
+
+msgid "from"
+msgstr "od"
+
+msgid "i_like_it"
+msgstr "Lubię to!"
+
+msgid "booo"
+msgstr "Booo!"
+
+msgid "comment_published_succesfully"
+msgstr "Pomyślnie wysłano komentarz"
+
+msgid "related_files"
+msgstr "Powiązane pliki"
+
+msgid "file"
+msgstr "plik"
+
+msgid "add_favorite"
+msgstr "Dodaj %(type)s do ulubionych"
+
+msgid "delete_favorite"
+msgstr "Usuń %(type)s z ulubionych"
+
+msgid "favorite"
+msgstr "dodano %(type)s do ulubionych"
+
+msgid "download_links"
+msgstr "Pokaż odnośniki do pobierania"
+
+msgid "more_info"
+msgstr "więcej informacji"
+
+msgid "less_info"
+msgstr "mniej informacji"
+
+msgid "more_comments"
+msgstr "więcej komentarzy"
+
+msgid "less_comments"
+msgstr "mniej komentarzy"
+
+msgid "login_required"
+msgstr "Dostęp do strony możliwy tylko po zalogowaniu."
+
+msgid "user_profile"
+msgstr "Profil użytkownika"
+
+msgid "your_password"
+msgstr "Wybierz hasło:"
+
+msgid "insert_your_password"
+msgstr "Wprowadź hasło (tak, ponownie):"
+
+msgid "fill_sing_up_form"
+msgstr ""
+"Proszę wypełnić formularz, aby zostać zarejestrowanym członkiem Foofind:"
+
+msgid "nickname"
+msgstr "Pseudonim"
+
+msgid "edit_profile"
+msgstr "edytuj profil"
+
+msgid "or"
+msgstr "lub"
+
+msgid "profile_edited_succesfully"
+msgstr "Twój profil został poprawnie zedytowany!"
+
+msgid "hello"
+msgstr "witaj,"
+
+msgid "logout"
+msgstr "wyloguj"
+
+msgid "login"
+msgstr "zaloguj"
+
+msgid "new_user"
+msgstr "nowy użytkownik"
+
+msgid "remember_me"
+msgstr "Zapamiętaj mnie"
+
+msgid "register"
+msgstr "zarejestruj"
+
+msgid "if_new_user"
+msgstr "Jeśli jesteś nowym użytkownikiem, proszę"
+
+msgid "register_here"
+msgstr "zarejestruj się tutaj"
+
+msgid "choose_nickname"
+msgstr "Wybierz pseudonim:"
+
+msgid "user_login"
+msgstr "Login"
+
+msgid "not_allowed_view_page"
+msgstr "Nie możesz oglądać tej strony"
+
+msgid "your_location"
+msgstr "Twoje miejsce:"
+
+msgid "new_password"
+msgstr "Zmień hasło tutaj: (albo pozostaw pole puste)"
+
+msgid "save_profile"
+msgstr "Zapisz profil"
+
+msgid "your_password?"
+msgstr "swojego hasła?"
+
+msgid "username_taken"
+msgstr "Nazwa użytkownika jest już w użyciu. Wybierz inną."
+
+msgid "email_taken"
+msgstr "Adres email jest już w użyciu. Wybierz inny."
+
+msgid "forgot"
+msgstr "Nie pamiętasz"
+
+msgid "passwords_not_match"
+msgstr "Podane hasła są różne."
+
+msgid "sure_delete_account"
+msgstr "Czy aby na pewno chcesz skasować swoje konto Foofind?"
+
+msgid "yes"
+msgstr "Tak"
+
+msgid "no"
+msgstr "Nie"
+
+msgid "account_deleted"
+msgstr "Twoje konto zostało skasowane."
+
+msgid "nice_to_hear_that"
+msgstr "Miło to słyszeć"
+
+msgid "username"
+msgstr "Pseudonim:"
+
+msgid "profile"
+msgstr "profil"
+
+msgid "delete_account"
+msgstr "Skasuj swoje konto Foofind"
+
+msgid "member_since"
+msgstr "Członek od:"
+
+msgid "last_comments"
+msgstr "Ostatnie %(comments)d komentarzy:"
+
+msgid "location"
+msgstr "Miejsce:"
+
+msgid "forgot_password"
+msgstr "Nie pamiętasz hasła?"
+
+msgid "wrong_email_password"
+msgstr "Błędny email lub hasło, spróbuj ponownie"
+
+msgid "welcome"
+msgstr "Witamy"
+
+msgid "choose_language"
+msgstr "Wybierz język"
+
+msgid "finish_register"
+msgstr "Proszę kliknąć ten odnośnik, aby zakończyć proces rejestracji:"
+
+msgid "token_not_exist"
+msgstr "Przykro nam, ten żeton nie istnieje, albo został już użyty"
+
+msgid "confirm_email"
+msgstr ", potwierdź swój adres email"
+
+msgid "check_inbox_email_finish"
+msgstr "Sprawdź pocztę, aby zakończyć proces rejestracji"
+
+msgid "foofind_team"
+msgstr "Zespół Foofind."
+
+msgid "user_not_exist"
+msgstr "Taki użytkownik nie istnieje"
+
+msgid "logged_in"
+msgstr "Poprawnie zalogowano,"
+
+msgid "registered_user"
+msgstr "Zarejestrowanych użytkowników prosimy"
+
+msgid "login_here"
+msgstr "zalogować się tutaj"
+
+msgid "send"
+msgstr "Wyślij"
+
+msgid "user_favorites"
+msgstr "Lubiane pliki"
+
+msgid "user_searches"
+msgstr "Lubiane wyszukiwania"
+
+msgid "user_fav_lists"
+msgstr "Listy plików"
+
+msgid "user_fav_file_list_empty"
+msgstr "Brak plików na liście"
+
+msgid "user_fav_search_list_empty"
+msgstr "Brak wyszukiwań na liście"
+
+msgid "user_fav_no_lists"
+msgstr "Brak własnej listy"
+
+msgid "enter_email"
+msgstr ""
+"Proszę wprowadzić swój adres email. Wyślemy na niego wiadomość pozwalającą "
+"odzyskać Ci dostęp."
+
+msgid "email_same_register"
+msgstr "Adres email musi być taki sam, jak przy rejestracji."
+
+msgid "email_not_database"
+msgstr "Tego emaila nie ma w naszej bazie. Spróbuj ponownie."
+
+msgid "check_inbox_email_restore"
+msgstr "Sprawdź pocztę, aby przywrócić dostęp do Foofind"
+
+msgid "restore_access"
+msgstr ", przywróć dostęp do Foofind"
+
+msgid "restore_account"
+msgstr ""
+"Ktoś, prawdopodobnie Ty, chce przywrócić sobie dostęp do Foofind. Kliknij w "
+"ten odnośnik, aby przywrócić dostęp do konta Foofind:"
+
+msgid "ignore_message"
+msgstr "W przeciwnym wypadku zignoruj tą wiadomość."
+
+msgid "login_vote"
+msgstr "Zaloguj się, aby zagłosować"
+
+msgid "login_comment"
+msgstr "Zaloguj się, aby skomentować"
+
+msgid "technical_problems"
+msgstr "Przykro nam, mamy problem techniczny z usługą %(service)s."
+
+msgid "allow_access_account"
+msgstr ""
+"Foofind powinno mieć dostęp do Twojego konta na %(account)s, aby móc używać "
+"tej funkcjonalności."
+
+msgid "submit_registration"
+msgstr "Zapisz się"
+
+msgid "submit_login"
+msgstr "Zaloguj się"
+
+msgid "submit_edit"
+msgstr "Zapisz profil"
+
+msgid "submit_search"
+msgstr "Szukaj"
+
+msgid "contact_form"
+msgstr "Formularz kontaktowy"
+
+msgid "report_form"
+msgstr "formularz zgłoszenia odnośnika"
+
+msgid "link_removal"
+msgstr "Uwaga: Jeśli chcesz usunąć odnośnik, wykorzystaj %(report_form)s."
+
+msgid "your_message"
+msgstr "Twoja wiadomość"
+
+msgid "insert_characters"
+msgstr "Proszę wprowadzić 5 przedstawionych znaków:"
+
+msgid "captcha_wrong"
+msgstr "Błędny kod Captcha"
+
+msgid "message_sent"
+msgstr "Poprawnie wysłano wiadomość!"
+
+msgid "your_name"
+msgstr "Imię"
+
+msgid "your_surname"
+msgstr "Nazwisko"
+
+msgid "your_company"
+msgstr "Firma"
+
+msgid "your_phone"
+msgstr "Numer telefonu"
+
+msgid "link_not_exist"
+msgstr "Ten odnośnik nie istnieje lub został usunięty."
+
+msgid "translate"
+msgstr "Przetłumacz"
+
+msgid "translate_to_your_language"
+msgstr "Pomóż nam przetłumaczyć Foofind na Twój język"
+
+msgid "translation_sent"
+msgstr "Twoje tłumaczenie zostało wysłane. Dziękujemy za twą pomoc!"
+
+msgid "translate_at_least_one"
+msgstr "Proszę przetłumaczyć cokolwiek przed wysłaniem."
+
+msgid "here"
+msgstr "tutaj"
+
+msgid "translation_beta"
+msgstr ""
+"Ta wersja językowa jest w fazie testowej. Jeśli znajdziesz brakujące lub "
+"błędne tłumaczenie, prosimy zgłoś to %(here)s."
+
+msgid "downloader_update_message"
+msgstr ""
+"Nowa wersja %(appname)s (%(version)s) jest gotowa do instalacji. Czy "
+"zgadzasz się na aktualizację?"
+
+msgid "other"
+msgstr "Inny"

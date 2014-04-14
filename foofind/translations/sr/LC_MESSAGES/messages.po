@@ -1,0 +1,1041 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: 1\n"
+"Report-Msgid-Bugs-To: ismael@mp2p.net\n"
+"POT-Creation-Date: 2011-12-09 11:49+0100\n"
+"PO-Revision-Date: 2011-12-09 11:49+0100\n"
+"Last-Translator: Foofind <hola@foofind.com>\n"
+"Language-Team: sr <hola@foofind.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Foofind's pogit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgid "new_toolbar"
+msgstr "Пробајте нашу траку са алатима"
+
+msgid "click_here"
+msgstr "кликните овде!"
+
+msgid "your_email"
+msgstr "Ваша епошта:"
+
+msgid "password"
+msgstr "Лозинка:"
+
+msgid "submit"
+msgstr "Пошаљи"
+
+msgid "ok"
+msgstr "у реду"
+
+msgid "help_us"
+msgstr "помозите нам!"
+
+msgid "legal_info"
+msgstr "правне информације"
+
+msgid "go_home"
+msgstr "Повратак на претрагу"
+
+msgid "error_500_message"
+msgstr "Догодила се грешка"
+
+msgid "error_500_description"
+msgstr ""
+"Нешто чудно се дешава, наши стручњаци истражују ову паранормалну активност."
+
+msgid "error_404_message"
+msgstr "Страница није пронађена"
+
+msgid "error_404_description"
+msgstr ""
+"Захтевана адреса није пронађена. Молим проверите да сте исправно унели "
+"адресу, ако јесте, молим обавестите администраторе."
+
+msgid "error_410_message"
+msgstr "Страница није доступна"
+
+msgid "error_410_description"
+msgstr "Захтевана адреса више није доступна нити ће бити у будућности"
+
+msgid "error_502_message"
+msgstr "Лош мрежни пролаз"
+
+msgid "error_502_description"
+msgstr "Приступ услугама није могућ због лошег мрежног пролаза"
+
+msgid "error_503_message"
+msgstr "Услуга није доступна"
+
+msgid "error_503_description"
+msgstr "Захтевана адреса је привремено недоступна. Молим покушајте касније."
+
+msgid "servers_status"
+msgstr "Проверите статус сервера"
+
+msgid "error_mail_send"
+msgstr ""
+"Догодила се грешка при слању поруке на наведену адресу. Молим изаберите "
+"другу или покушајте касније."
+
+msgid "non_alphabetic_digits"
+msgstr "%(value)s садржи карактере који нису слова нити бројеви"
+
+msgid "required_empty"
+msgstr "Вредност је захтевана и не може бити празна"
+
+msgid "no_valid_email"
+msgstr "Ово није исправна адреса епоште према формату: корисник@пример.ком"
+
+msgid "field_length"
+msgstr "Ово поље мора садржати од %(min)s до %(max)s карактера"
+
+msgid "no_valid_url"
+msgstr "Адреса није исправна"
+
+msgid "about"
+msgstr "О сајту"
+
+msgid "contact"
+msgstr "Контакт"
+
+msgid "technology"
+msgstr "Технологија"
+
+msgid "legal"
+msgstr "Законски"
+
+msgid "tos"
+msgstr "Услови коришћења"
+
+msgid "privacy"
+msgstr "Полиса о приватности"
+
+msgid "complaint"
+msgstr "Пријави линк"
+
+msgid "source_code"
+msgstr "Изворни код"
+
+msgid "files_indexed"
+msgstr "датотека индексирано"
+
+msgid "last_indexed_files"
+msgstr "Последње индексиране датотеке"
+
+msgid "i_want_that_file"
+msgstr "Желим. Ту. Датотеку"
+
+msgid "index_change"
+msgstr "фуфајнд се мења"
+
+msgid "index_comunity"
+msgstr "Постаните део наше заједнице."
+
+msgid "index_first"
+msgstr "Будите први који ће добити све вести и учествовати."
+
+msgid "index_suggestion"
+msgstr "Имате предлог?"
+
+msgid "all"
+msgstr "Све"
+
+msgid "direct_download"
+msgstr "директно преузимање"
+
+msgid "direct_downloads"
+msgstr "Директно преузимање"
+
+msgid "other_streamings"
+msgstr "Остала струјања"
+
+msgid "other_direct_downloads"
+msgstr "Остала директна преузимања"
+
+msgid "some_streamings"
+msgstr "Понека струјања"
+
+msgid "some_downloads"
+msgstr "Понека директна преузимања"
+
+msgid "others"
+msgstr "Остало"
+
+msgid "unknown"
+msgstr "Непознато"
+
+msgid "audio"
+msgstr "Аудио"
+
+msgid "video"
+msgstr "Видео"
+
+msgid "image"
+msgstr "Слике"
+
+msgid "document"
+msgstr "Документа"
+
+msgid "software"
+msgstr "Програми"
+
+msgid "archive"
+msgstr "Архиве"
+
+msgid "no_results_for"
+msgstr "Нема резултата за"
+
+msgid "write_something"
+msgstr "Хеј! Напиши нешто"
+
+msgid "previous"
+msgstr "Претходно"
+
+msgid "next"
+msgstr "Следеће"
+
+msgid "sources"
+msgstr "извори"
+
+msgid "approximately"
+msgstr "Приближно"
+
+msgid "of_about"
+msgstr "од"
+
+msgid "results_for"
+msgstr "резултата за"
+
+msgid "other_categories"
+msgstr "остале категорије"
+
+msgid "no_type_count"
+msgstr ""
+"Ништа није пронађено за вашу претрагу %(search)s, али има %(results)d "
+"резултата за вашу претрагу за %(category)s."
+
+msgid "not_allow_browse_results"
+msgstr "Фуфајнд не приказује резултате преко 100-те странице."
+
+msgid "did_you_mean"
+msgstr "Да ли сте мислили %(text)s?"
+
+msgid "go_to_file"
+msgstr "Иди на датотеку"
+
+msgid "play"
+msgstr "Репродукуј"
+
+msgid "what"
+msgstr "Шта?"
+
+msgid "where"
+msgstr "Где?"
+
+msgid "update"
+msgstr "освежи"
+
+msgid "minimun"
+msgstr "мин"
+
+msgid "maximun"
+msgstr "макс"
+
+msgid "all_sizes"
+msgstr "Све величине"
+
+msgid "smaller_than"
+msgstr "Мањи од"
+
+msgid "larger_than"
+msgstr "Већи од"
+
+msgid "all_qualities"
+msgstr "Свих квалитета"
+
+msgid "or_better"
+msgstr "или бољи"
+
+msgid "all_years"
+msgstr "Све године"
+
+msgid "before"
+msgstr "Пре"
+
+msgid "last_year"
+msgstr "Прошле године"
+
+msgid "artist"
+msgstr "Извођач"
+
+msgid "title"
+msgstr "Наслов"
+
+msgid "author"
+msgstr "Аутор"
+
+msgid "format"
+msgstr "Формат"
+
+msgid "pages"
+msgstr "Страна"
+
+msgid "album"
+msgstr "Албум"
+
+msgid "length"
+msgstr "Трајање"
+
+msgid "bitrate"
+msgstr "Квалитет"
+
+msgid "genre"
+msgstr "Жанр"
+
+msgid "seconds"
+msgstr "Секунди"
+
+msgid "minutes"
+msgstr "Минута"
+
+msgid "source"
+msgstr "Извор"
+
+msgid "seeds"
+msgstr "Делилаца"
+
+msgid "leechs"
+msgstr "Преузимача"
+
+msgid "first_files"
+msgstr "Приказано првих %(value)s датотека. Преузмите да би сте видели све."
+
+msgid "height"
+msgstr "Висина"
+
+msgid "width"
+msgstr "Ширина"
+
+msgid "track"
+msgstr "Нумера"
+
+msgid "quality"
+msgstr "Квалитет"
+
+msgid "series"
+msgstr "Серија"
+
+msgid "episode"
+msgstr "Епизода"
+
+msgid "season"
+msgstr "Сезона"
+
+msgid "num_pages"
+msgstr "Број страница"
+
+msgid "include_results_from"
+msgstr "Укључи резултате из:"
+
+msgid "size"
+msgstr "Величина"
+
+msgid "unpacked_size"
+msgstr "Распакована величина"
+
+msgid "colors"
+msgstr "Боје"
+
+msgid "version"
+msgstr "Верзија"
+
+msgid "name"
+msgstr "Назив"
+
+msgid "description"
+msgstr "Опис"
+
+msgid "files"
+msgstr "Датотеке"
+
+msgid "soundtype"
+msgstr "Тип звука"
+
+msgid "channels"
+msgstr "канала"
+
+msgid "year"
+msgstr "година"
+
+msgid "years"
+msgstr "године"
+
+msgid "month"
+msgstr "месец"
+
+msgid "months"
+msgstr "месеци"
+
+msgid "day"
+msgstr "дан"
+
+msgid "days"
+msgstr "дана"
+
+msgid "hour"
+msgstr "сат"
+
+msgid "hours"
+msgstr "сати"
+
+msgid "minute"
+msgstr "минут"
+
+msgid "second"
+msgstr "минута"
+
+msgid "tags"
+msgstr "Ознаке"
+
+msgid "license"
+msgstr "Дозвола"
+
+msgid "private_file"
+msgstr "Приватна датотека"
+
+msgid "composer"
+msgstr "Композитор"
+
+msgid "publisher"
+msgstr "Издавач"
+
+msgid "comments"
+msgstr "Коментари"
+
+msgid "created_by"
+msgstr "Креирао"
+
+msgid "language"
+msgstr "Језик"
+
+msgid "date"
+msgstr "Датум"
+
+msgid "trackers"
+msgstr "Трагачи"
+
+msgid "hash"
+msgstr "Хеш"
+
+msgid "visualizations"
+msgstr "Визуелизација"
+
+msgid "codec"
+msgstr "Кодек"
+
+msgid "encoding"
+msgstr "Енкодовање"
+
+msgid "director"
+msgstr "Режисер"
+
+msgid "writer"
+msgstr "Сценариста"
+
+msgid "starring"
+msgstr "Улоге"
+
+msgid "producer"
+msgstr "Продуцент"
+
+msgid "released"
+msgstr "Издато"
+
+msgid "loading"
+msgstr "Учитавање"
+
+msgid "close"
+msgstr "Затвори"
+
+msgid "all_sources"
+msgstr "сви извори"
+
+msgid "share"
+msgstr "Подели на %(site)s"
+
+msgid "share_download"
+msgstr "Подели"
+
+msgid "share_search"
+msgstr "Подели ову претрагу"
+
+msgid "share_this"
+msgstr "Подели ово:"
+
+msgid "send_by_email"
+msgstr "пошаљи путем епоште"
+
+msgid "open_link_new_tab"
+msgstr "отвори везу у новој картици"
+
+msgid "download"
+msgstr "Преузми"
+
+msgid "download_source"
+msgstr "Преузми са %(source)s"
+
+msgid "watch"
+msgstr "Гледај"
+
+msgid "watch_source"
+msgstr "Гледај на %(source)s"
+
+msgid "listen"
+msgstr "Слушај"
+
+msgid "listen_source"
+msgstr "Слушај на %(source)s"
+
+msgid "since"
+msgstr "%(since)s"
+
+msgid "post_comment"
+msgstr "Пошаљи коментар"
+
+msgid "add_comment"
+msgstr "Додај коментар"
+
+msgid "from"
+msgstr "од"
+
+msgid "i_like_it"
+msgstr "Свиђа ми се!"
+
+msgid "booo"
+msgstr "Уааа!"
+
+msgid "comment_published_succesfully"
+msgstr "Коментар успешно послат"
+
+msgid "related_files"
+msgstr "Сродне датотеке"
+
+msgid "file"
+msgstr "датотека"
+
+msgid "add_favorite"
+msgstr "Додај %(type)s у омиљене"
+
+msgid "delete_favorite"
+msgstr "Уклони %(type)s из омиљених"
+
+msgid "favorite"
+msgstr "%(type)s додат у омиљене"
+
+msgid "download_links"
+msgstr "Прикажи везе за преузимања"
+
+msgid "more_info"
+msgstr "више информација"
+
+msgid "less_info"
+msgstr "мање информација"
+
+msgid "more_comments"
+msgstr "више коментара"
+
+msgid "less_comments"
+msgstr "мање коментара"
+
+msgid "login_required"
+msgstr "Морате се пријавити да би сте приступили овој страници."
+
+msgid "user_profile"
+msgstr "Профил корисника"
+
+msgid "your_password"
+msgstr "Изаберите вашу лозинку:"
+
+msgid "insert_your_password"
+msgstr "Унесите вашу лозинку (да, поново):"
+
+msgid "fill_sing_up_form"
+msgstr ""
+"Молим вас, попуните овај формулар да би сте били регостровани Фуфајнд члан:"
+
+msgid "nickname"
+msgstr "Надимак:"
+
+msgid "edit_profile"
+msgstr "измени профил"
+
+msgid "edit_your_profile"
+msgstr "Измените ваш профил"
+
+msgid "profile_edited_succesfully"
+msgstr "Ваш профил је успешно измењен!"
+
+msgid "hello"
+msgstr "здраво,"
+
+msgid "logout"
+msgstr "одјава"
+
+msgid "login"
+msgstr "пријава"
+
+msgid "new_user"
+msgstr "нови корисник"
+
+msgid "or"
+msgstr "или"
+
+msgid "register"
+msgstr "региструј се"
+
+msgid "if_new_user"
+msgstr "Ако сте нови корисник, молим"
+
+msgid "register_here"
+msgstr "региструјте се овде"
+
+msgid "choose_nickname"
+msgstr "Изаберите надимак:"
+
+msgid "user_login"
+msgstr "Пријава корисника"
+
+msgid "remember_me"
+msgstr "Запамти ме"
+
+msgid "your_location"
+msgstr "Ваша локација:"
+
+msgid "new_password"
+msgstr "Измените вашу лозинку овде: (у супротном оставите празно)"
+
+msgid "save_profile"
+msgstr "Сними профил"
+
+msgid "not_allowed_view_page"
+msgstr "Није вам дозвољено да видите ову страницу"
+
+msgid "username_taken"
+msgstr "Ово корисничко име је заузето. Молим изаберите друго."
+
+msgid "email_taken"
+msgstr "Ова епошта је заузета. Молим употребите другу."
+
+msgid "forgot"
+msgstr "Заборавили"
+
+msgid "your_password?"
+msgstr "сте лозинку?"
+
+msgid "passwords_not_match"
+msgstr "Унете лозинке се не подударају."
+
+msgid "sure_delete_account"
+msgstr "Да ли сте сигурни да желите да обришете ваш Фуфајнд налог?"
+
+msgid "yes"
+msgstr "Да"
+
+msgid "no"
+msgstr "Не"
+
+msgid "account_deleted"
+msgstr "Ваш налог је обрисан."
+
+msgid "nice_to_hear_that"
+msgstr "То је лепо чути"
+
+msgid "profile"
+msgstr "профил"
+
+msgid "username"
+msgstr "Надимак:"
+
+msgid "member_since"
+msgstr "Члан од:"
+
+msgid "last_comments"
+msgstr "Последњих %(comments)d коментара:"
+
+msgid "location"
+msgstr "Локација:"
+
+msgid "delete_account"
+msgstr "Обришите ваш Фуфајнд налог"
+
+msgid "forgot_password"
+msgstr "Заборавили сте лозинку?"
+
+msgid "wrong_email_password"
+msgstr "Погрешна епошта или лозинка, молим покушајте поново"
+
+msgid "welcome"
+msgstr "Добродошли"
+
+msgid "finish_register"
+msgstr "Молим, кликните на ову адресу да би сте завршили процес регистрације:"
+
+msgid "token_not_exist"
+msgstr "Жао ми је, овај токен не постоји или је већ искоришћен"
+
+msgid "confirm_email"
+msgstr ", потврдите вашу епошту"
+
+msgid "check_inbox_email_finish"
+msgstr "Проверите примљену епошту да би сте завршили процес регистрације"
+
+msgid "foofind_team"
+msgstr "Фуфајнд тим."
+
+msgid "user_not_exist"
+msgstr "Овај корисник не постоји"
+
+msgid "logged_in"
+msgstr "Сада сте пријављени,"
+
+msgid "registered_user"
+msgstr "Ако сте регистровани корисник, молим"
+
+msgid "login_here"
+msgstr "пријавите се овде"
+
+msgid "send"
+msgstr "Пошаљи"
+
+msgid "user_favorites"
+msgstr "Означене датотеке"
+
+msgid "user_searches"
+msgstr "Означене претраге"
+
+msgid "user_fav_lists"
+msgstr "Листа датотека"
+
+msgid "user_fav_file_list_empty"
+msgstr "Нема датотека у листи"
+
+msgid "user_fav_search_list_empty"
+msgstr "Нема претрага у листи"
+
+msgid "user_fav_no_lists"
+msgstr "Нема произвољних листи"
+
+msgid "enter_email"
+msgstr ""
+"Молим, унесите вашу адресу епоште. Порука за повраћај приступа ће бити "
+"послата на њу."
+
+msgid "email_same_register"
+msgstr "Адреса епоште мора бити иста којом сте се регистровали."
+
+msgid "email_not_database"
+msgstr "Ова епошта није у нашој бази података. Молим, покушајте поново."
+
+msgid "check_inbox_email_restore"
+msgstr "Проверите примљену пошту да би сте повратили приступ Фуфајнду"
+
+msgid "restore_access"
+msgstr ", повратите приступ Фуфајнду"
+
+msgid "restore_account"
+msgstr ""
+"Неко, вероватно ви, жели да поврати приступ Фуфајнду. Кликните на ову адресу"
+" да би сте повратили ваш Фуфајнд налог:"
+
+msgid "ignore_message"
+msgstr "У супротном, игноришите ову поруку."
+
+msgid "login_vote"
+msgstr "Молим, пријавите се да би гласали"
+
+msgid "login_comment"
+msgstr "Молим, пријавите се да би коментарисали"
+
+msgid "technical_problems"
+msgstr "Извините, имамо техничких проблема са %(service)s услугом."
+
+msgid "allow_access_account"
+msgstr ""
+"Треба да дозволите Фуфајнду приступ %(account)s налогу да би користили ову "
+"могућност."
+
+msgid "submit_registration"
+msgstr "Регистрација"
+
+msgid "submit_login"
+msgstr "Пријава"
+
+msgid "submit_edit"
+msgstr "Сними профил"
+
+msgid "submit_search"
+msgstr "Тражи"
+
+msgid "contact_form"
+msgstr "Формулар за контакт"
+
+msgid "report_form"
+msgstr "формулар за пријаву везе"
+
+msgid "link_removal"
+msgstr ""
+"Напомена: Ако захтевате уклањање везе, морате користити %(report_form)s"
+
+msgid "complaints_ignored"
+msgstr "Притужбе одрађене кроз овај формулар биће игнорисане."
+
+msgid "your_message"
+msgstr "Ваша порука:"
+
+msgid "insert_characters"
+msgstr "Молим, унесите 5 приказаних карактера:"
+
+msgid "captcha_wrong"
+msgstr "Провера је неуспела"
+
+msgid "no_valid_hostname"
+msgstr "%(hostname)s није исправан домен за адресу епоште %(value)s"
+
+msgid "local_network"
+msgstr ""
+"%(value)s је изгледа име локалне мреже а имена локалних мрежа нису дозвољена"
+
+msgid "no_dns_hostname"
+msgstr "%(value)s се не поклапа са очекиваном структуром за ДНС хостнаме"
+
+msgid "no_tld_known"
+msgstr "%(value)s је изгледа ДНС хостнаме али нема поклапања у познатој листи"
+
+msgid "message_sent"
+msgstr "Порука је успешно послата!"
+
+msgid "your_name"
+msgstr "Ваше име:"
+
+msgid "your_surname"
+msgstr "Ваше презиме:"
+
+msgid "your_company"
+msgstr "Ваша компанија:"
+
+msgid "your_phone"
+msgstr "Ваш број телефона:"
+
+msgid "link_reviewed"
+msgstr "Молим унесите везу за рецензију:"
+
+msgid "url_content"
+msgstr "Молим, унесите адресу где се овај садржај налази:"
+
+msgid "reason_complaint"
+msgstr "Разлог за вашу жалбу:"
+
+msgid "accept_tos"
+msgstr "Прочитао сам и прихватам %(tos)s и %(privacy)s."
+
+msgid "accept_terms"
+msgstr "Молим, прихватите услове коришћења и полису о приватношћу"
+
+msgid "not_foofind_page"
+msgstr "Веза не може бити Фуфајнд страница"
+
+msgid "not_foofind_link"
+msgstr "Адреса мора бити исправна Фуфајнд страница за преузимање."
+
+msgid "include_reported_links"
+msgstr "Молим, упишите пријављене везе у одговарајућим пољима у формулару."
+
+msgid "submit_links"
+msgstr "Проследи везе"
+
+msgid "include_link_per_line"
+msgstr ""
+"Молим упишите једну http, ftp, ed2k или магнетну везу по линији.\r\n"
+"Везе ће аутоматски бити обрађене и убрзо додате у резултате претраге."
+
+msgid "link_sent"
+msgstr "Везе су послате. Хвала на помоћи!"
+
+msgid "footer"
+msgstr "Вебсајт је под %(cc)s лиценцом. %(code)s под %(gpl)s лиценцом."
+
+msgid "about_text"
+msgstr ""
+"Фуфајнд је универзални систем претраге. У Фуфајнду радимо на стварању програма који прегледа сваку мрежу и индексира сваку датотеку. На овај начин, намеравамо да понудимо највећу доступну колекцију веза.\r\n"
+"\r\n"
+"Фуфајнд је креација Пабла Сота, дизајнера П2П технологије, развијен у Мадриду, Шпанија од стране Фуфајнд Лабс С.Л. у сарадњи са МП2П Технологије."
+
+msgid "under_maintenance"
+msgstr "Фуфајнд је тренутно у процесу одржавања. Молим, покушајте касније."
+
+msgid "technology_text"
+msgstr ""
+"<p>Фуфајнд тим развија већину изворног кода пројекта, али се такође ослањамо"
+" на рад заједнице слободног софтвера.</p><p>Без свих ових изузетних "
+"пројеката, Фуфајнд не би био могућ. Хвала пуно! ;-)</p><ul><li><a "
+"href=\"http://twistedmatrix.com/\">Twisted</a>: Twisted је мрежни инструмент"
+" заснован на догађајима написан у Python-у и лиценциран под МИТ лиценцом "
+"отвореног кода.</li><li><a href=\"http://scrapy.org/\">Scrapy</a>: Scrapy је"
+" брзи стругач екрана високог нивоа и систем тумарања мрежом, који служи да "
+"тумара веб сајтовима и извлачи сложене податке са њих. Може бити употребљен "
+"за разне потребе, од рударења за подацима до надгледања и аутоматизованог "
+"тестирања.</li><li><a href=\"http://flask.pocoo.org/\">Flask</a>: Flask је "
+"микроинструмент за Python заснован на Werkzeug, Jinja 2 и његовом БСД "
+"лиценцом.</li><li><a href=\"http://www.mongodb.org/\">MongoDB</a>: MongoDB "
+"(од \"humongous\") је скалабилна, без SQL база података отвореног кода "
+"високих перформанси.</li><li><a "
+"href=\"http://github.com/dcramer/sentry\">Sentry</a>: Sentry је платформа за"
+" бележење и сакупљање догађаја у реалном времену. Специјализован је за "
+"надгледање грешака и извлачење свих информација потребних за исправну "
+"посмртну анализу без муке стандардне корисничко повратне петље.</li><li><a "
+"href=\"http://sphinxsearch.com/\">Sphinx</a>: Sphinx је сервер за претрагу "
+"пуног текста отвореног кода, дизајниран од почетка према перформансама, "
+"релевантношћу (квалитет претраге), и једноставношћу интеграције. Написан је "
+"језику C++ и ради на Linux-у (RedHat, Ubuntu итд), Windows-у, MacOS-у, "
+"Solaris-у, FreeBSD-у, и неколико других система.</li><li><a "
+"href=\"http://jquery.com/\">jQuery</a>: jQuery је брза, мала и богата "
+"могућностима JavaScript библиотека. Чини ствари попут HTML документа "
+"прегледнијим и манипулацију, управљање догађајима, анимацију и Ajax много "
+"једноставнијим са API-јем лаким за коришћење који ради на већини прегледача "
+"интернета. Са комбинацијом свестраности и проширивости, jQuery је променио "
+"начин на који милиони људи пише JavaScript код.</li><li><a "
+"href=\"http://jqueryui.com/\">jQuery UI</a>: jQuery UI је група интереакција"
+" корисничког приказа, ефеката, програмчића и тема изграђених поврх jQuery "
+"JavaScript библиотеке. Било да изграђујете веб апликацију високе "
+"интерактивности или вам је потребно да само додате бирач датума за формулар,"
+" jQuery UI је савршен избор.</li><li><a "
+"href=\"http://www.komodomedia.com/blog/2009/06/social-network-icon-"
+"pack/\">Паковање Икона Друштвених Мрежа</a>: Паковање Икона Друштвених Мрежа"
+" од Komodo Media, Rogie King је лиценцирано под Creatice Commons "
+"Attribution-Share Alike 3.0 Unported лиценцом.</li></ul>"
+
+msgid "link_not_exist"
+msgstr "Веза не постоји или је обрисана."
+
+msgid "error_link_removed"
+msgstr "Жао нам је: ова веза је уклоњена од стране аутора."
+
+msgid "translate"
+msgstr "Преведи"
+
+msgid "translate_to_your_language"
+msgstr "Помозите нам да преведемо Фуфајнд на ваш језик"
+
+msgid "translate_description"
+msgstr ""
+"Фуфајнд је тренутно доступан на неколико језика, али ви нам можете помоћи ако га преведете на ваш језик. Само га изаберите из листе и попуните поља са преводом. Не морате да попуните сва поља да би сте послали формулар, свака помоћ је добродошла.\r\n"
+"\r\n"
+"Ако вашег језика нема у листи, контактирајте нас да би смо га додали."
+
+msgid "choose_language"
+msgstr "Изаберите језик"
+
+msgid "translation_sent"
+msgstr "Ваш превод је послат. Хвала вам на помоћи!"
+
+msgid "translate_at_least_one"
+msgstr "Молим преведите нешто пре слања."
+
+msgid "here"
+msgstr "овде"
+
+msgid "translation_beta"
+msgstr ""
+"Превод овог језика је у пробној фази. Ако пронађете недостајући или погрешан"
+" превод, пријавите га %(here)s."
+
+msgid "other"
+msgstr "Остало"
+
+msgid "embed_foofind_button"
+msgstr "Погледај на фуфајнд"
+
+msgid "copy_to_clipboard_shortcut"
+msgstr "Користи CTRL+C да би сте копирали на бележницу"
+
+msgid "opensearch_description"
+msgstr "Претражите користећи Фуфајнд"
+
+msgid "downloader_powered"
+msgstr "Доступно уз помоћ [%(name)s](%(link)s)"
+
+msgid "downloader_overview"
+msgstr "Преглед"
+
+msgid "downloader_overview_text"
+msgstr ""
+"Фуфајнд управљач преузимањима је дизајниран да буде лак за употребу, интуитиван и безбедан. Можете паузирати, наставити и пронаћи ваша преузимања лакше него икад, проверите неке од његових могућности:\r\n"
+"\r\n"
+"* Изузетан торент клијент.\r\n"
+"* Поједностављен изглед.\r\n"
+"* екстензије DHT, uPnP и uTorrent протокола."
+
+msgid "downloader_sharing"
+msgstr "Преузми и подели датотеке"
+
+msgid "downloader_sharing_text"
+msgstr ""
+"Сада, са **Фуфајнд управљачем преузимањима** можете да преузимате брже него икада. Захваљујући **торент** мрежи, најбржем П2П решењу икада направљеном, ваша преузимања ће летети.\r\n"
+"\r\n"
+"Пробајте! **Будућност преузимања је само један клик далеко.**"
+
+msgid "downloader_safety"
+msgstr "Узмите ваше датотеке на безбедан начин"
+
+msgid "downloader_safety_text"
+msgstr ""
+"Ми безбедност схватамо веом озбиљно. **Фуфајнд управљач преузимањима** користи награђену либторент библиотеку, која ће учинити ваше искуство са преузимањима безбедно и сигурно.\r\n"
+"\r\n"
+"Строго препоручујемо да користите антивирусни програм, јер можете преузети злонамеран програм са непоузданих извора."
+
+msgid "downloader_its_free"
+msgstr "Потпуно је **БЕСПЛАТАН**!"
+
+msgid "downloader_download_source"
+msgstr "Преузми изворни код"
+
+msgid "downloader_meta_description"
+msgstr ""
+"Фуфајнд управљач преузимањима је једноставан и лак за употребу торент "
+"преузимач"
+
+msgid "downloader_download_coming_soon"
+msgstr "Извините: Још није доступан за ваш систем."
+
+msgid "downloader_dialog_title"
+msgstr ""
+"Хеј!\r\n"
+"\r\n"
+"Потребан је торент клијент за преузимање ове датотеке"
+
+msgid "downloader_dialog_yes"
+msgstr ""
+"Да, преузми\r\n"
+"\r\n"
+"Фуфајнд Управљач Преузимањима"
+
+msgid "downloader_dialog_text"
+msgstr ""
+"Преузмите Фуфајнд Управљач Преузимањима да би сте преузели ову датотеку.\r\n"
+"\r\n"
+"Наш програм вам омогућава брже и лакше него икад преузимање торента - потпуно бесплатно!"
+
+msgid "downloader_dialog_no"
+msgstr "Не, хвалаЖелим да преузмем директно"
+
+msgid "downloader_dialog_noagain"
+msgstr "Већ имам торент клијент, молим не питај ме поново."
+
+msgid "downloader_update_message"
+msgstr ""
+"Нова верзија %(appname)s (%(version)s) је спремна за  инсталирање.\r\n"
+"Да ли желите да извршите надоградњу?"

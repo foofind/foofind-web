@@ -22,6 +22,7 @@ def init_data(file_data, ntts=[]):
     '''
     Inicializa el diccionario de datos del archivo
     '''
+    content_fixes(file_data)
     file_data["id"]=mid2url(file_data['_id'])
     file_data['name']=file_data['src'].itervalues().next()['url']
 
@@ -149,6 +150,7 @@ def build_source_links(f):
     f['view']['sources']={}
     max_weight=0
     icon=""
+    any_downloader=False
 
     # agrupación de origenes
     source_groups = {}
@@ -186,7 +188,7 @@ def build_source_links(f):
         #torrenthash antes de torrent porque es un caso especifico
         elif source_data["d"]=="BitTorrentHash":
             downloader=True
-            link_weight=0.7 if 'torrent:tracker' in f['file']['md'] or 'torrent:trackers' in f['file']['md'] else 0.1
+            link_weight=0.9 if 'torrent:tracker' in f['file']['md'] or 'torrent:trackers' in f['file']['md'] else 0.1
             tip="Torrent MagnetLink"
             source="tmagnet"
             icon="torrent"
@@ -211,7 +213,8 @@ def build_source_links(f):
             else:
                 tip=source=get_domain(src['url'])
             icon="torrent"
-            source_groups[icon] = tip
+            if not icon in source_groups:
+                source_groups[icon] = tip
         elif source_data["d"]=="Gnutella":
             link_weight=0.2
             tip="Gnutella"
@@ -250,11 +253,11 @@ def build_source_links(f):
             view_source = f['view']['sources'][source] = {}
         view_source.update(source_data)
 
-        if 'downloader' in view_source:
-            if downloader:
-                view_source['downloader']=1
-        else:
-            view_source['downloader']=1 if downloader else 0
+        if downloader:
+            any_downloader = True
+            view_source['downloader']=1
+        elif not 'downloader' in view_source:
+            view_source['downloader']=0
 
         view_source['tip']=tip
         view_source['icon']=icon
@@ -290,6 +293,7 @@ def build_source_links(f):
             f['view']['source'] = source
 
     f['view']['source_groups'] = sorted(source_groups.items())
+    f['view']['any_downloader'] = any_downloader
 
     if "source" not in f["view"]:
         raise FileNoSources
@@ -706,7 +710,6 @@ def fill_data(file_data, text=None, ntts={}):
     # se asegura que esten cargados los datos de origenes y servidor de imagen antes de empezar
     fetch_global_data()
     f=init_data(file_data, ntts)
-    content_fixes(f["file"])
 
     choose_file_type(f)
     # al elegir nombre de fichero, averigua si aparece el texto buscado

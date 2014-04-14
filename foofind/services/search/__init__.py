@@ -3,7 +3,7 @@ from proxy import SearchProxy
 from search import Search, escape_string
 from results_browser import ResultsBrowser
 from sphinxservice import Sphinx
-from foofind.utils import mid2bin
+from foofind.utils import mid2bin, logging
 from foofind.utils.splitter import slugify
 
 class Searchd:

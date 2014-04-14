@@ -76,5 +76,8 @@ hachoir-core
 
 msgpack-python
 
+requests
+
 # cliente nuevo searchd
 redis
+

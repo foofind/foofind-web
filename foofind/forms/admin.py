@@ -67,31 +67,11 @@ class MultiHostField(SelectMultipleField):
     option_widget = CheckboxInput()
 
 class MultiSubmit(SelectMultipleField):
-    class MultiWidget(object):
-        '''
-        SelectMultipleField en un ul con checkboxes.
-        '''
-        def __init__(self, html_tag='ul'):
-            self.html_tag = html_tag
-            self.inner_kwarg_prefix = "submit_"
-
-        def __call__(self, field, **kwargs):
-            kwargs.setdefault('id', field.id)
-            likp = len(self.inner_kwarg_prefix)
-            #inner_kwargs = {fix_param_name(k[likp:]):v for k,v in kwargs.iteritems() if k.startswith(self.inner_kwarg_prefix)}
-            outer_kwargs = {fix_param_name(k):v for k,v in kwargs.iteritems() if not k.startswith(self.inner_kwarg_prefix)}
-            return HTMLString(u'<%s %s>%s</%s>' % (
-                self.html_tag,
-                html_params(**outer_kwargs),
-                u''.join(u'<li>%s</li>' % i for i in self),
-                self.html_tag))
-
     def __init__(self, *args, **kwargs):
         SelectMultipleField.__init__(self, *args, **kwargs)
         self.label = LoneLabel(self.id, self.label.text)
         self.status = kwargs.get("status", {})
 
-    widget = MultiWidget()
     option_widget = SubmitInput()
 
 class ValidateTranslationForm(Form):
@@ -192,7 +172,7 @@ class GetServerForm(Form):
 
 class ActionForm(Form):
     target = SelectField(_("admin_actions_target"))
-    submitlist = MultiSubmit()
+    submitlist = MultiSubmit("task")
 
 class LogForm(Form):
     processing = HiddenField(default=False, filters=(lambda x: str(x).strip().lower() == "true" ,))

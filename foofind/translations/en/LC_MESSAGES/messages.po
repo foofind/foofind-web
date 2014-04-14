@@ -1579,76 +1579,75 @@ msgstr "Bad version code"
 msgid "opensearch_description"
 msgstr "Search using Foofind"
 
-msgid "foodownloader_powered"
+msgid "downloader_powered"
 msgstr "Powered by [%(name)s](%(link)s)"
 
-msgid "foodownloader_overview"
+msgid "downloader_overview"
 msgstr "Overview"
 
-msgid "foodownloader_overview_text"
+msgid "downloader_overview_text"
 msgstr ""
-"**Foofind Download Manager** is a fast client for the **Torrent** P2P network.\r\n"
-"\r\n"
 "Foofind Download Manager is designed to be very easy to use, intuitive, and safe. You can pause, resume and find your downloads more easily than ever, check out some of its features:\r\n"
 "\r\n"
 "*    Rock solid torrent client.\r\n"
 "*    Simplified interface.\r\n"
 "*    DHT, uPnP and uTorrent protocol extensions.\r\n"
 
-msgid "foodownloader_sharing"
+msgid "downloader_sharing"
 msgstr "Download and share files"
 
-msgid "foodownloader_sharing_text"
+msgid "downloader_sharing_text"
 msgstr ""
 "Now, with **Foofind Download Manager** you can download faster than ever before. Thanks to the **torrent** network, the fastest P2P solution ever made, your downloads will fly.\r\n"
 "\r\n"
 "Give it a try! **The future of downloading is only one click away.**"
 
-msgid "foodownloader_safety"
+msgid "downloader_safety"
 msgstr "Get your files in a safe way"
 
-msgid "foodownloader_safety_text"
+msgid "downloader_safety_text"
 msgstr ""
 "We take security very seriously. **Foofind Download Manager** uses the award winning libtorrent library, which will make your download experience a safe and secure one.\r\n"
 "\r\n"
 "We strongly recomment you use an antivirus, you can download malware from untrusted sources."
 
-msgid "foodownloader_download"
-msgstr "Free download"
+msgid "downloader_its_free"
+msgstr "It's totally **FREE**!"
 
-msgid "foodownloader_download_source"
+msgid "downloader_download_source"
 msgstr "Download source"
 
-msgid "foodownloader_meta_description"
+msgid "downloader_meta_description"
 msgstr "Foofind Download Manager is a simple and easy to use torrent downloader"
 
-msgid "foodownloader_thanks"
-msgstr "Happy downloading!"
-
-msgid "foodownloader_thanks_message"
-msgstr "Thanks for installing Foofind Download Manager, we hope you enjoy it."
-
-msgid "foodownloader_download_coming_soon"
+msgid "downloader_download_coming_soon"
 msgstr "Sorry: Not yet available for your OS."
 
-msgid "foodownloader_dialog_title"
+msgid "downloader_dialog_title"
 msgstr "Hey!\n\nYou need a Torrent client to download this file"
 
-msgid "foodownloader_dialog_yes"
+msgid "downloader_dialog_yes"
 msgstr ""
 "Yes, download\n\n"
 "Foofind Download Manager"
 
-msgid "foodownloader_dialog_no"
+msgid "downloader_dialog_no"
 msgstr ""
 "No, thanks\n\n"
-"I already have a torrent client"
+"Just take me to the download"
 
-msgid "foodownloader_dialog_text"
+msgid "downloader_dialog_noagain"
+msgstr "I already have a torrent client, please don't ask me again."
+
+msgid "downloader_dialog_text"
 msgstr ""
 "Download Foofind Download Manager to get this file right now. \r\n"
 "\r\n"
-"Our sofware lets you download torrents faster and more easily than ever -  absolutely free! If you already have a Torrent client, click \"No, thanks\"."
+"Our sofware lets you download torrents faster and more easily than ever -  absolutely free!."
+
+msgid "safe_downloader_share_responsibly"
+msgstr "**SHARE RESPONSIBLY**: Using Foofind Downloader Manager for the uploading or downloading of copyrighted works without the permission or authorization of the copyright holders may be illegal and could subject you (or the ISP subscriber) to civil and/or criminal liability and penalties. There are a significant number of copyright holders who have authorized the sharing of their content for non-commercial purposes, such as some content with Creative Commons format licenses, and there is also content available in the public domain and not protected by copyright. Most commercially released popular songs are NOT currently authorized for free redistribution but require separate purchase or licensing."
+
 
 # Downloader
 msgid "downloader_update_message"

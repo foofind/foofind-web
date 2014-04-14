@@ -976,74 +976,81 @@ msgstr "Tercümeniz gönderilmiştir. Yardımınız için teşekkür ederiz!"
 msgid "translate_at_least_one"
 msgstr "Lütfen en az bir metin tercüme ediniz."
 
-msgid "foodownloader_powered"
+msgid "downloader_powered"
 msgstr "[%(name)s](%(link)s) ile güçlendirilmiştir"
 
-msgid "foodownloader_overview"
+msgid "downloader_overview"
 msgstr "Genel bakış"
 
-msgid "foodownloader_overview_text"
+msgid "A fast client for the Torrent P2P network"
+msgstr "torrent P2P ağı için hızlı bir istemcidir"
+
+msgid "downloader_overview_text"
 msgstr ""
-"**Foofind Download Manager**, **torrent** P2P ağı için hızlı bir istemcidir.\r\n"
-"\r\n"
 "Foofind Download Manager kullanımı kolay, sezgisel ve güvenli olması yönünde tasarlanmıştır. İndirmelerinizi her zamankinden daha kolay durdurabilir, sürdürebilir ve bulabilirsiniz; bakın neler sunar:\r\n"
 "\r\n"
 "*    Kaya gibi sağlam torrent istemcisi.\r\n"
 "*    Sade bir arayüz.\r\n"
 "*    DHT, UPnP ve uTorrent protokol uzantıları."
 
-msgid "foodownloader_sharing"
+msgid "downloader_sharing"
 msgstr "Dosya indir ve paylaş"
 
-msgid "foodownloader_sharing_text"
+msgid "downloader_sharing_text"
 msgstr ""
 "Bundan böyle **Foofind Download Manager** ile dosyalarınızı çok daha hızlı indirebilirsiniz. Bu güne dek tasarlanan en hızlı P2P ağı olan **torrent** şebekesi sayesinde indirmeleriniz adeta uçarcasına gerçekleşecektir.\r\n"
 "\r\n"
 "Deneyin! **Geleceğin indirmeleri sadece bir tıklama ötededir.**"
 
-msgid "foodownloader_safety"
+msgid "downloader_safety"
 msgstr "Dosyalarınızı güvenli bir şekilde elde edin"
 
-msgid "foodownloader_safety_text"
+msgid "downloader_its_free"
+msgstr "Tamamen **ÜCRETSİZDİR**!"
+
+msgid "downloader_safety_text"
 msgstr ""
 "Güvenliğe çok önem veririz. **Foofind Download Manager** ödül kazanan libtorrent kütüphanesini kullanır ve bu indirme deneyiminizi mümkün olan\\* en güvenli dereceye yükseltir.\r\n"
 "\r\n"
 "\\* _güvenilir olmayan kaynaklardan kötücül yazılım indirmeniz mümkündür dolayısıyla bir anti-virüs kullanmanızı hararetle tavsiye ederiz._"
 
-msgid "foodownloader_download"
+msgid "downloader_download"
 msgstr "Ücretsiz indirim"
 
-msgid "foodownloader_download_source"
+msgid "downloader_download_source"
 msgstr "Kaynak kodu indirin"
 
-msgid "foodownloader_meta_description"
+msgid "downloader_meta_description"
 msgstr ""
 "Foofind Download Manager sade ve kullanımı kolay bir torrent indiricisidir."
 
-msgid "foodownloader_thanks"
+msgid "downloader_thanks"
 msgstr "Mutlu indirmeler dileriz!"
 
-msgid "foodownloader_thanks_message"
+msgid "downloader_dialog_no"
+msgstr ""
+"Hayır, teşekkürler\r\n"
+"\r\n"
+"Beni indirme sayfasına götürün"
+
+msgid "downloader_dialog_noagain"
+msgstr "Zaten bir torrent istemcim var, tekrar sormayın."
+
+msgid "downloader_thanks_message"
 msgstr ""
 "Foofind Download Manager'ı kurduğunuz için teşekkür ederiz, hoşunuza "
 "gideceğini umuyoruz."
 
-msgid "foodownloader_download_coming_soon"
+msgid "downloader_download_coming_soon"
 msgstr "Özür dileriz: Henüz işletim sisteminiz için sürüm yoktur."
 
-msgid "foodownloader_dialog_title"
+msgid "downloader_dialog_title"
 msgstr "Foofind Download Manager mevcuttur"
 
-msgid "foodownloader_dialog_yes"
+msgid "downloader_dialog_yes"
 msgstr "Evet, Foofind Download Manager'ı indir"
 
-msgid "foodownloader_dialog_no"
-msgstr ""
-"Hayır, teşekkürler\r\n"
-"\r\n"
-"Zaten bir torrent istemcim var"
-
-msgid "foodownloader_dialog_text"
+msgid "downloader_dialog_text"
 msgstr ""
 "%(domain)s bu dosyayı tamamen ücretsiz yeni indirme yöneticisini kullanarak "
 "zamankinden daha hızlı ve kolay bir şekilde indirmenizi tavsiye eder!"

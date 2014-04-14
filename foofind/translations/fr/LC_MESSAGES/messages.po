@@ -1,4 +1,4 @@
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
@@ -80,7 +80,7 @@ msgstr ""
 "ultérieurement."
 
 msgid "servers_status"
-msgstr "Vérifier l'état du serveur"
+msgstr "Vérifiez l'état du serveur"
 
 msgid "error_mail_send"
 msgstr ""
@@ -994,78 +994,85 @@ msgstr "Votre traduction a été envoyée. Merci de votre aide !"
 msgid "translate_at_least_one"
 msgstr "S'il vous plaît, traduisez au moins une phrase."
 
-msgid "foodownloader_powered"
+msgid "downloader_powered"
 msgstr "Propulsé par [%(name)s](%(link)s)"
 
-msgid "foodownloader_overview"
+msgid "downloader_overview"
 msgstr "Vue d'ensemble"
 
-msgid "foodownloader_overview_text"
+msgid "A fast client for the Torrent P2P network"
+msgstr "est un client rapide pour le réseau P2P torrent"
+
+msgid "downloader_overview_text"
 msgstr ""
-"**Foofind Download Manager** est un client rapide pour le réseau P2P **torrent**.\r\n"
-"\r\n"
 "Foofind Download Manager est conçu pour être intuitif, facile à utiliser et sûr. Vous pouvez mettre en pause, reprendre et trouver vos téléchargements plus facilement que jamais, voyez ce qu'il offre :\r\n"
 "\r\n"
 "*    Un client torrent solide comme du roc.\r\n"
 "*    Une interface simplifiée.\r\n"
 "*    La DHT, l'UPnP et les extensions de protocole de uTorrent.\r\n"
 
-msgid "foodownloader_sharing"
+msgid "downloader_sharing"
 msgstr "Télécharger et partager des fichiers"
 
-msgid "foodownloader_sharing_text"
+msgid "downloader_sharing_text"
 msgstr ""
 "Désormais, avec **Foofind Download Manager** vous pouvez télécharger tout ce que vous voulez plus vite que jamais. Grâce au réseau **torrent** qui est la solution P2P la plus rapide jamais conçue, vos téléchargements vont s'envoler.\r\n"
 "\r\n"
 "Essayez donc ! **L'avenir des téléchargements n'est qu'à un clic.**"
 
-msgid "foodownloader_safety"
+msgid "downloader_safety"
 msgstr "Obtenez vos fichiers d'une manière sûre"
 
-msgid "foodownloader_safety_text"
+msgid "downloader_its_free"
+msgstr "C'est entièrement **GRATUIT** !"
+
+msgid "downloader_safety_text"
 msgstr ""
 "Nous nous occupons de la sécurité. **Foofind Download Manager** utilise la librairie libtorrent qui a gagné des prix, ce qui rend votre expérience de téléchargement aussi \\* sûre que possible.\r\n"
 "\r\n"
 "\\* _vous pouvez télécharger des logiciels hostiles depuis des sources peu sûres, donc nous recommandons fortement l'utilisation d'un antivirus._"
 
-msgid "foodownloader_download"
+msgid "downloader_download"
 msgstr "Téléchargement gratuit"
 
-msgid "foodownloader_download_source"
+msgid "downloader_download_source"
 msgstr "Télécharger le code source"
 
-msgid "foodownloader_meta_description"
+msgid "downloader_meta_description"
 msgstr ""
 "Foofind Download Manager est un téléchargeur torrent simple et facile à "
 "utiliser"
 
-msgid "foodownloader_thanks"
+msgid "downloader_thanks"
 msgstr "Bons téléchargements !"
 
-msgid "foodownloader_thanks_message"
+msgid "downloader_thanks_message"
 msgstr ""
 "Merci d'avoir installé Foofind Download Manager, nous espérons qu'il vous "
 "plaira."
 
-msgid "foodownloader_download_coming_soon"
+msgid "downloader_download_coming_soon"
 msgstr "Désolé : pas encore disponible pour votre système d'exploitation."
 
-msgid "foodownloader_dialog_title"
+msgid "downloader_dialog_title"
 msgstr "Foofind Download Manager est disponible"
 
-msgid "foodownloader_dialog_yes"
+msgid "downloader_dialog_yes"
 msgstr ""
 "Oui, télécharger\r\n"
 "\r\n"
 "Foofind Download Manager"
 
-msgid "foodownloader_dialog_no"
+msgid "downloader_dialog_no"
 msgstr ""
 "Non, merci\r\n"
 "\r\n"
-"J'ai déjà un client torrent"
+"Juste laisse-moi le télécharger"
 
-msgid "foodownloader_dialog_text"
+msgid "downloader_dialog_noagain"
+msgstr "J'ai déjà un client de torrents. S'il vous plaît ne me demandez plus."
+
+msgid "downloader_dialog_text"
 msgstr ""
 "%(domain)s vous recommande de télécharger ce fichier plus rapidement et "
 "facilement que jamais en utilisant le tout nouveau gestionnaire de "

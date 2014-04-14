@@ -17,7 +17,7 @@ $fuente:Arial,Verdana,Helvetica,sans-serif;
 
 /*funciones generales*/
 /* lapiz que se pone en todos los inputs */
-@mixin pencil($status,$size:24,$color:'transparent')
+@mixin pencil($status,$size:24,$color:transparent)
 {
     @if $status==1{@include icon(307,$status,$size,$color);margin-right:-28px;position:relative;top:5px;left:5px;float:left}
     @else{@include sprite(307,$status,$size)}
@@ -51,20 +51,22 @@ $fuente:Arial,Verdana,Helvetica,sans-serif;
     @else if $active==2{&.active,&:active{color:$status2_color;#{$selector}{@include sprite($icon,$status2,$size)}}}
 }
 /* para poner un icono */
-@mixin icon($icon:101,$status:0,$size:50,$color:'transparent',$span:0,$span_selector:'>span',$active:1,$status1:1,$status2:2,$status3:3,$status4:4,$img:false)
+@mixin icon($icon:101,$status:0,$size:50,$color:transparent,$span:0,$span_selector:'>span',$active:1,$status1:1,$status2:2,$status3:3,$status4:4,$img:false)
 {
-    @if $img{@include background_cached("img/#{$img}.png", $color)}
+    @if $img{@include background_cached("img/#{$img}.png", $color);}
     @else
     {
         @include background_cached("img/icons#{$size}.png", $color);
         @if $status>0{@include sprite($icon,$status,$size)}
         @else if $status<0{@include states($icon,$size,$span,$active,$span_selector,$status1,$status2,$status3,$status4)}
     }
-    display:inline-block;
     vertical-align:middle;
     width:$size + px;
     height:$size + px;
     margin-right:$size/8 + px;
+    display:inline-block;
+    zoom:1;
+    *display:inline;
 }
 /* coloca un icono */
 @mixin sprite($icon,$status:0,$size:50)
@@ -84,6 +86,10 @@ $fuente:Arial,Verdana,Helvetica,sans-serif;
 @mixin ellipsis($width:100,$inline:block,$white-space:nowrap,$width-type:max-width)
 {
     #{$width-type}:#{$width}px;display:$inline;white-space:$white-space;overflow:hidden;text-overflow:ellipsis;
+    @if $inline==inline-block{
+        zoom:1;
+        *display:inline;
+    }
 }
 *{margin:0;padding:0}
 html,body{height:100%}
@@ -104,7 +110,7 @@ input[type="text"]:not(#recaptcha_response_field),input[type="password"],select,
 input[type="radio"], input[type="checkbox"]{vertical-align:-2px;margin-right:3px}
 input[type="radio"]:focus, input[type="checkbox"]:focus{border-style:none;border:0px;border:0px;background-color:blue;color:green}
 input[type="submit"],.button{font-size:1.5em;padding:6px 18px;background:$magenta;color:#fff;border-radius:7px;box-shadow:0px 0px 3px #999;text-shadow:0 0 5px rgba(0,0,0,0.25);border:none;cursor:pointer;position:relative;margin-top:10px}
-.button{font-size:1.5em;padding:10px 18px;display:inline-block;text-decoration:none}
+.button{font-size:1.5em;padding:10px 18px;text-decoration:none;display:inline-block;zoom:1;*display:inline}
 button{border:none;cursor:pointer}
 input[type="submit"]:active{top:1px;box-shadow:0px 0.5px 1.5px #999}
 label
@@ -156,11 +162,16 @@ h3{font-size:1.3em}
                     small{color:$lightgray}
                 }
             }
+            #cookies
+            {
+                z-index:9999;width:500px;top:30px;
+                span{display:none}
+            }
         }
         #social
         {
             float:left;padding-top:4px;padding-left:4px;
-            .fb-like{display:inline-block;width:100px;height:24px;margin-right:10px;vertical-align:top}
+            .fb-like{width:115px;height:24px;margin-right:10px;vertical-align:top;display:inline-block;zoom:1;*display:inline}
             .twitter-follow-button{margin-right:10px}
             a.twitter-follow-button{display:none}
             div{min-width:90px}
@@ -168,7 +179,8 @@ h3{font-size:1.3em}
         #header_navigation
         {
             padding-right:140px;float:right;margin:0;height:30px;text-align:right;font-weight:bold;position:relative;z-index:2;/*para evitar problemas con poner el logo movido hacia abajo y section subido*/
-            a{display:inline-block;color:$lightestgray;text-decoration:none;&:hover{color:#FFF}}
+            a{color:$lightestgray;text-decoration:none;display:inline-block;zoom:1;*display:inline;
+                &:hover{color:#FFF}}
             >a{margin:3px 0px 3px 13px}
             a:nth-child(1){span{@include icon(313,3,24)}&:hover span{@include sprite(313,2,24)}}
             a:nth-child(2){span{@include icon(310,3,24)}&:hover span{@include sprite(310,2,24)}}
@@ -205,12 +217,12 @@ h3{font-size:1.3em}
     >section{padding:10px 10px 60px;font-size:1.3em;clear:both}
     #search_file
     {
-        display:inline-block;padding-top:8px;
+        padding-top:8px;display:inline-block;zoom:1;*display:inline;
         input#q{background:#FFF;height:30px;font-size:1.6em;margin:5px;width:390px}
         .small{position:relative;input[type="text"]+span{top:16px;left:8px}}
         #share
         {
-            display:inline-block;position:relative;
+            position:relative;display:inline-block;zoom:1;*display:inline;
             &:hover ul{display:block;float:left}
             ul{display:none;width:160px;min-height:20px;padding:5px 14px 10px;overflow:hidden;position:absolute;z-index:20;background:$darkerwhite;box-shadow:-3px -3px 3px $lightgray inset;border-radius:10px}
             li{display:inline;opacity:.7;&:hover{opacity:1}}
@@ -220,13 +232,13 @@ h3{font-size:1.3em}
         #search_info
         {
             font-size:1em;font-weight:normal;color:$darkgray;
-            h1{font-size:1em;color:$darkergray;display:inline-block}
+            h1{font-size:1em;color:$darkergray;display:inline-block;zoom:1;*display:inline}
         }
     }
     #error
     {
         background:$darkerwhite;margin-top:30px;padding:40px 0 30px;overflow:hidden;
-        >img,>div{display:inline-block;vertical-align:middle;min-height:224px}
+        >img,>div{vertical-align:middle;min-height:224px;display:inline-block;zoom:1;*display:inline}
         >img{margin:-10px 50px 0 35px}
         >div{width:55%}
         h1{color:$magenta;font-size:1.8em;font-weight:normal;margin-top:25px;letter-spacing:1px}
@@ -242,7 +254,7 @@ h3{font-size:1.3em}
 {
     background:#F6F6F6;border-top:1px #DDDDDD solid;position:absolute;bottom:0;left:0;right:0;text-align:left;font-size:1.2em;padding:10px;color:$darkergray;/*IE*/margin-top:480px
     a{color:#0E65A6}
-    ul{display:inline-block}
+    ul{display:inline-block;zoom:1;*display:inline}
     li{display:inline;margin-right:10px}
     p,div{float:right;padding:0}
     #logos{height:40px}
@@ -290,6 +302,11 @@ h3{font-size:1.3em}
     a {font-size:1.3em;font-weight:bold;white-space:nowrap}
 }
 
+@mixin check-icon(){
+    background:url('data:image/gif;base64,R0lGODlhEAAQAIABAOEAev///yH5BAEKAAEALAAAAAAQABAAAAIbjI+py+3fAIBBymdnuiYr7y2Z5YwQSWnUylIFADs=') left 0px no-repeat;
+    padding-left:20px;
+}
+
 /* home */
 section#home
 {
@@ -310,7 +327,7 @@ section#home
         {
             width:900px;margin:30px auto 0;white-space:nowrap;text-align:left;position:relative;
             input,select,option{border:none;font-weight:normal}
-            fieldset{display:inline-block;vertical-align:middle}
+            fieldset{vertical-align:middle;display:inline-block;zoom:1;*display:inline}
             input:focus,select:focus{outline-style:none}
             #params
             {
@@ -320,7 +337,7 @@ section#home
                 &:hover>a,&:focus>a,&.hover>a{@include pencil(3,32,$darkwhite);left:7px}
                 >span
                 {
-                    width:234px;overflow:hidden;display:inline-block;vertical-align:top;background:$darkwhite image-url("img/home/flecha_desplegar.png") no-repeat 200px 17px;border-radius:5px;
+                    width:234px;overflow:hidden;vertical-align:top;background:$darkwhite image-url("img/home/flecha_desplegar.png") no-repeat 200px 17px;border-radius:5px;display:inline-block;zoom:1;*display:inline;
                     #type{background:transparent;width:255px;height:35px;border-left:1px solid $gray;font-size:1.8em;margin:7px 0 0 -2px;padding:5px 0 0 50px}
                 }
                 #q{font-size:2em;color:$magenta;background:$darkwhite;width:458px;height:35px;padding:4px 10px 4px 40px;margin:5px 0;border-right:1px solid $gray;border-radius:0;box-shadow:0 0 0}
@@ -338,22 +355,25 @@ section#home
         background:image-url("img/home/fondo.png") repeat-x;border-top:1px solid #DDD;position:absolute;z-index:0;bottom:55px;left:0;right:0;
         #live
         {
-            padding:15px;width:900px;height:165px;overflow:hidden;margin:0 auto;text-align:left;
-            .texto
-            {
-                width:250px;float:left;display:block;margin:15px 30px 0 30px;color:$lightestblack;
-                p{padding-bottom:5px}
-                h3{font-size:1.6em;font-weight:bold;margin-bottom:15px}
-                h4{font-size:1.4em;font-weight:normal;margin-top:5px;a{color:$lightestblack;text-decoration:none}}
+            color:$lightblack; padding:0px 15px;width:900px;overflow:hidden;margin:0 auto;text-align:left;height:180px;
+
+            p {padding-bottom:3px;}
+
+            h2 {
+                margin: 0.4em 0 0.2em;
+                font-size: 1.6em;
             }
+
             .social
             {
-                width:562px;height:143px;overflow:hidden;margin-top:5px;
-                .fb-like-box iframe{width:101%;position:relative;left:-1px;right:-1px;top:-10px}
-                .twitter-follow-button{top:-154px;left:345px;position:relative;}
-                #___plusone_0{top:-178px;left:435px;position:relative}
+                height:90px;width:300px;float:right;display:block;color:$lightestblack;
+                .fb_iframe_widget {display:block;margin:5px 0px;}
             }
-            .facepile{overflow:scroll;background:transparent;border:0}
+            .suggestions
+            {
+                height:90px;width:300px;float:right;display:block;color:$lightestblack;
+                a {color:$lightestblack;}
+            }
         }
     }
     &+footer
@@ -362,6 +382,38 @@ section#home
         p{float:none}
     }
 }
+
+#live, #search_banner {
+    .banner {
+        text-align:center;float:left;width:200px;background:image-url("img/downloader/eyes.png") center -30px no-repeat;
+        #download_button {
+            background:$magenta;border-radius:5px;color:white;padding:0.4em 0.8em;font-weight:bold;font-size:1.3em;text-decoration:none;margin:5.7em 0em 0em;display:inline-block;zoom:1;*display:inline;
+        }
+        p {margin-top:0.5em; font-size:0.9em}
+    }
+    .banner2 {
+        margin-left:2em;width:150px;float:left;
+
+        h2 {
+            font-style:normal;font-size:2.2em !important ;color:$magenta;
+            span {font-size:0.5em;display:block}
+        }
+        >p {font-style:italic;margin:0 0 0.5em}
+        ul {margin-top:2em}
+        li {
+            margin-top:0.3em;
+            @include check-icon();
+        }
+    }
+}
+
+#search_banner {
+    position: fixed; top: 115px; left: 805px; font-size:1.1em; z-index: 0; background: $darkerwhite; padding-bottom:1em; padding-right:3em;
+    .banner { width:170px; background-position:-30px -30px;}
+    .banner2 { width:180px; padding-top:0.5em}
+    p {padding-bottom:0}
+}
+
 /* page */
 section#page
 {
@@ -450,7 +502,7 @@ section#files
             >ul>li
             {
                 @include icon($size:50);font-size:.5em;font-size-adjust:0.45;text-align:center;text-transform:uppercase;width:42px;height:42px;margin:0 0 0 8px;
-                >a{position:relative;top:-7px;display:inline-block;float:left;width:42px;height:50px;padding-right:6px;text-decoration:none;text-align:center;color:$darkergray}
+                >a{position:relative;top:-7px;float:left;width:42px;height:50px;padding-right:6px;text-decoration:none;text-align:center;color:$darkergray;display:inline-block;zoom:1;*display:inline;}
             }
         }
         #type li
@@ -505,7 +557,7 @@ section#files
                     strong{background:#FFF;height:32px;font-size:1.8em;font-weight:bold;span{color:$green}}
                     ul
                     {
-                        /*display:inline-block;*/background:#FFF;width:86px;height:20px;overflow:hidden;
+                        background:#FFF;width:86px;height:20px;overflow:hidden;
                         &.inactive
                         {
                             height:30px;
@@ -522,7 +574,8 @@ section#files
                             display:none;height:10px;font-size:1.3em;font-size-adjust:0.5;
                             &:last-child{display:none}
                             &.active{display:block}
-                            a{@include ellipsis(90,inline-block);vertical-align:middle;text-decoration:none;color:$darkergray;&:hover{color:$magenta}}
+                            a{vertical-align:middle;text-decoration:none;color:$darkergray;@include ellipsis(90,inline-block);
+                                &:hover{color:$magenta}}
                         }
                     }
                 }
@@ -588,7 +641,7 @@ section#files
                 &.direct_download{@include sprite(350,1,24)}
                 &.P2P{@include sprite(351,1,24)}
             }
-            h2{clear:both;padding:20px 40px 0 35px;margin-left:5px;@include ellipsis(560,$white-space:pre-wrap);text-align:left;min-height:30px;background:$darkwhite;color:$magenta;font-size:1.4em;font-weight:normal;line-height:1.2em}
+            h2{clear:both;padding:20px 40px 0 35px;margin-left:5px;text-align:left;min-height:30px;background:$darkwhite;color:$magenta;font-size:1.4em;font-weight:normal;line-height:1.2em;@include ellipsis(560,$white-space:pre-wrap)}
         }
         article{height:100%;position:relative;top:-20px}
         section{overflow:hidden;margin:0 40px}
@@ -609,20 +662,36 @@ section#files
             {
                 &.source
                 {
-                    @include icon($size:32);margin:20px 10px 25px 20px;
+                    @include icon($size:32);margin:20px 10px 15px 20px;
                     &.web{@include sprite(204,2,32)}
                     &.ed2k{@include sprite(201,2,32)}
                     &.gnutella{@include sprite(202,2,32)}
                     &.torrent{@include sprite(203,2,32)}
                 }
-                &.source32{margin:20px 10px 25px 20px}
+                &.source32{margin:20px 10px 15px 20px}
             }
+            .downloader {
+                font-size:0.9em;
+                line-height:1em;
+                display:block;
+                background: url(/static/img/download_green.png) left center no-repeat;
+                color: $darkgray;
+                margin: 0 0 0.5em 2.4em;
+                padding: 0.5em 0 0.5em 2.4em;
+                width:270px;
+                text-decoration:none;
+                font-weight:bold;
+                & + h4 {
+                    margin-top:0;
+                }
+            }
+
             iframe,embed{display:block;margin:0 auto;border:0}
-            >a{margin:20px 0 25px;width:230px;font-size:1.35em;vertical-align:middle;span{@include icon(322,1,16);float:right}}
-            em{display:inline-block;font-variant:small-caps}
+            >a{margin:20px 0 15px;width:230px;font-size:1.35em;vertical-align:middle;span{@include icon(322,1,16);float:right}}
+            em{font-variant:small-caps;display:inline-block;zoom:1;*display:inline;}
             div{float:right;width:190px;max-height:315px;min-height:175px;padding:20px;overflow:hidden;text-align:center;span{background:image-url("img/search/no_image.png");display:block;height:175px;border:1px solid $lightgray}}
             img{max-width:190px}
-            h4{width:290px;margin-left:20px;padding:5px 10px;background:$darkerwhite;color:$gray}
+            h4{margin-top:2em;width:290px;margin-left:20px;padding:5px 10px;background:$darkerwhite;color:$gray}
         }
         #download_share
         {
@@ -638,10 +707,11 @@ section#files
             li
             {
                 text-align:left;margin-top:8px;line-height:16px;
-                a{color:$darkergray;text-decoration:none;font-size:.85em;display:inline-block;vertical-align:middle;line-height:16px;&:hover,&:hover>em{text-decoration:underline}}
+                a{color:$darkergray;text-decoration:none;font-size:.85em;vertical-align:middle;line-height:16px;display:inline-block;zoom:1;*display:inline;
+                    &:hover,&:hover>em{text-decoration:underline}}
                 >span
                 {
-                    &:before{content:"";display:inline-block;border:4px solid transparent;border-left-color:$gray}
+                    &:before{content:"";border:4px solid transparent;border-left-color:$gray;display:inline-block;zoom:1;*display:inline;}
                     &.source
                     {
                         @include icon($size:16);margin-right:12px;
@@ -673,7 +743,7 @@ section#files
             #download_link{@extend .button;font-size:1em;font-weight:bold;padding:1px 7px;margin-left:115px;line-height:16px;vertical-align:bottom;margin-top:0px;border-radius:5px;}
             form {display:inline;}
             #complaint{border:none;display:inline;margin:-3px 0px 0px;padding:0px;box-shadow:none;@include states(321,24,$active:2);
-                    vertical-align: bottom;width: 20px;height: 21px;}
+                    vertical-align: bottom;width: 20px;height: 23px;}
             #favorite{@include states(305,24,$status3:2,$active:2)}
             #vote_up{@include states(302,24,$status3:2,$active:2)}
             #vote_down{@include states(303,24,$status3:2,$active:2)}
@@ -686,7 +756,7 @@ section#files
                 ul.filepaths {margin-left:10px;}
                 li {
                     margin: 4px 0px;
-                    a {max-width:82%;overflow: hidden; display: inline-block; white-space: nowrap;text-overflow: ellipsis;}
+                    a {max-width:82%;overflow: hidden; white-space: nowrap;text-overflow: ellipsis; display: inline-block; zoom:1; *display: inline; }
                     span {display:block;float:right;font-size:0.75em;margin-left:3px;white-space:nowrap}
                 }
                 li.first_files {
@@ -715,7 +785,7 @@ section#files
         overflow:hidden;background:$darkwhite;width:615px;padding:10px;margin-bottom:5px;padding-left:0;font-weight:bold;color:$darkergray;
         li
         {
-            @include ellipsis(565,inline-block);padding:0 10px;border-right:2px solid $green;
+            padding:0 10px;border-right:2px solid $green;@include ellipsis(565,inline-block);
             &:last-child{border-right:none}
         }
         a{position:relative;top:4px}
@@ -743,9 +813,9 @@ section#files
                 background:#FFF;height:65px;border:1px solid transparent;border-radius:1px;padding:10px 5px;margin:1px 0;
                 h3 a
                 {
-                    z-index:0;@include ellipsis(380,$width-type:width);text-decoration:none;outline:none;color:#000;font-weight:normal;
+                    z-index:0;text-decoration:none;outline:none;color:#000;font-weight:normal;@include ellipsis(380,$width-type:width);
                     strong{color:$magenta}
-                    span{@include ellipsis(250,inline-block);vertical-align:top}
+                    span{vertical-align:top;@include ellipsis(250,inline-block);}
                 }
                 a{z-index:1}
                 >span
@@ -753,14 +823,14 @@ section#files
                     float:left;color:#000;
                     &.type{@include icon(101,0,50);margin:12px 10px 0 15px}
                     &.ext{}
-                    &.size{width:90px;span{margin-left:5px;display:inline-block;border:5px solid transparent;border-left-color:$gray}}
+                    &.size{width:90px;span{margin-left:5px;border:5px solid transparent;border-left-color:$gray;display:inline-block;zoom:1;*display:inline}}
                 }
                 ul
                 {
                     ul{float:left;margin-top:15px;}
                     &.sources
                     {
-                        float:right;color:$darkergray;text-align:right;margin-top:-5px;margin-left:-1000px;
+                        color:$darkergray;text-align:right;margin-top:-5px;position:absolute;right:113px;top:13px;
                         li{min-height:15px;font-size:0.9em;&:first{margin-bottom:20px}}
                         a{font-size:0.85em;display:block;color:$darkergray;text-decoration:none;text-transform:uppercase;&:hover{color:$magenta;text-decoration:underline}}
                         @mixin icon_p2p($icon_size:32)
@@ -768,7 +838,8 @@ section#files
                             margin-bottom:15px;margin-right:3px;
                             >span
                             {
-                                &:not(.source32){@include icon($size:$icon_size);margin-right:-3px}
+                                @include icon($size:$icon_size);margin-right:-3px;
+                                &.source32{@include icon($size:32,$img:sources);margin-right:0px;}
                                 &.ed2k{@include sprite(201,1,$icon_size)}
                                 &.gnutella{@include sprite(202,1,$icon_size)}
                                 &.torrent{@include sprite(203,1,$icon_size)}
@@ -776,39 +847,30 @@ section#files
                             }
                         }
                         .source_1{@include icon_p2p;height:32px;.source32{margin-right:-4px}}
-                        .source_2{@include icon_p2p(24);margin-bottom:25px;span:not(.source32){margin-right:-6px}}
-                        .source_3{@include icon_p2p(16);width:32px;display:inline-block;text-align:center}
+                        .source_2{@include icon_p2p(24);margin-right:7px;margin-bottom:25px;span{margin-right:-6px;&.source32:margin-right:0px}}
+                        .source_3{@include icon_p2p(16);width:32px;text-align:center;display:inline-block;zoom:1;*display:inline;}
                     }
                     &.metadata
                     {
-                        display:block;height:35px;font-size:.85em;width:465px;
-                        li{display:inline;&:first-child a:before{content:none}}
+                        display:block;height:39px;font-size:.85em;width:465px;
+                        li{display:inline;line-height: 0.9em;&:first-child a:before{content:none}}
                         a
                         {
-                            @include ellipsis(300,inline-block);color:$darkergray;text-decoration:none;
-                            &:before{content:"";margin:0 1px 0 3px;display:inline-block;border:4px solid transparent;border-left-color:$gray}
+                            margin-top:5px;color:$darkergray;text-decoration:none;@include ellipsis(300,inline-block);
+                            &:before{content:"";margin:0 1px 0 3px;border:4px solid transparent;border-left-color:$gray;display:inline-block;zoom:1;*display:inline;}
                             &:hover{color:$magenta;text-decoration:underline}
                         }
                     }
                     &.links
                     {
-                        display:none;float:right;height:32px;/*width:320px;margin-left:120px;margin-top:-3px;*/
-                        a{color:$darkergray;/*font-size:.9em;*/display:block;}
-                        /*span{@include icon(309,0,24);float:left}
+                        display:none;float:right;height:32px;
+                        a{color:$darkergray;display:block;}
                         li
                         {
-                            display:inline-block;width:100px;
-                            &:nth-child(1){a{@include states(309,24,1)}}
-                            &:nth-child(2){a{@include states(302,24,1)}}
-                            &:nth-child(3){a{@include states(308,24,1)}}
-                            strong{display:block}
-                        }*/
-                        li
-                        {
-                            /*position:relative;*/display:inline-block;vertical-align:middle;
-                            &:nth-child(1){width:175px;span{/*float:left;*/@include icon(309,0,24)}a{@include states(309,24,1,0)}}
-                            &:nth-child(2){width:50px;/*top:-28px;left:80px;*/span{@include icon(309,0,16)}a{@include states(302,16,1,0)}}
-                            &:nth-child(3){width:50px;/*top:-28px;left:116px;*/span{@include icon(309,0,16)}a{@include states(308,16,1,0)}}
+                            vertical-align:middle;display:inline-block;zoom:1;*display:inline;
+                            &:nth-child(1){width:175px;span{@include icon(309,0,24)}a{@include states(309,24,1,0)}}
+                            &:nth-child(2){width:50px;span{@include icon(309,0,16)}a{@include states(302,16,1,0)}}
+                            &:nth-child(3){width:50px;span{@include icon(309,0,16)}a{@include states(308,16,1,0)}}
                             strong{display:block}
                         }
                     }
@@ -871,7 +933,7 @@ section#files
 /* user */
 section#user
 {
-    .oauth{width:89px;height:21px;display:inline-block;margin:5px}
+    .oauth{width:89px;height:21px;margin:5px;display:inline-block;zoom:1;*display:inline}
     .oauth span{display:none}
     .oauth.tw{background:image-url("img/users/oauth.png")}
     .oauth.fb{background:image-url("img/users/oauth.png") -89px 0 no-repeat}
@@ -906,9 +968,10 @@ section#user
         width:500px;
         padding:1px;
         vertical-align:middle;
-        display:inline-block;
         line-height:1em;
         border-radius:6px;
+        display:inline-block;
+        zoom:1;*display:inline;
         }
     .inner{
         background:$darkwhite;
@@ -962,8 +1025,77 @@ section#user
         margin-left:2.5%;
         background:$magenta;
         color:#FFF;
+    }
+    .dialog_check {
+        font-size:0.8em;
+    }
+}
+
+section#downloader {
+    color: $lightblack;
+    margin:0 auto;
+    width:800px;
+
+    .thanks {
+        font-size:1.75em; text-align:center
+    }
+
+    .column {
+        float: left; padding: 0px;width: 800px; margin-top:4em;
+        &.c2 {width:350px;padding:0px 25px;
+            div {
+                margin-top:0.6em;text-align:right;
+                a + p {font-weight:bold;}
+                strong {color:$magenta}
+                p {
+                    padding:0; line-height:1.5em; font-size:0.85em;
+                }
+                a { color: $lightblack;}
+
+                a#download_button {
+                    background:$magenta;border-radius:5px;color:white;padding:0.4em 0.5em;font-weight:bold;font-size:2.1em;float:right;text-decoration:none;margin-left:0.3em; display:inline-block; zoom:1; *display:inline;
+                }
+            }
+        }
+        &.c3 {width:220px;padding:0px 35px;font-size:0.9em;
+            div {height:100px;text-align:center}
+            ul li {
+                @include check-icon();
+            }
+        }
+        &.alpha {
+            clear:left;
+            padding-left:0px;
+        }
+        &.omega {
+            clear:right;
+            padding-right:0px;
+        }
+
+    }
+    h1 + p {
+        text-align:right;margin-top:-2.5em;font-style:italic;font-size:0.9em;
+        span {
+            color: $magenta;
+            font-size:1.8em;
+            font-weight:bold;
+            font-style:normal;
+            display:block;
         }
     }
+    h3 {
+        margin-bottom:0.2em;
+    }
+
+    .legal {
+        margin: 2em 0;
+        p {
+            margin: 0em 0 3em;
+            color: $gray;
+            font-size:0.8em;
+        }
+    }
+}
 
 /* dialog downloader */
 #dialog.downloader{

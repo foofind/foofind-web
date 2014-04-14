@@ -3,7 +3,7 @@
     Módulo principal de la aplicación Web
 """
 import foofind.globals
-import os, os.path, defaults
+import os, os.path, defaults, datetime
 
 from collections import OrderedDict
 from flask import Flask, g, request, session, render_template, redirect, abort, url_for, make_response, current_app, _request_ctx_stack
@@ -22,7 +22,7 @@ from foofind.blueprints.page import page
 from foofind.blueprints.user import user,init_oauth
 from foofind.blueprints.files import files
 from foofind.blueprints.api import api
-from foofind.blueprints.downloads import downloads, track_downloader_info
+from foofind.blueprints.downloader import downloader, get_downloader_properties
 from foofind.blueprints.labs import add_labs, init_labs
 from foofind.templates import register_filters
 from foofind.utils.webassets_filters import JsSlimmer, CssSlimmer
@@ -69,6 +69,7 @@ def create_app(config=None, debug=False):
         sentry.init_app(app)
     logging.getLogger().setLevel(logging.DEBUG if debug else logging.INFO)
 
+
     # Configuración dependiente de la versión del código
     revision_filename_path = os.path.join(os.path.dirname(app.root_path), "revision")
     if os.path.exists(revision_filename_path):
@@ -110,7 +111,7 @@ def create_app(config=None, debug=False):
     app.register_blueprint(user)
     app.register_blueprint(files)
     app.register_blueprint(api)
-    app.register_blueprint(downloads)
+    app.register_blueprint(downloader)
     add_labs(app) # Labs (blueprints y alternativas en pruebas)
 
     # Web Assets
@@ -128,14 +129,12 @@ def create_app(config=None, debug=False):
     assets.register('css_ie7', 'css/ie7.css', filters='css_slimmer', output='gen/ie7.css')
     assets.register('css_labs', 'css/jquery-ui.css', Bundle('css/labs.css', filters='pyscss', output='gen/l.css', debug=False), filters='css_slimmer', output='gen/labs.css')
     assets.register('css_admin', Bundle('css/admin.css', 'css/jquery-ui.css', filters='css_slimmer', output='gen/admin.css'))
-    assets.register('css_foodownloader', Bundle('css/foodownloader.css', filters='css_slimmer', output='gen/foodownloader.css'))
 
     assets.register('js_all', Bundle('js/jquery.js', 'js/jquery-ui.js', 'js/jquery.ui.selectmenu.js', 'js/files.js', filters='rjsmin', output='gen/foofind.js'), )
     assets.register('js_ie', Bundle('js/html5shiv.js', 'js/jquery-extra-selectors.js', 'js/jquery.ba-hashchange.js', 'js/selectivizr.js', filters='rjsmin', output='gen/ie.js'))
     assets.register('js_search', Bundle('js/jquery.hoverIntent.js', 'js/search.js', filters='rjsmin', output='gen/search.js'))
     assets.register('js_labs', Bundle('js/jquery.js', 'js/jquery-ui.js', 'js/labs.js', filters='rjsmin', output='gen/labs.js'))
     assets.register('js_admin', Bundle('js/jquery.js',  'js/jquery-ui-admin.js', 'js/admin.js', filters='rjsmin', output='gen/admin.js'))
-    assets.register('js_foodownloader', Bundle('js/jquery.js', 'js/foodownloader.js', filters='rjsmin', output='gen/foodownloader.js'))
 
     # proteccion CSRF
     csrf.init_app(app)
@@ -158,9 +157,7 @@ def create_app(config=None, debug=False):
         '''
         Carga el código de idioma en la variable global.
         '''
-
         all_langs = current_app.config["ALL_LANGS"]
-
         # obtiene el idioma de la URL
         g.url_lang = None
         if values is not None:
@@ -225,7 +222,6 @@ def create_app(config=None, debug=False):
     feedbackdb.init_app(app)
     configdb.init_app(app)
     entitiesdb.init_app(app)
-    downloadsdb.init_app(app)
 
     for service_name, params in app.config["DATA_SOURCE_SHARING"].iteritems():
         eval(service_name).share_connections(**{key:eval(value) for key, value in params.iteritems()})
@@ -253,8 +249,17 @@ def create_app(config=None, debug=False):
     eventmanager.once(configdb.pull)
     eventmanager.interval(app.config["CONFIG_UPDATE_INTERVAL"], configdb.pull)
 
-    # guarda registro de downloader
-    eventmanager.interval(app.config["CONFIG_UPDATE_INTERVAL"], track_downloader_info)
+    # downloader files
+    downloader_files = app.config["DOWNLOADER_FILES"]
+    base_path = os.path.abspath(os.path.join(app.root_path,"../downloads"))
+    def update_downloader_properties():
+        '''
+        Downloader updated.
+        '''
+        local_cache["downloader_properties"] = get_downloader_properties(base_path, downloader_files)
+
+    configdb.register_action("update_downloader", update_downloader_properties)
+    local_cache["downloader_properties"] = get_downloader_properties(base_path, downloader_files)
 
     # Unittesting
     unit.init_app(app)
@@ -266,10 +271,15 @@ def create_app(config=None, debug=False):
         eventmanager.timeout(20, unit.run_tests)
         #eventmanager.interval(current_app.config["UNITTEST_INTERVAL"], unit.run_tests)
 
+    # IPs españolas
+    spanish_ips.load(os.path.join(os.path.dirname(app.root_path),app.config["SPANISH_IPS_FILENAME"]))
+
     @app.before_request
     def before_request():
+
         # No preprocesamos la peticiones a static
         if request.path.startswith("/static"):
+            g.accept_cookies = None
             return
 
         # default values for g object
@@ -301,8 +311,6 @@ def create_app(config=None, debug=False):
         descr = _("about_text")
         g.page_description = descr[:descr.find("<br")]
 
-        g.foodownloader = current_app.config["FOODOWNLOADER"] and (request.user_agent.platform == "windows")
-
         # ignora peticiones sin blueprint
         if request.blueprint is None and request.path.endswith("/"):
             if "?" in request.url:
@@ -316,6 +324,9 @@ def create_app(config=None, debug=False):
     @app.after_request
     def after_request(response):
         if request.user_agent.browser == "msie": response.headers["X-UA-Compatible"] = "IE=edge"
+
+        if g.accept_cookies == "0":
+            response.set_cookie("ck", "2", expires=datetime.datetime.now() + datetime.timedelta(3650))
         return response
 
     # Páginas de error
@@ -333,6 +344,8 @@ def create_app(config=None, debug=False):
     return app
 
 def init_g():
+    g.accept_cookies = None
+
     # argumentos de busqueda por defecto
     g.args = {}
     g.active_types = {}
@@ -364,6 +377,28 @@ def init_g():
     g.page_description = g.title
 
     g.full_lang = current_app.config["ALL_LANGS_COMPLETE"][g.lang]
+
+    # downloader links
+    g.downloader = current_app.config["DOWNLOADER"]
+    g.downloader_properties = local_cache["downloader_properties"]
+
+    g.user_build = current_app.config["DOWNLOADER_DEFAULT_BUILD"]
+
+    # Find the best active build for the user
+    for build, info in g.downloader_properties.iteritems():
+        try:
+            if build != "common" and info["active"] and info["length"] and info.get("check_user_agent", lambda x:False)(request.user_agent):
+                g.user_build = build
+        except BaseException as e:
+            logging.exception(e)
+
+
+    accept_cookies = request.cookies.get("ck", "0")
+    if accept_cookies=="0":
+        if not (any(lang_code in request.accept_languages.values() for lang_code in current_app.config["SPANISH_LANG_CODES"]) or request.remote_addr in spanish_ips):
+            accept_cookies = "2"
+    g.accept_cookies = accept_cookies
+
 
 def add_translation_fallback(locale):
     domain = get_domain()

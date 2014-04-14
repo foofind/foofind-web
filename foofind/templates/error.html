@@ -1,7 +1,7 @@
 {% if not full_screen %}
     {% extends "base.html" %}
     {%- block header %}{% endblock %}
-    {% block content %}
+    {%- block content %}
         <img src="{{ g.static_prefix }}/img/error.png" alt="error" width="329" height="224"/>
         <div>
             {{ logo() }}
@@ -10,12 +10,12 @@
             <a href="http://status.foofind.is" rel="nofollow">{{_('servers_status')}}</a>
             {{ search_box(search_form,query) }}
         </div>
-        <script>_gaq.push(['_trackEvent','Errores','{{ g.title }}','web']);</script>
-    {% endblock %}
+    {%- endblock %}
+    {%- block extra_cookies %}trackGAEvent('Errores','{{ g.title }}','web');{%- endblock %}
 {% else %}
     <h1>{{ g.title }}</h1>
     {% if error[1] %}
     <p class="error">{{_(error[1])}}</p>
     {% endif %}
-    <script>_gaq.push(['_trackEvent','Errores','{{ g.title }}','web']);</script>
+    <script>trackGAEvent('Errores','{{ g.title }}','web');</script>
 {% endif %}

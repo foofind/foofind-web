@@ -15,10 +15,6 @@
             <label>{{ radio }}{{ radio.label.text }}</label>
         {%- endfor %}
         </fieldset>
-    {%- elif field.type=="SelectField" %}
-        {%- for value,option in field.choices %}
-            <option label="{{ option }}" value="{{ value }}"{% if field.default==value %}selected="selected"{% endif %}  >{{ option }}</option>
-        {%- endfor %}
     {%- else %}
         {%- if field.type=="SubmitField" %}
             </fieldset>

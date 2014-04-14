@@ -1,4 +1,4 @@
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
@@ -46,6 +46,9 @@ msgstr "返回搜索引擎"
 msgid "error_500_message"
 msgstr "发生错误"
 
+msgid "error_500_description"
+msgstr "似乎出现了一些意外状况,我们正在努力解决"
+
 msgid "error_404_message"
 msgstr "页面未找到"
 
@@ -81,6 +84,9 @@ msgstr "关于"
 
 msgid "no_valid_email"
 msgstr "这不是一个有效的电子邮件地址，正确格式为：user@example.com"
+
+msgid "field_length"
+msgstr "这个栏位必须包含%(min)s到%(max)s个字母"
 
 msgid "no_valid_url"
 msgstr "不是有效的地址"
@@ -291,6 +297,9 @@ msgstr "流派"
 
 msgid "seconds"
 msgstr "秒"
+
+msgid "first_files"
+msgstr "正显示前%(value)s个文件。下载可见全部。"
 
 msgid "minutes"
 msgstr "分钟"
@@ -873,13 +882,14 @@ msgstr "您的翻译结果已经提交成功。谢谢您的帮助！"
 msgid "translate_at_least_one"
 msgstr "请至少一个文本翻译"
 
-msgid "foodownloader_overview"
+msgid "A fast client for the Torrent P2P network"
+msgstr "是一个小巧快速的 Torrent P2P网络客户端"
+
+msgid "downloader_overview"
 msgstr "概述"
 
-msgid "foodownloader_overview_text"
+msgid "downloader_overview_text"
 msgstr ""
-"**Foofind Download Manager** 是一个小巧快速的 **Torrent** P2P网络客户端\r\n"
-"\r\n"
 "Foofind Download Manager  容易使用，界面直观，安全。你可以随时暂停，恢复下载\r\n"
 "软件特点：\r\n"
 "\r\n"
@@ -887,43 +897,40 @@ msgstr ""
 "*直观的界面\r\n"
 "*支持DHT,uPnP和uTorrent"
 
-msgid "foodownloader_sharing"
+msgid "downloader_sharing"
 msgstr "下载并且分享软件"
 
-msgid "foodownloader_safety"
+msgid "downloader_safety"
 msgstr "安全提取你的文件"
 
-msgid "foodownloader_download"
+msgid "downloader_download"
 msgstr "免费下载"
 
-msgid "foodownloader_download_source"
+msgid "downloader_download_source"
 msgstr "下载原始版"
 
-msgid "foodownloader_meta_description"
+msgid "downloader_meta_description"
 msgstr "Foofind Download Manager是一个小巧方便的torrent下载软件"
 
-msgid "foodownloader_thanks"
+msgid "downloader_thanks"
 msgstr "感谢下载！"
 
-msgid "foodownloader_thanks_message"
+msgid "downloader_thanks_message"
 msgstr "感谢安装Foofing Download Manager！"
 
-msgid "foodownloader_download_coming_soon"
+msgid "downloader_download_coming_soon"
 msgstr "抱歉：尚未提供适用于您的操作系统。"
 
-msgid "foodownloader_dialog_title"
+msgid "downloader_dialog_title"
 msgstr "嘿！你需要一个Torrent客户端下载此文件"
 
-msgid "foodownloader_dialog_yes"
+msgid "downloader_dialog_yes"
 msgstr "是的，下载用Foofind Download Manager下载"
 
-msgid "foodownloader_dialog_no"
-msgstr "不，谢谢我已经有一个Torrent客户端"
-
-msgid "foodownloader_dialog_text"
+msgid "downloader_dialog_text"
 msgstr ""
 "现在下载安装Foofind Download Manager来得到这个文件。\r\n"
-"我们的软件让你下载的种子更快，比以往任何时候都更容易 - 完全免费！如果你已经有了一个Torrent客户端，点击“不，谢谢”。"
+"我们的软件让你下载的种子更快，比以往任何时候都更容易 - 完全免费！"
 
 msgid "downloader_update_message"
 msgstr "新版本的%(appname)s (%(version)s)，准备安装。你想升级吗？"

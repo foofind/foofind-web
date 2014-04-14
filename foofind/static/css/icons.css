@@ -1,4 +1,4 @@
-@mixin background_cached($url,$color:'transparent'){background-image:image-url($url);background-repeat:no-repeat;background-color:$color}
+@mixin background_cached($url,$color:transparent){background-image:image-url($url);background-repeat:no-repeat;background-color:$color}
 @mixin icon-16px-201-A{ background-position: 0 0;  }
 @mixin icon-16px-201-AA{ background-position: -17px 0;  }
 @mixin icon-16px-201-B{ background-position: -34px 0;  }

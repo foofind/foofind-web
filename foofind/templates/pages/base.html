@@ -9,6 +9,7 @@
         <dd><a href="{{ url_for('page.contact') }}"{% if request.path==url_for('page.contact') %} class="active"{% endif %}>{{_('contact')}}</a></dd>
         {%- if g.lang == "es" %}
         <dd><a href="{{ url_for('page.show',pname='jobs') }}"{% if request.path==url_for('page.show',pname='jobs') %} class="active"{% endif %}>Ofertas de empleo</a></dd>
+        <dd><a href="{{ url_for('page.cookies') }}"{% if request.path==url_for('page.cookies') %} class="active"{% endif %}>Política de cookies</a></dd>
         {%- endif %}
         <dt>{{_('help_us')}}</dt>
         <dd><a href="{{ url_for('page.submit_link') }}"{% if request.path==url_for('page.submit_link') %} class="active"{% endif %}>{{_('submit_links')}}</a></dd>

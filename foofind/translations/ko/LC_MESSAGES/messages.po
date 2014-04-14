@@ -1,4 +1,4 @@
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
@@ -16,6 +16,9 @@ msgstr ""
 msgid "your_email"
 msgstr "메일주소"
 
+msgid "click_here"
+msgstr "클릭하세요!"
+
 msgid "password"
 msgstr "비밀번호"
 
@@ -24,6 +27,9 @@ msgstr "보내기"
 
 msgid "help_us"
 msgstr "도와주세요!"
+
+msgid "ok"
+msgstr "확인"
 
 msgid "legal_info"
 msgstr "정책안내"
@@ -123,11 +129,17 @@ msgstr "직접 내려받기"
 msgid "other_direct_downloads"
 msgstr "그밖의 직접 내려받기"
 
+msgid "other_streamings"
+msgstr "다른 스트리밍들"
+
 msgid "others"
 msgstr "기타"
 
 msgid "audio"
 msgstr "오디오"
+
+msgid "unknown"
+msgstr "불명"
 
 msgid "video"
 msgstr "비디오"
@@ -144,8 +156,14 @@ msgstr "응용프로그램"
 msgid "no_results_for"
 msgstr "결과 없음"
 
+msgid "archive"
+msgstr "활성화"
+
 msgid "previous"
 msgstr "이전"
+
+msgid "write_something"
+msgstr "뭐라도 적어주세요!"
 
 msgid "next"
 msgstr "다음"
@@ -244,7 +262,7 @@ msgid "length"
 msgstr "길이"
 
 msgid "bitrate"
-msgstr "Bitrate"
+msgstr "비트레이트"
 
 msgid "genre"
 msgstr "장르"
@@ -303,6 +321,9 @@ msgstr "버전"
 msgid "name"
 msgstr "이름"
 
+msgid "channels"
+msgstr "채널"
+
 msgid "description"
 msgstr "설명"
 
@@ -351,6 +372,9 @@ msgstr "저작권"
 msgid "private_file"
 msgstr "개인 파일"
 
+msgid "created_by"
+msgstr "만든이"
+
 msgid "composer"
 msgstr "작자"
 
@@ -372,11 +396,29 @@ msgstr "트래커"
 msgid "hash"
 msgstr "해쉬"
 
+msgid "director"
+msgstr "디렉터"
+
+msgid "writer"
+msgstr "작가"
+
+msgid "producer"
+msgstr "프로듀서"
+
 msgid "visualizations"
 msgstr "시각화"
 
 msgid "codec"
 msgstr "코덱"
+
+msgid "all_sources"
+msgstr "모든 소스"
+
+msgid "share_download"
+msgstr "공유"
+
+msgid "share_search"
+msgstr "검색 결과 공유"
 
 msgid "encoding"
 msgstr "인코딩"
@@ -428,6 +470,12 @@ msgstr "부!"
 
 msgid "comment_published_succesfully"
 msgstr "덧글이 성공적으로 작성되었습니다"
+
+msgid "more_info"
+msgstr "정보 더보기"
+
+msgid "more_comments"
+msgstr "코멘드 보기"
 
 msgid "related_files"
 msgstr "관련 파일"
@@ -735,6 +783,51 @@ msgstr "URL 은 내려받기 페이지에 적합해야 합니다."
 msgid "include_reported_links"
 msgstr "검토 주소를 적절한 필드에 기재해 주세요"
 
+msgid "link_not_exist"
+msgstr "이 링크는 존재하지 않거나 삭제되었습니다"
+
+msgid "translate"
+msgstr "번역"
+
+msgid "choose_language"
+msgstr "언어 선택"
+
+msgid "translation_sent"
+msgstr "당신의 번역이 제출되었습니다. 도움에 감사드립니다!"
+
+msgid "copy_to_clipboard_shortcut"
+msgstr "CTRL+C를 이용해 복사하세요"
+
+msgid "opensearch_description"
+msgstr "Foofind를 이용해 검색"
+
+msgid "downloader_overview"
+msgstr "미리보기"
+
+msgid "downloader_sharing"
+msgstr "내려받기 또는 파일 공유"
+
+msgid "downloader_safety"
+msgstr "안전한 방법으로 파일 받기"
+
+msgid "downloader_its_free"
+msgstr "완전 **무료**!"
+
+msgid "downloader_download_source"
+msgstr "다운로드 소스"
+
+msgid "downloader_meta_description"
+msgstr "Foofind 다운로드 매니저는 쉽고 간편하게 토렌트를 다운로드 할수 있습니다."
+
+msgid "downloader_download_coming_soon"
+msgstr "죄송합니다: 당신의 OS는 아직 지원하지 않습니다."
+
+msgid "downloader_dialog_title"
+msgstr "잠깐만요!다운로드 하려면 토렌트 클라이언트가필요합니다."
+
+msgid "downloader_dialog_yes"
+msgstr "네, Foofind 매니저로다운로드 받습니다."
+
 msgid "submit_links"
 msgstr "전송 주소"
 
@@ -757,13 +850,22 @@ msgstr ""
 
 msgid "technology_text"
 msgstr ""
-"<p>Foofind 팀은 프로젝트 대부분의 소스코드를 개발했지만, 무료 소프트웨어 커뮤니티의 많은 도움을 받았습니다.</p>"
-"<p>이러한 도움들이 없었더라면, Foofind 는 만들어지지 않았을 것 입니다. 감사합니다! ;-)</p>"
-"<ul>"
-"<li><a href=\"http://twistedmatrix.com/\">Twisted</a>: Twisted 는 MIT 라이센스를 갖는 오픈 소스 프로젝트로 Python 기반으로 만들어진 event-driven 네트워킹 엔진 입니다.</li>"
-"<li><a href=\"http://scrapy.org/\">Scrapy</a>: Scrapy 는 빠르고 고수준의 화면 스크래핑과 웹 탐색을 하는 프레임웍으로 웹 페이지에서 데이터 구조를 파악하고 데이터마이닝 에서부터 모니터링, 테스트 자동화에 이르기까지 광범위하게 사용됩니다.</li>"
-"<li><a href=\"http://flask.pocoo.org/\">Flask</a>: Flask 는 Python 을 위한 WerkZeug 기반의 마이크로프레임워크 로써, Jinja 2 와 Jinja 2 의 BSD 라이센스를 갖습니다.</li>"
-"<li><a href=\"http://www.mongodb.org/\">MongoDB</a>: MongoDB (\"humongous\" 로 부터 파생된) 는 확장가능한 고성능의 오픈 소스 NoSQL 데이터베이스 입니다.</li>"
-"<li><a href=\"http://github.com/dcramer/sentry\">Sentry</a>: Sentry 는 실시간 이벤트의 기록을 위한 플랫폼으로 오류 모니터링과 사용자 피드백의 혼란없이 적절히 필요한 모든 정보를 추출하는데 적합합니다.</li>"
-"<li><a href=\"http://sphinxsearch.com/\">Sphinx</a>: Sphinx 는 간결하고 정확하며 성능향상에 초점을 두고 디자인된 오픈 소스 검색 서버입니다. C++ 로 작성되어졌으며 Linux (RedHat, Ubuntu, 기타), Windows, MacOS, Solaris, FreeBSD, 그 외의 다른 시스템들에서 동작합니다.</li>"
-"<li><a href=\"http://www.komodomedia.com/blog/2009/06/social-network-icon-pack/\">Social Network Icon Pack</a>: Komodo Media, Rogie King 의 Social Network Icon Pack 은  Creative Commons Attribution-Share Alike 3.0 Unported 라이센스를 갖습니다.</li></ul>"
+"<p>Foofind 팀은 프로젝트 대부분의 소스코드를 개발했지만, 무료 소프트웨어 커뮤니티의 많은 도움을 받았습니다.</p><p>이러한 "
+"도움들이 없었더라면, Foofind 는 만들어지지 않았을 것 입니다. 감사합니다! ;-)</p><ul><li><a "
+"href=\"http://twistedmatrix.com/\">Twisted</a>: Twisted 는 MIT 라이센스를 갖는 오픈 소스"
+" 프로젝트로 Python 기반으로 만들어진 event-driven 네트워킹 엔진 입니다.</li><li><a "
+"href=\"http://scrapy.org/\">Scrapy</a>: Scrapy 는 빠르고 고수준의 화면 스크래핑과 웹 탐색을 하는 "
+"프레임웍으로 웹 페이지에서 데이터 구조를 파악하고 데이터마이닝 에서부터 모니터링, 테스트 자동화에 이르기까지 광범위하게 "
+"사용됩니다.</li><li><a href=\"http://flask.pocoo.org/\">Flask</a>: Flask 는 Python"
+" 을 위한 WerkZeug 기반의 마이크로프레임워크 로써, Jinja 2 와 Jinja 2 의 BSD 라이센스를 "
+"갖습니다.</li><li><a href=\"http://www.mongodb.org/\">MongoDB</a>: MongoDB "
+"(\"humongous\" 로 부터 파생된) 는 확장가능한 고성능의 오픈 소스 NoSQL 데이터베이스 입니다.</li><li><a "
+"href=\"http://github.com/dcramer/sentry\">Sentry</a>: Sentry 는 실시간 이벤트의 기록을 "
+"위한 플랫폼으로 오류 모니터링과 사용자 피드백의 혼란없이 적절히 필요한 모든 정보를 추출하는데 적합합니다.</li><li><a "
+"href=\"http://sphinxsearch.com/\">Sphinx</a>: Sphinx 는 간결하고 정확하며 성능향상에 초점을 "
+"두고 디자인된 오픈 소스 검색 서버입니다. C++ 로 작성되어졌으며 Linux (RedHat, Ubuntu, 기타), Windows, "
+"MacOS, Solaris, FreeBSD, 그 외의 다른 시스템들에서 동작합니다.</li><li><a "
+"href=\"http://www.komodomedia.com/blog/2009/06/social-network-icon-"
+"pack/\">Social Network Icon Pack</a>: Komodo Media, Rogie King 의 Social "
+"Network Icon Pack 은  Creative Commons Attribution-Share Alike 3.0 Unported "
+"라이센스를 갖습니다.</li></ul>"

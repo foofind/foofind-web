@@ -1,0 +1,201 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: 1\n"
+"Report-Msgid-Bugs-To: ismael@mp2p.net\n"
+"POT-Creation-Date: 2011-12-09 11:49+0100\n"
+"PO-Revision-Date: 2011-12-09 11:49+0100\n"
+"Last-Translator: Foofind <hola@foofind.com>\n"
+"Language-Team: el <hola@foofind.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Foofind's pogit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgid "new_toolbar"
+msgstr "Δοκιμάστε την νέα γραμμή εργαλεἰων"
+
+msgid "click_here"
+msgstr "πατήστε εδώ"
+
+msgid "your_email"
+msgstr "Διεὐθυνση ηλεκτρονικού ταχυδρομείου"
+
+msgid "password"
+msgstr "Κωδικός"
+
+msgid "submit"
+msgstr "Στείλτε"
+
+msgid "ok"
+msgstr "Εντάξει"
+
+msgid "help_us"
+msgstr "Βοηθήστε μας"
+
+msgid "legal_info"
+msgstr "νομικές πληροφορίες"
+
+msgid "go_home"
+msgstr "Πήγαινε ξανά στην αναζήτηση"
+
+msgid "error_500_message"
+msgstr "Συνέβη σφάλμα"
+
+msgid "error_500_description"
+msgstr ""
+"Κάτι περίεργο συνέβη, οι ειδικοί μας διερευνούν αυτή την περίεργη "
+"δραστηριότητα."
+
+msgid "error_404_message"
+msgstr "Η σελίδα δεν βρέθηκε"
+
+msgid "error_404_description"
+msgstr ""
+"Η διεύθυνση που ζητήθηκε δεν βρέθηκε. Παρακαλούμε ελέγξτε αν την γράψατετο "
+"σωστά. Αν ναι, παρακαλούμε ενημερώστε τους διαχειριστές της ιστοσελίδας."
+
+msgid "error_410_message"
+msgstr "Η σελίδα δεν είναι διαθέσιμη"
+
+msgid "error_410_description"
+msgstr ""
+"Η διεύθυνση που ζητήσατε δεν είναι πλέον διαθέσιμη και ούτε θα είναι στο "
+"μέλλον"
+
+msgid "error_502_message"
+msgstr "Κακή πύλη"
+
+msgid "error_502_description"
+msgstr "Δεν είναι δυνατή η πρόσβαση στην υπηρεσία λόγω λάθος εισόδου"
+
+msgid "error_503_message"
+msgstr "Μη διαθέσιμη υπηρεσία"
+
+msgid "error_503_description"
+msgstr ""
+"Η διεύθυνση που ζητήσατε δεν είναι διαθέσιμο προσωρινά. Παρακαλώ δοκιμάστε "
+"ξανά αργότερα."
+
+msgid "servers_status"
+msgstr "Ελέγξτε την κατάσταση του σέρβερ"
+
+msgid "error_mail_send"
+msgstr ""
+"Υπήρξε ένα σφάλμα κατά την αποστολή του μηνύματος στη διεύθυνση που "
+"αναγράφεται. Παρακαλώ επιλέξτε άλλο ή δοκιμάστε ξανά αργότερα."
+
+msgid "required_empty"
+msgstr "Το στοιχείο είναι απαραίτητο και δεν μπορεί να είναι κενό"
+
+msgid "no_valid_email"
+msgstr "Δεν είναι έγκυρος τύπος διεύθυνσης e-mail όπως: user@example.com"
+
+msgid "no_valid_url"
+msgstr "Μη έγκυρη διεύθυνση"
+
+msgid "about"
+msgstr "περί"
+
+msgid "contact"
+msgstr "Επαφή"
+
+msgid "technology"
+msgstr "Τεχνολογία"
+
+msgid "legal"
+msgstr "Νόμιμο"
+
+msgid "tos"
+msgstr "Όροι χρήσης"
+
+msgid "privacy"
+msgstr "Πολιτική προσωπικών δεδομένων"
+
+msgid "complaint"
+msgstr "Αναφορά λανθασμένου συνδέσμου"
+
+msgid "source_code"
+msgstr "Κωδικός ασφαλείας"
+
+msgid "files_indexed"
+msgstr "Ευρετήριο αρχείων"
+
+msgid "last_indexed_files"
+msgstr "Αρχεία προσφάτων αρχειοθετηθέντα"
+
+msgid "i_want_that_file"
+msgstr "Εγώ. Θέλω. Εκείνο. Αρχείο"
+
+msgid "index_change"
+msgstr "Το foofind τροποποιείται"
+
+msgid "index_comunity"
+msgstr "Γίνετε μέλος της κοινότητάς μας"
+
+msgid "index_first"
+msgstr "Γίνε ο πρώτος που θα λάβει όλα τα νέα και θα συμμετέχει."
+
+msgid "index_suggestion"
+msgstr "κάποια πρόταση;"
+
+msgid "all"
+msgstr "Όλα"
+
+msgid "direct_download"
+msgstr "Θέση λήψης"
+
+msgid "direct_downloads"
+msgstr "Θέση λήψεων"
+
+msgid "other_streamings"
+msgstr "Άλλες ροές"
+
+msgid "other_direct_downloads"
+msgstr "Άλλη διεύθυνση λήψεων"
+
+msgid "unknown"
+msgstr "Άγνωστο"
+
+msgid "audio"
+msgstr "Αρχείο ήχου"
+
+msgid "video"
+msgstr "Αρχείο βίντεο"
+
+msgid "image"
+msgstr "Εικόνα"
+
+msgid "document"
+msgstr "Έγγραφο"
+
+msgid "software"
+msgstr "Εφαρμογή"
+
+msgid "archive"
+msgstr "Αρχείο"
+
+msgid "no_results_for"
+msgstr "Δεν υπάρχουν αποτελέσματα"
+
+msgid "write_something"
+msgstr "Γειά! Γράψτε κάτι"
+
+msgid "previous"
+msgstr "Προηγούμενο"
+
+msgid "next"
+msgstr "Επόμενο"
+
+msgid "sources"
+msgstr "πηγές"
+
+msgid "approximately"
+msgstr "Περίπου"
+
+msgid "results_for"
+msgstr "αποτελέσματα για"
+
+msgid "other_categories"
+msgstr "άλλες κατηγορίες"

@@ -63,6 +63,9 @@
             <span class="{% if file['view']['sources'][file['view']['source']]['icons']['32'] %}source32 source_{{ file['view']['sources'][file['view']['source']]['tip']|replace('.','') }}32{% else %}source {{ file['view']['sources'][file['view']['source']]['icon'] }}{% endif %}" title="{{ file['view']['sources'][file['view']['source']]['tip'] }}"></span>
             <a href="{{ file['view']['sources'][file['view']['source']]['urls'][0] }}" class="button" title="{{_(file['view']['action'])}} ({{_('open_link_new_tab')}})" target="_blank" data-stats="Download;Download big button;{{file['view']['sources'][file['view']['source']]['d']}}" data-downloader="{{file['view']['sources'][file['view']['source']]['downloader']}}">{{_(file['view']['action']+"_source",source='<em>%s</em>'|safe%file['view']['sources'][file['view']['source']]['tip'])|lower}}</a>
             {% endif %}
+            {% if file['view']['any_downloader'] %}
+            <a class="downloader" data-label="File page tip" href="{{url_for('downloader.download_proxy')}}">{{_("download using Foofind Download Manager")}}</a>
+            {% endif %}
             <h4>{{_('all_sources')}}</h4>
             {{print_sources(file['view']['sources'],"Download main links")}}
         {% endif %}

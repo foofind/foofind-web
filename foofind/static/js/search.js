@@ -27,7 +27,7 @@ function link_lookup(parent){
             var data=elm.data("stats").split(";"), wait=elm.attr("_target");
             elm.data("link_stats_handled", true);
             elm.click(function(event){
-                _gaq.push(['_trackEvent', data[0], data[1], data[2]]);
+                trackGAEvent(data[0], data[1], data[2]);
                 if(!target){
                     setTimeout(function(){
                         if(!event.stop_redirection) window.location = link_href;
@@ -415,7 +415,7 @@ function mostrar(file,ocul)
         //como esta en position fixed se limita la posicion ya que no se puede hacer por css
         download.css({position:"fixed",top:arriba<subcontent_top?subcontent_top-arriba:0,height:alto-55}).show(100)
         .animate({right:ancho>ancho_max_download?ancho-ancho_max_download:ancho<ancho_min_download?ancho-ancho_min_download:0},{duration:200,queue:false});
-
+        $("#search_banner").hide();
     }
     else if(ocul)
         ocultar();
@@ -443,6 +443,7 @@ function ocultar(duracion,derecha,cambiar)
         delete filtros["d"];
         delete filtros["dn"];
         change_url(!cambiar);
+        $("#search_banner").show();
     }
 }
 //rota los iconos de carga
@@ -851,7 +852,7 @@ $(function()
         e.preventDefault();
     });
     //hay que ocultar download porque esta fixed y no se puede poner la lista de idiomas encima al estar en absolute
-    $('#select_language_box').hover(function(){$("#download").css("z-index",0);ocultar(0)},function(){$("#download").css("z-index",6)});
+    $('#select_language_box').hover(function(){$("#download").css("z-index",1);ocultar(0)},function(){$("#download").css("z-index",6);});
 
     if (current_url_info.has_download) //si es download se inicializa todo lo necesario
     {
@@ -893,7 +894,7 @@ function track_pageview()
     track_download = false;
     if (current_url_info.has_download) {
         if (current_url!=last_download) {
-            _gaq.push(['_trackPageview',current_url]);
+            trackGAPageview(current_url);
             last_download = current_url;
         }
     }
@@ -912,7 +913,7 @@ function track_pageview()
         if (current_search_page>0) search_url += "?page="+current_search_page;
         last_search_page = current_search_page;
 
-        _gaq.push(['_trackPageview',search_url]);
+        trackGAPageview(search_url);
     }
 }
 

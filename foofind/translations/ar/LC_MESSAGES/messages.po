@@ -173,6 +173,9 @@ msgstr "برامج"
 msgid "no_results_for"
 msgstr "لا توجد نتائج"
 
+msgid "archive"
+msgstr "ارشيف"
+
 msgid "write_something"
 msgstr "مرحبا! اكتب شيئا"
 
@@ -187,6 +190,9 @@ msgstr "نتائج حول"
 
 msgid "go_to_file"
 msgstr "اذهب الى ملف"
+
+msgid "did_you_mean"
+msgstr ""
 
 msgid "play"
 msgstr "إلعب"
@@ -233,8 +239,17 @@ msgstr "السنة الماضية"
 msgid "author"
 msgstr "اخرى"
 
+msgid "artist"
+msgstr "الفنان"
+
+msgid "title"
+msgstr "العنوان"
+
 msgid "pages"
 msgstr "صفحات"
+
+msgid "format"
+msgstr "الصيغه"
 
 msgid "album"
 msgstr "ألبوم"
@@ -271,6 +286,12 @@ msgstr "الحجم"
 
 msgid "name"
 msgstr "الاسم"
+
+msgid "colors"
+msgstr "الالوان"
+
+msgid "version"
+msgstr "الاصدار"
 
 msgid "description"
 msgstr "الوصف"
@@ -469,6 +490,15 @@ msgstr "فريق الدعم"
 
 msgid "send"
 msgstr "ارسل"
+
+msgid "user_not_exist"
+msgstr "هذا المستخدم غير موجود"
+
+msgid "logged_in"
+msgstr "تم تسجيل دخولك"
+
+msgid "login_here"
+msgstr "تسجل دخول هنا"
 
 msgid "submit_search"
 msgstr "البحث"

@@ -33,8 +33,8 @@ def send_mail(subject,to,template=None,attachment=None,**kwargs):
         mail.send(msg)
         return True
     except SMTPRecipientsRefused as e:
-        flash("error_mail_send")
         # se extrae el código y el mensaje de error
         (code,message)=e[0].values()[0]
         logging.warn("%d: %s"%(code,message))
+        flash("error_mail_send")
         return False

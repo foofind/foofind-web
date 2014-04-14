@@ -1,10 +1,12 @@
 {% extends "base.html" %}
+{%- block extra_cookies %}
+    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+{%- endblock %}
 {% block header %}{% endblock %}
 {% block content %}
     <div id="search">
         <h1><img src="{{ g.static_prefix }}/img/logo.png" alt="File search engine - {{g.domain}}" title="{{g.domain}}" width="350" height="125" /></h1>
         <span{%- if g.lang in ["pt","zh","ja","eu"] %} class="small{%- if g.lang in ['ja'] %}er{% endif %}"{% endif %}>{{_('i_want_that_file')}}</span>
-
         {{flash()}}
         <form method="get" action="{{ url_for('files.search') }}">
             <fieldset id="params">
@@ -25,20 +27,27 @@
     </div>
     <div id="extra">
         <div id="live">
-            <div class="texto">
-                <h3>{{_("index_change")}}</h3>
-                <p>{{_("index_comunity")}}</p>
-                <p>{{_("index_first")}}</p>
-                <h4><a href="{{ url_for('page.contact') }}">{{_("index_suggestion")}}</a></h4>
+            <div class="banner">
+                <a id="download_button" data-label="Frontpage band button" class="downloader" href="{{url_for('downloader.download_proxy')}}">{{_("download")|lower}}</a>
+                <p>{{_("Or get %(more)s!", more="<a href='%s'>%s</a>"|safe%(url_for('downloader.index'),_("more info")))}}</p>
+            </div>
+            <div class="banner2">
+                <h2>foofind <span>download manager</span></h2>
+                <ul>
+                    <li>{{_('Very easy to use')}}</li>
+                    <li>{{_('Intuitive')}}<li>
+                    <li>{{_('Safe')}}</li>
+                </ul>
             </div>
             <div class="social">
-                <div class="fb-like-box" data-href="https://www.facebook.com/foofind" data-width="600" data-height="180" data-show-faces="true" data-border-color="#F5F5F5" data-stream="false" data-header="false"></div>
-                <div class="g-plusone" data-size="medium" data-href="http://{{g.domain}}"></div>
+                <h2>{{_("follow us")}}</h2>
                 <a href="https://twitter.com/foofind" class="twitter-follow-button" data-show-count="false" data-lang="{{ g.lang }}">Seguir a @foofind</a>
-                <script>
-                    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
-                    window.___gcfg={lang:'{{ g.lang }}'};(function(){var po=document.createElement('script');po.type='text/javascript';po.async=true;po.src='https://apis.google.com/js/plusone.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(po, s)})();
-                </script>
+                <div class="fb-like" data-href="https://www.facebook.com/foofind" data-send="false" data-layout="button_count" data-width="150" data-show-faces="false"></div>
+            </div>
+            <div class="suggestions">
+                <h2>{{_("suggestions")}}</h2>
+                <p>{{_("index_change")}}...</p>
+                <p><a href="{{ url_for('page.contact') }}">{{_("index_suggestion")}}</a></p>
             </div>
         </div>
     </div>

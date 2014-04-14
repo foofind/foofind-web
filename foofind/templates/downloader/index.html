@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{%- block header %}{%- endblock %}
+{% block content %}
+<div class="column c2 alpha">
+    <h1><a class="downloader" data-label="Microsite logo" href="{{url_for('downloader.download_proxy', build=g.user_build) if 'proxy' in g.downloader_properties[g.user_build] else url_for('downloader.download', build=g.user_build, instfile=g.downloader_properties[g.user_build]['main'])}}"><img src="{{ g.static_prefix }}/img/logo.png" alt="File search engine - {{g.domain}}" title="{{g.domain}}" width="350" height="125" /></a></h1>
+    <p><span>download manager</span></p>
+<div>
+{% if g.downloader_properties[g.user_build]["active"] and g.downloader_properties[g.user_build]['length'] %}
+<a id="download_button" class="downloader" data-label="Microsite button" href="{{url_for('downloader.download_proxy', build=g.user_build) if 'proxy' in g.downloader_properties[g.user_build] else url_for('downloader.download', build=g.user_build, instfile=g.downloader_properties[g.user_build]['main'])}}">{{_("download")|lower}}</a>
+<p>{{_("downloader_its_free")|markdown}}</p>
+<p>{{_(g.downloader_properties[g.user_build]["name"])}} (v. {{g.downloader_properties[g.user_build]["version"].split("-")[0]}})<br/>{{g.downloader_properties[g.user_build]["length"]|numbersizeformat}}</p>
+{% else %}
+<p>{{_("Sorry: Not yet available for your OS.")}}</p>
+{% endif %}
+<div>
+{%- for build, properties in g.downloader_properties.iteritems() if build not in ["common", g.user_build] and properties["active"] and properties['length']%}
+{{ " - " if not loop.first }}
+<a class="downloader" data-label="All versions" href="{{url_for('downloader.download_proxy', build=build) if 'proxy' in properties else url_for('downloader.download', build=build, instfile=properties['main'])}}">{{_(properties["name"])}}</a> ({{g.downloader_properties[build]["length"]|numbersizeformat}})
+{%- endfor %}</div>
+</div>
+
+</div>
+<div class="column c2 omega">
+    <a class="downloader" data-label="Microsite screenshot" href="{{url_for('downloader.download_proxy', build=g.user_build) if 'proxy' in g.downloader_properties[g.user_build] else url_for('downloader.download', build=g.user_build, instfile=g.downloader_properties[g.user_build]['main'])}}"><img src="{{ g.static_prefix }}/img/downloader/screenshot.png" alt="{{_('Downloader screenshot')}}"/></a>
+</div>
+
+<div class="column c3 alpha">
+<div><img src="{{ g.static_prefix }}/img/downloader/overview.png" alt="{{_('downloader_overview')}}"/></div>
+<h3>{{_('downloader_overview')|capitalize}}</h3>
+{{_('downloader_overview_text')|markdown}}
+</div>
+<div class="column c3">
+<div><img src="{{ g.static_prefix }}/img/downloader/sharing.png" alt="{{_('downloader_sharing')}}"/></div>
+<h3>{{_('downloader_sharing')|capitalize}}</h3>
+{{_('downloader_sharing_text')|markdown}}
+</div>
+<div class="column c3 omega">
+<div><img src="{{ g.static_prefix }}/img/downloader/safety.png" alt="{{_('downloader_safety')}}"/></div>
+<h3>{{_('downloader_safety')|capitalize}}</h3>
+{{_('downloader_safety_text')|markdown}}
+</div>
+
+<div class="column legal">
+{{_('safe_downloader_share_responsibly')|markdown}}
+</div>
+
+{% endblock %}
+

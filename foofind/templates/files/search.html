@@ -7,7 +7,7 @@
 {%- endmacro %}
 {% block head %}
     {%- assets "js_search" %}
-        <script src="{{ ASSET_URL }}"></script>
+        <script src="{{ ASSET_URL.rstrip(' \n.') }}"></script>
     {%- endassets %}
     {%- if request.user_agent.platform=="iphone" or "ipad" in request.user_agent.string|lower() %}
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -143,6 +143,21 @@
             </ul>
             <a href="#" id="more"></a>
         </section>
+    </div>
+
+    <div id="search_banner">
+        <div class="banner">
+            <a id="download_button" data-label="Search banner button" class="downloader" href="{{url_for('downloader.download_proxy')}}">{{_("download")|lower}}</a>
+            <p>{{_("Or get %(more)s!", more="<a href='%s'>%s</a>"|safe%(url_for('downloader.index'),_("more info")))}}</p>
+        </div>
+        <div class="banner2">
+            <h2>foofind <span>download manager</span></h2>
+            <ul>
+                <li>{{_('Very easy to use')}}</li>
+                <li>{{_('Intuitive')}}<li>
+                <li>{{_('Safe')}}</li>
+            </ul>
+        </div>
     </div>
     {% endautoescape %}
 {% endblock %}

@@ -1,0 +1,1000 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: 1\n"
+"Report-Msgid-Bugs-To: ismael@mp2p.net\n"
+"POT-Creation-Date: 2011-12-09 11:49+0100\n"
+"PO-Revision-Date: 2011-12-09 11:49+0100\n"
+"Last-Translator: Foofind <hola@foofind.com>\n"
+"Language-Team: nl <hola@foofind.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Foofind's pogit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgid "new_toolbar"
+msgstr "Probeer onze nieuwe toolbar"
+
+msgid "click_here"
+msgstr "klik hier!"
+
+msgid "your_email"
+msgstr "je e-mail adres"
+
+msgid "password"
+msgstr "wachtwoord"
+
+msgid "submit"
+msgstr "Verstuur"
+
+msgid "ok"
+msgstr "ok"
+
+msgid "help_us"
+msgstr "help ons!"
+
+msgid "legal_info"
+msgstr "wettelijke informatie"
+
+msgid "go_home"
+msgstr "Ga terug naar de zoekfunctie"
+
+msgid "error_500_message"
+msgstr "Er gebeurde een fout "
+
+msgid "error_500_description"
+msgstr ""
+"Er is iets vreemd aan de hand, onze specialisten onderzoeken deze "
+"paranormale gebeurtenis."
+
+msgid "error_404_message"
+msgstr "Pagina niet gevonden"
+
+msgid "error_404_description"
+msgstr ""
+"Gevraagde URL niet gevonden. Gelieve de spelling na kijken. Indien correct, "
+"verwittig dan de web beheerder."
+
+msgid "error_410_message"
+msgstr "Pagina niet beschikbaar"
+
+msgid "error_410_description"
+msgstr ""
+"Gevraagde URL is niet langer beschikbaar en zal ook in de toekomst niet "
+"terug komen"
+
+msgid "error_502_message"
+msgstr "Slechte gateway"
+
+msgid "error_502_description"
+msgstr "Geen toegang tot service wegens verkeerde gateway"
+
+msgid "error_503_message"
+msgstr "Service niet beschikbaar"
+
+msgid "error_503_description"
+msgstr "Gevraagde URL is momenteel niet beschikbaar"
+
+msgid "servers_status"
+msgstr "Check server status"
+
+msgid "error_mail_send"
+msgstr ""
+"Er is een fout opgetreden bij het verzenden naar het opgegeven adres. "
+"Gelieve een ander op te geven of probeer later opnieuw."
+
+msgid "non_alphabetic_digits"
+msgstr "%(value)s bevat karakters die niet alfanumeriek zijn"
+
+msgid "required_empty"
+msgstr "Waarde is noodzakelijk, mag niet leeg zijn"
+
+msgid "no_valid_email"
+msgstr "Dit is geen geldig mailadres in het formaat gebruiker@voorbeeld.com"
+
+msgid "field_length"
+msgstr "Dit veld moet  %(min)s tot %(max)s karakters bevatten"
+
+msgid "no_valid_url"
+msgstr "Geen geldig URL"
+
+msgid "about"
+msgstr "Over"
+
+msgid "contact"
+msgstr "Contact"
+
+msgid "technology"
+msgstr "Technologie"
+
+msgid "legal"
+msgstr "Wettelijk"
+
+msgid "tos"
+msgstr "Gebruiksvoorwaarden"
+
+msgid "privacy"
+msgstr "Privacy policy"
+
+msgid "complaint"
+msgstr "Meldt link"
+
+msgid "source_code"
+msgstr "Broncode"
+
+msgid "files_indexed"
+msgstr "geïndexeerde bestanden"
+
+msgid "last_indexed_files"
+msgstr "Laatst geïndexeerde bestanden"
+
+msgid "i_want_that_file"
+msgstr "Ik. Moet. Dat. Bestand. Hebben"
+
+msgid "index_change"
+msgstr "foofind is aan het veranderen"
+
+msgid "index_comunity"
+msgstr "Wordt één met onze gemeenschap"
+
+msgid "index_first"
+msgstr "Wordt de eerste om al het nieuws te krijgen en doe mee."
+
+msgid "index_suggestion"
+msgstr "Suggesties?"
+
+msgid "all"
+msgstr "Alles"
+
+msgid "direct_download"
+msgstr "directe download"
+
+msgid "direct_downloads"
+msgstr "Directe downloads"
+
+msgid "other_streamings"
+msgstr "Andere streams"
+
+msgid "other_direct_downloads"
+msgstr "Andere directe downloads"
+
+msgid "some_streamings"
+msgstr "Enkele streams"
+
+msgid "some_downloads"
+msgstr "Enkele directe downloads"
+
+msgid "others"
+msgstr "Andere"
+
+msgid "unknown"
+msgstr "Onbekend"
+
+msgid "audio"
+msgstr "Audio"
+
+msgid "video"
+msgstr "Video"
+
+msgid "image"
+msgstr "Afbeelding"
+
+msgid "document"
+msgstr "Bestand"
+
+msgid "software"
+msgstr "Software"
+
+msgid "archive"
+msgstr "Archief"
+
+msgid "no_results_for"
+msgstr "Geen resultaten voor"
+
+msgid "write_something"
+msgstr "He! Schrijf iets"
+
+msgid "previous"
+msgstr "Vorige"
+
+msgid "next"
+msgstr "Volgende"
+
+msgid "sources"
+msgstr "bronnen"
+
+msgid "approximately"
+msgstr "Ongeveer"
+
+msgid "of_about"
+msgstr "van"
+
+msgid "results_for"
+msgstr "resultaten voor"
+
+msgid "other_categories"
+msgstr "andere categoriën"
+
+msgid "no_type_count"
+msgstr ""
+"Er werden geen resultaten gevonden voor je zoektocht in %(search)s, maar er "
+"zijn ongeveer %(results)d resultaten gevonden in %(category)s"
+
+msgid "not_allow_browse_results"
+msgstr "Foofind laat geen resultaten zien na pagina 100"
+
+msgid "did_you_mean"
+msgstr "Bedoelde je %(text)s?"
+
+msgid "go_to_file"
+msgstr "Ga naar bestand"
+
+msgid "play"
+msgstr "Speel"
+
+msgid "what"
+msgstr "Wat?"
+
+msgid "where"
+msgstr "Waar?"
+
+msgid "update"
+msgstr "update"
+
+msgid "minimun"
+msgstr "min"
+
+msgid "maximun"
+msgstr "max"
+
+msgid "all_sizes"
+msgstr "Alle groottes"
+
+msgid "smaller_than"
+msgstr "Kleiner dan"
+
+msgid "larger_than"
+msgstr "Groter dan"
+
+msgid "all_qualities"
+msgstr "Alle kwaliteiten"
+
+msgid "or_better"
+msgstr "of beter"
+
+msgid "all_years"
+msgstr "Alle jaren"
+
+msgid "before"
+msgstr "Voor"
+
+msgid "last_year"
+msgstr "Vorig jaar"
+
+msgid "artist"
+msgstr "Artiest"
+
+msgid "title"
+msgstr "Titel"
+
+msgid "author"
+msgstr "Auteur"
+
+msgid "format"
+msgstr "Formaat"
+
+msgid "pages"
+msgstr "Pagina's"
+
+msgid "album"
+msgstr "Album"
+
+msgid "length"
+msgstr "Lengte"
+
+msgid "bitrate"
+msgstr "Bitrate"
+
+msgid "genre"
+msgstr "Genre"
+
+msgid "seconds"
+msgstr "Seconden"
+
+msgid "minutes"
+msgstr "Minuten"
+
+msgid "source"
+msgstr "Bron"
+
+msgid "seeds"
+msgstr "Seeds"
+
+msgid "leechs"
+msgstr "Leechs"
+
+msgid "first_files"
+msgstr "Toon eerste %(value)s bestanden. Download bestand om alles te zien."
+
+msgid "height"
+msgstr "Hoogte"
+
+msgid "width"
+msgstr "Breedte"
+
+msgid "track"
+msgstr "Nummer"
+
+msgid "quality"
+msgstr "Kwaliteit"
+
+msgid "series"
+msgstr "Serie"
+
+msgid "episode"
+msgstr "Aflevering"
+
+msgid "season"
+msgstr "Seizoen"
+
+msgid "num_pages"
+msgstr "Aantal pagina's"
+
+msgid "include_results_from"
+msgstr "Ook resultaten van:"
+
+msgid "size"
+msgstr "Grootte"
+
+msgid "unpacked_size"
+msgstr "Uitgepakte grootte"
+
+msgid "colors"
+msgstr "Kleuren"
+
+msgid "version"
+msgstr "Versie"
+
+msgid "name"
+msgstr "Naam"
+
+msgid "description"
+msgstr "Beschrijving"
+
+msgid "files"
+msgstr "Bestanden"
+
+msgid "soundtype"
+msgstr "Geluidstype"
+
+msgid "channels"
+msgstr "Kanalen"
+
+msgid "year"
+msgstr "jaar"
+
+msgid "years"
+msgstr "jaren"
+
+msgid "month"
+msgstr "maand"
+
+msgid "months"
+msgstr "maanden"
+
+msgid "day"
+msgstr "dag"
+
+msgid "days"
+msgstr "dagen"
+
+msgid "hour"
+msgstr "uur"
+
+msgid "hours"
+msgstr "uren"
+
+msgid "minute"
+msgstr "minuut"
+
+msgid "second"
+msgstr "seconde"
+
+msgid "tags"
+msgstr "Tags"
+
+msgid "license"
+msgstr "Licentie"
+
+msgid "private_file"
+msgstr "Privé bestand"
+
+msgid "composer"
+msgstr "Componist"
+
+msgid "publisher"
+msgstr "Uitgever"
+
+msgid "comments"
+msgstr "Commentaar"
+
+msgid "created_by"
+msgstr "Gemaakt door"
+
+msgid "language"
+msgstr "Taal"
+
+msgid "date"
+msgstr "Datum"
+
+msgid "trackers"
+msgstr "Trackers"
+
+msgid "hash"
+msgstr "Hash"
+
+msgid "visualizations"
+msgstr "Visualitaties"
+
+msgid "codec"
+msgstr "Codec"
+
+msgid "encoding"
+msgstr "Codering"
+
+msgid "director"
+msgstr "Regisseur"
+
+msgid "writer"
+msgstr "Schrijver"
+
+msgid "starring"
+msgstr "Steracteurs"
+
+msgid "producer"
+msgstr "Producent"
+
+msgid "released"
+msgstr "Vrijgave"
+
+msgid "loading"
+msgstr "Laden"
+
+msgid "close"
+msgstr "Sluit"
+
+msgid "all_sources"
+msgstr "alle bronnen"
+
+msgid "share"
+msgstr "Deel op %(site)s"
+
+msgid "share_download"
+msgstr "Deel"
+
+msgid "share_search"
+msgstr "Deel deze opzoeking"
+
+msgid "share_this"
+msgstr "Deel dit:"
+
+msgid "send_by_email"
+msgstr "stuur per e-mail"
+
+msgid "open_link_new_tab"
+msgstr "open link in nieuwe tab"
+
+msgid "download"
+msgstr "Download"
+
+msgid "download_source"
+msgstr "Download van %(source)s"
+
+msgid "watch"
+msgstr "Bekijk"
+
+msgid "watch_source"
+msgstr "Bekijk op %(source)s"
+
+msgid "listen"
+msgstr "Luister"
+
+msgid "listen_source"
+msgstr "Luister naar %(source)s"
+
+msgid "since"
+msgstr "sinds %(since)s"
+
+msgid "post_comment"
+msgstr "Plaatst reactie"
+
+msgid "add_comment"
+msgstr "Voeg reactie toe"
+
+msgid "from"
+msgstr "van"
+
+msgid "i_like_it"
+msgstr "Vind ik leuk!"
+
+msgid "booo"
+msgstr "Boe!"
+
+msgid "comment_published_succesfully"
+msgstr "Reactie succesvol gepubliseerd"
+
+msgid "related_files"
+msgstr "Gerelateerde bestanden"
+
+msgid "file"
+msgstr "bestand"
+
+msgid "add_favorite"
+msgstr "Voeg %(type)s toe aan favorieten"
+
+msgid "delete_favorite"
+msgstr "Verwijder %(type)s uit favorieten"
+
+msgid "favorite"
+msgstr "%(type)s toegevoegd aan favorieten"
+
+msgid "download_links"
+msgstr "Toon download links"
+
+msgid "more_info"
+msgstr "meer info"
+
+msgid "less_info"
+msgstr "minder info"
+
+msgid "more_comments"
+msgstr "meer reacties"
+
+msgid "less_comments"
+msgstr "minder reacties"
+
+msgid "login_required"
+msgstr "Je moet aanmelden om deze pagina te zien"
+
+msgid "user_profile"
+msgstr "Gebruikersprofiel"
+
+msgid "your_password"
+msgstr "Kies je wachtwoord:"
+
+msgid "insert_your_password"
+msgstr "Vul je wachtwoord in (yep, opnieuw):"
+
+msgid "fill_sing_up_form"
+msgstr ""
+"Gelieve dit formulier in te vullen om een geregisteerde gebruiker van "
+"Foofind te worden"
+
+msgid "nickname"
+msgstr "Bijnaam:"
+
+msgid "edit_profile"
+msgstr "Bewerk profiel"
+
+msgid "edit_your_profile"
+msgstr "Bewerk je profiel"
+
+msgid "profile_edited_succesfully"
+msgstr "Je profiel werd bijgewerkt"
+
+msgid "hello"
+msgstr "Hallo,"
+
+msgid "logout"
+msgstr "Afmelden"
+
+msgid "login"
+msgstr "Aanmelden"
+
+msgid "new_user"
+msgstr "Nieuwe gebruiket"
+
+msgid "or"
+msgstr "of"
+
+msgid "register"
+msgstr "registreer"
+
+msgid "if_new_user"
+msgstr "Als je een nieuwe gebruiker bent, gelieve"
+
+msgid "register_here"
+msgstr "hier registreren"
+
+msgid "choose_nickname"
+msgstr "Kies een bijnaam:"
+
+msgid "user_login"
+msgstr "Aanmelden"
+
+msgid "remember_me"
+msgstr "Herinner mij"
+
+msgid "your_location"
+msgstr "Je locatie:"
+
+msgid "new_password"
+msgstr "Wijzig hier je wachtwoord: (anders leeg laten)"
+
+msgid "save_profile"
+msgstr "Profiel opslaan"
+
+msgid "not_allowed_view_page"
+msgstr "Je bent niet gemachtigd om deze pagina te bekijken"
+
+msgid "username_taken"
+msgstr "Deze gebruikersnaam is reeds bezet. Gelieve een andere te kiezen."
+
+msgid "email_taken"
+msgstr "Dit e-mail adres is in gebruik. Gelieve een ander te kiezen"
+
+msgid "forgot"
+msgstr "Vergeten"
+
+msgid "your_password?"
+msgstr "je wachtwoord?"
+
+msgid "passwords_not_match"
+msgstr "De gebruikte wachtwoorden komen niet overeen."
+
+msgid "sure_delete_account"
+msgstr "Ben je zeker dat je je Foofind account wil verwijderen?"
+
+msgid "yes"
+msgstr "Ja"
+
+msgid "no"
+msgstr "Nee"
+
+msgid "account_deleted"
+msgstr "Je account werd verwijderd"
+
+msgid "nice_to_hear_that"
+msgstr "Fijn te horen dat"
+
+msgid "profile"
+msgstr "profiel"
+
+msgid "username"
+msgstr "Bijnaam:"
+
+msgid "member_since"
+msgstr "Lid sinds:"
+
+msgid "last_comments"
+msgstr "Laatste %(comments)d reacties:"
+
+msgid "location"
+msgstr "Locatie:"
+
+msgid "delete_account"
+msgstr "Verwijder je Foofind account"
+
+msgid "forgot_password"
+msgstr "Je wachtwoord vergeten?"
+
+msgid "wrong_email_password"
+msgstr "Verkeerd e-mailadres of wachtwoord, probeer opnieuw"
+
+msgid "welcome"
+msgstr "Welkom"
+
+msgid "finish_register"
+msgstr "Gelieve op deze URL te klikken om het registratieproces te voltooien:"
+
+msgid "token_not_exist"
+msgstr "Sorry, dit token bestaat niet of werd reeds gebruikt"
+
+msgid "confirm_email"
+msgstr ", bevestig je e-mail"
+
+msgid "check_inbox_email_finish"
+msgstr "Kijk in je inbox om het registratieproces te voltooien"
+
+msgid "foofind_team"
+msgstr "Het Foofind team"
+
+msgid "user_not_exist"
+msgstr "Deze gebruiker bestaat niet"
+
+msgid "logged_in"
+msgstr "Je ben nu ingelogd,"
+
+msgid "registered_user"
+msgstr "Als je je al geregistreerd hebt, gelieve"
+
+msgid "login_here"
+msgstr "hier aan te melden"
+
+msgid "send"
+msgstr "Verstuur"
+
+msgid "user_favorites"
+msgstr "Favoriete bestanden"
+
+msgid "user_searches"
+msgstr "Favoriete zoektochten"
+
+msgid "user_fav_lists"
+msgstr "Bestandslijsten"
+
+msgid "user_fav_file_list_empty"
+msgstr "Geen bestanden in lijst"
+
+msgid "user_fav_search_list_empty"
+msgstr "Geen zoektochten in lijst"
+
+msgid "user_fav_no_lists"
+msgstr "Geen eigen lijsten gevonden"
+
+msgid "enter_email"
+msgstr ""
+"Gelieve je e-mail adres op te geven. Er zal een e-mail verstuurd worden om "
+"je toegang terug vrij te geven."
+
+msgid "email_same_register"
+msgstr ""
+"Het e-mail adres moet overeen komen met het adres gebruikt tijdens de "
+"registratie."
+
+msgid "email_not_database"
+msgstr "Dit adres zit niet in onze databank. Probeer opnieuw."
+
+msgid "check_inbox_email_restore"
+msgstr "Kijk in je inbox om terug toegang te krijgen tot Foofind "
+
+msgid "restore_access"
+msgstr ", herstel je toegang tot Foofind"
+
+msgid "restore_account"
+msgstr ""
+"Iemand, waarschijnlijk jij, wil je toegang tot Foofind herstellen. Klik op "
+"deze URL om je Foofind account te herstellen:"
+
+msgid "ignore_message"
+msgstr "Indien dit niet zo is, gelieve dit bericht te negeren."
+
+msgid "login_vote"
+msgstr "Gelieve aan te melden om te stemmen"
+
+msgid "login_comment"
+msgstr "Gelieve aan te melden voor uw reactie"
+
+msgid "technical_problems"
+msgstr ""
+"Sorry, maar we ondervinden momenteel technische problemen met de %(service)s"
+" service."
+
+msgid "allow_access_account"
+msgstr ""
+"Je moet Foofind toegang verlenen tot je %(account)s account om deze functie "
+"te gebruiken."
+
+msgid "submit_registration"
+msgstr "Kom erbij"
+
+msgid "submit_login"
+msgstr "Aanmelden"
+
+msgid "submit_edit"
+msgstr "Profiel opslaan"
+
+msgid "submit_search"
+msgstr "Zoek"
+
+msgid "contact_form"
+msgstr "Contact formulier"
+
+msgid "report_form"
+msgstr "Meldt link formulier"
+
+msgid "link_removal"
+msgstr ""
+"Nota: als je het verwijderen van een link wilt eisen, moet je "
+"%(report_form)s gebruiken."
+
+msgid "complaints_ignored"
+msgstr "Klachten via dit formulier zullen genegeerd worden."
+
+msgid "your_message"
+msgstr "Je bericht:"
+
+msgid "insert_characters"
+msgstr "Gelieve de 5 getoonde karakters in te vullen"
+
+msgid "captcha_wrong"
+msgstr "De Captcha waarde is verkeerd"
+
+msgid "no_valid_hostname"
+msgstr "%(hostname)s is geen geldig domein voor het e-mail adres %(value)s"
+
+msgid "local_network"
+msgstr ""
+"%(value)s lijkt een lokale netwerknaam doch lokale netwerken zijn niet "
+"toegestaan"
+
+msgid "no_dns_hostname"
+msgstr ""
+"%(value)s komt niet overeen met de verwachte struktuur van een DNS hostname"
+
+msgid "no_tld_known"
+msgstr ""
+"%(value)s lijkt een DNS hostname te zijn, maar kan geen TLD vinden in "
+"gekende lijst"
+
+msgid "message_sent"
+msgstr "Bericht met succes verzonden!"
+
+msgid "your_name"
+msgstr "Je naam:"
+
+msgid "your_surname"
+msgstr "Je achternaam:"
+
+msgid "your_company"
+msgstr "Je bedrijf:"
+
+msgid "your_phone"
+msgstr "Je telefoonnummer:"
+
+msgid "link_reviewed"
+msgstr "Gelieve de te bekijken link in te voeren"
+
+msgid "url_content"
+msgstr "Gelieve de URL in te voeren waar deze inhoud verschijnt:"
+
+msgid "reason_complaint"
+msgstr "Reden van je klacht:"
+
+msgid "accept_tos"
+msgstr "Ik heb de %(tos)s en de %(privacy)s gelezen en aanvaard deze"
+
+msgid "accept_terms"
+msgstr "Gelieve de gebruiksvoorwaarden en het privacy beleid te aanvaarden"
+
+msgid "not_foofind_page"
+msgstr "Link kan geen Foofind pagina zijn"
+
+msgid "not_foofind_link"
+msgstr "URL moet een geldige Foofind download pagina zijn."
+
+msgid "include_reported_links"
+msgstr ""
+"Gelieve de gerapporteerde links in de correcte velden van het formulier te "
+"plaatsen"
+
+msgid "submit_links"
+msgstr "Verstuur links"
+
+msgid "include_link_per_line"
+msgstr ""
+"Gelieve één http, ftp, ed2k of magnet link per lijn te gebruiken.\r\n"
+"Deze zullen automatisch bezocht worden en binnenkort in de zoekresultaten verschijnen."
+
+msgid "link_sent"
+msgstr "De links werden verstuurd. Bedankt voor je hulp!"
+
+msgid "footer"
+msgstr "Website onder %(cc)s licentie. %(code)s onder %(gpl)s licentie."
+
+msgid "about_text"
+msgstr ""
+"Foofind is een universele zoekmachine. Bij Foofind werken we aan software dat elk netwerk afstruind en ieder bestand indexeert. Op deze manier streven we er naar de grootste collectie beschikbare links aan te bieden.\r\n"
+"\r\n"
+"Foofind is een creatie van Pablo Soto, P2P technologie ontwerper, ontwikkeld in Madrid, Spanje door Foofind Labs S.L. in samenwerking met MP2P Technologies."
+
+msgid "technology_text"
+msgstr ""
+"Het Foofind team ontwikkelt het merendeel van de broncode voor dit project, maar we maken ook veel gebruik van het werk van vrije software gemeenschap.\r\n"
+"\r\n"
+"Zonder al deze ongelooflijke projecten zou Foofind niet mogelijk zijn.\r\n"
+"Waarvoor hartelijk dank! ;-)\r\n"
+"\r\n"
+"Twisted: Twisted is een gebeurtenis gestuurde netwerk motor geschreven in Python met een open source MIT licentie.\r\n"
+"Scrapy: Scrapy is een snel high-level screen scrapping en web crawling framework, gebruikt om websites te doorzoeken en er gestructureerde data uit te halen. Het kan voor allerlei doeleinden gebruikt worden, van data mining tot het monitoren van gegevens en geautomatiseerde testen.\r\n"
+"Flask: Flask is een microframework voor Python gebaseerd op Werkzeug, Jinja 3 en staat ter beschikking onder een BSD licentie.\r\n"
+"MongoDB: MongoDB (vanwege \"humongous\" oftewel enorm) is een schaalbare high-performance open source NoSQL databank.\r\n"
+"Sentry: Sentry legt in realtime gebeurtenissen vast en verzamelt deze. Het is gespecialiseerd in het in de gaten houden van fouten en boven water brengen van alle informatie nodig om een deftige post-mortem uit te voeren zonder al het gedoe met standaard gebruikersfeedback\r\n"
+"Spinx: Spinx is een open source volledige tekst zoek server, van de grond uit opgebouwd met performantie, relevantie (oftewel de kwaliteit van de zoekfuntie) en eenvoudige integratie als uitgangspunten. Het is geschreven in C++ en werkt op Linux (RedHat, Ubuntu, enz), Windows, MacOS, Solaris, FreeBSD en enkele andere systemen.\r\n"
+"jQuery: JQuery is een snelle, kleine en featurerijke JavaScrip bibliotheek. Het maakt dingen als het doorlopen en bewerken van een HTML document, het afhandelen van gebeurtenissen, het animeren en Ajax zoveel eenvoudiger met een eenvoudig te gebruiken API die over verschillende browers heen zijn werk doet. Met een combinatie van veelzijdigheid en uitbreidbaarheid heeft jQuery voor miljoenen mensen de schrijfwijze voor javascript aangepast.\r\n"
+"jQuery UI: jQuery is een met zorg samengestelde set van interacties, effecten, widgets en thema's voor de gebruiksomgeving gebouwd bovenop de jQuery JavaScript Library. Of je nu zeer interactieve webapplicaties bouwt of enkel een datum prikker voor een formulier nodig hebt, jQuery is hiervoor de beste keuze.\r\n"
+"Social Network Icon Pack: Social Network Icon Pack doorKomodo Media, Rogie King heeft een Creative Commons Attribution-Share Alike 3.0 Unported Licentie."
+
+msgid "under_maintenance"
+msgstr "Foofind ondergaat moment onderhoud. Probeer het later nog eens."
+
+msgid "link_not_exist"
+msgstr "Deze link bestaat niet of werd verwijderd"
+
+msgid "error_link_removed"
+msgstr "Onze excuses: deze link werd door de bron verwijderd."
+
+msgid "translate"
+msgstr "Vertaal"
+
+msgid "translate_to_your_language"
+msgstr "Help ons Foofind te vertalen in jouw taal "
+
+msgid "translate_description"
+msgstr ""
+"Foofind is momenteel beschikbaar in enkele talen, maar je kan ons steeds helpen deze te vertalen. Kies je eigen taal uit de volgende lijst en vul de vertaling aan. Je hoeft niet alles te vertalen, alle hulp is van harte welkom.\r\n"
+"\r\n"
+"Als je je taal niet in de lijst kunt vinden, contacteer ons om deze toe te voegen."
+
+msgid "choose_language"
+msgstr "Kies je taal"
+
+msgid "translation_sent"
+msgstr "Je vertaling is verstuurd. Bedankt voor je hulp!"
+
+msgid "translate_at_least_one"
+msgstr "Gelieve iets te vertalen alvorens te versturen."
+
+msgid "here"
+msgstr "hier"
+
+msgid "translation_beta"
+msgstr ""
+"Deze vertaling is in test fase. Indien je een ontbrekende of verkeerde "
+"vertaling tegenkomt, gelieve dit %(here)s te melden."
+
+msgid "other"
+msgstr "Andere"
+
+msgid "embed_foofind_button"
+msgstr "Bekijk in Foofind"
+
+msgid "copy_to_clipboard_shortcut"
+msgstr "Gebruik CTRL+C om naar je prikbord te kopiëren"
+
+msgid "opensearch_description"
+msgstr "Zoek met Foofind"
+
+msgid "downloader_update_message"
+msgstr ""
+"Een nieuwe versie van %(appname)s (%(version)s) is klaar om geïnstalleerd te worden.\r\n"
+"Wil je nu upgraden?"
+
+msgid "downloader_overview"
+msgstr "Overzicht"
+
+msgid "downloader_overview_text"
+msgstr ""
+"Foofind Download Manager is ontworpen om erg makkelijk, intuïtief en veilig in het gebruik te zijn. Je kunt je downloads makkelijker dan ooit pauseren, hervatten en vinden. Hier enkele eigenschappen:\r\n"
+"\r\n"
+"* Zeer solide torrent client\r\n"
+"* Versimpeld interface\r\n"
+"* DHT, uPnP en uTorrent protocol extensie"
+
+msgid "downloader_sharing"
+msgstr "Bestanden downloaden en delen"
+
+msgid "downloader_sharing_text"
+msgstr ""
+"Nu kun je met **Foofind Download Manager** makkelijker downloaden dan ooit tevoren. Dankzij het **torrent** netwerk, de snelste P2P uitvinding ooit, zullen je downloads vliegensvlug gaan.\r\n"
+"\r\n"
+"Probeer het eens! **De toekomst van het downloaden is maar één klik van je verwijderd.**"
+
+msgid "downloader_safety"
+msgstr "Krijg je bestanden op een veilige manier"
+
+msgid "downloader_its_free"
+msgstr "Het is volledig **GRATIS**!"
+
+msgid "downloader_download_source"
+msgstr "Downloadbron"
+
+msgid "downloader_download_coming_soon"
+msgstr "Sorry: Nog niet voor jouw besturingssysteem beschikbaar"
+
+msgid "downloader_dialog_title"
+msgstr ""
+"Hey!\r\n"
+"\r\n"
+"Je hebt een Torrent client nodig om dit bestand te downloaden"

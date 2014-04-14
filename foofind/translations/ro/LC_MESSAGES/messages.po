@@ -1,4 +1,4 @@
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
@@ -20,7 +20,7 @@ msgid "click_here"
 msgstr "clic aici!"
 
 msgid "your_email"
-msgstr ""
+msgstr "Adresa ta de email"
 
 msgid "password"
 msgstr "Parolă:"
@@ -64,10 +64,11 @@ msgstr ""
 "URL-ul solicitat nu mai este disponibil şi nici nu va mai fi în viitor"
 
 msgid "error_502_message"
-msgstr "Gateway greşit"
+msgstr "Portal greşit"
 
 msgid "error_502_description"
-msgstr "Nu se poate accesa serviciul din cauza unei erori de gateway."
+msgstr ""
+"Nu se poate accesa serviciul din cauza unei erori de portal (gateway)."
 
 msgid "error_503_message"
 msgstr "Serviciu indisponibil"
@@ -86,7 +87,7 @@ msgstr ""
 " alegi altă adresă sau încearcă din nou mai târziu."
 
 msgid "required_empty"
-msgstr "Este necesară o valoare și nu poate fi gol"
+msgstr "Este necesară o valoare și nu poate fi goală"
 
 msgid "non_alphabetic_digits"
 msgstr "%(value)s conține caractere care sunt non alfabetice și non numerice"
@@ -132,7 +133,7 @@ msgid "last_indexed_files"
 msgstr "Ultimul fișier indexat"
 
 msgid "i_want_that_file"
-msgstr "Vreau. Acest. Fișier"
+msgstr "Vreau. Acel. Fișier"
 
 msgid "index_change"
 msgstr "foofind se schimbă"
@@ -147,10 +148,10 @@ msgid "index_suggestion"
 msgstr "Vreo sugestie?"
 
 msgid "all"
-msgstr "Tot"
+msgstr "Toate"
 
 msgid "direct_download"
-msgstr "descărca direct"
+msgstr "descarcă direct"
 
 msgid "direct_downloads"
 msgstr "Descărcări directe"
@@ -186,7 +187,7 @@ msgid "document"
 msgstr "Document"
 
 msgid "software"
-msgstr "Software"
+msgstr "Programe"
 
 msgid "archive"
 msgstr "Arhivă"
@@ -245,10 +246,10 @@ msgid "update"
 msgstr "actualizare"
 
 msgid "minimun"
-msgstr "min"
+msgstr "minim"
 
 msgid "maximun"
-msgstr "max"
+msgstr "maxim"
 
 msgid "all_sizes"
 msgstr "Toate dimensiunile"
@@ -522,7 +523,7 @@ msgid "i_like_it"
 msgstr "Îmi place!"
 
 msgid "booo"
-msgstr "Booo!"
+msgstr "Bau!"
 
 msgid "comment_published_succesfully"
 msgstr "Comentariu publicat cu succes"
@@ -605,7 +606,7 @@ msgid "register"
 msgstr "înregistrează"
 
 msgid "if_new_user"
-msgstr "Dacă ești un utilizator nou, te rugăm să"
+msgstr "Dacă ești un utilizator nou, te rugăm"
 
 msgid "register_here"
 msgstr "înregistrează-te aici"
@@ -632,10 +633,10 @@ msgid "not_allowed_view_page"
 msgstr "Nu ai permisiunea de a vizualiza această pagină"
 
 msgid "username_taken"
-msgstr "Acest nume de utilizator este atribuit. Te rugăm să îți alegi altul."
+msgstr "Acest nume de utilizator este luat. Te rugăm să îți alegi altul."
 
 msgid "email_taken"
-msgstr "Acest email este atribuit. Te rugăm să folosești altul."
+msgstr "Acest email este luat. Te rugăm să folosești altul."
 
 msgid "forgot"
 msgstr "Ai uitat"
@@ -659,7 +660,7 @@ msgid "account_deleted"
 msgstr "Contul tău a fost șters."
 
 msgid "nice_to_hear_that"
-msgstr "Mă bucur să aud că"
+msgstr "Mă bucur să aud asta"
 
 msgid "profile"
 msgstr "profil"
@@ -686,7 +687,7 @@ msgid "wrong_email_password"
 msgstr "Email sau parolă greșită, te rugăm să încerci din nou"
 
 msgid "welcome"
-msgstr "Bun venit"
+msgstr "Bine ai venit"
 
 msgid "finish_register"
 msgstr ""
@@ -697,7 +698,7 @@ msgid "token_not_exist"
 msgstr "Ne pare rău, dar acest simbol nu există sau a fost deja folosit"
 
 msgid "confirm_email"
-msgstr ", confirmă adresa de email"
+msgstr ", confirmă adresa ta de email"
 
 msgid "check_inbox_email_finish"
 msgstr ""
@@ -713,13 +714,13 @@ msgid "logged_in"
 msgstr "Ești autentificat,"
 
 msgid "registered_user"
-msgstr "Dacă eşti deja un utilizator înregistrat, te rugăm să"
+msgstr "Dacă eşti deja un utilizator înregistrat, te rugăm"
 
 msgid "login_here"
-msgstr "autentifică aici"
+msgstr "autentificare aici"
 
 msgid "send"
-msgstr "trimite"
+msgstr "Trimite"
 
 msgid "user_favorites"
 msgstr "Fișiere cu steluță"
@@ -734,15 +735,15 @@ msgid "user_fav_file_list_empty"
 msgstr "Niciun fișier în listă"
 
 msgid "user_fav_search_list_empty"
-msgstr "Nicio căutare în listă"
+msgstr "Nici o căutare în listă"
 
 msgid "user_fav_no_lists"
 msgstr "Nu s-au găsit liste personalizate"
 
 msgid "enter_email"
 msgstr ""
-"Te rugăm să introduci adresa de email. Un email pentru recupera accesului "
-"îți va fi trimis."
+"Te rugăm să introduci adresa de email. Un email pentru recuperarea accesului"
+" îți va fi trimis."
 
 msgid "email_same_register"
 msgstr ""
@@ -760,8 +761,8 @@ msgstr ", recuperarea accesului la Foofind"
 
 msgid "restore_account"
 msgstr ""
-"Cineva, cel mai probabil tu, vrea să recupereze accesul la Foofind. Fă clic "
-"pe această adresă URL pentru a recupera contul la Foofind:"
+"Cineva, probabil tu, vrea să-ţi recupereze accesul la FooFind. Fă clic pe "
+"această adresă URL pentru a recupera contul la Foofind:"
 
 msgid "ignore_message"
 msgstr "În caz contrar, ignoră acest mesaj."
@@ -776,7 +777,7 @@ msgid "submit_registration"
 msgstr "Înregistrează-te"
 
 msgid "technical_problems"
-msgstr "Ne pare rău, dar avem probleme tehnice cu %(service)s."
+msgstr "Ne pare rău, dar avem probleme tehnice cu %(service)s serviciul."
 
 msgid "allow_access_account"
 msgstr ""
@@ -872,11 +873,11 @@ msgstr "URL-ul trebuie să fie o pagină de descărcare validă Foofind."
 
 msgid "include_reported_links"
 msgstr ""
-"Te rugăm să introduci în câmpurile corespunzătoare de pe formular, link-uri "
-"raportate."
+"Te rugăm să introduci în câmpurile corespunzătoare de pe formular, link-"
+"uriile raportate."
 
 msgid "submit_links"
-msgstr "Trimite link-urile"
+msgstr "Trimite link-uriile"
 
 msgid "include_link_per_line"
 msgstr ""
@@ -884,11 +885,11 @@ msgstr ""
 "Acestea vor fi indexate în mod automat și adăugate pentru a căuta rezultatele într-un timp mai scurt."
 
 msgid "link_sent"
-msgstr "Link-urile au fost trimise. Îți mulțumim pentru ajutor!"
+msgstr "Link-uriile au fost trimise. Îți mulțumim pentru ajutor!"
 
 msgid "about_text"
 msgstr ""
-"Foofind este un motor de căutare universal. La Foofind lucrăm pentru crearea de soft-uri care accesează prin investigare în fiecare rețea și indexează fiecare fișier. În acest fel, ne propunem să oferim cea mai mare colecție de link-uri disponibile.\r\n"
+"Foofind este un motor de căutare universal. La Foofind lucrăm pentru crearea de programe care accesează prin investigare în fiecare rețea, și indexează fiecare fișier. În acest fel, ne propunem să oferim cea mai mare colecție de link-uri disponibile.\r\n"
 "\r\n"
 "Foofind este o creație a lui Pablo Soto, designer de tehnologie P2P, dezvoltată în Madrid, Spania, prin Foofind Labs S.L. în asociere cu tehnologiile MP2P."
 
@@ -900,8 +901,8 @@ msgstr "Foofind este în întreținere. Te rugăm să revii mai târziu."
 
 msgid "technology_text"
 msgstr ""
-"Echipa Foofind dezvoltă în special codul sursă al proiectului, dar de asemenea muncim foarte mult şi cu comunitatea soft-urilor gratuite.\r\n"
-"Fără toate aceste proiecte incredibile, Foofind nu ar fi posibil. Multe mulțumiri! ;-)\r\n"
+"Echipa Foofind dezvoltă în special codul sursă al proiectului, dar de asemenea, muncim foarte mult şi cu comunitatea programelor gratuite.\r\n"
+"Fără toate aceste proiecte incredibile, FooFind nu ar fi posibil. Multe mulțumiri! ;-)\r\n"
 "Twisted: Twisted este un motor event-driven networking scris în Python și sub licența open-source, licență MIT.\r\n"
 "Scrapy: Scrapy este un screen scraping de nivel înalt şi web crawling framework, folosit pentru a investiga site-uri web și pentru a extrage date structurate din paginile lor. Poate fi folosit într-o gamă largă de scopuri, de la mining pentru monitorizarea până la testarea automată.\r\n"
 "Flask: Flask este un microframework pentru Python bazat pe Werkzeug, Jinja 2 și are licenţă BSD.\r\n"
@@ -951,7 +952,7 @@ msgstr ""
 "lipsă în traducere sau ceva greșit, te rugăm să raportezi %(here)s."
 
 msgid "embed_foofind_button"
-msgstr "Vezi în foofind"
+msgstr "Vezi în Foofind"
 
 msgid "copy_to_clipboard_shortcut"
 msgstr "Foloseşte CTRL+C pentru a copia în clipboard"
@@ -959,82 +960,78 @@ msgstr "Foloseşte CTRL+C pentru a copia în clipboard"
 msgid "opensearch_description"
 msgstr "Caută folosind Foofind"
 
-msgid "foodownloader_overview"
+msgid "downloader_overview"
 msgstr "Prezentare"
 
-msgid "foodownloader_powered"
+msgid "downloader_powered"
 msgstr "Realizat de [%(name)s] (%(link)s)"
 
-msgid "foodownloader_overview_text"
+msgid "A fast client for the Torrent P2P network"
+msgstr "este un client de torrent rapid pentru rețele P2P"
+
+msgid "downloader_overview_text"
 msgstr ""
-"**Foofind Download Manager** este un client de **torrent**rapid pentru rețele P2P.\r\n"
-"\r\n"
 "Foofind Download Manager este conceput pentru a fi foarte ușor de utilizat, intuitiv, și în condiții de siguranță. Puteți întrerupe, relua și găsi descărcările mai ușor decât oricând, verifică unele din caracteristicile sale:\r\n"
 "\r\n"
 "* Client de torrent solid.\r\n"
 "* Interfață simplificată.\r\n"
 "* Extensii pentru protocolul DHT, UPnP și uTorrent."
 
-msgid "foodownloader_sharing"
+msgid "downloader_sharing"
 msgstr "Descarcă şi partajează fișiere"
 
-msgid "foodownloader_sharing_text"
+msgid "downloader_sharing_text"
 msgstr ""
 "Acum, cu **Foofind Download Manager** poți descărca mai repede decât oricând altcândva. Datorită rețelei **torrent**, cea mai rapidă soluție P2P realizată vreodată, descărcările tale vor zbura.\r\n"
 "\r\n"
 "Încearcă! **Viitorul în descărcare este doar la un clic distanță.**"
 
-msgid "foodownloader_safety"
+msgid "downloader_safety"
 msgstr "Ia-ţi fișierele într-un mod sigur"
 
-msgid "foodownloader_safety_text"
+msgid "downloader_safety_text"
 msgstr ""
 "Noi acordăm toată atenția siguranței. **Foofind Download Manager** utilizează o bibliotecă libtorrent premiată, ceea ce va face ca experiența ta de descărcare să fie una sigură şi securizată.\r\n"
 "\r\n"
 "Te sfătuim insistent să utilizezi un antivirus, poți descărca malware-uri din surse nesigure."
 
-msgid "foodownloader_download"
+msgid "downloader_download"
 msgstr "Descărcare gratuită"
 
-msgid "foodownloader_download_source"
+msgid "downloader_download_source"
 msgstr "Descarcă sursa"
 
-msgid "foodownloader_meta_description"
+msgid "downloader_meta_description"
 msgstr ""
 "Foofind Download Manager este un downloader de torrent simplu și ușor de "
 "utilizat"
 
-msgid "foodownloader_thanks"
+msgid "downloader_thanks"
 msgstr "Descărcare cu succes!"
 
-msgid "foodownloader_thanks_message"
+msgid "downloader_thanks_message"
 msgstr ""
 "Îți mulțumim că ai instalat Foofind Download Manager, sperăm să îți placă."
 
-msgid "foodownloader_download_coming_soon"
+msgid "downloader_download_coming_soon"
 msgstr "Ne pare rău: Nu este încă disponibil pentru sistemul tău de operare."
 
-msgid "foodownloader_dialog_title"
+msgid "downloader_dialog_title"
 msgstr ""
 "Hei!\r\n"
 "\r\n"
 "Îţi trebuie un client torrent pentru a descărca acest fișier"
 
-msgid "foodownloader_dialog_yes"
-msgstr "Da, descarcăFoofind Download Manager"
+msgid "downloader_dialog_yes"
+msgstr "Da, descarcă Foofind Download Manager"
 
-msgid "foodownloader_dialog_no"
-msgstr ""
-"Nu, mulțumesc\r\n"
-"\r\n"
-"Am deja un client de torrent"
-
-msgid "foodownloader_dialog_text"
+msgid "downloader_dialog_text"
 msgstr ""
 "Descarcă Foofind Download Manager pentru a obține acest fișier chiar acum.\r\n"
 "\r\n"
-"Soft-ul nostru îți permite să descarci torrente mai rapid și mai ușor decât oricând - absolut gratuit! Dacă ai deja un client de torrent, fă clic pe \"Nu, mulțumesc\"."
+"Soft-ul nostru îți permite să descarci torrente mai rapid și mai ușor decât oricând - absolut gratuit!"
 
 msgid "downloader_update_message"
 msgstr ""
-"O nouă versiune %(appname)s (%(version)s) este gata pentru a fi instalată."
+"O nouă versiune %(appname)s (%(version)s) este gata pentru a fi instalată.\r\n"
+"Vrei să faci o îmbunătăţire ?"

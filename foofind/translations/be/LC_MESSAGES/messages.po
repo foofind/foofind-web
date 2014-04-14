@@ -1,0 +1,51 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: 1\n"
+"Report-Msgid-Bugs-To: ismael@mp2p.net\n"
+"POT-Creation-Date: 2011-12-09 11:49+0100\n"
+"PO-Revision-Date: 2011-12-09 11:49+0100\n"
+"Last-Translator: Foofind <hola@foofind.com>\n"
+"Language-Team: be <hola@foofind.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Foofind's pogit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgid "new_toolbar"
+msgstr "Паспрабуй нашую новую панэль інструментаў"
+
+msgid "click_here"
+msgstr "Націсні тут"
+
+msgid "your_email"
+msgstr "Адрас Тваёй электроннай скрыні"
+
+msgid "password"
+msgstr "Пароль"
+
+msgid "submit"
+msgstr "Даслаць"
+
+msgid "ok"
+msgstr "Добра"
+
+msgid "help_us"
+msgstr "Дапамагчы нам"
+
+msgid "legal_info"
+msgstr "Юрыдычная інфармацыя"
+
+msgid "go_home"
+msgstr "Вярнуцца да пошуку "
+
+msgid "error_500_message"
+msgstr "Памылка"
+
+msgid "error_500_description"
+msgstr ""
+"Адбылося нешта дзіўнае. Нашыя спецыялісты спрабуюць вырашыць праблему."
+
+msgid "error_404_message"
+msgstr "Не атрымалася знайсці старонку"
