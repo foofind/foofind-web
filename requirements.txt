@@ -9,7 +9,7 @@
 #
 
 flask==0.10.1
-Werkzeug==0.9.4
+Werkzeug==0.15.3
 
 markupsafe>=0.18
 
