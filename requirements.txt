@@ -8,7 +8,7 @@
 #   Líneas que comiencen con # o sean vacías serán ignoradas.
 #
 
-flask==0.10.1
+flask==1.0
 Werkzeug==0.9.4
 
 markupsafe>=0.18
